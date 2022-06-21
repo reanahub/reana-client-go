@@ -9,37 +9,59 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
-	"crypto/tls"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"net/http"
 	"os"
+	"reanahub/reana-client-go/client"
+	"reanahub/reana-client-go/client/operations"
+	"reanahub/reana-client-go/utils"
+	"reanahub/reana-client-go/validation"
 	"strings"
 
-	"reanahub/reana-client-go/validation"
-
 	"github.com/spf13/cobra"
+	"golang.org/x/exp/slices"
 )
+
+var listFormatFlagDescription = `Format output according to column titles or column
+values. Use <columm_name>=<column_value> format.
+E.g. display workflow with failed status and named test_workflow
+--format status=failed,name=test_workflow.
+`
+
+var listFilterFlagDescription = `Filter workflow that contains certain filtering
+criteria. Use --filter
+<columm_name>=<column_value> pairs. Available
+filters are 'name' and 'status'.
+`
+
+// Available run statuses
+var runStatuses = []string{"created", "running", "finished", "failed", "deleted", "stopped", "queued", "pending"}
 
 var listCmd = &cobra.Command{
 	Use:   "list",
-	Short: "Check connection to REANA server.",
-	Long: `
-Check connection to REANA server.
+	Short: "List all workflows and sessions.",
+	Long: `List all workflows and sessions.
 
-The ` + "``list``" + ` command allows to test connection to REANA server.
+The ` + "``list``" + ` command lists workflows and sessions. By default, the list of
+workflows is returned. If you would like to see the list of your open
+interactive sessions, you need to pass the ` + "``--sessions``" + ` command-line
+option.
 
-Examples:
+Example:
 
-  $ reana-client list
-	`,
+  $ reana-client list --all
+
+  $ reana-client list --sessions
+
+  $ reana-client list --verbose --bytes
+
+  `,
 	Run: func(cmd *cobra.Command, args []string) {
 		token, _ := cmd.Flags().GetString("access-token")
 		serverURL := os.Getenv("REANA_SERVER_URL")
 		validation.ValidateAccessToken(token)
 		validation.ValidateServerURL(serverURL)
-		list(token, serverURL)
+		list(cmd)
 	},
 }
 
@@ -47,80 +69,113 @@ func init() {
 	rootCmd.AddCommand(listCmd)
 
 	listCmd.Flags().StringP("access-token", "t", os.Getenv("REANA_ACCESS_TOKEN"), "Access token of the current user.")
+	listCmd.Flags().StringP("workflow", "w", "", "List all runs of the given workflow.")
+	listCmd.Flags().StringP("sessions", "s", "", "List all open interactive sessions.")
+	listCmd.Flags().String("format", "", listFormatFlagDescription)
+	listCmd.Flags().BoolP("json", "", false, "Get output in JSON format.")
+	listCmd.Flags().StringArray("filter", []string{}, listFilterFlagDescription)
 }
 
-func list(accessToken string, serverURL string) {
-		// disable certificate security checks
-		http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{
-			InsecureSkipVerify: true,
-		}
+func list(cmd *cobra.Command) {
+	token, _ := cmd.Flags().GetString("access-token")
+	workflow, _ := cmd.Flags().GetString("workflow")
+	jsonOutput, _ := cmd.Flags().GetBool("json")
+	filter, _ := cmd.Flags().GetStringArray("filter")
 
-		// make API query
-		resp, err := http.Get(
-			serverURL + "/api/workflows?type=workflow&access_token=" + accessToken,
-		)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(3)
-		}
-		defer resp.Body.Close()
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			fmt.Println(err)
-			os.Exit(4)
-		}
+	statusFilters, searchFilter := parseListFilters(filter)
 
-		// define response structure
-		type rList struct {
-			HasNext bool `json:"has_next"`
-			HasPrev bool `json:"has_prev"`
-			Items   []struct {
-				Created  string `json:"created"`
-				ID       string `json:"id"`
-				Name     string `json:"name"`
-				Progress struct {
-					RunFinishedAt string `json:"run_finished_at"`
-					RunStartedAt  string `json:"run_started_at"`
-				} `json:"progress"`
-				Size struct {
-					HumanReadable string `json:"human_readable"`
-					Raw           int    `json:"raw"`
-				} `json:"size"`
-				Status string `json:"status"`
-				User   string `json:"user"`
-			} `json:"items"`
-			Page             int  `json:"page"`
-			Total            int  `json:"total"`
-			UserHasWorkflows bool `json:"user_has_workflows"`
-		}
+	listParams := operations.NewGetWorkflowsParams()
+	listParams.SetAccessToken(&token)
+	listParams.SetWorkflowIDOrName(&workflow)
+	listParams.SetStatus(statusFilters)
+	listParams.SetSearch(&searchFilter)
 
-		// parse response
-		p := rList{}
-		err = json.Unmarshal(body, &p)
-		if err != nil {
-			panic(err)
-		}
+	listResp, err := client.ApiClient.Operations.GetWorkflows(listParams)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		os.Exit(1)
+	}
+	if jsonOutput {
+		utils.DisplayJsonOutput(listResp.Payload)
+	} else {
+		displayListPayload(listResp.Payload)
+	}
+}
 
-		// format output
+func displayListPayload(p *operations.GetWorkflowsOKBody) {
+	fmt.Printf(
+		"%-38s %-12s %-21s %-21s %-21s %-8s\n",
+		"NAME",
+		"RUN_NUMBER",
+		"CREATED",
+		"STARTED",
+		"ENDED",
+		"STATUS",
+	)
+	for _, workflow := range p.Items {
+		workflowNameAndRunNumber := strings.SplitN(workflow.Name, ".", 2)
 		fmt.Printf(
 			"%-38s %-12s %-21s %-21s %-21s %-8s\n",
-			"NAME",
-			"RUN_NUMBER",
-			"CREATED",
-			"STARTED",
-			"ENDED",
-			"STATUS",
+			workflowNameAndRunNumber[0],
+			workflowNameAndRunNumber[1],
+			workflow.Created,
+			displayOptionalField(workflow.Progress.RunStartedAt),
+			displayOptionalField(workflow.Progress.RunFinishedAt),
+			workflow.Status,
 		)
-		for _, workflow := range p.Items {
-			workflowNameAndRunnumber := strings.SplitN(workflow.Name, ".", 2)
-			fmt.Printf(
-				"%-38s %-12s %-21s %-21s %-21s %-8s\n",
-				workflowNameAndRunnumber[0],
-				workflowNameAndRunnumber[1],
-				workflow.Created,
-				workflow.Progress.RunStartedAt,
-				workflow.Progress.RunFinishedAt,
-				workflow.Status,
-			)
+	}
+}
+
+func displayOptionalField(value *string) string {
+	if value == nil {
+		return "-"
+	}
+	return *value
+}
+
+func parseListFilters(filter []string) ([]string, string) {
+	filterNames := []string{"name", "status"}
+	searchFilters := make(map[string][]string)
+	statusFilters := []string{}
+
+	for _, value := range filter {
+		if !strings.Contains(value, "=") {
+			fmt.Println("Error: Wrong input format. Please use --filter filter_name=filter_value")
+			os.Exit(1)
 		}
+
+		filterNameAndValue := strings.SplitN(value, "=", 2)
+		filterName := strings.ToLower(filterNameAndValue[0])
+		filterValue := filterNameAndValue[1]
+
+		if !slices.Contains(filterNames, filterName) {
+			fmt.Printf("Error: Filter %s is not valid", filterName)
+			os.Exit(1)
+		}
+
+		if filterName == "status" && !slices.Contains(runStatuses, filterValue) {
+			fmt.Printf("Error: Input status value %s is not valid. ", filterValue)
+			os.Exit(1)
+		}
+
+		if filterName == "status" {
+			statusFilters = append(statusFilters, filterValue)
+		}
+
+		if filterName == "name" {
+			searchFilters[filterName] = append(searchFilters[filterName], filterValue)
+		}
+	}
+
+	searchFiltersString := ""
+	if len(searchFilters) > 0 {
+		searchFiltersByteArray, err := json.Marshal(searchFilters)
+		if err != nil {
+			fmt.Println("Error: ", err)
+			os.Exit(1)
+		}
+		searchFiltersString = string(searchFiltersByteArray)
+	}
+
+	return statusFilters, searchFiltersString
 }
