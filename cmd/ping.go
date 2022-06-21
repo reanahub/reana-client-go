@@ -9,22 +9,15 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 
-	"reanahub/reana-client-go/utils"
+	"reanahub/reana-client-go/client"
+	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/validation"
 
 	"github.com/spf13/cobra"
 )
-
-type Ping struct {
-	Email         string `json:"email"`
-	FullName      string `json:"full_name"`
-	Username      string `json:"username"`
-	ServerVersion string `json:"reana_server_version"`
-}
 
 var pingCmd = &cobra.Command{
 	Use:   "ping",
@@ -54,14 +47,17 @@ func init() {
 }
 
 func ping(token string, serverURL string) {
-	respBytes := utils.NewRequest(token, serverURL, "/api/you")
-	p := Ping{}
-
-	if err := json.Unmarshal(respBytes, &p); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+	pingParams := operations.NewGetYouParams()
+	pingParams.SetAccessToken(&token)
+	pingResp, err := client.ApiClient.Operations.GetYou(pingParams)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		os.Exit(1)
 	}
+
+	p := pingResp.Payload
 	response := fmt.Sprintf("REANA server: %s \n", serverURL) +
-		fmt.Sprintf("REANA server version: %s \n", p.ServerVersion) +
+		fmt.Sprintf("REANA server version: %s \n", p.ReanaServerVersion) +
 		fmt.Sprintf("REANA client version: %s \n", version) +
 		fmt.Sprintf("Authenticated as: <%s> \n", p.Email) +
 		fmt.Sprintf("Status: %s ", "Connected")

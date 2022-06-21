@@ -9,31 +9,17 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
 
+	"reanahub/reana-client-go/client"
+	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/utils"
 	"reanahub/reana-client-go/validation"
 
 	"github.com/spf13/cobra"
 )
-
-type Info struct {
-	ComputeBackends struct {
-		Title string   `json:"title"`
-		Value []string `json:"value"`
-	} `json:"compute_backends"`
-	DefaultWorkspace struct {
-		Title string `json:"title"`
-		Value string `json:"value"`
-	} `json:"default_workspace"`
-	AvailableWorkspaces struct {
-		Title string   `json:"title"`
-		Value []string `json:"value"`
-	} `json:"workspaces_available"`
-}
 
 var infoCmd = &cobra.Command{
 	Use:   "info",
@@ -56,7 +42,7 @@ Examples:
 		serverURL := os.Getenv("REANA_SERVER_URL")
 		validation.ValidateAccessToken(token)
 		validation.ValidateServerURL(serverURL)
-		info(token, serverURL, jsonOutput)
+		info(token, jsonOutput)
 	},
 }
 
@@ -67,19 +53,22 @@ func init() {
 	infoCmd.Flags().StringP("access-token", "t", os.Getenv("REANA_ACCESS_TOKEN"), "Access token of the current user.")
 }
 
-func info(token string, serverURL string, jsonOutput bool) {
-	respBytes := utils.NewRequest(token, serverURL, "/api/info")
-	i := Info{}
-
-	if err := json.Unmarshal(respBytes, &i); err != nil {
-		fmt.Printf("Could not unmarshal reponseBytes. %v", err)
+func info(token string, jsonOutput bool) {
+	infoParams := operations.NewInfoParams()
+	infoParams.SetAccessToken(token)
+	infoResp, err := client.ApiClient.Operations.Info(infoParams)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		os.Exit(1)
 	}
+
+	p := infoResp.Payload
 	if jsonOutput {
-		utils.DisplayJsonOutput(i)
+		utils.DisplayJsonOutput(p)
 	} else {
-		response := fmt.Sprintf("List of supported compute backends: %s \n", strings.Join(i.ComputeBackends.Value, ", ")) +
-			fmt.Sprintf("Default workspace: %s \n", i.DefaultWorkspace.Value) +
-			fmt.Sprintf("List of available workspaces: %s \n", strings.Join(i.AvailableWorkspaces.Value, ", "))
+		response := fmt.Sprintf("List of supported compute backends: %s \n", strings.Join(p.ComputeBackends.Value, ", ")) +
+			fmt.Sprintf("Default workspace: %s \n", p.DefaultWorkspace.Value) +
+			fmt.Sprintf("List of available workspaces: %s \n", strings.Join(p.WorkspacesAvailable.Value, ", "))
 
 		fmt.Print(response)
 	}
