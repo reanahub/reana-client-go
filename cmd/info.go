@@ -21,36 +21,36 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var infoCmd = &cobra.Command{
-	Use:   "info",
-	Short: "List cluster general information.",
-	Long: `
-List cluster general information.
+func newInfoCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "info",
+		Short: "List cluster general information.",
+		Long: `
+	List cluster general information.
 
-The ` + "``info``" + ` command lists general information about the cluster.
+	The ` + "``info``" + ` command lists general information about the cluster.
 
-Lists all the available workspaces. It also returns the default workspace
-defined by the admin.
+	Lists all the available workspaces. It also returns the default workspace
+	defined by the admin.
 
-Examples:
+	Examples:
 
-  $ reana-client info
-	`,
-	Run: func(cmd *cobra.Command, args []string) {
-		jsonOutput, _ := cmd.Flags().GetBool("json")
-		token, _ := cmd.Flags().GetString("access-token")
-		serverURL := os.Getenv("REANA_SERVER_URL")
-		validation.ValidateAccessToken(token)
-		validation.ValidateServerURL(serverURL)
-		info(token, jsonOutput)
-	},
-}
+	  $ reana-client info
+		`,
+		Run: func(cmd *cobra.Command, args []string) {
+			jsonOutput, _ := cmd.Flags().GetBool("json")
+			token, _ := cmd.Flags().GetString("access-token")
+			serverURL := os.Getenv("REANA_SERVER_URL")
+			validation.ValidateAccessToken(token)
+			validation.ValidateServerURL(serverURL)
+			info(token, jsonOutput)
+		},
+	}
 
-func init() {
-	rootCmd.AddCommand(infoCmd)
+	cmd.Flags().BoolP("json", "", false, "Get output in JSON format.")
+	cmd.Flags().StringP("access-token", "t", os.Getenv("REANA_ACCESS_TOKEN"), "Access token of the current user.")
 
-	infoCmd.Flags().BoolP("json", "", false, "Get output in JSON format.")
-	infoCmd.Flags().StringP("access-token", "t", os.Getenv("REANA_ACCESS_TOKEN"), "Access token of the current user.")
+	return cmd
 }
 
 func info(token string, jsonOutput bool) {

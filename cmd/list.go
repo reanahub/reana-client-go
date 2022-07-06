@@ -37,43 +37,43 @@ filters are 'name' and 'status'.
 // Available run statuses
 var runStatuses = []string{"created", "running", "finished", "failed", "deleted", "stopped", "queued", "pending"}
 
-var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "List all workflows and sessions.",
-	Long: `List all workflows and sessions.
+func newListCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "list",
+		Short: "List all workflows and sessions.",
+		Long: `List all workflows and sessions.
 
-The ` + "``list``" + ` command lists workflows and sessions. By default, the list of
-workflows is returned. If you would like to see the list of your open
-interactive sessions, you need to pass the ` + "``--sessions``" + ` command-line
-option.
+	The ` + "``list``" + ` command lists workflows and sessions. By default, the list of
+	workflows is returned. If you would like to see the list of your open
+	interactive sessions, you need to pass the ` + "``--sessions``" + ` command-line
+	option.
 
-Example:
+	Example:
 
-  $ reana-client list --all
+	  $ reana-client list --all
 
-  $ reana-client list --sessions
+	  $ reana-client list --sessions
 
-  $ reana-client list --verbose --bytes
+	  $ reana-client list --verbose --bytes
 
-  `,
-	Run: func(cmd *cobra.Command, args []string) {
-		token, _ := cmd.Flags().GetString("access-token")
-		serverURL := os.Getenv("REANA_SERVER_URL")
-		validation.ValidateAccessToken(token)
-		validation.ValidateServerURL(serverURL)
-		list(cmd)
-	},
-}
+	  `,
+		Run: func(cmd *cobra.Command, args []string) {
+			token, _ := cmd.Flags().GetString("access-token")
+			serverURL := os.Getenv("REANA_SERVER_URL")
+			validation.ValidateAccessToken(token)
+			validation.ValidateServerURL(serverURL)
+			list(cmd)
+		},
+	}
 
-func init() {
-	rootCmd.AddCommand(listCmd)
+	cmd.Flags().StringP("access-token", "t", os.Getenv("REANA_ACCESS_TOKEN"), "Access token of the current user.")
+	cmd.Flags().StringP("workflow", "w", "", "List all runs of the given workflow.")
+	cmd.Flags().StringP("sessions", "s", "", "List all open interactive sessions.")
+	cmd.Flags().String("format", "", listFormatFlagDescription)
+	cmd.Flags().BoolP("json", "", false, "Get output in JSON format.")
+	cmd.Flags().StringArray("filter", []string{}, listFilterFlagDescription)
 
-	listCmd.Flags().StringP("access-token", "t", os.Getenv("REANA_ACCESS_TOKEN"), "Access token of the current user.")
-	listCmd.Flags().StringP("workflow", "w", "", "List all runs of the given workflow.")
-	listCmd.Flags().StringP("sessions", "s", "", "List all open interactive sessions.")
-	listCmd.Flags().String("format", "", listFormatFlagDescription)
-	listCmd.Flags().BoolP("json", "", false, "Get output in JSON format.")
-	listCmd.Flags().StringArray("filter", []string{}, listFilterFlagDescription)
+	return cmd
 }
 
 func list(cmd *cobra.Command) {

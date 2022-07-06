@@ -19,31 +19,31 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var pingCmd = &cobra.Command{
-	Use:   "ping",
-	Short: "Check connection to REANA server.",
-	Long: `
-Check connection to REANA server.
+func newPingCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "ping",
+		Short: "Check connection to REANA server.",
+		Long: `
+	Check connection to REANA server.
 
-The ` + "``ping``" + ` command allows to test connection to REANA server.
+	The ` + "``ping``" + ` command allows to test connection to REANA server.
 
-Examples:
+	Examples:
 
-  $ reana-client ping
-	`,
-	Run: func(cmd *cobra.Command, args []string) {
-		token, _ := cmd.Flags().GetString("access-token")
-		serverURL := os.Getenv("REANA_SERVER_URL")
-		validation.ValidateAccessToken(token)
-		validation.ValidateServerURL(serverURL)
-		ping(token, serverURL)
-	},
-}
+	  $ reana-client ping
+		`,
+		Run: func(cmd *cobra.Command, args []string) {
+			token, _ := cmd.Flags().GetString("access-token")
+			serverURL := os.Getenv("REANA_SERVER_URL")
+			validation.ValidateAccessToken(token)
+			validation.ValidateServerURL(serverURL)
+			ping(token, serverURL)
+		},
+	}
 
-func init() {
-	rootCmd.AddCommand(pingCmd)
+	cmd.Flags().StringP("access-token", "t", os.Getenv("REANA_ACCESS_TOKEN"), "Access token of the current user.")
 
-	pingCmd.Flags().StringP("access-token", "t", os.Getenv("REANA_ACCESS_TOKEN"), "Access token of the current user.")
+	return cmd
 }
 
 func ping(token string, serverURL string) {

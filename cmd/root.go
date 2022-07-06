@@ -9,26 +9,23 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
-	"os"
-
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
-	Use:   "reana-client",
-	Short: "REANA client for interacting with REANA server.",
-	Long:  "REANA client for interacting with REANA server.",
-}
-
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
-	err := rootCmd.Execute()
-	if err != nil {
-		os.Exit(1)
+func NewRootCmd() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "reana-client",
+		Short: "REANA client for interacting with REANA server.",
+		Long:  "REANA client for interacting with REANA server.",
 	}
-}
 
-func init() {
-	rootCmd.PersistentFlags().BoolP("loglevel", "l", false, "Sets log level [DEBUG|INFO|WARNING]")
+	cmd.PersistentFlags().BoolP("loglevel", "l", false, "Sets log level [DEBUG|INFO|WARNING]")
+
+	// Add commands
+	cmd.AddCommand(newVersionCmd())
+	cmd.AddCommand(newPingCmd())
+	cmd.AddCommand(newInfoCmd())
+	cmd.AddCommand(newListCmd())
+
+	return cmd
 }

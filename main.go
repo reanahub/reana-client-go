@@ -8,8 +8,16 @@ under the terms of the MIT License; see LICENSE file for more details.
 
 package main
 
-import "reanahub/reana-client-go/cmd"
+import (
+	"os"
+	"reanahub/reana-client-go/cmd"
+)
 
 func main() {
-	cmd.Execute()
+	rootCmd := cmd.NewRootCmd()
+	err := rootCmd.Execute()
+
+	if err != nil {
+		os.Exit(1)
+	}
 }
