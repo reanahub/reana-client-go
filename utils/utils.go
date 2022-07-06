@@ -9,13 +9,27 @@ under the terms of the MIT License; see LICENSE file for more details.
 package utils
 
 import (
+	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"os"
+
+	"github.com/spf13/cobra"
 )
+
+func ExecuteCommand(root *cobra.Command, args ...string) (output string, err error) {
+	buf := new(bytes.Buffer)
+	root.SetOut(buf)
+	root.SetErr(buf)
+	root.SetArgs(args)
+
+	err = root.Execute()
+
+	return buf.String(), err
+}
 
 func DisplayJsonOutput(output any) {
 	byteArray, err := json.MarshalIndent(output, "", "  ")
