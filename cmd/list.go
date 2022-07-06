@@ -59,6 +59,9 @@ func newListCmd() *cobra.Command {
 	  `,
 		Run: func(cmd *cobra.Command, args []string) {
 			token, _ := cmd.Flags().GetString("access-token")
+			if token == "" {
+				token = os.Getenv("REANA_ACCESS_TOKEN")
+			}
 			serverURL := os.Getenv("REANA_SERVER_URL")
 			validation.ValidateAccessToken(token)
 			validation.ValidateServerURL(serverURL)
@@ -66,7 +69,7 @@ func newListCmd() *cobra.Command {
 		},
 	}
 
-	cmd.Flags().StringP("access-token", "t", os.Getenv("REANA_ACCESS_TOKEN"), "Access token of the current user.")
+	cmd.Flags().StringP("access-token", "t", "", "Access token of the current user.")
 	cmd.Flags().StringP("workflow", "w", "", "List all runs of the given workflow.")
 	cmd.Flags().StringP("sessions", "s", "", "List all open interactive sessions.")
 	cmd.Flags().String("format", "", listFormatFlagDescription)
@@ -78,6 +81,9 @@ func newListCmd() *cobra.Command {
 
 func list(cmd *cobra.Command) {
 	token, _ := cmd.Flags().GetString("access-token")
+	if token == "" {
+		token = os.Getenv("REANA_ACCESS_TOKEN")
+	}
 	workflow, _ := cmd.Flags().GetString("workflow")
 	jsonOutput, _ := cmd.Flags().GetBool("json")
 	filter, _ := cmd.Flags().GetStringArray("filter")

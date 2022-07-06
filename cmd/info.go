@@ -40,6 +40,9 @@ func newInfoCmd() *cobra.Command {
 		Run: func(cmd *cobra.Command, args []string) {
 			jsonOutput, _ := cmd.Flags().GetBool("json")
 			token, _ := cmd.Flags().GetString("access-token")
+			if token == "" {
+				token = os.Getenv("REANA_ACCESS_TOKEN")
+			}
 			serverURL := os.Getenv("REANA_SERVER_URL")
 			validation.ValidateAccessToken(token)
 			validation.ValidateServerURL(serverURL)
@@ -48,7 +51,7 @@ func newInfoCmd() *cobra.Command {
 	}
 
 	cmd.Flags().BoolP("json", "", false, "Get output in JSON format.")
-	cmd.Flags().StringP("access-token", "t", os.Getenv("REANA_ACCESS_TOKEN"), "Access token of the current user.")
+	cmd.Flags().StringP("access-token", "t", "", "Access token of the current user.")
 
 	return cmd
 }
