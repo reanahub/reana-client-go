@@ -1,0 +1,39 @@
+# This file is part of REANA.
+# Copyright (C) 2022 CERN.
+#
+# REANA is free software; you can redistribute it and/or modify it
+# under the terms of the MIT License; see LICENSE file for more details
+
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+    go-tests:
+        runs-on: ubuntu-20.04
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Setup Go
+              uses: actions/setup-go@v3
+              with:
+                  go-version: '>=1.18.X'
+
+            - name: Run test suit
+              run: make test
+
+    go-lint:
+        runs-on: ubuntu-20.04
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Setup Go
+              uses: actions/setup-go@v3
+              with:
+                  go-version: '>=1.18.X'
+
+            - name: Run lint action
+              uses: golangci/golangci-lint-action@v3
+              with:
+                  version: latest
+                  args: --enable=gofmt
