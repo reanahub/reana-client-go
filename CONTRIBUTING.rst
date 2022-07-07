@@ -15,6 +15,6 @@ the tests to ensure that everything is operating correctly:
 
 .. code-block:: console
 
-    $ ./run-tests.sh
+    $ make test
 
 Each pull request should preserve or increase code coverage.
