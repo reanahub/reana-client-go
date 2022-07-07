@@ -59,7 +59,7 @@ func newInfoCmd() *cobra.Command {
 func info(token string, jsonOutput bool) {
 	infoParams := operations.NewInfoParams()
 	infoParams.SetAccessToken(token)
-	infoResp, err := client.ApiClient.Operations.Info(infoParams)
+	infoResp, err := client.ApiClient().Operations.Info(infoParams)
 	if err != nil {
 		fmt.Println("Error: ", err)
 		os.Exit(1)

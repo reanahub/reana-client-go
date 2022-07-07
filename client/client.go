@@ -12,7 +12,14 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 )
 
-var ApiClient = newApiClient()
+var apiClient *API
+
+func ApiClient() *API {
+	if apiClient == nil {
+		apiClient = newApiClient()
+	}
+	return apiClient
+}
 
 func newApiClient() *API {
 	// disable certificate security checks

@@ -52,7 +52,7 @@ func newPingCmd() *cobra.Command {
 func ping(token string, serverURL string) {
 	pingParams := operations.NewGetYouParams()
 	pingParams.SetAccessToken(&token)
-	pingResp, err := client.ApiClient.Operations.GetYou(pingParams)
+	pingResp, err := client.ApiClient().Operations.GetYou(pingParams)
 	if err != nil {
 		fmt.Println("Error: ", err)
 		os.Exit(1)

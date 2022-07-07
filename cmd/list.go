@@ -96,7 +96,7 @@ func list(cmd *cobra.Command) {
 	listParams.SetStatus(statusFilters)
 	listParams.SetSearch(&searchFilter)
 
-	listResp, err := client.ApiClient.Operations.GetWorkflows(listParams)
+	listResp, err := client.ApiClient().Operations.GetWorkflows(listParams)
 	if err != nil {
 		fmt.Println("Error: ", err)
 		os.Exit(1)
