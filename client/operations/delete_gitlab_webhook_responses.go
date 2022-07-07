@@ -6,10 +6,14 @@ package operations
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"fmt"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // DeleteGitlabWebhookReader is a Reader for the DeleteGitlabWebhook structure.
@@ -130,5 +134,78 @@ func (o *DeleteGitlabWebhookInternalServerError) Error() string {
 
 func (o *DeleteGitlabWebhookInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	return nil
+}
+
+/*DeleteGitlabWebhookBody delete gitlab webhook body
+swagger:model DeleteGitlabWebhookBody
+*/
+type DeleteGitlabWebhookBody struct {
+
+	// The GitLab webhook id of the project.
+	// Required: true
+	HookID *int64 `json:"hook_id"`
+
+	// The GitLab project id.
+	// Required: true
+	ProjectID *string `json:"project_id"`
+}
+
+// Validate validates this delete gitlab webhook body
+func (o *DeleteGitlabWebhookBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateHookID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateProjectID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *DeleteGitlabWebhookBody) validateHookID(formats strfmt.Registry) error {
+
+	if err := validate.Required("data"+"."+"hook_id", "body", o.HookID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (o *DeleteGitlabWebhookBody) validateProjectID(formats strfmt.Registry) error {
+
+	if err := validate.Required("data"+"."+"project_id", "body", o.ProjectID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validates this delete gitlab webhook body based on context it is used
+func (o *DeleteGitlabWebhookBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DeleteGitlabWebhookBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DeleteGitlabWebhookBody) UnmarshalBinary(b []byte) error {
+	var res DeleteGitlabWebhookBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }

@@ -14,7 +14,6 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 )
 
 // NewCreateGitlabWebhookParams creates a new CreateGitlabWebhookParams object,
@@ -60,11 +59,11 @@ func NewCreateGitlabWebhookParamsWithHTTPClient(client *http.Client) *CreateGitl
 */
 type CreateGitlabWebhookParams struct {
 
-	/* ProjectID.
+	/* Data.
 
-	   The GitLab project id.
+	   Data required to set a new webhook from GitLab.
 	*/
-	ProjectID int64
+	Data CreateGitlabWebhookBody
 
 	timeout    time.Duration
 	Context    context.Context
@@ -119,15 +118,15 @@ func (o *CreateGitlabWebhookParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithProjectID adds the projectID to the create gitlab webhook params
-func (o *CreateGitlabWebhookParams) WithProjectID(projectID int64) *CreateGitlabWebhookParams {
-	o.SetProjectID(projectID)
+// WithData adds the data to the create gitlab webhook params
+func (o *CreateGitlabWebhookParams) WithData(data CreateGitlabWebhookBody) *CreateGitlabWebhookParams {
+	o.SetData(data)
 	return o
 }
 
-// SetProjectID adds the projectId to the create gitlab webhook params
-func (o *CreateGitlabWebhookParams) SetProjectID(projectID int64) {
-	o.ProjectID = projectID
+// SetData adds the data to the create gitlab webhook params
+func (o *CreateGitlabWebhookParams) SetData(data CreateGitlabWebhookBody) {
+	o.Data = data
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -137,15 +136,8 @@ func (o *CreateGitlabWebhookParams) WriteToRequest(r runtime.ClientRequest, reg 
 		return err
 	}
 	var res []error
-
-	// query param project_id
-	qrProjectID := o.ProjectID
-	qProjectID := swag.FormatInt64(qrProjectID)
-	if qProjectID != "" {
-
-		if err := r.SetQueryParam("project_id", qProjectID); err != nil {
-			return err
-		}
+	if err := r.SetBodyParam(o.Data); err != nil {
+		return err
 	}
 
 	if len(res) > 0 {

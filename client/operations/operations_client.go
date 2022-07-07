@@ -392,7 +392,7 @@ func (a *Client) DownloadFile(params *DownloadFileParams, writer io.Writer, opts
 		ID:                 "download_file",
 		Method:             "GET",
 		PathPattern:        "/api/workflows/{workflow_id_or_name}/workspace/{file_name}",
-		ProducesMediaTypes: []string{"multipart/form-data"},
+		ProducesMediaTypes: []string{"application/json", "application/octet-stream", "application/zip", "image/*", "text/html"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
 		Params:             params,

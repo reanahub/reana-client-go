@@ -14,7 +14,6 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"github.com/go-openapi/swag"
 )
 
 // NewDeleteGitlabWebhookParams creates a new DeleteGitlabWebhookParams object,
@@ -60,17 +59,11 @@ func NewDeleteGitlabWebhookParamsWithHTTPClient(client *http.Client) *DeleteGitl
 */
 type DeleteGitlabWebhookParams struct {
 
-	/* HookID.
+	/* Data.
 
-	   The GitLab webhook id of the project.
+	   Data required to delete an existing webhook from GitLab.
 	*/
-	HookID int64
-
-	/* ProjectID.
-
-	   The GitLab project id.
-	*/
-	ProjectID int64
+	Data DeleteGitlabWebhookBody
 
 	timeout    time.Duration
 	Context    context.Context
@@ -125,26 +118,15 @@ func (o *DeleteGitlabWebhookParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithHookID adds the hookID to the delete gitlab webhook params
-func (o *DeleteGitlabWebhookParams) WithHookID(hookID int64) *DeleteGitlabWebhookParams {
-	o.SetHookID(hookID)
+// WithData adds the data to the delete gitlab webhook params
+func (o *DeleteGitlabWebhookParams) WithData(data DeleteGitlabWebhookBody) *DeleteGitlabWebhookParams {
+	o.SetData(data)
 	return o
 }
 
-// SetHookID adds the hookId to the delete gitlab webhook params
-func (o *DeleteGitlabWebhookParams) SetHookID(hookID int64) {
-	o.HookID = hookID
-}
-
-// WithProjectID adds the projectID to the delete gitlab webhook params
-func (o *DeleteGitlabWebhookParams) WithProjectID(projectID int64) *DeleteGitlabWebhookParams {
-	o.SetProjectID(projectID)
-	return o
-}
-
-// SetProjectID adds the projectId to the delete gitlab webhook params
-func (o *DeleteGitlabWebhookParams) SetProjectID(projectID int64) {
-	o.ProjectID = projectID
+// SetData adds the data to the delete gitlab webhook params
+func (o *DeleteGitlabWebhookParams) SetData(data DeleteGitlabWebhookBody) {
+	o.Data = data
 }
 
 // WriteToRequest writes these params to a swagger request
@@ -154,25 +136,8 @@ func (o *DeleteGitlabWebhookParams) WriteToRequest(r runtime.ClientRequest, reg 
 		return err
 	}
 	var res []error
-
-	// query param hook_id
-	qrHookID := o.HookID
-	qHookID := swag.FormatInt64(qrHookID)
-	if qHookID != "" {
-
-		if err := r.SetQueryParam("hook_id", qHookID); err != nil {
-			return err
-		}
-	}
-
-	// query param project_id
-	qrProjectID := o.ProjectID
-	qProjectID := swag.FormatInt64(qrProjectID)
-	if qProjectID != "" {
-
-		if err := r.SetQueryParam("project_id", qProjectID); err != nil {
-			return err
-		}
+	if err := r.SetBodyParam(o.Data); err != nil {
+		return err
 	}
 
 	if len(res) > 0 {
