@@ -19,19 +19,17 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const pingDesc = `
+Check connection to REANA server.
+
+The ` + "``ping``" + ` command allows to test connection to REANA server.
+`
+
 func newPingCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "ping",
 		Short: "Check connection to REANA server.",
-		Long: `
-	Check connection to REANA server.
-
-	The ` + "``ping``" + ` command allows to test connection to REANA server.
-
-	Examples:
-
-	  $ reana-client ping
-		`,
+		Long:  pingDesc,
 		Run: func(cmd *cobra.Command, args []string) {
 			token, _ := cmd.Flags().GetString("access-token")
 			if token == "" {

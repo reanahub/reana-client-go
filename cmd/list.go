@@ -22,16 +22,33 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-var listFormatFlagDescription = `Format output according to column titles or column
+const listFormatFlagDesc = `Format output according to column titles or column
 values. Use <columm_name>=<column_value> format.
 E.g. display workflow with failed status and named test_workflow
 --format status=failed,name=test_workflow.
 `
 
-var listFilterFlagDescription = `Filter workflow that contains certain filtering
+const listFilterFlagDesc = `Filter workflow that contains certain filtering
 criteria. Use --filter
 <columm_name>=<column_value> pairs. Available
 filters are 'name' and 'status'.
+`
+
+const listDesc = `
+List all workflows and sessions.
+
+The ` + "``list``" + ` command lists workflows and sessions. By default, the list of
+workflows is returned. If you would like to see the list of your open
+interactive sessions, you need to pass the ` + "``--sessions``" + ` command-line
+option.
+
+Example:
+
+  $ reana-client list --all
+
+  $ reana-client list --sessions
+
+  $ reana-client list --verbose --bytes
 `
 
 // Available run statuses
@@ -41,22 +58,7 @@ func newListCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "List all workflows and sessions.",
-		Long: `List all workflows and sessions.
-
-	The ` + "``list``" + ` command lists workflows and sessions. By default, the list of
-	workflows is returned. If you would like to see the list of your open
-	interactive sessions, you need to pass the ` + "``--sessions``" + ` command-line
-	option.
-
-	Example:
-
-	  $ reana-client list --all
-
-	  $ reana-client list --sessions
-
-	  $ reana-client list --verbose --bytes
-
-	  `,
+		Long:  listDesc,
 		Run: func(cmd *cobra.Command, args []string) {
 			token, _ := cmd.Flags().GetString("access-token")
 			if token == "" {
@@ -72,9 +74,9 @@ func newListCmd() *cobra.Command {
 	cmd.Flags().StringP("access-token", "t", "", "Access token of the current user.")
 	cmd.Flags().StringP("workflow", "w", "", "List all runs of the given workflow.")
 	cmd.Flags().StringP("sessions", "s", "", "List all open interactive sessions.")
-	cmd.Flags().String("format", "", listFormatFlagDescription)
+	cmd.Flags().String("format", "", listFormatFlagDesc)
 	cmd.Flags().BoolP("json", "", false, "Get output in JSON format.")
-	cmd.Flags().StringArray("filter", []string{}, listFilterFlagDescription)
+	cmd.Flags().StringArray("filter", []string{}, listFilterFlagDesc)
 
 	return cmd
 }

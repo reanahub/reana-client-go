@@ -21,22 +21,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const infoDesc = `
+List cluster general information.
+
+The ` + "``info``" + ` command lists general information about the cluster.
+
+Lists all the available workspaces. It also returns the default workspace
+defined by the admin.
+`
+
 func newInfoCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "info",
 		Short: "List cluster general information.",
-		Long: `
-	List cluster general information.
-
-	The ` + "``info``" + ` command lists general information about the cluster.
-
-	Lists all the available workspaces. It also returns the default workspace
-	defined by the admin.
-
-	Examples:
-
-	  $ reana-client info
-		`,
+		Long:  infoDesc,
 		Run: func(cmd *cobra.Command, args []string) {
 			jsonOutput, _ := cmd.Flags().GetBool("json")
 			token, _ := cmd.Flags().GetString("access-token")
