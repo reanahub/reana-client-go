@@ -41,4 +41,12 @@ update: # Update go module dependencies.
 	go get -u
 	go mod tidy
 
-.PHONY: all build clean help release swagger-generate-client swagger-validate-specs test update
+lint: # Run lint checks
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+	golangci-lint run --enable=gofmt
+
+golines: # Run line size checks
+	go install github.com/segmentio/golines@latest
+	golines --dry-run ./
+
+.PHONY: all build clean help release swagger-generate-client swagger-validate-specs test update lint golines

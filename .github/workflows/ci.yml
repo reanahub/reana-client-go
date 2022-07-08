@@ -48,14 +48,11 @@ jobs:
               with:
                   go-version: '>=1.18.X'
 
-            - name: Install golines
-              run: go install github.com/segmentio/golines@latest
-
             - name: Run golines
               run: |
-                  if [[ $(golines --dry-run ./) ]]; then
+                  if [[ $(make golines | wc -l) -gt 2 ]]; then
                       echo "Golines would make the following changes:"
-                      golines --dry-run ./
+                      make golines
                       exit 1
                   else
                       echo "No file exceeds the line size limit"
