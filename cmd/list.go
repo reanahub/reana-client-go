@@ -52,7 +52,16 @@ Example:
 `
 
 // Available run statuses
-var runStatuses = []string{"created", "running", "finished", "failed", "deleted", "stopped", "queued", "pending"}
+var runStatuses = []string{
+	"created",
+	"running",
+	"finished",
+	"failed",
+	"deleted",
+	"stopped",
+	"queued",
+	"pending",
+}
 
 func newListCmd() *cobra.Command {
 	cmd := &cobra.Command{

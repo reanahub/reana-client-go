@@ -16,7 +16,9 @@ import (
 
 func ValidateAccessToken(token string) {
 	if strings.TrimSpace(token) == "" {
-		fmt.Println("Error: Please provide your access token by using the -t/--access-token flag, or by setting the REANA_ACCESS_TOKEN environment variable.")
+		fmt.Println(
+			"Error: Please provide your access token by using the -t/--access-token flag, or by setting the REANA_ACCESS_TOKEN environment variable.",
+		)
 		os.Exit(1)
 	}
 }

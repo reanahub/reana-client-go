@@ -37,3 +37,26 @@ jobs:
               with:
                   version: latest
                   args: --enable=gofmt
+
+    go-lines:
+        runs-on: ubuntu-20.04
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Setup Go
+              uses: actions/setup-go@v3
+              with:
+                  go-version: '>=1.18.X'
+
+            - name: Install golines
+              run: go install github.com/segmentio/golines@latest
+
+            - name: Run golines
+              run: |
+                  if [[ $(golines --dry-run ./) ]]; then
+                      echo "Golines would make the following changes:"
+                      golines --dry-run ./
+                      exit 1
+                  else
+                      echo "No file exceeds the line size limit"
+                  fi
