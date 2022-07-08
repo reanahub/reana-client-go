@@ -8,21 +8,37 @@
 
 SWAGGER := docker run --rm -it -e GOPATH=$(shell go env GOPATH):/go -v $(HOME):$(HOME) -w $(shell pwd) quay.io/goswagger/swagger
 
-build:
+all: build
+
+build: # Build reana-client-go executable.
 	go build
 
-release:
+clean: # Clean build.
+	rm -f reana-client-go
+
+help: # Print usage help information.
+	@echo "Available commands:"
+	@echo
+	@grep -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?# "}; {printf "  \033[36m%-17s\033[0m %s\n", $$1, $$2}'
+
+release: # Prepare standalone reana-client-go-* executables for release.
 	version=$(shell go run . version) && \
 	GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -o reana-client-go-$$version-darwin-amd64 && \
 	GOOS=darwin GOARCH=arm64 CGO_ENABLED=0 go build -o reana-client-go-$$version-darwin-arm64 && \
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o reana-client-go-$$version-linux-amd64 && \
 	GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -o reana-client-go-$$version-linux-arm64
 
-test:
-	go test -v ./...
+swagger-generate-client: # Generate OpenAPI client.
+	$(SWAGGER) generate client -f "../reana-server/docs/openapi.json" -A api
 
-validate-spec:
+swagger-validate-specs: # Validate OpenAPI specification.
 	$(SWAGGER) validate "../reana-server/docs/openapi.json"
 
-generate-api-client:
-	$(SWAGGER) generate client -f "../reana-server/docs/openapi.json" -A api
+test: # Run test suite.
+	go test -v ./...
+
+update: # Update go module dependencies.
+	go get -u
+	go mod tidy
+
+.PHONY: all build clean help release swagger-generate-client swagger-validate-specs test update
