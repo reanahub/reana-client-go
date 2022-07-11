@@ -26,6 +26,7 @@ func NewRootCmd() *cobra.Command {
 	cmd.AddCommand(newPingCmd())
 	cmd.AddCommand(newInfoCmd())
 	cmd.AddCommand(newListCmd())
+	cmd.AddCommand(newDuCmd())
 
 	return cmd
 }

@@ -29,3 +29,12 @@ func ValidateServerURL(serverURL string) {
 		os.Exit(1)
 	}
 }
+
+func ValidateWorkflow(workflow string) {
+	if strings.TrimSpace(workflow) == "" {
+		fmt.Println(
+			"Error: Workflow name must be provided either with `--workflow` option or with REANA_WORKON environment variable",
+		)
+		os.Exit(1)
+	}
+}

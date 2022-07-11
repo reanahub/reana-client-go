@@ -9,7 +9,6 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"reanahub/reana-client-go/client"
@@ -19,7 +18,6 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	"golang.org/x/exp/slices"
 )
 
 const listFormatFlagDesc = `Format output according to column titles or column
@@ -50,18 +48,6 @@ Example:
 
   $ reana-client list --verbose --bytes
 `
-
-// Available run statuses
-var runStatuses = []string{
-	"created",
-	"running",
-	"finished",
-	"failed",
-	"deleted",
-	"stopped",
-	"queued",
-	"pending",
-}
 
 func newListCmd() *cobra.Command {
 	cmd := &cobra.Command{
@@ -99,7 +85,8 @@ func list(cmd *cobra.Command) {
 	jsonOutput, _ := cmd.Flags().GetBool("json")
 	filter, _ := cmd.Flags().GetStringArray("filter")
 
-	statusFilters, searchFilter := parseListFilters(filter)
+	filterNames := []string{"name", "status"}
+	statusFilters, searchFilter := utils.ParseListFilters(filter, filterNames)
 
 	listParams := operations.NewGetWorkflowsParams()
 	listParams.SetAccessToken(&token)
@@ -148,51 +135,4 @@ func displayOptionalField(value *string) string {
 		return "-"
 	}
 	return *value
-}
-
-func parseListFilters(filter []string) ([]string, string) {
-	filterNames := []string{"name", "status"}
-	searchFilters := make(map[string][]string)
-	statusFilters := []string{}
-
-	for _, value := range filter {
-		if !strings.Contains(value, "=") {
-			fmt.Println("Error: Wrong input format. Please use --filter filter_name=filter_value")
-			os.Exit(1)
-		}
-
-		filterNameAndValue := strings.SplitN(value, "=", 2)
-		filterName := strings.ToLower(filterNameAndValue[0])
-		filterValue := filterNameAndValue[1]
-
-		if !slices.Contains(filterNames, filterName) {
-			fmt.Printf("Error: Filter %s is not valid", filterName)
-			os.Exit(1)
-		}
-
-		if filterName == "status" && !slices.Contains(runStatuses, filterValue) {
-			fmt.Printf("Error: Input status value %s is not valid. ", filterValue)
-			os.Exit(1)
-		}
-
-		if filterName == "status" {
-			statusFilters = append(statusFilters, filterValue)
-		}
-
-		if filterName == "name" {
-			searchFilters[filterName] = append(searchFilters[filterName], filterValue)
-		}
-	}
-
-	searchFiltersString := ""
-	if len(searchFilters) > 0 {
-		searchFiltersByteArray, err := json.Marshal(searchFilters)
-		if err != nil {
-			fmt.Println("Error: ", err)
-			os.Exit(1)
-		}
-		searchFiltersString = string(searchFiltersByteArray)
-	}
-
-	return statusFilters, searchFiltersString
 }

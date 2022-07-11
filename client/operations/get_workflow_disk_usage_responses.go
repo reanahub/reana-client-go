@@ -176,6 +176,46 @@ func (o *GetWorkflowDiskUsageInternalServerError) readResponse(response runtime.
 	return nil
 }
 
+/*GetWorkflowDiskUsageBody get workflow disk usage body
+swagger:model GetWorkflowDiskUsageBody
+*/
+type GetWorkflowDiskUsageBody struct {
+
+	// search
+	Search string `json:"search,omitempty"`
+
+	// summarize
+	Summarize bool `json:"summarize,omitempty"`
+}
+
+// Validate validates this get workflow disk usage body
+func (o *GetWorkflowDiskUsageBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get workflow disk usage body based on context it is used
+func (o *GetWorkflowDiskUsageBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWorkflowDiskUsageBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWorkflowDiskUsageBody) UnmarshalBinary(b []byte) error {
+	var res GetWorkflowDiskUsageBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
 /*GetWorkflowDiskUsageOKBody get workflow disk usage o k body
 swagger:model GetWorkflowDiskUsageOKBody
 */

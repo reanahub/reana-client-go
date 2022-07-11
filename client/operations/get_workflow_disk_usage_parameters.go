@@ -69,7 +69,7 @@ type GetWorkflowDiskUsageParams struct {
 
 	   Optional. Additional input parameters and operational options.
 	*/
-	Parameters interface{}
+	Parameters GetWorkflowDiskUsageBody
 
 	/* WorkflowIDOrName.
 
@@ -142,13 +142,13 @@ func (o *GetWorkflowDiskUsageParams) SetAccessToken(accessToken *string) {
 }
 
 // WithParameters adds the parameters to the get workflow disk usage params
-func (o *GetWorkflowDiskUsageParams) WithParameters(parameters interface{}) *GetWorkflowDiskUsageParams {
+func (o *GetWorkflowDiskUsageParams) WithParameters(parameters GetWorkflowDiskUsageBody) *GetWorkflowDiskUsageParams {
 	o.SetParameters(parameters)
 	return o
 }
 
 // SetParameters adds the parameters to the get workflow disk usage params
-func (o *GetWorkflowDiskUsageParams) SetParameters(parameters interface{}) {
+func (o *GetWorkflowDiskUsageParams) SetParameters(parameters GetWorkflowDiskUsageBody) {
 	o.Parameters = parameters
 }
 
@@ -187,10 +187,8 @@ func (o *GetWorkflowDiskUsageParams) WriteToRequest(r runtime.ClientRequest, reg
 			}
 		}
 	}
-	if o.Parameters != nil {
-		if err := r.SetBodyParam(o.Parameters); err != nil {
-			return err
-		}
+	if err := r.SetBodyParam(o.Parameters); err != nil {
+		return err
 	}
 
 	// path param workflow_id_or_name
