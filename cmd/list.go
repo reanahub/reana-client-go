@@ -107,19 +107,21 @@ func list(cmd *cobra.Command) {
 }
 
 func displayListPayload(p *operations.GetWorkflowsOKBody) {
-	fmt.Printf(
-		"%-38s %-12s %-21s %-21s %-21s %-8s\n",
+	header := []interface{}{
 		"NAME",
 		"RUN_NUMBER",
 		"CREATED",
 		"STARTED",
 		"ENDED",
 		"STATUS",
-	)
+	}
+	var rows [][]interface{}
+
 	for _, workflow := range p.Items {
+		var row []interface{}
 		workflowNameAndRunNumber := strings.SplitN(workflow.Name, ".", 2)
-		fmt.Printf(
-			"%-38s %-12s %-21s %-21s %-21s %-8s\n",
+		row = append(
+			row,
 			workflowNameAndRunNumber[0],
 			workflowNameAndRunNumber[1],
 			workflow.Created,
@@ -127,7 +129,10 @@ func displayListPayload(p *operations.GetWorkflowsOKBody) {
 			displayOptionalField(workflow.Progress.RunFinishedAt),
 			workflow.Status,
 		)
+		rows = append(rows, row)
 	}
+
+	utils.DisplayTable(header, rows)
 }
 
 func displayOptionalField(value *string) string {
