@@ -43,7 +43,7 @@ update: # Update go module dependencies.
 
 lint: # Run lint checks
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-	golangci-lint run --enable=gofmt
+	golangci-lint run --enable=gofmt --enable=goimports
 
 golines: # Run line size checks
 	go install github.com/segmentio/golines@latest
