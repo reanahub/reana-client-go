@@ -385,7 +385,7 @@ type GetFilesOKBodyItemsItems0Size struct {
 	HumanReadable string `json:"human_readable,omitempty"`
 
 	// raw
-	Raw float64 `json:"raw,omitempty"`
+	Raw int64 `json:"raw,omitempty"`
 }
 
 // Validate validates this get files o k body items items0 size

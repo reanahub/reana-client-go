@@ -428,7 +428,7 @@ type GetWorkflowDiskUsageOKBodyDiskUsageInfoItems0Size struct {
 	HumanReadable string `json:"human_readable,omitempty"`
 
 	// raw
-	Raw float64 `json:"raw,omitempty"`
+	Raw int64 `json:"raw,omitempty"`
 }
 
 // Validate validates this get workflow disk usage o k body disk usage info items0 size

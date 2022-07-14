@@ -15,7 +15,7 @@ import (
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/utils"
 	"reanahub/reana-client-go/validation"
-	"strings"
+	"time"
 
 	"github.com/spf13/cobra"
 )
@@ -68,10 +68,24 @@ func newListCmd() *cobra.Command {
 
 	cmd.Flags().StringP("access-token", "t", "", "Access token of the current user.")
 	cmd.Flags().StringP("workflow", "w", "", "List all runs of the given workflow.")
-	cmd.Flags().StringP("sessions", "s", "", "List all open interactive sessions.")
-	cmd.Flags().String("format", "", listFormatFlagDesc)
-	cmd.Flags().BoolP("json", "", false, "Get output in JSON format.")
+	cmd.Flags().BoolP("sessions", "s", false, "List all open interactive sessions.")
+	cmd.Flags().StringSlice("format", []string{}, listFormatFlagDesc)
+	cmd.Flags().Bool("json", false, "Get output in JSON format.")
+	cmd.Flags().Bool("all", false, "Show all workflows including deleted ones.")
+	cmd.Flags().
+		BoolP("verbose", "v", false, `Print out extra information: workflow id, user id, disk usage,
+progress, duration.`)
+	cmd.Flags().BoolP("human-readable", "r", false, "Show disk size in human readable format.")
+	cmd.Flags().String("sort", "CREATED", "Sort the output by specified column.")
 	cmd.Flags().StringArray("filter", []string{}, listFilterFlagDesc)
+	cmd.Flags().
+		Bool("include-duration", false, `Include the duration of the workflows in seconds. In case a workflow is in
+progress, its duration as of now will be shown.`)
+	cmd.Flags().Bool("include-progress", false, "Include progress information of the workflows.")
+	cmd.Flags().Bool("include-workspace-size", false, "Include size information of the workspace.")
+	cmd.Flags().Bool("show-deleted-runs", false, "Include deleted workflows in the output.")
+	cmd.Flags().Int64("page", 1, "Results page number (to be used with --size).")
+	cmd.Flags().Int64("size", 0, "Size of results per page (to be used with --page).")
 
 	return cmd
 }
@@ -82,62 +96,186 @@ func list(cmd *cobra.Command) {
 		token = os.Getenv("REANA_ACCESS_TOKEN")
 	}
 	workflow, _ := cmd.Flags().GetString("workflow")
+	listSessions, _ := cmd.Flags().GetBool("sessions")
 	jsonOutput, _ := cmd.Flags().GetBool("json")
-	filter, _ := cmd.Flags().GetStringArray("filter")
+	showAll, _ := cmd.Flags().GetBool("all")
+	verbose, _ := cmd.Flags().GetBool("verbose")
+	humanReadable, _ := cmd.Flags().GetBool("human-readable")
+	filters, _ := cmd.Flags().GetStringArray("filter")
+	includeDuration, _ := cmd.Flags().GetBool("include-duration")
+	includeProgress, _ := cmd.Flags().GetBool("include-progress")
+	includeWorkspaceSize, _ := cmd.Flags().GetBool("include-workspace-size")
+	showDeletedRuns, _ := cmd.Flags().GetBool("show-deleted-runs")
+	page, _ := cmd.Flags().GetInt64("page")
+	size, _ := cmd.Flags().GetInt64("size")
 
-	filterNames := []string{"name", "status"}
-	statusFilters, searchFilter := utils.ParseListFilters(filter, filterNames)
+	var runType string
+	if listSessions {
+		runType = "interactive"
+	} else {
+		runType = "batch"
+	}
+
+	statusFilters := utils.GetRunStatuses(showDeletedRuns || showAll)
+	var searchFilter string
+	if len(filters) > 0 {
+		filterNames := []string{"name", "status"}
+		statusFilters, searchFilter = utils.ParseListFilters(filters, filterNames)
+	}
 
 	listParams := operations.NewGetWorkflowsParams()
 	listParams.SetAccessToken(&token)
+	listParams.SetType(runType)
+	listParams.SetVerbose(&verbose)
+	listParams.SetPage(&page)
 	listParams.SetWorkflowIDOrName(&workflow)
 	listParams.SetStatus(statusFilters)
 	listParams.SetSearch(&searchFilter)
+	listParams.SetIncludeProgress(&includeProgress)
+	listParams.SetIncludeWorkspaceSize(&includeWorkspaceSize)
+	if cmd.Flags().Changed("size") {
+		listParams.SetSize(&size)
+	}
 
 	listResp, err := client.ApiClient().Operations.GetWorkflows(listParams)
 	if err != nil {
 		fmt.Println("Error: ", err)
 		os.Exit(1)
 	}
-	if jsonOutput {
-		utils.DisplayJsonOutput(listResp.Payload)
-	} else {
-		displayListPayload(listResp.Payload)
-	}
+
+	header := buildListHeader(
+		runType,
+		verbose,
+		includeWorkspaceSize,
+		includeProgress,
+		includeDuration,
+	)
+	displayListPayload(listResp.Payload, header, jsonOutput, humanReadable)
 }
 
-func displayListPayload(p *operations.GetWorkflowsOKBody) {
-	header := []interface{}{
-		"NAME",
-		"RUN_NUMBER",
-		"CREATED",
-		"STARTED",
-		"ENDED",
-		"STATUS",
-	}
-	var rows [][]interface{}
-
+func displayListPayload(
+	p *operations.GetWorkflowsOKBody,
+	header []string,
+	jsonOutput, humanReadable bool,
+) {
+	var data [][]any
 	for _, workflow := range p.Items {
-		var row []interface{}
-		workflowNameAndRunNumber := strings.SplitN(workflow.Name, ".", 2)
-		row = append(
-			row,
-			workflowNameAndRunNumber[0],
-			workflowNameAndRunNumber[1],
-			workflow.Created,
-			displayOptionalField(workflow.Progress.RunStartedAt),
-			displayOptionalField(workflow.Progress.RunFinishedAt),
-			workflow.Status,
-		)
-		rows = append(rows, row)
+		name, runNumber := utils.GetWorkflowNameAndRunNumber(workflow.Name)
+
+		var row []any
+		for _, col := range header {
+			var value any
+
+			switch col {
+			case "id":
+				value = workflow.ID
+			case "user":
+				value = workflow.User
+			case "size":
+				if humanReadable {
+					value = workflow.Size.HumanReadable
+				} else {
+					value = workflow.Size.Raw
+				}
+			case "progress":
+				progress := workflow.Progress
+				finishedInfo := getOptionalIntField(progress.Finished.Total)
+				totalInfo := getOptionalIntField(progress.Total.Total)
+				value = finishedInfo + "/" + totalInfo
+			case "duration":
+				value = getWorkflowDuration(workflow)
+			case "name":
+				value = name
+			case "run_number":
+				value = runNumber
+			case "created":
+				value = workflow.Created
+			case "started":
+				value = getOptionalStringField(workflow.Progress.RunStartedAt)
+			case "ended":
+				value = getOptionalStringField(workflow.Progress.RunFinishedAt)
+			case "status":
+				value = workflow.Status
+			case "session_type":
+				// TODO
+			case "session_uri":
+				// TODO
+			case "session_status":
+				// TODO
+			}
+
+			row = append(row, value)
+		}
+		data = append(data, row)
 	}
 
-	utils.DisplayTable(header, rows)
+	if jsonOutput {
+		// TODO Fix json output
+		utils.DisplayJsonOutput(data)
+	} else {
+		utils.DisplayTable(header, data)
+	}
 }
 
-func displayOptionalField(value *string) string {
+func getWorkflowDuration(workflow *operations.GetWorkflowsOKBodyItemsItems0) string {
+	runStartedAt := workflow.Progress.RunStartedAt
+	runFinishedAt := workflow.Progress.RunFinishedAt
+	if runStartedAt == nil {
+		return "-"
+	}
+	startTime := utils.FromIsoToTimestamp(*runStartedAt)
+	var endTime time.Time
+	if runFinishedAt != nil {
+		endTime = utils.FromIsoToTimestamp(*runFinishedAt)
+	} else {
+		endTime = time.Now()
+	}
+	duration := endTime.Sub(startTime).Round(time.Second).Seconds()
+	return fmt.Sprintf("%g", duration)
+}
+
+func buildListHeader(
+	runType string,
+	verbose, includeWorkspaceSize, includeProgress, includeDuration bool,
+) []string {
+	headers := map[string][]string{
+		"batch": {"name", "run_number", "created", "started", "ended", "status"},
+		"interactive": {
+			"name",
+			"run_number",
+			"created",
+			"session_type",
+			"session_uri",
+			"session_status",
+		},
+	}
+
+	if verbose {
+		headers[runType] = append(headers[runType], "id", "user")
+	}
+	if verbose || includeWorkspaceSize {
+		headers[runType] = append(headers[runType], "size")
+	}
+	if verbose || includeProgress {
+		headers[runType] = append(headers[runType], "progress")
+	}
+	if verbose || includeDuration {
+		headers[runType] = append(headers[runType], "duration")
+	}
+
+	return headers[runType]
+}
+
+func getOptionalStringField(value *string) string {
 	if value == nil {
 		return "-"
 	}
 	return *value
+}
+
+func getOptionalIntField(value int64) string {
+	if value == 0 {
+		return "-"
+	}
+	return fmt.Sprintf("%d", value)
 }

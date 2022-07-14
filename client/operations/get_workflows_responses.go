@@ -300,6 +300,15 @@ type GetWorkflowsOKBodyItemsItems0 struct {
 	// progress
 	Progress *GetWorkflowsOKBodyItemsItems0Progress `json:"progress,omitempty"`
 
+	// session status
+	SessionStatus *string `json:"session_status,omitempty"`
+
+	// session type
+	SessionType *string `json:"session_type,omitempty"`
+
+	// session uri
+	SessionURI *string `json:"session_uri,omitempty"`
+
 	// size
 	Size *GetWorkflowsOKBodyItemsItems0Size `json:"size,omitempty"`
 
@@ -683,7 +692,7 @@ type GetWorkflowsOKBodyItemsItems0ProgressFailed struct {
 	JobIds []string `json:"job_ids"`
 
 	// total
-	Total float64 `json:"total,omitempty"`
+	Total int64 `json:"total,omitempty"`
 }
 
 // Validate validates this get workflows o k body items items0 progress failed
@@ -723,7 +732,7 @@ type GetWorkflowsOKBodyItemsItems0ProgressFinished struct {
 	JobIds []string `json:"job_ids"`
 
 	// total
-	Total float64 `json:"total,omitempty"`
+	Total int64 `json:"total,omitempty"`
 }
 
 // Validate validates this get workflows o k body items items0 progress finished
@@ -763,7 +772,7 @@ type GetWorkflowsOKBodyItemsItems0ProgressRunning struct {
 	JobIds []string `json:"job_ids"`
 
 	// total
-	Total float64 `json:"total,omitempty"`
+	Total int64 `json:"total,omitempty"`
 }
 
 // Validate validates this get workflows o k body items items0 progress running
@@ -803,7 +812,7 @@ type GetWorkflowsOKBodyItemsItems0ProgressTotal struct {
 	JobIds []string `json:"job_ids"`
 
 	// total
-	Total float64 `json:"total,omitempty"`
+	Total int64 `json:"total,omitempty"`
 }
 
 // Validate validates this get workflows o k body items items0 progress total
@@ -843,7 +852,7 @@ type GetWorkflowsOKBodyItemsItems0Size struct {
 	HumanReadable string `json:"human_readable,omitempty"`
 
 	// raw
-	Raw float64 `json:"raw,omitempty"`
+	Raw int64 `json:"raw,omitempty"`
 }
 
 // Validate validates this get workflows o k body items items0 size
