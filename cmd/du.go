@@ -112,15 +112,15 @@ func displayDuPayload(p *operations.GetWorkflowDiskUsageOKBody, humanReadable bo
 		os.Exit(1)
 	}
 
-	header := []interface{}{"SIZE", "NAME"}
-	var rows [][]interface{}
+	header := []string{"SIZE", "NAME"}
+	var rows [][]any
 
 	for _, diskUsageInfo := range p.DiskUsageInfo {
 		if utils.HasAnyPrefix(diskUsageInfo.Name, utils.FilesBlacklist) {
 			continue
 		}
 
-		var row []interface{}
+		var row []any
 		if humanReadable {
 			row = append(row, diskUsageInfo.Size.HumanReadable)
 		} else {

@@ -72,6 +72,12 @@ type GetWorkflowsParams struct {
 	*/
 	IncludeProgress *bool
 
+	/* IncludeRetentionRules.
+
+	   Include workspace retention rules of the workflows.
+	*/
+	IncludeRetentionRules *bool
+
 	/* IncludeWorkspaceSize.
 
 	   Include size information of the workspace.
@@ -199,6 +205,17 @@ func (o *GetWorkflowsParams) WithIncludeProgress(includeProgress *bool) *GetWork
 // SetIncludeProgress adds the includeProgress to the get workflows params
 func (o *GetWorkflowsParams) SetIncludeProgress(includeProgress *bool) {
 	o.IncludeProgress = includeProgress
+}
+
+// WithIncludeRetentionRules adds the includeRetentionRules to the get workflows params
+func (o *GetWorkflowsParams) WithIncludeRetentionRules(includeRetentionRules *bool) *GetWorkflowsParams {
+	o.SetIncludeRetentionRules(includeRetentionRules)
+	return o
+}
+
+// SetIncludeRetentionRules adds the includeRetentionRules to the get workflows params
+func (o *GetWorkflowsParams) SetIncludeRetentionRules(includeRetentionRules *bool) {
+	o.IncludeRetentionRules = includeRetentionRules
 }
 
 // WithIncludeWorkspaceSize adds the includeWorkspaceSize to the get workflows params
@@ -337,6 +354,23 @@ func (o *GetWorkflowsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		if qIncludeProgress != "" {
 
 			if err := r.SetQueryParam("include_progress", qIncludeProgress); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.IncludeRetentionRules != nil {
+
+		// query param include_retention_rules
+		var qrIncludeRetentionRules bool
+
+		if o.IncludeRetentionRules != nil {
+			qrIncludeRetentionRules = *o.IncludeRetentionRules
+		}
+		qIncludeRetentionRules := swag.FormatBool(qrIncludeRetentionRules)
+		if qIncludeRetentionRules != "" {
+
+			if err := r.SetQueryParam("include_retention_rules", qIncludeRetentionRules); err != nil {
 				return err
 			}
 		}

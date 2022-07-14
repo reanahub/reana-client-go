@@ -17,26 +17,31 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"time"
 
 	"golang.org/x/exp/slices"
 
 	"github.com/spf13/cobra"
 )
 
-// Available run statuses
-var runStatuses = []string{
-	"created",
-	"running",
-	"finished",
-	"failed",
-	"deleted",
-	"stopped",
-	"queued",
-	"pending",
-}
-
 // Files black list
 var FilesBlacklist = []string{".git/", "/.git/"}
+
+func GetRunStatuses(includeDeleted bool) []string {
+	runStatuses := []string{
+		"created",
+		"running",
+		"finished",
+		"failed",
+		"stopped",
+		"queued",
+		"pending",
+	}
+	if includeDeleted {
+		runStatuses = append(runStatuses, "deleted")
+	}
+	return runStatuses
+}
 
 func ExecuteCommand(root *cobra.Command, args ...string) (output string, err error) {
 	buf := new(bytes.Buffer)
@@ -47,16 +52,6 @@ func ExecuteCommand(root *cobra.Command, args ...string) (output string, err err
 	err = root.Execute()
 
 	return buf.String(), err
-}
-
-func DisplayJsonOutput(output any) {
-	byteArray, err := json.MarshalIndent(output, "", "  ")
-
-	if err != nil {
-		fmt.Println("Error: ", err)
-	}
-
-	fmt.Println(string(byteArray))
 }
 
 func NewRequest(token string, serverURL string, endpoint string) []byte {
@@ -106,7 +101,7 @@ func ParseListFilters(filter []string, filterNames []string) ([]string, string) 
 			os.Exit(1)
 		}
 
-		if filterName == "status" && !slices.Contains(runStatuses, filterValue) {
+		if filterName == "status" && !slices.Contains(GetRunStatuses(true), filterValue) {
 			fmt.Printf("Error: Input status value %s is not valid. ", filterValue)
 			os.Exit(1)
 		}
@@ -138,4 +133,21 @@ func HasAnyPrefix(s string, prefixes []string) bool {
 		}
 	}
 	return false
+}
+
+func FromIsoToTimestamp(date string) time.Time {
+	timestamp, err := time.Parse("2006-01-02T15:04:05", date)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		os.Exit(1)
+	}
+	return timestamp
+}
+
+func GetWorkflowNameAndRunNumber(workflowName string) (string, string) {
+	workflowNameAndRunNumber := strings.SplitN(workflowName, ".", 2)
+	if len(workflowNameAndRunNumber) < 2 {
+		return workflowName, ""
+	}
+	return workflowNameAndRunNumber[0], workflowNameAndRunNumber[1]
 }
