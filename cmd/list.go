@@ -215,14 +215,20 @@ func displayListPayload(
 	}
 
 	if jsonOutput {
-		// TODO Fix json output
-		utils.DisplayJsonOutput(data)
+		jsonData := make([]map[string]any, len(data))
+		for i, row := range data {
+			jsonData[i] = map[string]any{}
+			for j, col := range header {
+				jsonData[i][col] = row[j]
+			}
+		}
+		utils.DisplayJsonOutput(jsonData)
 	} else {
 		utils.DisplayTable(header, data)
 	}
 }
 
-func getWorkflowDuration(workflow *operations.GetWorkflowsOKBodyItemsItems0) string {
+func getWorkflowDuration(workflow *operations.GetWorkflowsOKBodyItemsItems0) any {
 	runStartedAt := workflow.Progress.RunStartedAt
 	runFinishedAt := workflow.Progress.RunFinishedAt
 	if runStartedAt == nil {
@@ -235,8 +241,7 @@ func getWorkflowDuration(workflow *operations.GetWorkflowsOKBodyItemsItems0) str
 	} else {
 		endTime = time.Now()
 	}
-	duration := endTime.Sub(startTime).Round(time.Second).Seconds()
-	return fmt.Sprintf("%g", duration)
+	return endTime.Sub(startTime).Round(time.Second).Seconds()
 }
 
 func buildListHeader(
