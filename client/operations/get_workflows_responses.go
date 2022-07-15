@@ -301,13 +301,13 @@ type GetWorkflowsOKBodyItemsItems0 struct {
 	Progress *GetWorkflowsOKBodyItemsItems0Progress `json:"progress,omitempty"`
 
 	// session status
-	SessionStatus *string `json:"session_status,omitempty"`
+	SessionStatus string `json:"session_status,omitempty"`
 
 	// session type
-	SessionType *string `json:"session_type,omitempty"`
+	SessionType string `json:"session_type,omitempty"`
 
 	// session uri
-	SessionURI *string `json:"session_uri,omitempty"`
+	SessionURI string `json:"session_uri,omitempty"`
 
 	// size
 	Size *GetWorkflowsOKBodyItemsItems0Size `json:"size,omitempty"`

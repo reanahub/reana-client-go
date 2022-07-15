@@ -62,7 +62,7 @@ func newListCmd() *cobra.Command {
 			serverURL := os.Getenv("REANA_SERVER_URL")
 			validation.ValidateAccessToken(token)
 			validation.ValidateServerURL(serverURL)
-			list(cmd)
+			list(cmd, serverURL)
 		},
 	}
 
@@ -90,7 +90,7 @@ progress, its duration as of now will be shown.`)
 	return cmd
 }
 
-func list(cmd *cobra.Command) {
+func list(cmd *cobra.Command, serverURL string) {
 	token, _ := cmd.Flags().GetString("access-token")
 	if token == "" {
 		token = os.Getenv("REANA_ACCESS_TOKEN")
@@ -150,11 +150,12 @@ func list(cmd *cobra.Command) {
 		includeProgress,
 		includeDuration,
 	)
-	displayListPayload(listResp.Payload, header, jsonOutput, humanReadable)
+	displayListPayload(listResp.Payload, serverURL, token, header, jsonOutput, humanReadable)
 }
 
 func displayListPayload(
 	p *operations.GetWorkflowsOKBody,
+	serverURL, token string,
 	header []string,
 	jsonOutput, humanReadable bool,
 ) {
@@ -197,11 +198,15 @@ func displayListPayload(
 			case "status":
 				value = workflow.Status
 			case "session_type":
-				// TODO
+				value = getOptionalStringField(&workflow.SessionType)
 			case "session_uri":
-				// TODO
+				if workflow.SessionURI == "" {
+					value = "-"
+				} else {
+					value = serverURL + workflow.SessionURI + "?token=" + token
+				}
 			case "session_status":
-				// TODO
+				value = getOptionalStringField(&workflow.SessionStatus)
 			}
 
 			row = append(row, value)
@@ -267,7 +272,7 @@ func buildListHeader(
 }
 
 func getOptionalStringField(value *string) string {
-	if value == nil {
+	if value == nil || *value == "" {
 		return "-"
 	}
 	return *value
