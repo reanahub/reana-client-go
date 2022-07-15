@@ -215,8 +215,14 @@ func displayListPayload(
 	}
 
 	if jsonOutput {
-		// TODO Fix json output
-		utils.DisplayJsonOutput(data)
+		jsonData := make([]map[string]any, len(data))
+		for i, row := range data {
+			jsonData[i] = map[string]any{}
+			for j, col := range header {
+				jsonData[i][col] = row[j]
+			}
+		}
+		utils.DisplayJsonOutput(jsonData)
 	} else {
 		utils.DisplayTable(header, data)
 	}
