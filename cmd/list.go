@@ -15,7 +15,11 @@ import (
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/utils"
 	"reanahub/reana-client-go/validation"
+	"sort"
+	"strings"
 	"time"
+
+	"golang.org/x/exp/slices"
 
 	"github.com/spf13/cobra"
 )
@@ -101,6 +105,7 @@ func list(cmd *cobra.Command, serverURL string) {
 	showAll, _ := cmd.Flags().GetBool("all")
 	verbose, _ := cmd.Flags().GetBool("verbose")
 	humanReadable, _ := cmd.Flags().GetBool("human-readable")
+	sortColumn, _ := cmd.Flags().GetString("sort")
 	filters, _ := cmd.Flags().GetStringArray("filter")
 	includeDuration, _ := cmd.Flags().GetBool("include-duration")
 	includeProgress, _ := cmd.Flags().GetBool("include-progress")
@@ -150,12 +155,12 @@ func list(cmd *cobra.Command, serverURL string) {
 		includeProgress,
 		includeDuration,
 	)
-	displayListPayload(listResp.Payload, serverURL, token, header, jsonOutput, humanReadable)
+	displayListPayload(listResp.Payload, serverURL, token, sortColumn, header, jsonOutput, humanReadable)
 }
 
 func displayListPayload(
 	p *operations.GetWorkflowsOKBody,
-	serverURL, token string,
+	serverURL, token, sortColumn string,
 	header []string,
 	jsonOutput, humanReadable bool,
 ) {
@@ -213,6 +218,8 @@ func displayListPayload(
 		}
 		data = append(data, row)
 	}
+
+	sortListData(data, header, sortColumn)
 
 	if jsonOutput {
 		jsonData := make([]map[string]any, len(data))
@@ -288,4 +295,44 @@ func getOptionalIntField(value int64) string {
 		return "-"
 	}
 	return fmt.Sprintf("%d", value)
+}
+
+func sortListData(data [][]any, header []string, sortColumn string) {
+	sortColumn = strings.ToLower(sortColumn)
+	if !slices.Contains(header, sortColumn) {
+		fmt.Println("Warning: column '" + sortColumn + "' does not exist")
+		return
+	}
+
+	sortColumnId := slices.Index(header, sortColumn)
+	ok := true
+	sort.SliceStable(data, func(i, j int) bool {
+		value1 := data[i][sortColumnId]
+		value2 := data[j][sortColumnId]
+
+		// Make sure missing values are at the bottom of the list
+		if value1 == "-" {
+			return false
+		}
+		if value2 == "-" {
+			return true
+		}
+
+		switch value1.(type) {
+		case int64:
+			return value1.(int64) > value2.(int64)
+		case float64:
+			return value1.(float64) > value2.(float64)
+		case string:
+			return value1.(string) > value2.(string)
+		default:
+			ok = false
+			return false
+		}
+	})
+
+	if !ok {
+		fmt.Println("Error: Unexpected value type received")
+		os.Exit(1)
+	}
 }
