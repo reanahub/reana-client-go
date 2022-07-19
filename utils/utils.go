@@ -82,7 +82,7 @@ func NewRequest(token string, serverURL string, endpoint string) []byte {
 	return respBytes
 }
 
-func ParseListFilters(filter []string, filterNames []string) ([]string, string) {
+func ParseFilterParameters(filter []string, filterNames []string) ([]string, string) {
 	searchFilters := make(map[string][]string)
 	var statusFilters []string
 
@@ -124,6 +124,47 @@ func ParseListFilters(filter []string, filterNames []string) ([]string, string) 
 	}
 
 	return statusFilters, searchFiltersString
+}
+
+func ParseFormatParameters(filters []string) map[string]string {
+	parsedFilters := make(map[string]string)
+	for _, filter := range filters {
+		filterNameAndValue := strings.SplitN(filter, "=", 2)
+		if len(filterNameAndValue) < 2 {
+			parsedFilters[filterNameAndValue[0]] = ""
+		} else {
+			parsedFilters[filterNameAndValue[0]] = filterNameAndValue[1]
+		}
+	}
+	return parsedFilters
+}
+
+func FormatData(data *[][]any, header *[]string, formatFilters map[string]string) {
+	if len(formatFilters) == 0 {
+		return
+	}
+
+	for col := 0; col < len(*header); col++ {
+		filter, include := formatFilters[(*header)[col]]
+
+		if !include {
+			// Remove the column from header and data
+			*header = append((*header)[:col], (*header)[col+1:]...)
+			for row := range *data {
+				(*data)[row] = append((*data)[row][:col], (*data)[row][col+1:]...)
+			}
+			col--
+		} else if filter != "" {
+			// Remove rows not containing filter
+			for row := 0; row < len(*data); row++ {
+				val := fmt.Sprint((*data)[row][col])
+				if val != filter {
+					*data = append((*data)[:row], (*data)[row+1:]...)
+					row--
+				}
+			}
+		}
+	}
 }
 
 func HasAnyPrefix(s string, prefixes []string) bool {

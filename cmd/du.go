@@ -85,7 +85,7 @@ func du(cmd *cobra.Command) {
 	filter, _ := cmd.Flags().GetStringArray("filter")
 
 	filterNames := []string{"size", "name"}
-	_, searchFilter := utils.ParseListFilters(filter, filterNames)
+	_, searchFilter := utils.ParseFilterParameters(filter, filterNames)
 
 	duParams := operations.NewGetWorkflowDiskUsageParams()
 	duParams.SetAccessToken(&token)

@@ -81,7 +81,7 @@ func newListCmd() *cobra.Command {
 progress, duration.`)
 	cmd.Flags().BoolP("human-readable", "r", false, "Show disk size in human readable format.")
 	cmd.Flags().String("sort", "CREATED", "Sort the output by specified column.")
-	cmd.Flags().StringArray("filter", []string{}, listFilterFlagDesc)
+	cmd.Flags().StringSlice("filter", []string{}, listFilterFlagDesc)
 	cmd.Flags().
 		Bool("include-duration", false, `Include the duration of the workflows in seconds. In case a workflow is in
 progress, its duration as of now will be shown.`)
@@ -101,6 +101,7 @@ func list(cmd *cobra.Command, serverURL string) {
 	}
 	workflow, _ := cmd.Flags().GetString("workflow")
 	listSessions, _ := cmd.Flags().GetBool("sessions")
+	formatFilters, _ := cmd.Flags().GetStringSlice("format")
 	jsonOutput, _ := cmd.Flags().GetBool("json")
 	showAll, _ := cmd.Flags().GetBool("all")
 	verbose, _ := cmd.Flags().GetBool("verbose")
@@ -125,7 +126,7 @@ func list(cmd *cobra.Command, serverURL string) {
 	var searchFilter string
 	if len(filters) > 0 {
 		filterNames := []string{"name", "status"}
-		statusFilters, searchFilter = utils.ParseListFilters(filters, filterNames)
+		statusFilters, searchFilter = utils.ParseFilterParameters(filters, filterNames)
 	}
 
 	listParams := operations.NewGetWorkflowsParams()
@@ -155,13 +156,24 @@ func list(cmd *cobra.Command, serverURL string) {
 		includeProgress,
 		includeDuration,
 	)
-	displayListPayload(listResp.Payload, serverURL, token, sortColumn, header, jsonOutput, humanReadable)
+	parsedFormatFilters := utils.ParseFormatParameters(formatFilters)
+	displayListPayload(
+		listResp.Payload,
+		header,
+		parsedFormatFilters,
+		serverURL,
+		token,
+		sortColumn,
+		jsonOutput,
+		humanReadable,
+	)
 }
 
 func displayListPayload(
 	p *operations.GetWorkflowsOKBody,
-	serverURL, token, sortColumn string,
 	header []string,
+	formatFilters map[string]string,
+	serverURL, token, sortColumn string,
 	jsonOutput, humanReadable bool,
 ) {
 	var data [][]any
@@ -220,6 +232,7 @@ func displayListPayload(
 	}
 
 	sortListData(data, header, sortColumn)
+	utils.FormatData(&data, &header, formatFilters)
 
 	if jsonOutput {
 		jsonData := make([]map[string]any, len(data))
@@ -267,20 +280,21 @@ func buildListHeader(
 		},
 	}
 
+	header := headers[runType]
 	if verbose {
-		headers[runType] = append(headers[runType], "id", "user")
+		header = append(header, "id", "user")
 	}
 	if verbose || includeWorkspaceSize {
-		headers[runType] = append(headers[runType], "size")
+		header = append(header, "size")
 	}
 	if verbose || includeProgress {
-		headers[runType] = append(headers[runType], "progress")
+		header = append(header, "progress")
 	}
 	if verbose || includeDuration {
-		headers[runType] = append(headers[runType], "duration")
+		header = append(header, "duration")
 	}
 
-	return headers[runType]
+	return header
 }
 
 func getOptionalStringField(value *string) string {
