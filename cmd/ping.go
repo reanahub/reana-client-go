@@ -10,6 +10,7 @@ package cmd
 
 import (
 	"fmt"
+	"io"
 	"os"
 
 	"reanahub/reana-client-go/client"
@@ -38,7 +39,7 @@ func newPingCmd() *cobra.Command {
 			serverURL := os.Getenv("REANA_SERVER_URL")
 			validation.ValidateAccessToken(token)
 			validation.ValidateServerURL(serverURL)
-			ping(token, serverURL)
+			ping(token, serverURL, cmd.OutOrStdout())
 		},
 	}
 
@@ -47,7 +48,7 @@ func newPingCmd() *cobra.Command {
 	return cmd
 }
 
-func ping(token string, serverURL string) {
+func ping(token string, serverURL string, output io.Writer) {
 	pingParams := operations.NewGetYouParams()
 	pingParams.SetAccessToken(&token)
 	pingResp, err := client.ApiClient().Operations.GetYou(pingParams)
@@ -63,5 +64,5 @@ func ping(token string, serverURL string) {
 		fmt.Sprintf("Authenticated as: <%s> \n", p.Email) +
 		fmt.Sprintf("Status: %s ", "Connected")
 
-	fmt.Println(response)
+	fmt.Fprintln(output, response)
 }
