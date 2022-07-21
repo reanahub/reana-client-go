@@ -24,8 +24,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Files black list
 var FilesBlacklist = []string{".git/", "/.git/"}
+var InteractiveSessionTypes = []string{"jupyter"}
 
 func GetRunStatuses(includeDeleted bool) []string {
 	runStatuses := []string{
@@ -191,4 +191,8 @@ func GetWorkflowNameAndRunNumber(workflowName string) (string, string) {
 		return workflowName, ""
 	}
 	return workflowNameAndRunNumber[0], workflowNameAndRunNumber[1]
+}
+
+func FormatSessionURI(serverURL string, path string, token string) string {
+	return serverURL + path + "?token=" + token
 }

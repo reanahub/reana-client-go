@@ -12,6 +12,8 @@ import (
 	"fmt"
 	"os"
 	"strings"
+
+	"golang.org/x/exp/slices"
 )
 
 func ValidateAccessToken(token string) {
@@ -35,6 +37,13 @@ func ValidateWorkflow(workflow string) {
 		fmt.Println(
 			"Error: Workflow name must be provided either with `--workflow` option or with REANA_WORKON environment variable",
 		)
+		os.Exit(1)
+	}
+}
+
+func ValidateArgChoice(arg string, choices []string, name string) {
+	if !slices.Contains(choices, arg) {
+		fmt.Printf("Invalid value for '%s': '%s' is not part of %v\n", name, arg, choices)
 		os.Exit(1)
 	}
 }

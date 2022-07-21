@@ -220,7 +220,7 @@ func displayListPayload(
 				if workflow.SessionURI == "" {
 					value = "-"
 				} else {
-					value = serverURL + workflow.SessionURI + "?token=" + token
+					value = utils.FormatSessionURI(serverURL, workflow.SessionURI, token)
 				}
 			case "session_status":
 				value = getOptionalStringField(&workflow.SessionStatus)
