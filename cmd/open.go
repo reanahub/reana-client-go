@@ -66,7 +66,7 @@ func newOpenCmd() *cobra.Command {
 				"interactive-session-type",
 			)
 
-			open(cmd, token, workflow, interactiveSessionType)
+			open(cmd, token, serverURL, workflow, interactiveSessionType)
 		},
 	}
 
@@ -78,8 +78,13 @@ func newOpenCmd() *cobra.Command {
 	return cmd
 }
 
-func open(cmd *cobra.Command, token string, workflow string, interactiveSessionType string) {
-	serverURL := os.Getenv("REANA_SERVER_URL")
+func open(
+	cmd *cobra.Command,
+	token string,
+	serverURL string,
+	workflow string,
+	interactiveSessionType string,
+) {
 	image, _ := cmd.Flags().GetString("image")
 
 	openParams := operations.NewOpenInteractiveSessionParams()

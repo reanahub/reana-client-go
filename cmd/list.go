@@ -66,7 +66,7 @@ func newListCmd() *cobra.Command {
 			serverURL := os.Getenv("REANA_SERVER_URL")
 			validation.ValidateAccessToken(token)
 			validation.ValidateServerURL(serverURL)
-			list(cmd, serverURL)
+			list(cmd, token, serverURL)
 		},
 	}
 
@@ -94,11 +94,7 @@ progress, its duration as of now will be shown.`)
 	return cmd
 }
 
-func list(cmd *cobra.Command, serverURL string) {
-	token, _ := cmd.Flags().GetString("access-token")
-	if token == "" {
-		token = os.Getenv("REANA_ACCESS_TOKEN")
-	}
+func list(cmd *cobra.Command, token string, serverURL string) {
 	workflow, _ := cmd.Flags().GetString("workflow")
 	listSessions, _ := cmd.Flags().GetBool("sessions")
 	formatFilters, _ := cmd.Flags().GetStringSlice("format")

@@ -36,7 +36,6 @@ func newInfoCmd() *cobra.Command {
 		Short: "List cluster general information.",
 		Long:  infoDesc,
 		Run: func(cmd *cobra.Command, args []string) {
-			jsonOutput, _ := cmd.Flags().GetBool("json")
 			token, _ := cmd.Flags().GetString("access-token")
 			if token == "" {
 				token = os.Getenv("REANA_ACCESS_TOKEN")
@@ -44,7 +43,7 @@ func newInfoCmd() *cobra.Command {
 			serverURL := os.Getenv("REANA_SERVER_URL")
 			validation.ValidateAccessToken(token)
 			validation.ValidateServerURL(serverURL)
-			info(token, jsonOutput)
+			info(cmd, token)
 		},
 	}
 
@@ -54,7 +53,9 @@ func newInfoCmd() *cobra.Command {
 	return cmd
 }
 
-func info(token string, jsonOutput bool) {
+func info(cmd *cobra.Command, token string) {
+	jsonOutput, _ := cmd.Flags().GetBool("json")
+
 	infoParams := operations.NewInfoParams()
 	infoParams.SetAccessToken(token)
 	infoResp, err := client.ApiClient().Operations.Info(infoParams)

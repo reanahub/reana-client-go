@@ -57,7 +57,7 @@ func newDuCmd() *cobra.Command {
 			validation.ValidateAccessToken(token)
 			validation.ValidateServerURL(serverURL)
 			validation.ValidateWorkflow(workflow)
-			du(cmd)
+			du(cmd, token, workflow)
 		},
 	}
 
@@ -71,17 +71,9 @@ func newDuCmd() *cobra.Command {
 	return cmd
 }
 
-func du(cmd *cobra.Command) {
-	token, _ := cmd.Flags().GetString("access-token")
-	if token == "" {
-		token = os.Getenv("REANA_ACCESS_TOKEN")
-	}
+func du(cmd *cobra.Command, token string, workflow string) {
 	summarize, _ := cmd.Flags().GetBool("summarize")
 	humanReadable, _ := cmd.Flags().GetBool("human-readable")
-	workflow, _ := cmd.Flags().GetString("workflow")
-	if workflow == "" {
-		workflow = os.Getenv("REANA_WORKON")
-	}
 	filter, _ := cmd.Flags().GetStringArray("filter")
 
 	filterNames := []string{"size", "name"}
