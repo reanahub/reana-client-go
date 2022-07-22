@@ -9,41 +9,41 @@ under the terms of the MIT License; see LICENSE file for more details.
 package validation
 
 import (
+	"errors"
 	"fmt"
-	"os"
 	"strings"
 
 	"golang.org/x/exp/slices"
 )
 
-func ValidateAccessToken(token string) {
+func ValidateAccessToken(token string) error {
 	if strings.TrimSpace(token) == "" {
-		fmt.Println(
-			"Error: Please provide your access token by using the -t/--access-token flag, or by setting the REANA_ACCESS_TOKEN environment variable.",
+		return errors.New(
+			"please provide your access token by using the -t/--access-token flag, or by setting the REANA_ACCESS_TOKEN environment variable",
 		)
-		os.Exit(1)
 	}
+	return nil
 }
 
-func ValidateServerURL(serverURL string) {
+func ValidateServerURL(serverURL string) error {
 	if strings.TrimSpace(serverURL) == "" {
-		fmt.Println("Error: Please set REANA_SERVER_URL environment variable.")
-		os.Exit(1)
+		return errors.New("please set REANA_SERVER_URL environment variable")
 	}
+	return nil
 }
 
-func ValidateWorkflow(workflow string) {
+func ValidateWorkflow(workflow string) error {
 	if strings.TrimSpace(workflow) == "" {
-		fmt.Println(
-			"Error: Workflow name must be provided either with `--workflow` option or with REANA_WORKON environment variable",
+		return errors.New(
+			"workflow name must be provided either with `--workflow` option or with REANA_WORKON environment variable",
 		)
-		os.Exit(1)
 	}
+	return nil
 }
 
-func ValidateArgChoice(arg string, choices []string, name string) {
+func ValidateArgChoice(arg string, choices []string, name string) error {
 	if !slices.Contains(choices, arg) {
-		fmt.Printf("Invalid value for '%s': '%s' is not part of %v\n", name, arg, choices)
-		os.Exit(1)
+		return fmt.Errorf("Invalid value for '%s': '%s' is not part of %v\n", name, arg, choices)
 	}
+	return nil
 }

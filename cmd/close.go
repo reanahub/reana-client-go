@@ -36,7 +36,7 @@ func newCloseCmd() *cobra.Command {
 		Use:   "close",
 		Short: "Close an interactive session.",
 		Long:  closeDesc,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			token, _ := cmd.Flags().GetString("access-token")
 			if token == "" {
 				token = os.Getenv("REANA_ACCESS_TOKEN")
@@ -46,10 +46,16 @@ func newCloseCmd() *cobra.Command {
 				workflow = os.Getenv("REANA_WORKON")
 			}
 
-			validation.ValidateAccessToken(token)
-			validation.ValidateWorkflow(workflow)
-
-			close(token, workflow)
+			if err := validation.ValidateAccessToken(token); err != nil {
+				return err
+			}
+			if err := validation.ValidateWorkflow(workflow); err != nil {
+				return err
+			}
+			if err := close(token, workflow); err != nil {
+				return err
+			}
+			return nil
 		},
 	}
 
@@ -60,17 +66,20 @@ func newCloseCmd() *cobra.Command {
 	return cmd
 }
 
-func close(token string, workflow string) {
+func close(token string, workflow string) error {
 	closeParams := operations.NewCloseInteractiveSessionParams()
 	closeParams.SetAccessToken(&token)
 	closeParams.SetWorkflowIDOrName(workflow)
 
-	_, err := client.ApiClient().Operations.CloseInteractiveSession(closeParams)
+	api, err := client.ApiClient()
 	if err != nil {
-		fmt.Println("Error: Interactive session could not be closed")
-		fmt.Println(err)
-		os.Exit(1)
+		return err
+	}
+	_, err = api.Operations.CloseInteractiveSession(closeParams)
+	if err != nil {
+		return fmt.Errorf("interactive session could not be closed:\n%v", err)
 	}
 
 	fmt.Println("Interactive session for workflow", workflow, "was successfully closed")
+	return nil
 }

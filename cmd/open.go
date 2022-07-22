@@ -42,7 +42,7 @@ func newOpenCmd() *cobra.Command {
 		Use:   "open",
 		Short: "Open an interactive session inside the workspace.",
 		Long:  openDesc,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			token, _ := cmd.Flags().GetString("access-token")
 			if token == "" {
 				token = os.Getenv("REANA_ACCESS_TOKEN")
@@ -57,16 +57,26 @@ func newOpenCmd() *cobra.Command {
 				interactiveSessionType = args[0]
 			}
 
-			validation.ValidateAccessToken(token)
-			validation.ValidateServerURL(serverURL)
-			validation.ValidateWorkflow(workflow)
-			validation.ValidateArgChoice(
+			if err := validation.ValidateAccessToken(token); err != nil {
+				return err
+			}
+			if err := validation.ValidateServerURL(serverURL); err != nil {
+				return err
+			}
+			if err := validation.ValidateWorkflow(workflow); err != nil {
+				return err
+			}
+			if err := validation.ValidateArgChoice(
 				interactiveSessionType,
 				utils.InteractiveSessionTypes,
 				"interactive-session-type",
-			)
-
-			open(cmd, token, serverURL, workflow, interactiveSessionType)
+			); err != nil {
+				return err
+			}
+			if err := open(cmd, token, serverURL, workflow, interactiveSessionType); err != nil {
+				return err
+			}
+			return nil
 		},
 	}
 
@@ -84,7 +94,7 @@ func open(
 	serverURL string,
 	workflow string,
 	interactiveSessionType string,
-) {
+) error {
 	image, _ := cmd.Flags().GetString("image")
 
 	openParams := operations.NewOpenInteractiveSessionParams()
@@ -95,14 +105,17 @@ func open(
 		operations.OpenInteractiveSessionBody{Image: image},
 	)
 
-	openResp, err := client.ApiClient().Operations.OpenInteractiveSession(openParams)
+	api, err := client.ApiClient()
 	if err != nil {
-		fmt.Println("Error: Interactive session could not be opened")
-		fmt.Println(err)
-		os.Exit(1)
+		return err
+	}
+	openResp, err := api.Operations.OpenInteractiveSession(openParams)
+	if err != nil {
+		return fmt.Errorf("interactive session could not be opened:\n%v", err)
 	}
 
 	fmt.Println("Interactive session opened successfully")
 	fmt.Println(utils.FormatSessionURI(serverURL, openResp.Payload.Path, token))
 	fmt.Println("It could take several minutes to start the interactive session.")
+	return nil
 }

@@ -14,9 +14,10 @@ import (
 
 func NewRootCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "reana-client",
-		Short: "REANA client for interacting with REANA server.",
-		Long:  "REANA client for interacting with REANA server.",
+		Use:          "reana-client",
+		Short:        "REANA client for interacting with REANA server.",
+		Long:         "REANA client for interacting with REANA server.",
+		SilenceUsage: true,
 	}
 
 	cmd.PersistentFlags().BoolP("loglevel", "l", false, "Sets log level [DEBUG|INFO|WARNING]")

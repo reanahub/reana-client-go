@@ -12,10 +12,10 @@ import (
 	"bytes"
 	"crypto/tls"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 
@@ -54,7 +54,7 @@ func ExecuteCommand(root *cobra.Command, args ...string) (output string, err err
 	return buf.String(), err
 }
 
-func NewRequest(token string, serverURL string, endpoint string) []byte {
+func NewRequest(token string, serverURL string, endpoint string) ([]byte, error) {
 	// disable certificate security checks
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{
 		InsecureSkipVerify: true,
@@ -63,33 +63,31 @@ func NewRequest(token string, serverURL string, endpoint string) []byte {
 	url := serverURL + endpoint + "?access_token=" + token
 	request, err := http.NewRequest(http.MethodGet, url, nil)
 	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(1)
+		return nil, err
 	}
 
 	resp, err := http.DefaultClient.Do(request)
 	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(1)
+		return nil, err
 	}
 
 	respBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("Error:", err)
-		os.Exit(1)
+		return nil, err
 	}
 
-	return respBytes
+	return respBytes, nil
 }
 
-func ParseFilterParameters(filter []string, filterNames []string) ([]string, string) {
+func ParseFilterParameters(filter []string, filterNames []string) ([]string, string, error) {
 	searchFilters := make(map[string][]string)
 	var statusFilters []string
 
 	for _, value := range filter {
 		if !strings.Contains(value, "=") {
-			fmt.Println("Error: Wrong input format. Please use --filter filter_name=filter_value")
-			os.Exit(1)
+			return nil, "", errors.New(
+				"wrong input format. Please use --filter filter_name=filter_value",
+			)
 		}
 
 		filterNameAndValue := strings.SplitN(value, "=", 2)
@@ -97,13 +95,11 @@ func ParseFilterParameters(filter []string, filterNames []string) ([]string, str
 		filterValue := filterNameAndValue[1]
 
 		if !slices.Contains(filterNames, filterName) {
-			fmt.Printf("Error: Filter %s is not valid", filterName)
-			os.Exit(1)
+			return nil, "", fmt.Errorf("filter %s is not valid", filterName)
 		}
 
 		if filterName == "status" && !slices.Contains(GetRunStatuses(true), filterValue) {
-			fmt.Printf("Error: Input status value %s is not valid. ", filterValue)
-			os.Exit(1)
+			return nil, "", fmt.Errorf("input status value %s is not valid. ", filterValue)
 		}
 
 		if filterName == "status" {
@@ -117,13 +113,12 @@ func ParseFilterParameters(filter []string, filterNames []string) ([]string, str
 	if len(searchFilters) > 0 {
 		searchFiltersByteArray, err := json.Marshal(searchFilters)
 		if err != nil {
-			fmt.Println("Error: ", err)
-			os.Exit(1)
+			return nil, "", err
 		}
 		searchFiltersString = string(searchFiltersByteArray)
 	}
 
-	return statusFilters, searchFiltersString
+	return statusFilters, searchFiltersString, nil
 }
 
 func ParseFormatParameters(filters []string) map[string]string {
@@ -176,13 +171,12 @@ func HasAnyPrefix(s string, prefixes []string) bool {
 	return false
 }
 
-func FromIsoToTimestamp(date string) time.Time {
+func FromIsoToTimestamp(date string) (time.Time, error) {
 	timestamp, err := time.Parse("2006-01-02T15:04:05", date)
 	if err != nil {
-		fmt.Println("Error: ", err)
-		os.Exit(1)
+		return time.Time{}, err
 	}
-	return timestamp
+	return timestamp, nil
 }
 
 func GetWorkflowNameAndRunNumber(workflowName string) (string, string) {

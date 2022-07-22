@@ -35,15 +35,23 @@ func newInfoCmd() *cobra.Command {
 		Use:   "info",
 		Short: "List cluster general information.",
 		Long:  infoDesc,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			token, _ := cmd.Flags().GetString("access-token")
 			if token == "" {
 				token = os.Getenv("REANA_ACCESS_TOKEN")
 			}
 			serverURL := os.Getenv("REANA_SERVER_URL")
-			validation.ValidateAccessToken(token)
-			validation.ValidateServerURL(serverURL)
-			info(cmd, token)
+
+			if err := validation.ValidateAccessToken(token); err != nil {
+				return err
+			}
+			if err := validation.ValidateServerURL(serverURL); err != nil {
+				return err
+			}
+			if err := info(cmd, token); err != nil {
+				return err
+			}
+			return nil
 		},
 	}
 
@@ -53,20 +61,26 @@ func newInfoCmd() *cobra.Command {
 	return cmd
 }
 
-func info(cmd *cobra.Command, token string) {
+func info(cmd *cobra.Command, token string) error {
 	jsonOutput, _ := cmd.Flags().GetBool("json")
-
 	infoParams := operations.NewInfoParams()
 	infoParams.SetAccessToken(token)
-	infoResp, err := client.ApiClient().Operations.Info(infoParams)
+
+	api, err := client.ApiClient()
 	if err != nil {
-		fmt.Println("Error: ", err)
-		os.Exit(1)
+		return err
+	}
+	infoResp, err := api.Operations.Info(infoParams)
+	if err != nil {
+		return err
 	}
 
 	p := infoResp.Payload
 	if jsonOutput {
-		utils.DisplayJsonOutput(p)
+		err := utils.DisplayJsonOutput(p)
+		if err != nil {
+			return err
+		}
 	} else {
 		response := fmt.Sprintf("List of supported compute backends: %s \n", strings.Join(p.ComputeBackends.Value, ", ")) +
 			fmt.Sprintf("Default workspace: %s \n", p.DefaultWorkspace.Value) +
@@ -74,4 +88,5 @@ func info(cmd *cobra.Command, token string) {
 
 		fmt.Print(response)
 	}
+	return nil
 }

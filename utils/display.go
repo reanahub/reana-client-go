@@ -38,13 +38,13 @@ func DisplayTable(header []string, rows [][]any) {
 	t.Render()
 }
 
-func DisplayJsonOutput(output any) {
+func DisplayJsonOutput(output any) error {
 	byteArray, err := json.MarshalIndent(output, "", "  ")
 
 	if err != nil {
-		fmt.Println("Error: ", err)
-		os.Exit(1)
+		return fmt.Errorf("failed to display json output:\n%v", err)
 	}
 
 	fmt.Println(string(byteArray))
+	return nil
 }

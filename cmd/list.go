@@ -9,6 +9,7 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"reanahub/reana-client-go/client"
@@ -58,15 +59,23 @@ func newListCmd() *cobra.Command {
 		Use:   "list",
 		Short: "List all workflows and sessions.",
 		Long:  listDesc,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			token, _ := cmd.Flags().GetString("access-token")
 			if token == "" {
 				token = os.Getenv("REANA_ACCESS_TOKEN")
 			}
 			serverURL := os.Getenv("REANA_SERVER_URL")
-			validation.ValidateAccessToken(token)
-			validation.ValidateServerURL(serverURL)
-			list(cmd, token, serverURL)
+
+			if err := validation.ValidateAccessToken(token); err != nil {
+				return err
+			}
+			if err := validation.ValidateServerURL(serverURL); err != nil {
+				return err
+			}
+			if err := list(cmd, token, serverURL); err != nil {
+				return err
+			}
+			return nil
 		},
 	}
 
@@ -94,7 +103,7 @@ progress, its duration as of now will be shown.`)
 	return cmd
 }
 
-func list(cmd *cobra.Command, token string, serverURL string) {
+func list(cmd *cobra.Command, token string, serverURL string) error {
 	workflow, _ := cmd.Flags().GetString("workflow")
 	listSessions, _ := cmd.Flags().GetBool("sessions")
 	formatFilters, _ := cmd.Flags().GetStringSlice("format")
@@ -122,7 +131,11 @@ func list(cmd *cobra.Command, token string, serverURL string) {
 	var searchFilter string
 	if len(filters) > 0 {
 		filterNames := []string{"name", "status"}
-		statusFilters, searchFilter = utils.ParseFilterParameters(filters, filterNames)
+		var err error
+		statusFilters, searchFilter, err = utils.ParseFilterParameters(filters, filterNames)
+		if err != nil {
+			return err
+		}
 	}
 
 	listParams := operations.NewGetWorkflowsParams()
@@ -139,10 +152,13 @@ func list(cmd *cobra.Command, token string, serverURL string) {
 		listParams.SetSize(&size)
 	}
 
-	listResp, err := client.ApiClient().Operations.GetWorkflows(listParams)
+	api, err := client.ApiClient()
 	if err != nil {
-		fmt.Println("Error: ", err)
-		os.Exit(1)
+		return err
+	}
+	listResp, err := api.Operations.GetWorkflows(listParams)
+	if err != nil {
+		return err
 	}
 
 	header := buildListHeader(
@@ -153,7 +169,7 @@ func list(cmd *cobra.Command, token string, serverURL string) {
 		includeDuration,
 	)
 	parsedFormatFilters := utils.ParseFormatParameters(formatFilters)
-	displayListPayload(
+	err = displayListPayload(
 		listResp.Payload,
 		header,
 		parsedFormatFilters,
@@ -163,6 +179,11 @@ func list(cmd *cobra.Command, token string, serverURL string) {
 		jsonOutput,
 		humanReadable,
 	)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func displayListPayload(
@@ -171,7 +192,7 @@ func displayListPayload(
 	formatFilters map[string]string,
 	serverURL, token, sortColumn string,
 	jsonOutput, humanReadable bool,
-) {
+) error {
 	var data [][]any
 	for _, workflow := range p.Items {
 		name, runNumber := utils.GetWorkflowNameAndRunNumber(workflow.Name)
@@ -197,7 +218,11 @@ func displayListPayload(
 				totalInfo := getOptionalIntField(progress.Total.Total)
 				value = finishedInfo + "/" + totalInfo
 			case "duration":
-				value = getWorkflowDuration(workflow)
+				var err error
+				value, err = getWorkflowDuration(workflow)
+				if err != nil {
+					return err
+				}
 			case "name":
 				value = name
 			case "run_number":
@@ -227,7 +252,10 @@ func displayListPayload(
 		data = append(data, row)
 	}
 
-	sortListData(data, header, sortColumn)
+	err := sortListData(data, header, sortColumn)
+	if err != nil {
+		fmt.Printf("Warning: sort operation was aborted, \"%v\"\n", err)
+	}
 	utils.FormatData(&data, &header, formatFilters)
 
 	if jsonOutput {
@@ -238,26 +266,39 @@ func displayListPayload(
 				jsonData[i][col] = row[j]
 			}
 		}
-		utils.DisplayJsonOutput(jsonData)
+
+		err := utils.DisplayJsonOutput(jsonData)
+		if err != nil {
+			return err
+		}
 	} else {
 		utils.DisplayTable(header, data)
 	}
+	return nil
 }
 
-func getWorkflowDuration(workflow *operations.GetWorkflowsOKBodyItemsItems0) any {
+func getWorkflowDuration(workflow *operations.GetWorkflowsOKBodyItemsItems0) (any, error) {
 	runStartedAt := workflow.Progress.RunStartedAt
 	runFinishedAt := workflow.Progress.RunFinishedAt
 	if runStartedAt == nil {
-		return "-"
+		return "-", nil
 	}
-	startTime := utils.FromIsoToTimestamp(*runStartedAt)
+
+	startTime, err := utils.FromIsoToTimestamp(*runStartedAt)
+	if err != nil {
+		return nil, err
+	}
+
 	var endTime time.Time
 	if runFinishedAt != nil {
-		endTime = utils.FromIsoToTimestamp(*runFinishedAt)
+		endTime, err = utils.FromIsoToTimestamp(*runFinishedAt)
+		if err != nil {
+			return nil, err
+		}
 	} else {
 		endTime = time.Now()
 	}
-	return endTime.Sub(startTime).Round(time.Second).Seconds()
+	return endTime.Sub(startTime).Round(time.Second).Seconds(), nil
 }
 
 func buildListHeader(
@@ -307,11 +348,10 @@ func getOptionalIntField(value int64) string {
 	return fmt.Sprintf("%d", value)
 }
 
-func sortListData(data [][]any, header []string, sortColumn string) {
+func sortListData(data [][]any, header []string, sortColumn string) error {
 	sortColumn = strings.ToLower(sortColumn)
 	if !slices.Contains(header, sortColumn) {
-		fmt.Println("Warning: column '" + sortColumn + "' does not exist")
-		return
+		return fmt.Errorf("column '%s' does not exist", sortColumn)
 	}
 
 	sortColumnId := slices.Index(header, sortColumn)
@@ -342,7 +382,7 @@ func sortListData(data [][]any, header []string, sortColumn string) {
 	})
 
 	if !ok {
-		fmt.Println("Error: Unexpected value type received")
-		os.Exit(1)
+		return errors.New("unexpected value type received")
 	}
+	return nil
 }

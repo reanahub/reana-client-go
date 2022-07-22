@@ -9,6 +9,7 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"reanahub/reana-client-go/client"
@@ -43,7 +44,7 @@ func newDuCmd() *cobra.Command {
 		Use:   "du",
 		Short: "Get workspace disk usage.",
 		Long:  duDesc,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			token, _ := cmd.Flags().GetString("access-token")
 			if token == "" {
 				token = os.Getenv("REANA_ACCESS_TOKEN")
@@ -54,10 +55,19 @@ func newDuCmd() *cobra.Command {
 				workflow = os.Getenv("REANA_WORKON")
 			}
 
-			validation.ValidateAccessToken(token)
-			validation.ValidateServerURL(serverURL)
-			validation.ValidateWorkflow(workflow)
-			du(cmd, token, workflow)
+			if err := validation.ValidateAccessToken(token); err != nil {
+				return err
+			}
+			if err := validation.ValidateServerURL(serverURL); err != nil {
+				return err
+			}
+			if err := validation.ValidateWorkflow(workflow); err != nil {
+				return err
+			}
+			if err := du(cmd, token, workflow); err != nil {
+				return err
+			}
+			return nil
 		},
 	}
 
@@ -71,13 +81,16 @@ func newDuCmd() *cobra.Command {
 	return cmd
 }
 
-func du(cmd *cobra.Command, token string, workflow string) {
+func du(cmd *cobra.Command, token string, workflow string) error {
 	summarize, _ := cmd.Flags().GetBool("summarize")
 	humanReadable, _ := cmd.Flags().GetBool("human-readable")
 	filter, _ := cmd.Flags().GetStringArray("filter")
 
 	filterNames := []string{"size", "name"}
-	_, searchFilter := utils.ParseFilterParameters(filter, filterNames)
+	_, searchFilter, err := utils.ParseFilterParameters(filter, filterNames)
+	if err != nil {
+		return err
+	}
 
 	duParams := operations.NewGetWorkflowDiskUsageParams()
 	duParams.SetAccessToken(&token)
@@ -88,20 +101,25 @@ func du(cmd *cobra.Command, token string, workflow string) {
 	}
 	duParams.SetParameters(additionalParams)
 
-	duResp, err := client.ApiClient().Operations.GetWorkflowDiskUsage(duParams)
+	api, err := client.ApiClient()
 	if err != nil {
-		fmt.Println("Error: Disk usage could not be retrieved:")
-		fmt.Println(err)
-		os.Exit(1)
+		return err
+	}
+	duResp, err := api.Operations.GetWorkflowDiskUsage(duParams)
+	if err != nil {
+		return fmt.Errorf("disk usage could not be retrieved:\n%v", err)
 	}
 
-	displayDuPayload(duResp.Payload, humanReadable)
+	err = displayDuPayload(duResp.Payload, humanReadable)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func displayDuPayload(p *operations.GetWorkflowDiskUsageOKBody, humanReadable bool) {
+func displayDuPayload(p *operations.GetWorkflowDiskUsageOKBody, humanReadable bool) error {
 	if len(p.DiskUsageInfo) == 0 {
-		fmt.Println("Error: No files matching filter criteria.")
-		os.Exit(1)
+		return errors.New("no files matching filter criteria")
 	}
 
 	header := []string{"SIZE", "NAME"}
@@ -123,4 +141,5 @@ func displayDuPayload(p *operations.GetWorkflowDiskUsageOKBody, humanReadable bo
 	}
 
 	utils.DisplayTable(header, rows)
+	return nil
 }

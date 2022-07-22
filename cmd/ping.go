@@ -30,15 +30,23 @@ func newPingCmd() *cobra.Command {
 		Use:   "ping",
 		Short: "Check connection to REANA server.",
 		Long:  pingDesc,
-		Run: func(cmd *cobra.Command, args []string) {
+		RunE: func(cmd *cobra.Command, args []string) error {
 			token, _ := cmd.Flags().GetString("access-token")
 			if token == "" {
 				token = os.Getenv("REANA_ACCESS_TOKEN")
 			}
 			serverURL := os.Getenv("REANA_SERVER_URL")
-			validation.ValidateAccessToken(token)
-			validation.ValidateServerURL(serverURL)
-			ping(token, serverURL)
+
+			if err := validation.ValidateAccessToken(token); err != nil {
+				return err
+			}
+			if err := validation.ValidateServerURL(serverURL); err != nil {
+				return err
+			}
+			if err := ping(token, serverURL); err != nil {
+				return err
+			}
+			return nil
 		},
 	}
 
@@ -47,13 +55,17 @@ func newPingCmd() *cobra.Command {
 	return cmd
 }
 
-func ping(token string, serverURL string) {
+func ping(token string, serverURL string) error {
 	pingParams := operations.NewGetYouParams()
 	pingParams.SetAccessToken(&token)
-	pingResp, err := client.ApiClient().Operations.GetYou(pingParams)
+
+	api, err := client.ApiClient()
 	if err != nil {
-		fmt.Println("Error: ", err)
-		os.Exit(1)
+		return err
+	}
+	pingResp, err := api.Operations.GetYou(pingParams)
+	if err != nil {
+		return err
 	}
 
 	p := pingResp.Payload
@@ -64,4 +76,5 @@ func ping(token string, serverURL string) {
 		fmt.Sprintf("Status: %s ", "Connected")
 
 	fmt.Println(response)
+	return nil
 }

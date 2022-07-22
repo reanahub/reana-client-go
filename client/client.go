@@ -2,7 +2,7 @@ package client
 
 import (
 	"crypto/tls"
-	"fmt"
+	"errors"
 	"net/http"
 	"net/url"
 	"os"
@@ -14,14 +14,18 @@ import (
 
 var apiClient *API
 
-func ApiClient() *API {
+func ApiClient() (*API, error) {
 	if apiClient == nil {
-		apiClient = newApiClient()
+		var err error
+		apiClient, err = newApiClient()
+		if err != nil {
+			return nil, err
+		}
 	}
-	return apiClient
+	return apiClient, nil
 }
 
-func newApiClient() *API {
+func newApiClient() (*API, error) {
 	// disable certificate security checks
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{
 		InsecureSkipVerify: true,
@@ -31,17 +35,15 @@ func newApiClient() *API {
 	serverURL := os.Getenv("REANA_SERVER_URL")
 	u, err := url.Parse(serverURL)
 	if err != nil {
-		fmt.Println("Error: ", err)
-		os.Exit(1)
+		return nil, err
 	}
 	if u.Host == "" {
-		fmt.Println("Error: Environment variable REANA_SERVER_URL is not set")
-		os.Exit(1)
+		return nil, errors.New("environment variable REANA_SERVER_URL is not set")
 	}
 
 	// create the transport
 	transport := httptransport.New(u.Host, "", []string{"https"})
 
 	// create the API client, with the transport
-	return New(transport, strfmt.Default)
+	return New(transport, strfmt.Default), nil
 }
