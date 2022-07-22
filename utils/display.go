@@ -11,12 +11,12 @@ package utils
 import (
 	"encoding/json"
 	"fmt"
-	"os"
+	"io"
 
 	"github.com/jedib0t/go-pretty/v6/table"
 )
 
-func DisplayTable(header []string, rows [][]any) {
+func DisplayTable(header []string, rows [][]any, out io.Writer) {
 	// Convert to table.Row type
 	rowList := make([]table.Row, len(rows))
 	for i, r := range rows {
@@ -29,7 +29,7 @@ func DisplayTable(header []string, rows [][]any) {
 	}
 
 	t := table.NewWriter()
-	t.SetOutputMirror(os.Stdout)
+	t.SetOutputMirror(out)
 	t.AppendHeader(headerRow)
 	t.AppendRows(rowList)
 	t.Style().Options.DrawBorder = false
@@ -38,13 +38,16 @@ func DisplayTable(header []string, rows [][]any) {
 	t.Render()
 }
 
-func DisplayJsonOutput(output any) error {
+func DisplayJsonOutput(output any, out io.Writer) error {
 	byteArray, err := json.MarshalIndent(output, "", "  ")
 
 	if err != nil {
 		return fmt.Errorf("failed to display json output:\n%v", err)
 	}
 
-	fmt.Println(string(byteArray))
+	_, err = fmt.Fprintln(out, string(byteArray))
+	if err != nil {
+		return err
+	}
 	return nil
 }

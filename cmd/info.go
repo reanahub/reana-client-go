@@ -77,7 +77,7 @@ func info(cmd *cobra.Command, token string) error {
 
 	p := infoResp.Payload
 	if jsonOutput {
-		err := utils.DisplayJsonOutput(p)
+		err := utils.DisplayJsonOutput(p, cmd.OutOrStdout())
 		if err != nil {
 			return err
 		}
@@ -86,7 +86,7 @@ func info(cmd *cobra.Command, token string) error {
 			fmt.Sprintf("Default workspace: %s \n", p.DefaultWorkspace.Value) +
 			fmt.Sprintf("List of available workspaces: %s \n", strings.Join(p.WorkspacesAvailable.Value, ", "))
 
-		fmt.Print(response)
+		cmd.Print(response)
 	}
 	return nil
 }

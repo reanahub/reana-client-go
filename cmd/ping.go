@@ -43,7 +43,7 @@ func newPingCmd() *cobra.Command {
 			if err := validation.ValidateServerURL(serverURL); err != nil {
 				return err
 			}
-			if err := ping(token, serverURL); err != nil {
+			if err := ping(cmd, token, serverURL); err != nil {
 				return err
 			}
 			return nil
@@ -55,7 +55,7 @@ func newPingCmd() *cobra.Command {
 	return cmd
 }
 
-func ping(token string, serverURL string) error {
+func ping(cmd *cobra.Command, token string, serverURL string) error {
 	pingParams := operations.NewGetYouParams()
 	pingParams.SetAccessToken(&token)
 
@@ -75,6 +75,6 @@ func ping(token string, serverURL string) error {
 		fmt.Sprintf("Authenticated as: <%s> \n", p.Email) +
 		fmt.Sprintf("Status: %s ", "Connected")
 
-	fmt.Println(response)
+	cmd.Println(response)
 	return nil
 }

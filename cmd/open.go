@@ -114,8 +114,8 @@ func open(
 		return fmt.Errorf("interactive session could not be opened:\n%v", err)
 	}
 
-	fmt.Println("Interactive session opened successfully")
-	fmt.Println(utils.FormatSessionURI(serverURL, openResp.Payload.Path, token))
-	fmt.Println("It could take several minutes to start the interactive session.")
+	cmd.Println("Interactive session opened successfully")
+	cmd.Println(utils.FormatSessionURI(serverURL, openResp.Payload.Path, token))
+	cmd.Println("It could take several minutes to start the interactive session.")
 	return nil
 }

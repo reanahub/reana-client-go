@@ -9,8 +9,6 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +26,7 @@ func newVersionCmd() *cobra.Command {
 		Short: "Show version.",
 		Long:  versionDesc,
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Fprintln(cmd.OutOrStdout(), version)
+			cmd.Println(version)
 		},
 	}
 

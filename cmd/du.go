@@ -110,14 +110,18 @@ func du(cmd *cobra.Command, token string, workflow string) error {
 		return fmt.Errorf("disk usage could not be retrieved:\n%v", err)
 	}
 
-	err = displayDuPayload(duResp.Payload, humanReadable)
+	err = displayDuPayload(cmd, duResp.Payload, humanReadable)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func displayDuPayload(p *operations.GetWorkflowDiskUsageOKBody, humanReadable bool) error {
+func displayDuPayload(
+	cmd *cobra.Command,
+	p *operations.GetWorkflowDiskUsageOKBody,
+	humanReadable bool,
+) error {
 	if len(p.DiskUsageInfo) == 0 {
 		return errors.New("no files matching filter criteria")
 	}
@@ -140,6 +144,6 @@ func displayDuPayload(p *operations.GetWorkflowDiskUsageOKBody, humanReadable bo
 		rows = append(rows, row)
 	}
 
-	utils.DisplayTable(header, rows)
+	utils.DisplayTable(header, rows, cmd.OutOrStdout())
 	return nil
 }

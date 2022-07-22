@@ -52,7 +52,7 @@ func newCloseCmd() *cobra.Command {
 			if err := validation.ValidateWorkflow(workflow); err != nil {
 				return err
 			}
-			if err := close(token, workflow); err != nil {
+			if err := close(cmd, token, workflow); err != nil {
 				return err
 			}
 			return nil
@@ -66,7 +66,7 @@ func newCloseCmd() *cobra.Command {
 	return cmd
 }
 
-func close(token string, workflow string) error {
+func close(cmd *cobra.Command, token string, workflow string) error {
 	closeParams := operations.NewCloseInteractiveSessionParams()
 	closeParams.SetAccessToken(&token)
 	closeParams.SetWorkflowIDOrName(workflow)
@@ -80,6 +80,6 @@ func close(token string, workflow string) error {
 		return fmt.Errorf("interactive session could not be closed:\n%v", err)
 	}
 
-	fmt.Println("Interactive session for workflow", workflow, "was successfully closed")
+	cmd.Println("Interactive session for workflow", workflow, "was successfully closed")
 	return nil
 }

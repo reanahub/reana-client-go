@@ -9,6 +9,8 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
+	"os"
+
 	"github.com/spf13/cobra"
 )
 
@@ -19,6 +21,8 @@ func NewRootCmd() *cobra.Command {
 		Long:         "REANA client for interacting with REANA server.",
 		SilenceUsage: true,
 	}
+
+	cmd.SetOut(os.Stdout)
 
 	cmd.PersistentFlags().BoolP("loglevel", "l", false, "Sets log level [DEBUG|INFO|WARNING]")
 

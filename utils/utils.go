@@ -43,13 +43,13 @@ func GetRunStatuses(includeDeleted bool) []string {
 	return runStatuses
 }
 
-func ExecuteCommand(root *cobra.Command, args ...string) (output string, err error) {
+func ExecuteCommand(cmd *cobra.Command, args ...string) (output string, err error) {
 	buf := new(bytes.Buffer)
-	root.SetOut(buf)
-	root.SetErr(buf)
-	root.SetArgs(args)
+	cmd.SetOut(buf)
+	cmd.SetErr(buf)
+	cmd.SetArgs(args)
 
-	err = root.Execute()
+	err = cmd.Execute()
 
 	return buf.String(), err
 }

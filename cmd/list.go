@@ -170,6 +170,7 @@ func list(cmd *cobra.Command, token string, serverURL string) error {
 	)
 	parsedFormatFilters := utils.ParseFormatParameters(formatFilters)
 	err = displayListPayload(
+		cmd,
 		listResp.Payload,
 		header,
 		parsedFormatFilters,
@@ -187,6 +188,7 @@ func list(cmd *cobra.Command, token string, serverURL string) error {
 }
 
 func displayListPayload(
+	cmd *cobra.Command,
 	p *operations.GetWorkflowsOKBody,
 	header []string,
 	formatFilters map[string]string,
@@ -254,7 +256,7 @@ func displayListPayload(
 
 	err := sortListData(data, header, sortColumn)
 	if err != nil {
-		fmt.Printf("Warning: sort operation was aborted, \"%v\"\n", err)
+		cmd.PrintErrf("Warning: sort operation was aborted, \"%v\"\n", err)
 	}
 	utils.FormatData(&data, &header, formatFilters)
 
@@ -267,12 +269,12 @@ func displayListPayload(
 			}
 		}
 
-		err := utils.DisplayJsonOutput(jsonData)
+		err := utils.DisplayJsonOutput(jsonData, cmd.OutOrStdout())
 		if err != nil {
 			return err
 		}
 	} else {
-		utils.DisplayTable(header, data)
+		utils.DisplayTable(header, data, cmd.OutOrStdout())
 	}
 	return nil
 }

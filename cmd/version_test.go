@@ -15,8 +15,8 @@ import (
 )
 
 func TestVersionCmd(t *testing.T) {
-	cmd := NewRootCmd()
-	out, _ := utils.ExecuteCommand(cmd, "version")
+	cmd := newVersionCmd()
+	out, _ := utils.ExecuteCommand(cmd)
 
 	if strings.TrimSpace(out) != version {
 		t.Fatalf("Expected: \"%s\", got: \"%s\"", version, out)
