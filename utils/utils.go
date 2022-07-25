@@ -26,6 +26,11 @@ import (
 
 var FilesBlacklist = []string{".git/", "/.git/"}
 var InteractiveSessionTypes = []string{"jupyter"}
+var ReanaComputeBackends = map[string]string{
+	"kubernetes": "Kubernetes",
+	"htcondor":   "HTCondor",
+	"slurm":      "Slurm",
+}
 
 func GetRunStatuses(includeDeleted bool) []string {
 	runStatuses := []string{
@@ -84,15 +89,10 @@ func ParseFilterParameters(filter []string, filterNames []string) ([]string, str
 	var statusFilters []string
 
 	for _, value := range filter {
-		if !strings.Contains(value, "=") {
-			return nil, "", errors.New(
-				"wrong input format. Please use --filter filter_name=filter_value",
-			)
+		filterName, filterValue, err := GetFilterNameAndValue(value)
+		if err != nil {
+			return nil, "", err
 		}
-
-		filterNameAndValue := strings.SplitN(value, "=", 2)
-		filterName := strings.ToLower(filterNameAndValue[0])
-		filterValue := filterNameAndValue[1]
 
 		if !slices.Contains(filterNames, filterName) {
 			return nil, "", fmt.Errorf("filter %s is not valid", filterName)
@@ -119,6 +119,19 @@ func ParseFilterParameters(filter []string, filterNames []string) ([]string, str
 	}
 
 	return statusFilters, searchFiltersString, nil
+}
+
+func GetFilterNameAndValue(filter string) (string, string, error) {
+	if !strings.Contains(filter, "=") {
+		return "", "", errors.New(
+			"wrong input format. Please use --filter filter_name=filter_value",
+		)
+	}
+
+	filterNameAndValue := strings.SplitN(filter, "=", 2)
+	filterName := strings.ToLower(filterNameAndValue[0])
+	filterValue := filterNameAndValue[1]
+	return filterName, filterValue, nil
 }
 
 func ParseFormatParameters(filters []string) map[string]string {
