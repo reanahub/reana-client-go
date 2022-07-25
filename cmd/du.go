@@ -76,7 +76,7 @@ func newDuCmd() *cobra.Command {
 		StringP("workflow", "w", "", "Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.")
 	cmd.Flags().BoolP("summarize", "s", false, "Display total.")
 	cmd.Flags().BoolP("human-readable", "r", false, "Show disk size in human readable format.")
-	cmd.Flags().StringArray("filter", []string{}, duFilterFlagDesc)
+	cmd.Flags().StringSlice("filter", []string{}, duFilterFlagDesc)
 
 	return cmd
 }
@@ -84,7 +84,7 @@ func newDuCmd() *cobra.Command {
 func du(cmd *cobra.Command, token string, workflow string) error {
 	summarize, _ := cmd.Flags().GetBool("summarize")
 	humanReadable, _ := cmd.Flags().GetBool("human-readable")
-	filter, _ := cmd.Flags().GetStringArray("filter")
+	filter, _ := cmd.Flags().GetStringSlice("filter")
 
 	filterNames := []string{"size", "name"}
 	_, searchFilter, err := utils.ParseFilterParameters(filter, filterNames)

@@ -45,7 +45,7 @@ workflows is returned. If you would like to see the list of your open
 interactive sessions, you need to pass the ` + "``--sessions``" + ` command-line
 option.
 
-Example:
+Examples:
 
   $ reana-client list --all
 
