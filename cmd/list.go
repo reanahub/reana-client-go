@@ -112,7 +112,7 @@ func list(cmd *cobra.Command, token string, serverURL string) error {
 	verbose, _ := cmd.Flags().GetBool("verbose")
 	humanReadable, _ := cmd.Flags().GetBool("human-readable")
 	sortColumn, _ := cmd.Flags().GetString("sort")
-	filters, _ := cmd.Flags().GetStringArray("filter")
+	filters, _ := cmd.Flags().GetStringSlice("filter")
 	includeDuration, _ := cmd.Flags().GetBool("include-duration")
 	includeProgress, _ := cmd.Flags().GetBool("include-progress")
 	includeWorkspaceSize, _ := cmd.Flags().GetBool("include-workspace-size")
