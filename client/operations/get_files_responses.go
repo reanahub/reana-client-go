@@ -123,13 +123,24 @@ func NewGetFilesForbidden() *GetFilesForbidden {
 Request failed. User is not allowed to access workflow.
 */
 type GetFilesForbidden struct {
+	Payload *GetFilesForbiddenBody
 }
 
 func (o *GetFilesForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesForbidden ", 403)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesForbidden  %+v", 403, o.Payload)
+}
+func (o *GetFilesForbidden) GetPayload() *GetFilesForbiddenBody {
+	return o.Payload
 }
 
 func (o *GetFilesForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GetFilesForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -144,13 +155,24 @@ func NewGetFilesNotFound() *GetFilesNotFound {
 Request failed. Analysis does not exist.
 */
 type GetFilesNotFound struct {
+	Payload *GetFilesNotFoundBody
 }
 
 func (o *GetFilesNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesNotFound ", 404)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesNotFound  %+v", 404, o.Payload)
+}
+func (o *GetFilesNotFound) GetPayload() *GetFilesNotFoundBody {
+	return o.Payload
 }
 
 func (o *GetFilesNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GetFilesNotFoundBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -165,14 +187,136 @@ func NewGetFilesInternalServerError() *GetFilesInternalServerError {
 Request failed. Internal server error.
 */
 type GetFilesInternalServerError struct {
+	Payload *GetFilesInternalServerErrorBody
 }
 
 func (o *GetFilesInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesInternalServerError ", 500)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesInternalServerError  %+v", 500, o.Payload)
+}
+func (o *GetFilesInternalServerError) GetPayload() *GetFilesInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *GetFilesInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(GetFilesInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*GetFilesForbiddenBody get files forbidden body
+swagger:model GetFilesForbiddenBody
+*/
+type GetFilesForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get files forbidden body
+func (o *GetFilesForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get files forbidden body based on context it is used
+func (o *GetFilesForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetFilesForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetFilesForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res GetFilesForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GetFilesInternalServerErrorBody get files internal server error body
+swagger:model GetFilesInternalServerErrorBody
+*/
+type GetFilesInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get files internal server error body
+func (o *GetFilesInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get files internal server error body based on context it is used
+func (o *GetFilesInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetFilesInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetFilesInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res GetFilesInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GetFilesNotFoundBody get files not found body
+swagger:model GetFilesNotFoundBody
+*/
+type GetFilesNotFoundBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get files not found body
+func (o *GetFilesNotFoundBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get files not found body based on context it is used
+func (o *GetFilesNotFoundBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetFilesNotFoundBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetFilesNotFoundBody) UnmarshalBinary(b []byte) error {
+	var res GetFilesNotFoundBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 

@@ -83,14 +83,62 @@ func NewInfoInternalServerError() *InfoInternalServerError {
 Request failed. Internal controller error.
 */
 type InfoInternalServerError struct {
+	Payload *InfoInternalServerErrorBody
 }
 
 func (o *InfoInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/info][%d] infoInternalServerError ", 500)
+	return fmt.Sprintf("[GET /api/info][%d] infoInternalServerError  %+v", 500, o.Payload)
+}
+func (o *InfoInternalServerError) GetPayload() *InfoInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *InfoInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(InfoInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*InfoInternalServerErrorBody info internal server error body
+swagger:model InfoInternalServerErrorBody
+*/
+type InfoInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this info internal server error body
+func (o *InfoInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info internal server error body based on context it is used
+func (o *InfoInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res InfoInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 

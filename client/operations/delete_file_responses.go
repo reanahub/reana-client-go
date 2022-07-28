@@ -6,11 +6,13 @@ package operations
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"fmt"
 	"io"
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // DeleteFileReader is a Reader for the DeleteFile structure.
@@ -94,13 +96,24 @@ func NewDeleteFileForbidden() *DeleteFileForbidden {
 Request failed. User is not allowed to access workflow.
 */
 type DeleteFileForbidden struct {
+	Payload *DeleteFileForbiddenBody
 }
 
 func (o *DeleteFileForbidden) Error() string {
-	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileForbidden ", 403)
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileForbidden  %+v", 403, o.Payload)
+}
+func (o *DeleteFileForbidden) GetPayload() *DeleteFileForbiddenBody {
+	return o.Payload
 }
 
 func (o *DeleteFileForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(DeleteFileForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -115,13 +128,24 @@ func NewDeleteFileNotFound() *DeleteFileNotFound {
 Request failed. `file_name` does not exist.
 */
 type DeleteFileNotFound struct {
+	Payload *DeleteFileNotFoundBody
 }
 
 func (o *DeleteFileNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileNotFound ", 404)
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileNotFound  %+v", 404, o.Payload)
+}
+func (o *DeleteFileNotFound) GetPayload() *DeleteFileNotFoundBody {
+	return o.Payload
 }
 
 func (o *DeleteFileNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(DeleteFileNotFoundBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -136,13 +160,135 @@ func NewDeleteFileInternalServerError() *DeleteFileInternalServerError {
 Request failed. Internal server error.
 */
 type DeleteFileInternalServerError struct {
+	Payload *DeleteFileInternalServerErrorBody
 }
 
 func (o *DeleteFileInternalServerError) Error() string {
-	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileInternalServerError ", 500)
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileInternalServerError  %+v", 500, o.Payload)
+}
+func (o *DeleteFileInternalServerError) GetPayload() *DeleteFileInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *DeleteFileInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(DeleteFileInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*DeleteFileForbiddenBody delete file forbidden body
+swagger:model DeleteFileForbiddenBody
+*/
+type DeleteFileForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this delete file forbidden body
+func (o *DeleteFileForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this delete file forbidden body based on context it is used
+func (o *DeleteFileForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DeleteFileForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DeleteFileForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res DeleteFileForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*DeleteFileInternalServerErrorBody delete file internal server error body
+swagger:model DeleteFileInternalServerErrorBody
+*/
+type DeleteFileInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this delete file internal server error body
+func (o *DeleteFileInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this delete file internal server error body based on context it is used
+func (o *DeleteFileInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DeleteFileInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DeleteFileInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res DeleteFileInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*DeleteFileNotFoundBody delete file not found body
+swagger:model DeleteFileNotFoundBody
+*/
+type DeleteFileNotFoundBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this delete file not found body
+func (o *DeleteFileNotFoundBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this delete file not found body based on context it is used
+func (o *DeleteFileNotFoundBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DeleteFileNotFoundBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DeleteFileNotFoundBody) UnmarshalBinary(b []byte) error {
+	var res DeleteFileNotFoundBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }

@@ -100,13 +100,24 @@ func NewGetWorkflowDiffBadRequest() *GetWorkflowDiffBadRequest {
 Request failed. The incoming payload seems malformed.
 */
 type GetWorkflowDiffBadRequest struct {
+	Payload *GetWorkflowDiffBadRequestBody
 }
 
 func (o *GetWorkflowDiffBadRequest) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffBadRequest ", 400)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffBadRequest  %+v", 400, o.Payload)
+}
+func (o *GetWorkflowDiffBadRequest) GetPayload() *GetWorkflowDiffBadRequestBody {
+	return o.Payload
 }
 
 func (o *GetWorkflowDiffBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GetWorkflowDiffBadRequestBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -121,13 +132,24 @@ func NewGetWorkflowDiffForbidden() *GetWorkflowDiffForbidden {
 Request failed. User is not allowed to access workflow.
 */
 type GetWorkflowDiffForbidden struct {
+	Payload *GetWorkflowDiffForbiddenBody
 }
 
 func (o *GetWorkflowDiffForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffForbidden ", 403)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffForbidden  %+v", 403, o.Payload)
+}
+func (o *GetWorkflowDiffForbidden) GetPayload() *GetWorkflowDiffForbiddenBody {
+	return o.Payload
 }
 
 func (o *GetWorkflowDiffForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GetWorkflowDiffForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -142,13 +164,24 @@ func NewGetWorkflowDiffNotFound() *GetWorkflowDiffNotFound {
 Request failed. Either user or workflow does not exist.
 */
 type GetWorkflowDiffNotFound struct {
+	Payload *GetWorkflowDiffNotFoundBody
 }
 
 func (o *GetWorkflowDiffNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffNotFound ", 404)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffNotFound  %+v", 404, o.Payload)
+}
+func (o *GetWorkflowDiffNotFound) GetPayload() *GetWorkflowDiffNotFoundBody {
+	return o.Payload
 }
 
 func (o *GetWorkflowDiffNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GetWorkflowDiffNotFoundBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -163,14 +196,173 @@ func NewGetWorkflowDiffInternalServerError() *GetWorkflowDiffInternalServerError
 Request failed. Internal controller error.
 */
 type GetWorkflowDiffInternalServerError struct {
+	Payload *GetWorkflowDiffInternalServerErrorBody
 }
 
 func (o *GetWorkflowDiffInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffInternalServerError ", 500)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffInternalServerError  %+v", 500, o.Payload)
+}
+func (o *GetWorkflowDiffInternalServerError) GetPayload() *GetWorkflowDiffInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *GetWorkflowDiffInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(GetWorkflowDiffInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*GetWorkflowDiffBadRequestBody get workflow diff bad request body
+swagger:model GetWorkflowDiffBadRequestBody
+*/
+type GetWorkflowDiffBadRequestBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get workflow diff bad request body
+func (o *GetWorkflowDiffBadRequestBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get workflow diff bad request body based on context it is used
+func (o *GetWorkflowDiffBadRequestBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWorkflowDiffBadRequestBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWorkflowDiffBadRequestBody) UnmarshalBinary(b []byte) error {
+	var res GetWorkflowDiffBadRequestBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GetWorkflowDiffForbiddenBody get workflow diff forbidden body
+swagger:model GetWorkflowDiffForbiddenBody
+*/
+type GetWorkflowDiffForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get workflow diff forbidden body
+func (o *GetWorkflowDiffForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get workflow diff forbidden body based on context it is used
+func (o *GetWorkflowDiffForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWorkflowDiffForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWorkflowDiffForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res GetWorkflowDiffForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GetWorkflowDiffInternalServerErrorBody get workflow diff internal server error body
+swagger:model GetWorkflowDiffInternalServerErrorBody
+*/
+type GetWorkflowDiffInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get workflow diff internal server error body
+func (o *GetWorkflowDiffInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get workflow diff internal server error body based on context it is used
+func (o *GetWorkflowDiffInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWorkflowDiffInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWorkflowDiffInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res GetWorkflowDiffInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GetWorkflowDiffNotFoundBody get workflow diff not found body
+swagger:model GetWorkflowDiffNotFoundBody
+*/
+type GetWorkflowDiffNotFoundBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get workflow diff not found body
+func (o *GetWorkflowDiffNotFoundBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get workflow diff not found body based on context it is used
+func (o *GetWorkflowDiffNotFoundBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWorkflowDiffNotFoundBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWorkflowDiffNotFoundBody) UnmarshalBinary(b []byte) error {
+	var res GetWorkflowDiffNotFoundBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 

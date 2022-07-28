@@ -127,13 +127,24 @@ func NewRequestTokenForbidden() *RequestTokenForbidden {
 Request failed. User token not valid.
 */
 type RequestTokenForbidden struct {
+	Payload *RequestTokenForbiddenBody
 }
 
 func (o *RequestTokenForbidden) Error() string {
-	return fmt.Sprintf("[PUT /api/token][%d] requestTokenForbidden ", 403)
+	return fmt.Sprintf("[PUT /api/token][%d] requestTokenForbidden  %+v", 403, o.Payload)
+}
+func (o *RequestTokenForbidden) GetPayload() *RequestTokenForbiddenBody {
+	return o.Payload
 }
 
 func (o *RequestTokenForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(RequestTokenForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -148,14 +159,99 @@ func NewRequestTokenInternalServerError() *RequestTokenInternalServerError {
 Request failed. Internal server error.
 */
 type RequestTokenInternalServerError struct {
+	Payload *RequestTokenInternalServerErrorBody
 }
 
 func (o *RequestTokenInternalServerError) Error() string {
-	return fmt.Sprintf("[PUT /api/token][%d] requestTokenInternalServerError ", 500)
+	return fmt.Sprintf("[PUT /api/token][%d] requestTokenInternalServerError  %+v", 500, o.Payload)
+}
+func (o *RequestTokenInternalServerError) GetPayload() *RequestTokenInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *RequestTokenInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(RequestTokenInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*RequestTokenForbiddenBody request token forbidden body
+swagger:model RequestTokenForbiddenBody
+*/
+type RequestTokenForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this request token forbidden body
+func (o *RequestTokenForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this request token forbidden body based on context it is used
+func (o *RequestTokenForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *RequestTokenForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *RequestTokenForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res RequestTokenForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*RequestTokenInternalServerErrorBody request token internal server error body
+swagger:model RequestTokenInternalServerErrorBody
+*/
+type RequestTokenInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this request token internal server error body
+func (o *RequestTokenInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this request token internal server error body based on context it is used
+func (o *RequestTokenInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *RequestTokenInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *RequestTokenInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res RequestTokenInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 
