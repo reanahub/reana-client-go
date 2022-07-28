@@ -90,13 +90,24 @@ func NewLaunchBadRequest() *LaunchBadRequest {
 Request failed. The incoming payload seems malformed.
 */
 type LaunchBadRequest struct {
+	Payload *LaunchBadRequestBody
 }
 
 func (o *LaunchBadRequest) Error() string {
-	return fmt.Sprintf("[POST /api/launch][%d] launchBadRequest ", 400)
+	return fmt.Sprintf("[POST /api/launch][%d] launchBadRequest  %+v", 400, o.Payload)
+}
+func (o *LaunchBadRequest) GetPayload() *LaunchBadRequestBody {
+	return o.Payload
 }
 
 func (o *LaunchBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(LaunchBadRequestBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -111,14 +122,62 @@ func NewLaunchInternalServerError() *LaunchInternalServerError {
 Request failed. Internal server error.
 */
 type LaunchInternalServerError struct {
+	Payload *LaunchInternalServerErrorBody
 }
 
 func (o *LaunchInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/launch][%d] launchInternalServerError ", 500)
+	return fmt.Sprintf("[POST /api/launch][%d] launchInternalServerError  %+v", 500, o.Payload)
+}
+func (o *LaunchInternalServerError) GetPayload() *LaunchInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *LaunchInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(LaunchInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*LaunchBadRequestBody launch bad request body
+swagger:model LaunchBadRequestBody
+*/
+type LaunchBadRequestBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this launch bad request body
+func (o *LaunchBadRequestBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this launch bad request body based on context it is used
+func (o *LaunchBadRequestBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *LaunchBadRequestBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *LaunchBadRequestBody) UnmarshalBinary(b []byte) error {
+	var res LaunchBadRequestBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 
@@ -180,6 +239,43 @@ func (o *LaunchBody) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *LaunchBody) UnmarshalBinary(b []byte) error {
 	var res LaunchBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*LaunchInternalServerErrorBody launch internal server error body
+swagger:model LaunchInternalServerErrorBody
+*/
+type LaunchInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this launch internal server error body
+func (o *LaunchInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this launch internal server error body based on context it is used
+func (o *LaunchInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *LaunchInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *LaunchInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res LaunchInternalServerErrorBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

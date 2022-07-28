@@ -97,13 +97,24 @@ func NewAddSecretsForbidden() *AddSecretsForbidden {
 Request failed. Token is not valid.
 */
 type AddSecretsForbidden struct {
+	Payload *AddSecretsForbiddenBody
 }
 
 func (o *AddSecretsForbidden) Error() string {
-	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsForbidden ", 403)
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsForbidden  %+v", 403, o.Payload)
+}
+func (o *AddSecretsForbidden) GetPayload() *AddSecretsForbiddenBody {
+	return o.Payload
 }
 
 func (o *AddSecretsForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(AddSecretsForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -118,13 +129,24 @@ func NewAddSecretsConflict() *AddSecretsConflict {
 Request failed. Secrets could not be added due to a conflict.
 */
 type AddSecretsConflict struct {
+	Payload *AddSecretsConflictBody
 }
 
 func (o *AddSecretsConflict) Error() string {
-	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsConflict ", 409)
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsConflict  %+v", 409, o.Payload)
+}
+func (o *AddSecretsConflict) GetPayload() *AddSecretsConflictBody {
+	return o.Payload
 }
 
 func (o *AddSecretsConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(AddSecretsConflictBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -139,14 +161,62 @@ func NewAddSecretsInternalServerError() *AddSecretsInternalServerError {
 Request failed. Internal server error.
 */
 type AddSecretsInternalServerError struct {
+	Payload *AddSecretsInternalServerErrorBody
 }
 
 func (o *AddSecretsInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsInternalServerError ", 500)
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsInternalServerError  %+v", 500, o.Payload)
+}
+func (o *AddSecretsInternalServerError) GetPayload() *AddSecretsInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *AddSecretsInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(AddSecretsInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*AddSecretsConflictBody add secrets conflict body
+swagger:model AddSecretsConflictBody
+*/
+type AddSecretsConflictBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this add secrets conflict body
+func (o *AddSecretsConflictBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this add secrets conflict body based on context it is used
+func (o *AddSecretsConflictBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *AddSecretsConflictBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *AddSecretsConflictBody) UnmarshalBinary(b []byte) error {
+	var res AddSecretsConflictBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 
@@ -180,6 +250,80 @@ func (o *AddSecretsCreatedBody) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *AddSecretsCreatedBody) UnmarshalBinary(b []byte) error {
 	var res AddSecretsCreatedBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*AddSecretsForbiddenBody add secrets forbidden body
+swagger:model AddSecretsForbiddenBody
+*/
+type AddSecretsForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this add secrets forbidden body
+func (o *AddSecretsForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this add secrets forbidden body based on context it is used
+func (o *AddSecretsForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *AddSecretsForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *AddSecretsForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res AddSecretsForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*AddSecretsInternalServerErrorBody add secrets internal server error body
+swagger:model AddSecretsInternalServerErrorBody
+*/
+type AddSecretsInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this add secrets internal server error body
+func (o *AddSecretsInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this add secrets internal server error body based on context it is used
+func (o *AddSecretsInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *AddSecretsInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *AddSecretsInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res AddSecretsInternalServerErrorBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

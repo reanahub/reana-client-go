@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
@@ -84,13 +85,24 @@ func NewDeleteGitlabWebhookForbidden() *DeleteGitlabWebhookForbidden {
 Request failed. User token not valid.
 */
 type DeleteGitlabWebhookForbidden struct {
+	Payload *DeleteGitlabWebhookForbiddenBody
 }
 
 func (o *DeleteGitlabWebhookForbidden) Error() string {
-	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookForbidden ", 403)
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookForbidden  %+v", 403, o.Payload)
+}
+func (o *DeleteGitlabWebhookForbidden) GetPayload() *DeleteGitlabWebhookForbiddenBody {
+	return o.Payload
 }
 
 func (o *DeleteGitlabWebhookForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(DeleteGitlabWebhookForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -126,13 +138,24 @@ func NewDeleteGitlabWebhookInternalServerError() *DeleteGitlabWebhookInternalSer
 Request failed. Internal controller error.
 */
 type DeleteGitlabWebhookInternalServerError struct {
+	Payload *DeleteGitlabWebhookInternalServerErrorBody
 }
 
 func (o *DeleteGitlabWebhookInternalServerError) Error() string {
-	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookInternalServerError ", 500)
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookInternalServerError  %+v", 500, o.Payload)
+}
+func (o *DeleteGitlabWebhookInternalServerError) GetPayload() *DeleteGitlabWebhookInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *DeleteGitlabWebhookInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(DeleteGitlabWebhookInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -203,6 +226,80 @@ func (o *DeleteGitlabWebhookBody) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *DeleteGitlabWebhookBody) UnmarshalBinary(b []byte) error {
 	var res DeleteGitlabWebhookBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*DeleteGitlabWebhookForbiddenBody delete gitlab webhook forbidden body
+swagger:model DeleteGitlabWebhookForbiddenBody
+*/
+type DeleteGitlabWebhookForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this delete gitlab webhook forbidden body
+func (o *DeleteGitlabWebhookForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this delete gitlab webhook forbidden body based on context it is used
+func (o *DeleteGitlabWebhookForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DeleteGitlabWebhookForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DeleteGitlabWebhookForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res DeleteGitlabWebhookForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*DeleteGitlabWebhookInternalServerErrorBody delete gitlab webhook internal server error body
+swagger:model DeleteGitlabWebhookInternalServerErrorBody
+*/
+type DeleteGitlabWebhookInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this delete gitlab webhook internal server error body
+func (o *DeleteGitlabWebhookInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this delete gitlab webhook internal server error body based on context it is used
+func (o *DeleteGitlabWebhookInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DeleteGitlabWebhookInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DeleteGitlabWebhookInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res DeleteGitlabWebhookInternalServerErrorBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

@@ -100,13 +100,24 @@ func NewUploadFileBadRequest() *UploadFileBadRequest {
 Request failed. The incoming payload seems malformed
 */
 type UploadFileBadRequest struct {
+	Payload *UploadFileBadRequestBody
 }
 
 func (o *UploadFileBadRequest) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileBadRequest ", 400)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileBadRequest  %+v", 400, o.Payload)
+}
+func (o *UploadFileBadRequest) GetPayload() *UploadFileBadRequestBody {
+	return o.Payload
 }
 
 func (o *UploadFileBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(UploadFileBadRequestBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -121,13 +132,24 @@ func NewUploadFileForbidden() *UploadFileForbidden {
 Request failed. User is not allowed to access workflow.
 */
 type UploadFileForbidden struct {
+	Payload *UploadFileForbiddenBody
 }
 
 func (o *UploadFileForbidden) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileForbidden ", 403)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileForbidden  %+v", 403, o.Payload)
+}
+func (o *UploadFileForbidden) GetPayload() *UploadFileForbiddenBody {
+	return o.Payload
 }
 
 func (o *UploadFileForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(UploadFileForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -142,13 +164,24 @@ func NewUploadFileNotFound() *UploadFileNotFound {
 Request failed. User does not exist.
 */
 type UploadFileNotFound struct {
+	Payload *UploadFileNotFoundBody
 }
 
 func (o *UploadFileNotFound) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileNotFound ", 404)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileNotFound  %+v", 404, o.Payload)
+}
+func (o *UploadFileNotFound) GetPayload() *UploadFileNotFoundBody {
+	return o.Payload
 }
 
 func (o *UploadFileNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(UploadFileNotFoundBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -163,14 +196,173 @@ func NewUploadFileInternalServerError() *UploadFileInternalServerError {
 Request failed. Internal server error.
 */
 type UploadFileInternalServerError struct {
+	Payload *UploadFileInternalServerErrorBody
 }
 
 func (o *UploadFileInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileInternalServerError ", 500)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileInternalServerError  %+v", 500, o.Payload)
+}
+func (o *UploadFileInternalServerError) GetPayload() *UploadFileInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *UploadFileInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(UploadFileInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*UploadFileBadRequestBody upload file bad request body
+swagger:model UploadFileBadRequestBody
+*/
+type UploadFileBadRequestBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this upload file bad request body
+func (o *UploadFileBadRequestBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this upload file bad request body based on context it is used
+func (o *UploadFileBadRequestBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *UploadFileBadRequestBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *UploadFileBadRequestBody) UnmarshalBinary(b []byte) error {
+	var res UploadFileBadRequestBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*UploadFileForbiddenBody upload file forbidden body
+swagger:model UploadFileForbiddenBody
+*/
+type UploadFileForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this upload file forbidden body
+func (o *UploadFileForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this upload file forbidden body based on context it is used
+func (o *UploadFileForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *UploadFileForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *UploadFileForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res UploadFileForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*UploadFileInternalServerErrorBody upload file internal server error body
+swagger:model UploadFileInternalServerErrorBody
+*/
+type UploadFileInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this upload file internal server error body
+func (o *UploadFileInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this upload file internal server error body based on context it is used
+func (o *UploadFileInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *UploadFileInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *UploadFileInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res UploadFileInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*UploadFileNotFoundBody upload file not found body
+swagger:model UploadFileNotFoundBody
+*/
+type UploadFileNotFoundBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this upload file not found body
+func (o *UploadFileNotFoundBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this upload file not found body based on context it is used
+func (o *UploadFileNotFoundBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *UploadFileNotFoundBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *UploadFileNotFoundBody) UnmarshalBinary(b []byte) error {
+	var res UploadFileNotFoundBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 

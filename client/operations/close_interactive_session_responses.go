@@ -100,13 +100,24 @@ func NewCloseInteractiveSessionBadRequest() *CloseInteractiveSessionBadRequest {
 Request failed. The incoming payload seems malformed.
 */
 type CloseInteractiveSessionBadRequest struct {
+	Payload *CloseInteractiveSessionBadRequestBody
 }
 
 func (o *CloseInteractiveSessionBadRequest) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionBadRequest ", 400)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionBadRequest  %+v", 400, o.Payload)
+}
+func (o *CloseInteractiveSessionBadRequest) GetPayload() *CloseInteractiveSessionBadRequestBody {
+	return o.Payload
 }
 
 func (o *CloseInteractiveSessionBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(CloseInteractiveSessionBadRequestBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -121,13 +132,24 @@ func NewCloseInteractiveSessionForbidden() *CloseInteractiveSessionForbidden {
 Request failed. User is not allowed to access workflow.
 */
 type CloseInteractiveSessionForbidden struct {
+	Payload *CloseInteractiveSessionForbiddenBody
 }
 
 func (o *CloseInteractiveSessionForbidden) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionForbidden ", 403)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionForbidden  %+v", 403, o.Payload)
+}
+func (o *CloseInteractiveSessionForbidden) GetPayload() *CloseInteractiveSessionForbiddenBody {
+	return o.Payload
 }
 
 func (o *CloseInteractiveSessionForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(CloseInteractiveSessionForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -142,13 +164,24 @@ func NewCloseInteractiveSessionNotFound() *CloseInteractiveSessionNotFound {
 Request failed. Either user or workflow does not exist.
 */
 type CloseInteractiveSessionNotFound struct {
+	Payload *CloseInteractiveSessionNotFoundBody
 }
 
 func (o *CloseInteractiveSessionNotFound) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionNotFound ", 404)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionNotFound  %+v", 404, o.Payload)
+}
+func (o *CloseInteractiveSessionNotFound) GetPayload() *CloseInteractiveSessionNotFoundBody {
+	return o.Payload
 }
 
 func (o *CloseInteractiveSessionNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(CloseInteractiveSessionNotFoundBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -163,14 +196,173 @@ func NewCloseInteractiveSessionInternalServerError() *CloseInteractiveSessionInt
 Request failed. Internal controller error.
 */
 type CloseInteractiveSessionInternalServerError struct {
+	Payload *CloseInteractiveSessionInternalServerErrorBody
 }
 
 func (o *CloseInteractiveSessionInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionInternalServerError ", 500)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionInternalServerError  %+v", 500, o.Payload)
+}
+func (o *CloseInteractiveSessionInternalServerError) GetPayload() *CloseInteractiveSessionInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *CloseInteractiveSessionInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(CloseInteractiveSessionInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*CloseInteractiveSessionBadRequestBody close interactive session bad request body
+swagger:model CloseInteractiveSessionBadRequestBody
+*/
+type CloseInteractiveSessionBadRequestBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this close interactive session bad request body
+func (o *CloseInteractiveSessionBadRequestBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this close interactive session bad request body based on context it is used
+func (o *CloseInteractiveSessionBadRequestBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *CloseInteractiveSessionBadRequestBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *CloseInteractiveSessionBadRequestBody) UnmarshalBinary(b []byte) error {
+	var res CloseInteractiveSessionBadRequestBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*CloseInteractiveSessionForbiddenBody close interactive session forbidden body
+swagger:model CloseInteractiveSessionForbiddenBody
+*/
+type CloseInteractiveSessionForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this close interactive session forbidden body
+func (o *CloseInteractiveSessionForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this close interactive session forbidden body based on context it is used
+func (o *CloseInteractiveSessionForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *CloseInteractiveSessionForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *CloseInteractiveSessionForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res CloseInteractiveSessionForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*CloseInteractiveSessionInternalServerErrorBody close interactive session internal server error body
+swagger:model CloseInteractiveSessionInternalServerErrorBody
+*/
+type CloseInteractiveSessionInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this close interactive session internal server error body
+func (o *CloseInteractiveSessionInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this close interactive session internal server error body based on context it is used
+func (o *CloseInteractiveSessionInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *CloseInteractiveSessionInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *CloseInteractiveSessionInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res CloseInteractiveSessionInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*CloseInteractiveSessionNotFoundBody close interactive session not found body
+swagger:model CloseInteractiveSessionNotFoundBody
+*/
+type CloseInteractiveSessionNotFoundBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this close interactive session not found body
+func (o *CloseInteractiveSessionNotFoundBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this close interactive session not found body based on context it is used
+func (o *CloseInteractiveSessionNotFoundBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *CloseInteractiveSessionNotFoundBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *CloseInteractiveSessionNotFoundBody) UnmarshalBinary(b []byte) error {
+	var res CloseInteractiveSessionNotFoundBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 

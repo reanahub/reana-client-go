@@ -6,10 +6,13 @@ package operations
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // GitlabProjectsReader is a Reader for the GitlabProjects structure.
@@ -74,13 +77,24 @@ func NewGitlabProjectsForbidden() *GitlabProjectsForbidden {
 Request failed. User token not valid.
 */
 type GitlabProjectsForbidden struct {
+	Payload *GitlabProjectsForbiddenBody
 }
 
 func (o *GitlabProjectsForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsForbidden ", 403)
+	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsForbidden  %+v", 403, o.Payload)
+}
+func (o *GitlabProjectsForbidden) GetPayload() *GitlabProjectsForbiddenBody {
+	return o.Payload
 }
 
 func (o *GitlabProjectsForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GitlabProjectsForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -95,13 +109,98 @@ func NewGitlabProjectsInternalServerError() *GitlabProjectsInternalServerError {
 Request failed. Internal controller error.
 */
 type GitlabProjectsInternalServerError struct {
+	Payload *GitlabProjectsInternalServerErrorBody
 }
 
 func (o *GitlabProjectsInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsInternalServerError ", 500)
+	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsInternalServerError  %+v", 500, o.Payload)
+}
+func (o *GitlabProjectsInternalServerError) GetPayload() *GitlabProjectsInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *GitlabProjectsInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(GitlabProjectsInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*GitlabProjectsForbiddenBody gitlab projects forbidden body
+swagger:model GitlabProjectsForbiddenBody
+*/
+type GitlabProjectsForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this gitlab projects forbidden body
+func (o *GitlabProjectsForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this gitlab projects forbidden body based on context it is used
+func (o *GitlabProjectsForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GitlabProjectsForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GitlabProjectsForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res GitlabProjectsForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GitlabProjectsInternalServerErrorBody gitlab projects internal server error body
+swagger:model GitlabProjectsInternalServerErrorBody
+*/
+type GitlabProjectsInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this gitlab projects internal server error body
+func (o *GitlabProjectsInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this gitlab projects internal server error body based on context it is used
+func (o *GitlabProjectsInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GitlabProjectsInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GitlabProjectsInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res GitlabProjectsInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }

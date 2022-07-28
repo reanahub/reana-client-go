@@ -127,13 +127,24 @@ func NewGetYouForbidden() *GetYouForbidden {
 Request failed. User token not valid.
 */
 type GetYouForbidden struct {
+	Payload *GetYouForbiddenBody
 }
 
 func (o *GetYouForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/you][%d] getYouForbidden ", 403)
+	return fmt.Sprintf("[GET /api/you][%d] getYouForbidden  %+v", 403, o.Payload)
+}
+func (o *GetYouForbidden) GetPayload() *GetYouForbiddenBody {
+	return o.Payload
 }
 
 func (o *GetYouForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GetYouForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -148,14 +159,99 @@ func NewGetYouInternalServerError() *GetYouInternalServerError {
 Request failed. Internal server error.
 */
 type GetYouInternalServerError struct {
+	Payload *GetYouInternalServerErrorBody
 }
 
 func (o *GetYouInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/you][%d] getYouInternalServerError ", 500)
+	return fmt.Sprintf("[GET /api/you][%d] getYouInternalServerError  %+v", 500, o.Payload)
+}
+func (o *GetYouInternalServerError) GetPayload() *GetYouInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *GetYouInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(GetYouInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*GetYouForbiddenBody get you forbidden body
+swagger:model GetYouForbiddenBody
+*/
+type GetYouForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get you forbidden body
+func (o *GetYouForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get you forbidden body based on context it is used
+func (o *GetYouForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetYouForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetYouForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res GetYouForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GetYouInternalServerErrorBody get you internal server error body
+swagger:model GetYouInternalServerErrorBody
+*/
+type GetYouInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get you internal server error body
+func (o *GetYouInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get you internal server error body based on context it is used
+func (o *GetYouInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetYouInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetYouInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res GetYouInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 

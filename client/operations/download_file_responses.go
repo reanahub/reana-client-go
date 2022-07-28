@@ -6,11 +6,13 @@ package operations
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"fmt"
 	"io"
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // DownloadFileReader is a Reader for the DownloadFile structure.
@@ -121,13 +123,24 @@ func NewDownloadFileForbidden() *DownloadFileForbidden {
 Request failed. User is not allowed to access workflow.
 */
 type DownloadFileForbidden struct {
+	Payload *DownloadFileForbiddenBody
 }
 
 func (o *DownloadFileForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileForbidden ", 403)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileForbidden  %+v", 403, o.Payload)
+}
+func (o *DownloadFileForbidden) GetPayload() *DownloadFileForbiddenBody {
+	return o.Payload
 }
 
 func (o *DownloadFileForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(DownloadFileForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -142,13 +155,24 @@ func NewDownloadFileNotFound() *DownloadFileNotFound {
 Request failed. `file_name` does not exist .
 */
 type DownloadFileNotFound struct {
+	Payload *DownloadFileNotFoundBody
 }
 
 func (o *DownloadFileNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileNotFound ", 404)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileNotFound  %+v", 404, o.Payload)
+}
+func (o *DownloadFileNotFound) GetPayload() *DownloadFileNotFoundBody {
+	return o.Payload
 }
 
 func (o *DownloadFileNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(DownloadFileNotFoundBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -163,13 +187,135 @@ func NewDownloadFileInternalServerError() *DownloadFileInternalServerError {
 Request failed. Internal server error.
 */
 type DownloadFileInternalServerError struct {
+	Payload *DownloadFileInternalServerErrorBody
 }
 
 func (o *DownloadFileInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileInternalServerError ", 500)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileInternalServerError  %+v", 500, o.Payload)
+}
+func (o *DownloadFileInternalServerError) GetPayload() *DownloadFileInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *DownloadFileInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(DownloadFileInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*DownloadFileForbiddenBody download file forbidden body
+swagger:model DownloadFileForbiddenBody
+*/
+type DownloadFileForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this download file forbidden body
+func (o *DownloadFileForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this download file forbidden body based on context it is used
+func (o *DownloadFileForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DownloadFileForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DownloadFileForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res DownloadFileForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*DownloadFileInternalServerErrorBody download file internal server error body
+swagger:model DownloadFileInternalServerErrorBody
+*/
+type DownloadFileInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this download file internal server error body
+func (o *DownloadFileInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this download file internal server error body based on context it is used
+func (o *DownloadFileInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DownloadFileInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DownloadFileInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res DownloadFileInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*DownloadFileNotFoundBody download file not found body
+swagger:model DownloadFileNotFoundBody
+*/
+type DownloadFileNotFoundBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this download file not found body
+func (o *DownloadFileNotFoundBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this download file not found body based on context it is used
+func (o *DownloadFileNotFoundBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DownloadFileNotFoundBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DownloadFileNotFoundBody) UnmarshalBinary(b []byte) error {
+	var res DownloadFileNotFoundBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }

@@ -30,6 +30,12 @@ func (o *StatusReader) ReadResponse(response runtime.ClientResponse, consumer ru
 			return nil, err
 		}
 		return result, nil
+	case 500:
+		result := NewStatusInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	default:
 		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
 	}
@@ -64,6 +70,75 @@ func (o *StatusOK) readResponse(response runtime.ClientResponse, consumer runtim
 		return err
 	}
 
+	return nil
+}
+
+// NewStatusInternalServerError creates a StatusInternalServerError with default headers values
+func NewStatusInternalServerError() *StatusInternalServerError {
+	return &StatusInternalServerError{}
+}
+
+/* StatusInternalServerError describes a response with status code 500, with default header values.
+
+Request failed. Internal controller error.
+*/
+type StatusInternalServerError struct {
+	Payload *StatusInternalServerErrorBody
+}
+
+func (o *StatusInternalServerError) Error() string {
+	return fmt.Sprintf("[GET /api/status][%d] statusInternalServerError  %+v", 500, o.Payload)
+}
+func (o *StatusInternalServerError) GetPayload() *StatusInternalServerErrorBody {
+	return o.Payload
+}
+
+func (o *StatusInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(StatusInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*StatusInternalServerErrorBody status internal server error body
+swagger:model StatusInternalServerErrorBody
+*/
+type StatusInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this status internal server error body
+func (o *StatusInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this status internal server error body based on context it is used
+func (o *StatusInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *StatusInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *StatusInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res StatusInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 
