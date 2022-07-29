@@ -128,7 +128,7 @@ progress, duration.`,
 		&o.includeDuration,
 		"include-duration",
 		false,
-		`Include the duration of the workflows in seconds. 
+		`Include the duration of the workflows in seconds.
 In case a workflow is in progress, its duration as of now will be shown.`,
 	)
 	f.BoolVar(

@@ -21,7 +21,9 @@ import (
 
 	"golang.org/x/exp/slices"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 )
 
 var FilesBlacklist = []string{".git/", "/.git/"}
@@ -202,4 +204,11 @@ func GetWorkflowNameAndRunNumber(workflowName string) (string, string) {
 
 func FormatSessionURI(serverURL string, path string, token string) string {
 	return serverURL + path + "?token=" + token
+}
+
+func LogCmdFlags(cmd *cobra.Command) {
+	log.Debugf("command: %s", cmd.CalledAs())
+	cmd.Flags().Visit(func(f *pflag.Flag) {
+		log.Debugf("%s: %s", f.Name, f.Value)
+	})
 }
