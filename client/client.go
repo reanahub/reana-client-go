@@ -8,6 +8,7 @@ import (
 	"os"
 
 	"github.com/go-openapi/strfmt"
+	log "github.com/sirupsen/logrus"
 
 	httptransport "github.com/go-openapi/runtime/client"
 )
@@ -43,6 +44,8 @@ func newApiClient() (*API, error) {
 
 	// create the transport
 	transport := httptransport.New(u.Host, "", []string{"https"})
+	transport.SetLogger(log.StandardLogger())
+	transport.SetDebug(log.GetLevel() == log.DebugLevel)
 
 	// create the API client, with the transport
 	return New(transport, strfmt.Default), nil

@@ -16,6 +16,7 @@ import (
 	"reanahub/reana-client-go/utils"
 	"reanahub/reana-client-go/validation"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -66,7 +67,7 @@ func newOpenCmd() *cobra.Command {
 			if err := validation.ValidateWorkflow(workflow); err != nil {
 				return err
 			}
-			if err := validation.ValidateArgChoice(
+			if err := validation.ValidateChoice(
 				interactiveSessionType,
 				utils.InteractiveSessionTypes,
 				"interactive-session-type",
@@ -109,6 +110,7 @@ func open(
 	if err != nil {
 		return err
 	}
+	log.Infof("Opening an interactive session on '%s'", workflow)
 	openResp, err := api.Operations.OpenInteractiveSession(openParams)
 	if err != nil {
 		return fmt.Errorf("interactive session could not be opened:\n%v", err)

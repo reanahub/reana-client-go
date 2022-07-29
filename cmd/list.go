@@ -104,6 +104,7 @@ progress, its duration as of now will be shown.`)
 }
 
 func list(cmd *cobra.Command, token string, serverURL string) error {
+	utils.LogCmdFlags(cmd)
 	workflow, _ := cmd.Flags().GetString("workflow")
 	listSessions, _ := cmd.Flags().GetBool("sessions")
 	formatFilters, _ := cmd.Flags().GetStringSlice("format")

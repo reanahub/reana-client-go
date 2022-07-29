@@ -82,6 +82,7 @@ func newDuCmd() *cobra.Command {
 }
 
 func du(cmd *cobra.Command, token string, workflow string) error {
+	utils.LogCmdFlags(cmd)
 	summarize, _ := cmd.Flags().GetBool("summarize")
 	humanReadable, _ := cmd.Flags().GetBool("human-readable")
 	filter, _ := cmd.Flags().GetStringArray("filter")
