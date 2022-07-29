@@ -72,7 +72,7 @@ func info(cmd *cobra.Command, token string) error {
 	}
 	infoResp, err := api.Operations.Info(infoParams)
 	if err != nil {
-		return err
+		return utils.HandleBasicApiError(err)
 	}
 
 	p := infoResp.Payload

@@ -126,13 +126,24 @@ func NewGitlabOauthForbidden() *GitlabOauthForbidden {
 Request failed. User token not valid.
 */
 type GitlabOauthForbidden struct {
+	Payload *GitlabOauthForbiddenBody
 }
 
 func (o *GitlabOauthForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthForbidden ", 403)
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthForbidden  %+v", 403, o.Payload)
+}
+func (o *GitlabOauthForbidden) GetPayload() *GitlabOauthForbiddenBody {
+	return o.Payload
 }
 
 func (o *GitlabOauthForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GitlabOauthForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -147,13 +158,24 @@ func NewGitlabOauthInternalServerError() *GitlabOauthInternalServerError {
 Request failed. Internal controller error.
 */
 type GitlabOauthInternalServerError struct {
+	Payload *GitlabOauthInternalServerErrorBody
 }
 
 func (o *GitlabOauthInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthInternalServerError ", 500)
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthInternalServerError  %+v", 500, o.Payload)
+}
+func (o *GitlabOauthInternalServerError) GetPayload() *GitlabOauthInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *GitlabOauthInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GitlabOauthInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -191,6 +213,80 @@ func (o *GitlabOauthCreatedBody) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *GitlabOauthCreatedBody) UnmarshalBinary(b []byte) error {
 	var res GitlabOauthCreatedBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GitlabOauthForbiddenBody gitlab oauth forbidden body
+swagger:model GitlabOauthForbiddenBody
+*/
+type GitlabOauthForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this gitlab oauth forbidden body
+func (o *GitlabOauthForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this gitlab oauth forbidden body based on context it is used
+func (o *GitlabOauthForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GitlabOauthForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GitlabOauthForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res GitlabOauthForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GitlabOauthInternalServerErrorBody gitlab oauth internal server error body
+swagger:model GitlabOauthInternalServerErrorBody
+*/
+type GitlabOauthInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this gitlab oauth internal server error body
+func (o *GitlabOauthInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this gitlab oauth internal server error body based on context it is used
+func (o *GitlabOauthInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GitlabOauthInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GitlabOauthInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res GitlabOauthInternalServerErrorBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

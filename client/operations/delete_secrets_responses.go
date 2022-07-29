@@ -6,11 +6,13 @@ package operations
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
 	"fmt"
 	"io"
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // DeleteSecretsReader is a Reader for the DeleteSecrets structure.
@@ -90,13 +92,24 @@ func NewDeleteSecretsForbidden() *DeleteSecretsForbidden {
 Request failed. Token is not valid.
 */
 type DeleteSecretsForbidden struct {
+	Payload *DeleteSecretsForbiddenBody
 }
 
 func (o *DeleteSecretsForbidden) Error() string {
-	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsForbidden ", 403)
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsForbidden  %+v", 403, o.Payload)
+}
+func (o *DeleteSecretsForbidden) GetPayload() *DeleteSecretsForbiddenBody {
+	return o.Payload
 }
 
 func (o *DeleteSecretsForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(DeleteSecretsForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -141,13 +154,98 @@ func NewDeleteSecretsInternalServerError() *DeleteSecretsInternalServerError {
 Request failed. Internal server error.
 */
 type DeleteSecretsInternalServerError struct {
+	Payload *DeleteSecretsInternalServerErrorBody
 }
 
 func (o *DeleteSecretsInternalServerError) Error() string {
-	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsInternalServerError ", 500)
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsInternalServerError  %+v", 500, o.Payload)
+}
+func (o *DeleteSecretsInternalServerError) GetPayload() *DeleteSecretsInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *DeleteSecretsInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(DeleteSecretsInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*DeleteSecretsForbiddenBody delete secrets forbidden body
+swagger:model DeleteSecretsForbiddenBody
+*/
+type DeleteSecretsForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this delete secrets forbidden body
+func (o *DeleteSecretsForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this delete secrets forbidden body based on context it is used
+func (o *DeleteSecretsForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DeleteSecretsForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DeleteSecretsForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res DeleteSecretsForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*DeleteSecretsInternalServerErrorBody delete secrets internal server error body
+swagger:model DeleteSecretsInternalServerErrorBody
+*/
+type DeleteSecretsInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this delete secrets internal server error body
+func (o *DeleteSecretsInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this delete secrets internal server error body based on context it is used
+func (o *DeleteSecretsInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DeleteSecretsInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DeleteSecretsInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res DeleteSecretsInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }

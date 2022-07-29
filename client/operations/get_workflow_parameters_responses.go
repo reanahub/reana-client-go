@@ -100,13 +100,24 @@ func NewGetWorkflowParametersBadRequest() *GetWorkflowParametersBadRequest {
 Request failed. The incoming payload seems malformed.
 */
 type GetWorkflowParametersBadRequest struct {
+	Payload *GetWorkflowParametersBadRequestBody
 }
 
 func (o *GetWorkflowParametersBadRequest) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersBadRequest ", 400)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersBadRequest  %+v", 400, o.Payload)
+}
+func (o *GetWorkflowParametersBadRequest) GetPayload() *GetWorkflowParametersBadRequestBody {
+	return o.Payload
 }
 
 func (o *GetWorkflowParametersBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GetWorkflowParametersBadRequestBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -121,13 +132,24 @@ func NewGetWorkflowParametersForbidden() *GetWorkflowParametersForbidden {
 Request failed. User is not allowed to access workflow.
 */
 type GetWorkflowParametersForbidden struct {
+	Payload *GetWorkflowParametersForbiddenBody
 }
 
 func (o *GetWorkflowParametersForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersForbidden ", 403)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersForbidden  %+v", 403, o.Payload)
+}
+func (o *GetWorkflowParametersForbidden) GetPayload() *GetWorkflowParametersForbiddenBody {
+	return o.Payload
 }
 
 func (o *GetWorkflowParametersForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GetWorkflowParametersForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -142,13 +164,24 @@ func NewGetWorkflowParametersNotFound() *GetWorkflowParametersNotFound {
 Request failed. Either User or Analysis does not exist.
 */
 type GetWorkflowParametersNotFound struct {
+	Payload *GetWorkflowParametersNotFoundBody
 }
 
 func (o *GetWorkflowParametersNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersNotFound ", 404)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersNotFound  %+v", 404, o.Payload)
+}
+func (o *GetWorkflowParametersNotFound) GetPayload() *GetWorkflowParametersNotFoundBody {
+	return o.Payload
 }
 
 func (o *GetWorkflowParametersNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GetWorkflowParametersNotFoundBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -163,14 +196,173 @@ func NewGetWorkflowParametersInternalServerError() *GetWorkflowParametersInterna
 Request failed. Internal controller error.
 */
 type GetWorkflowParametersInternalServerError struct {
+	Payload *GetWorkflowParametersInternalServerErrorBody
 }
 
 func (o *GetWorkflowParametersInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersInternalServerError ", 500)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersInternalServerError  %+v", 500, o.Payload)
+}
+func (o *GetWorkflowParametersInternalServerError) GetPayload() *GetWorkflowParametersInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *GetWorkflowParametersInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(GetWorkflowParametersInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*GetWorkflowParametersBadRequestBody get workflow parameters bad request body
+swagger:model GetWorkflowParametersBadRequestBody
+*/
+type GetWorkflowParametersBadRequestBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get workflow parameters bad request body
+func (o *GetWorkflowParametersBadRequestBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get workflow parameters bad request body based on context it is used
+func (o *GetWorkflowParametersBadRequestBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWorkflowParametersBadRequestBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWorkflowParametersBadRequestBody) UnmarshalBinary(b []byte) error {
+	var res GetWorkflowParametersBadRequestBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GetWorkflowParametersForbiddenBody get workflow parameters forbidden body
+swagger:model GetWorkflowParametersForbiddenBody
+*/
+type GetWorkflowParametersForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get workflow parameters forbidden body
+func (o *GetWorkflowParametersForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get workflow parameters forbidden body based on context it is used
+func (o *GetWorkflowParametersForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWorkflowParametersForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWorkflowParametersForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res GetWorkflowParametersForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GetWorkflowParametersInternalServerErrorBody get workflow parameters internal server error body
+swagger:model GetWorkflowParametersInternalServerErrorBody
+*/
+type GetWorkflowParametersInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get workflow parameters internal server error body
+func (o *GetWorkflowParametersInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get workflow parameters internal server error body based on context it is used
+func (o *GetWorkflowParametersInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWorkflowParametersInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWorkflowParametersInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res GetWorkflowParametersInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GetWorkflowParametersNotFoundBody get workflow parameters not found body
+swagger:model GetWorkflowParametersNotFoundBody
+*/
+type GetWorkflowParametersNotFoundBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get workflow parameters not found body
+func (o *GetWorkflowParametersNotFoundBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get workflow parameters not found body based on context it is used
+func (o *GetWorkflowParametersNotFoundBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWorkflowParametersNotFoundBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWorkflowParametersNotFoundBody) UnmarshalBinary(b []byte) error {
+	var res GetWorkflowParametersNotFoundBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 

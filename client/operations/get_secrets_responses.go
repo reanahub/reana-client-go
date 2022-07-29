@@ -89,13 +89,24 @@ func NewGetSecretsForbidden() *GetSecretsForbidden {
 Request failed. Token is not valid.
 */
 type GetSecretsForbidden struct {
+	Payload *GetSecretsForbiddenBody
 }
 
 func (o *GetSecretsForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsForbidden ", 403)
+	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsForbidden  %+v", 403, o.Payload)
+}
+func (o *GetSecretsForbidden) GetPayload() *GetSecretsForbiddenBody {
+	return o.Payload
 }
 
 func (o *GetSecretsForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GetSecretsForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -110,14 +121,99 @@ func NewGetSecretsInternalServerError() *GetSecretsInternalServerError {
 Request failed. Internal server error.
 */
 type GetSecretsInternalServerError struct {
+	Payload *GetSecretsInternalServerErrorBody
 }
 
 func (o *GetSecretsInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsInternalServerError ", 500)
+	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsInternalServerError  %+v", 500, o.Payload)
+}
+func (o *GetSecretsInternalServerError) GetPayload() *GetSecretsInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *GetSecretsInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(GetSecretsInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*GetSecretsForbiddenBody get secrets forbidden body
+swagger:model GetSecretsForbiddenBody
+*/
+type GetSecretsForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get secrets forbidden body
+func (o *GetSecretsForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get secrets forbidden body based on context it is used
+func (o *GetSecretsForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetSecretsForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetSecretsForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res GetSecretsForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GetSecretsInternalServerErrorBody get secrets internal server error body
+swagger:model GetSecretsInternalServerErrorBody
+*/
+type GetSecretsInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get secrets internal server error body
+func (o *GetSecretsInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get secrets internal server error body based on context it is used
+func (o *GetSecretsInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetSecretsInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetSecretsInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res GetSecretsInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 

@@ -100,13 +100,24 @@ func NewMoveFilesBadRequest() *MoveFilesBadRequest {
 Request failed. The incoming payload seems malformed.
 */
 type MoveFilesBadRequest struct {
+	Payload *MoveFilesBadRequestBody
 }
 
 func (o *MoveFilesBadRequest) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesBadRequest ", 400)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesBadRequest  %+v", 400, o.Payload)
+}
+func (o *MoveFilesBadRequest) GetPayload() *MoveFilesBadRequestBody {
+	return o.Payload
 }
 
 func (o *MoveFilesBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(MoveFilesBadRequestBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -121,13 +132,24 @@ func NewMoveFilesForbidden() *MoveFilesForbidden {
 Request failed. User is not allowed to access workflow.
 */
 type MoveFilesForbidden struct {
+	Payload *MoveFilesForbiddenBody
 }
 
 func (o *MoveFilesForbidden) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesForbidden ", 403)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesForbidden  %+v", 403, o.Payload)
+}
+func (o *MoveFilesForbidden) GetPayload() *MoveFilesForbiddenBody {
+	return o.Payload
 }
 
 func (o *MoveFilesForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(MoveFilesForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -142,13 +164,24 @@ func NewMoveFilesNotFound() *MoveFilesNotFound {
 Request failed. Either User or Workflow does not exist.
 */
 type MoveFilesNotFound struct {
+	Payload *MoveFilesNotFoundBody
 }
 
 func (o *MoveFilesNotFound) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesNotFound ", 404)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesNotFound  %+v", 404, o.Payload)
+}
+func (o *MoveFilesNotFound) GetPayload() *MoveFilesNotFoundBody {
+	return o.Payload
 }
 
 func (o *MoveFilesNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(MoveFilesNotFoundBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -163,14 +196,173 @@ func NewMoveFilesInternalServerError() *MoveFilesInternalServerError {
 Request failed. Internal controller error.
 */
 type MoveFilesInternalServerError struct {
+	Payload *MoveFilesInternalServerErrorBody
 }
 
 func (o *MoveFilesInternalServerError) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesInternalServerError ", 500)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesInternalServerError  %+v", 500, o.Payload)
+}
+func (o *MoveFilesInternalServerError) GetPayload() *MoveFilesInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *MoveFilesInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(MoveFilesInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*MoveFilesBadRequestBody move files bad request body
+swagger:model MoveFilesBadRequestBody
+*/
+type MoveFilesBadRequestBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this move files bad request body
+func (o *MoveFilesBadRequestBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this move files bad request body based on context it is used
+func (o *MoveFilesBadRequestBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *MoveFilesBadRequestBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *MoveFilesBadRequestBody) UnmarshalBinary(b []byte) error {
+	var res MoveFilesBadRequestBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*MoveFilesForbiddenBody move files forbidden body
+swagger:model MoveFilesForbiddenBody
+*/
+type MoveFilesForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this move files forbidden body
+func (o *MoveFilesForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this move files forbidden body based on context it is used
+func (o *MoveFilesForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *MoveFilesForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *MoveFilesForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res MoveFilesForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*MoveFilesInternalServerErrorBody move files internal server error body
+swagger:model MoveFilesInternalServerErrorBody
+*/
+type MoveFilesInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this move files internal server error body
+func (o *MoveFilesInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this move files internal server error body based on context it is used
+func (o *MoveFilesInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *MoveFilesInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *MoveFilesInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res MoveFilesInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*MoveFilesNotFoundBody move files not found body
+swagger:model MoveFilesNotFoundBody
+*/
+type MoveFilesNotFoundBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this move files not found body
+func (o *MoveFilesNotFoundBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this move files not found body based on context it is used
+func (o *MoveFilesNotFoundBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *MoveFilesNotFoundBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *MoveFilesNotFoundBody) UnmarshalBinary(b []byte) error {
+	var res MoveFilesNotFoundBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 

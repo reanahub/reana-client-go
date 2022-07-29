@@ -112,13 +112,24 @@ func NewStartWorkflowBadRequest() *StartWorkflowBadRequest {
 Request failed. The incoming payload seems malformed.
 */
 type StartWorkflowBadRequest struct {
+	Payload *StartWorkflowBadRequestBody
 }
 
 func (o *StartWorkflowBadRequest) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowBadRequest ", 400)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowBadRequest  %+v", 400, o.Payload)
+}
+func (o *StartWorkflowBadRequest) GetPayload() *StartWorkflowBadRequestBody {
+	return o.Payload
 }
 
 func (o *StartWorkflowBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(StartWorkflowBadRequestBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -133,13 +144,24 @@ func NewStartWorkflowForbidden() *StartWorkflowForbidden {
 Request failed. User is not allowed to access workflow.
 */
 type StartWorkflowForbidden struct {
+	Payload *StartWorkflowForbiddenBody
 }
 
 func (o *StartWorkflowForbidden) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowForbidden ", 403)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowForbidden  %+v", 403, o.Payload)
+}
+func (o *StartWorkflowForbidden) GetPayload() *StartWorkflowForbiddenBody {
+	return o.Payload
 }
 
 func (o *StartWorkflowForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(StartWorkflowForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -154,13 +176,24 @@ func NewStartWorkflowNotFound() *StartWorkflowNotFound {
 Request failed. Either User or Workflow does not exist.
 */
 type StartWorkflowNotFound struct {
+	Payload *StartWorkflowNotFoundBody
 }
 
 func (o *StartWorkflowNotFound) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotFound ", 404)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotFound  %+v", 404, o.Payload)
+}
+func (o *StartWorkflowNotFound) GetPayload() *StartWorkflowNotFoundBody {
+	return o.Payload
 }
 
 func (o *StartWorkflowNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(StartWorkflowNotFoundBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -175,13 +208,24 @@ func NewStartWorkflowConflict() *StartWorkflowConflict {
 Request failed. The workflow could not be started due to a conflict.
 */
 type StartWorkflowConflict struct {
+	Payload *StartWorkflowConflictBody
 }
 
 func (o *StartWorkflowConflict) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowConflict ", 409)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowConflict  %+v", 409, o.Payload)
+}
+func (o *StartWorkflowConflict) GetPayload() *StartWorkflowConflictBody {
+	return o.Payload
 }
 
 func (o *StartWorkflowConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(StartWorkflowConflictBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -196,13 +240,24 @@ func NewStartWorkflowInternalServerError() *StartWorkflowInternalServerError {
 Request failed. Internal controller error.
 */
 type StartWorkflowInternalServerError struct {
+	Payload *StartWorkflowInternalServerErrorBody
 }
 
 func (o *StartWorkflowInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowInternalServerError ", 500)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowInternalServerError  %+v", 500, o.Payload)
+}
+func (o *StartWorkflowInternalServerError) GetPayload() *StartWorkflowInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *StartWorkflowInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(StartWorkflowInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -217,14 +272,247 @@ func NewStartWorkflowNotImplemented() *StartWorkflowNotImplemented {
 Request failed. The specified status change is not implemented.
 */
 type StartWorkflowNotImplemented struct {
+	Payload *StartWorkflowNotImplementedBody
 }
 
 func (o *StartWorkflowNotImplemented) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotImplemented ", 501)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotImplemented  %+v", 501, o.Payload)
+}
+func (o *StartWorkflowNotImplemented) GetPayload() *StartWorkflowNotImplementedBody {
+	return o.Payload
 }
 
 func (o *StartWorkflowNotImplemented) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(StartWorkflowNotImplementedBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*StartWorkflowBadRequestBody start workflow bad request body
+swagger:model StartWorkflowBadRequestBody
+*/
+type StartWorkflowBadRequestBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this start workflow bad request body
+func (o *StartWorkflowBadRequestBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this start workflow bad request body based on context it is used
+func (o *StartWorkflowBadRequestBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *StartWorkflowBadRequestBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *StartWorkflowBadRequestBody) UnmarshalBinary(b []byte) error {
+	var res StartWorkflowBadRequestBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*StartWorkflowConflictBody start workflow conflict body
+swagger:model StartWorkflowConflictBody
+*/
+type StartWorkflowConflictBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this start workflow conflict body
+func (o *StartWorkflowConflictBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this start workflow conflict body based on context it is used
+func (o *StartWorkflowConflictBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *StartWorkflowConflictBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *StartWorkflowConflictBody) UnmarshalBinary(b []byte) error {
+	var res StartWorkflowConflictBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*StartWorkflowForbiddenBody start workflow forbidden body
+swagger:model StartWorkflowForbiddenBody
+*/
+type StartWorkflowForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this start workflow forbidden body
+func (o *StartWorkflowForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this start workflow forbidden body based on context it is used
+func (o *StartWorkflowForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *StartWorkflowForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *StartWorkflowForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res StartWorkflowForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*StartWorkflowInternalServerErrorBody start workflow internal server error body
+swagger:model StartWorkflowInternalServerErrorBody
+*/
+type StartWorkflowInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this start workflow internal server error body
+func (o *StartWorkflowInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this start workflow internal server error body based on context it is used
+func (o *StartWorkflowInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *StartWorkflowInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *StartWorkflowInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res StartWorkflowInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*StartWorkflowNotFoundBody start workflow not found body
+swagger:model StartWorkflowNotFoundBody
+*/
+type StartWorkflowNotFoundBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this start workflow not found body
+func (o *StartWorkflowNotFoundBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this start workflow not found body based on context it is used
+func (o *StartWorkflowNotFoundBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *StartWorkflowNotFoundBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *StartWorkflowNotFoundBody) UnmarshalBinary(b []byte) error {
+	var res StartWorkflowNotFoundBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*StartWorkflowNotImplementedBody start workflow not implemented body
+swagger:model StartWorkflowNotImplementedBody
+*/
+type StartWorkflowNotImplementedBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this start workflow not implemented body
+func (o *StartWorkflowNotImplementedBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this start workflow not implemented body based on context it is used
+func (o *StartWorkflowNotImplementedBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *StartWorkflowNotImplementedBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *StartWorkflowNotImplementedBody) UnmarshalBinary(b []byte) error {
+	var res StartWorkflowNotImplementedBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 

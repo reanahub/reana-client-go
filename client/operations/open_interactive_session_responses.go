@@ -100,13 +100,24 @@ func NewOpenInteractiveSessionBadRequest() *OpenInteractiveSessionBadRequest {
 Request failed. The incoming payload seems malformed.
 */
 type OpenInteractiveSessionBadRequest struct {
+	Payload *OpenInteractiveSessionBadRequestBody
 }
 
 func (o *OpenInteractiveSessionBadRequest) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionBadRequest ", 400)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionBadRequest  %+v", 400, o.Payload)
+}
+func (o *OpenInteractiveSessionBadRequest) GetPayload() *OpenInteractiveSessionBadRequestBody {
+	return o.Payload
 }
 
 func (o *OpenInteractiveSessionBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(OpenInteractiveSessionBadRequestBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -121,13 +132,24 @@ func NewOpenInteractiveSessionForbidden() *OpenInteractiveSessionForbidden {
 Request failed. User is not allowed to access workflow.
 */
 type OpenInteractiveSessionForbidden struct {
+	Payload *OpenInteractiveSessionForbiddenBody
 }
 
 func (o *OpenInteractiveSessionForbidden) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionForbidden ", 403)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionForbidden  %+v", 403, o.Payload)
+}
+func (o *OpenInteractiveSessionForbidden) GetPayload() *OpenInteractiveSessionForbiddenBody {
+	return o.Payload
 }
 
 func (o *OpenInteractiveSessionForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(OpenInteractiveSessionForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -142,13 +164,24 @@ func NewOpenInteractiveSessionNotFound() *OpenInteractiveSessionNotFound {
 Request failed. Either user or workflow does not exist.
 */
 type OpenInteractiveSessionNotFound struct {
+	Payload *OpenInteractiveSessionNotFoundBody
 }
 
 func (o *OpenInteractiveSessionNotFound) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionNotFound ", 404)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionNotFound  %+v", 404, o.Payload)
+}
+func (o *OpenInteractiveSessionNotFound) GetPayload() *OpenInteractiveSessionNotFoundBody {
+	return o.Payload
 }
 
 func (o *OpenInteractiveSessionNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(OpenInteractiveSessionNotFoundBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -163,14 +196,62 @@ func NewOpenInteractiveSessionInternalServerError() *OpenInteractiveSessionInter
 Request failed. Internal controller error.
 */
 type OpenInteractiveSessionInternalServerError struct {
+	Payload *OpenInteractiveSessionInternalServerErrorBody
 }
 
 func (o *OpenInteractiveSessionInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionInternalServerError ", 500)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionInternalServerError  %+v", 500, o.Payload)
+}
+func (o *OpenInteractiveSessionInternalServerError) GetPayload() *OpenInteractiveSessionInternalServerErrorBody {
+	return o.Payload
 }
 
 func (o *OpenInteractiveSessionInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	o.Payload = new(OpenInteractiveSessionInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+/*OpenInteractiveSessionBadRequestBody open interactive session bad request body
+swagger:model OpenInteractiveSessionBadRequestBody
+*/
+type OpenInteractiveSessionBadRequestBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this open interactive session bad request body
+func (o *OpenInteractiveSessionBadRequestBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this open interactive session bad request body based on context it is used
+func (o *OpenInteractiveSessionBadRequestBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *OpenInteractiveSessionBadRequestBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *OpenInteractiveSessionBadRequestBody) UnmarshalBinary(b []byte) error {
+	var res OpenInteractiveSessionBadRequestBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 
@@ -204,6 +285,117 @@ func (o *OpenInteractiveSessionBody) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *OpenInteractiveSessionBody) UnmarshalBinary(b []byte) error {
 	var res OpenInteractiveSessionBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*OpenInteractiveSessionForbiddenBody open interactive session forbidden body
+swagger:model OpenInteractiveSessionForbiddenBody
+*/
+type OpenInteractiveSessionForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this open interactive session forbidden body
+func (o *OpenInteractiveSessionForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this open interactive session forbidden body based on context it is used
+func (o *OpenInteractiveSessionForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *OpenInteractiveSessionForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *OpenInteractiveSessionForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res OpenInteractiveSessionForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*OpenInteractiveSessionInternalServerErrorBody open interactive session internal server error body
+swagger:model OpenInteractiveSessionInternalServerErrorBody
+*/
+type OpenInteractiveSessionInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this open interactive session internal server error body
+func (o *OpenInteractiveSessionInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this open interactive session internal server error body based on context it is used
+func (o *OpenInteractiveSessionInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *OpenInteractiveSessionInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *OpenInteractiveSessionInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res OpenInteractiveSessionInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*OpenInteractiveSessionNotFoundBody open interactive session not found body
+swagger:model OpenInteractiveSessionNotFoundBody
+*/
+type OpenInteractiveSessionNotFoundBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this open interactive session not found body
+func (o *OpenInteractiveSessionNotFoundBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this open interactive session not found body based on context it is used
+func (o *OpenInteractiveSessionNotFoundBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *OpenInteractiveSessionNotFoundBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *OpenInteractiveSessionNotFoundBody) UnmarshalBinary(b []byte) error {
+	var res OpenInteractiveSessionNotFoundBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

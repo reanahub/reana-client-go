@@ -9,10 +9,10 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
+	"reanahub/reana-client-go/utils"
 	"reanahub/reana-client-go/validation"
 
 	"github.com/spf13/cobra"
@@ -77,7 +77,7 @@ func close(cmd *cobra.Command, token string, workflow string) error {
 	}
 	_, err = api.Operations.CloseInteractiveSession(closeParams)
 	if err != nil {
-		return fmt.Errorf("interactive session could not be closed:\n%v", err)
+		return utils.HandleBasicApiError(err)
 	}
 
 	cmd.Println("Interactive session for workflow", workflow, "was successfully closed")
