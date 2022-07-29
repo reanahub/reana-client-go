@@ -9,7 +9,6 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
-	"fmt"
 	"os"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
@@ -118,7 +117,7 @@ func (o *openOptions) run(cmd *cobra.Command) error {
 	log.Infof("Opening an interactive session on '%s'", o.workflow)
 	openResp, err := api.Operations.OpenInteractiveSession(openParams)
 	if err != nil {
-		return fmt.Errorf("interactive session could not be opened:\n%v", err)
+		return err
 	}
 
 	cmd.Println("Interactive session opened successfully")

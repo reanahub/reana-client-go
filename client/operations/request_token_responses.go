@@ -390,8 +390,8 @@ swagger:model RequestTokenUnauthorizedBody
 */
 type RequestTokenUnauthorizedBody struct {
 
-	// error
-	Error string `json:"error,omitempty"`
+	// message
+	Message string `json:"message,omitempty"`
 }
 
 // Validate validates this request token unauthorized body

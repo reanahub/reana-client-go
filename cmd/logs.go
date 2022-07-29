@@ -143,7 +143,7 @@ func (o *logsOptions) run(cmd *cobra.Command) error {
 	}
 	logsResp, err := api.Operations.GetWorkflowLogs(logsParams)
 	if err != nil {
-		return fmt.Errorf("workflow logs could not be retrieved:\n%v", err)
+		return err
 	}
 
 	var workflowLogs Logs

@@ -1019,8 +1019,8 @@ swagger:model GetYouUnauthorizedBody
 */
 type GetYouUnauthorizedBody struct {
 
-	// error
-	Error string `json:"error,omitempty"`
+	// message
+	Message string `json:"message,omitempty"`
 }
 
 // Validate validates this get you unauthorized body

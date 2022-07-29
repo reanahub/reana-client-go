@@ -9,8 +9,10 @@ under the terms of the MIT License; see LICENSE file for more details.
 package main
 
 import (
+	"fmt"
 	"os"
 	"reanahub/reana-client-go/cmd"
+	"reanahub/reana-client-go/utils"
 )
 
 func main() {
@@ -18,6 +20,8 @@ func main() {
 	err := rootCmd.Execute()
 
 	if err != nil {
+		err := utils.HandleApiError(err)
+		fmt.Fprintf(os.Stderr, "Error: %s\n", err.Error())
 		os.Exit(1)
 	}
 }

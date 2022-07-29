@@ -11,7 +11,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/validation"

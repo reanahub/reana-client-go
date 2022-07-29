@@ -10,7 +10,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"os"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
@@ -123,7 +122,7 @@ func (o *duOptions) run(cmd *cobra.Command) error {
 	}
 	duResp, err := api.Operations.GetWorkflowDiskUsage(duParams)
 	if err != nil {
-		return fmt.Errorf("disk usage could not be retrieved:\n%v", err)
+		return err
 	}
 
 	err = displayDuPayload(cmd, duResp.Payload, o.humanReadable)

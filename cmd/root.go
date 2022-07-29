@@ -24,10 +24,11 @@ type rootOptions struct {
 func NewRootCmd() *cobra.Command {
 	o := &rootOptions{}
 	cmd := &cobra.Command{
-		Use:          "reana-client",
-		Short:        "REANA client for interacting with REANA server.",
-		Long:         "REANA client for interacting with REANA server.",
-		SilenceUsage: true,
+		Use:           "reana-client",
+		Short:         "REANA client for interacting with REANA server.",
+		Long:          "REANA client for interacting with REANA server.",
+		SilenceUsage:  true,
+		SilenceErrors: true,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			return o.run(cmd)
 		},
