@@ -37,72 +37,77 @@ interactive session. Overrides the default image
 for the selected type.
 `
 
+type openOptions struct {
+	token                  string
+	serverURL              string
+	workflow               string
+	image                  string
+	interactiveSessionType string
+}
+
 func newOpenCmd() *cobra.Command {
+	o := &openOptions{}
+
 	cmd := &cobra.Command{
 		Use:   "open",
 		Short: "Open an interactive session inside the workspace.",
 		Long:  openDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			token, _ := cmd.Flags().GetString("access-token")
-			if token == "" {
-				token = os.Getenv("REANA_ACCESS_TOKEN")
+			if o.token == "" {
+				o.token = os.Getenv("REANA_ACCESS_TOKEN")
 			}
-			serverURL := os.Getenv("REANA_SERVER_URL")
-			workflow, _ := cmd.Flags().GetString("workflow")
-			if workflow == "" {
-				workflow = os.Getenv("REANA_WORKON")
+			o.serverURL = os.Getenv("REANA_SERVER_URL")
+			if o.workflow == "" {
+				o.workflow = os.Getenv("REANA_WORKON")
 			}
-			interactiveSessionType := utils.InteractiveSessionTypes[0]
+			o.interactiveSessionType = utils.InteractiveSessionTypes[0]
 			if len(args) > 0 {
-				interactiveSessionType = args[0]
+				o.interactiveSessionType = args[0]
 			}
 
-			if err := validation.ValidateAccessToken(token); err != nil {
+			if err := validation.ValidateAccessToken(o.token); err != nil {
 				return err
 			}
-			if err := validation.ValidateServerURL(serverURL); err != nil {
+			if err := validation.ValidateServerURL(o.serverURL); err != nil {
 				return err
 			}
-			if err := validation.ValidateWorkflow(workflow); err != nil {
+			if err := validation.ValidateWorkflow(o.workflow); err != nil {
 				return err
 			}
 			if err := validation.ValidateArgChoice(
-				interactiveSessionType,
+				o.interactiveSessionType,
 				utils.InteractiveSessionTypes,
 				"interactive-session-type",
 			); err != nil {
 				return err
 			}
-			if err := open(cmd, token, serverURL, workflow, interactiveSessionType); err != nil {
+			if err := o.run(cmd); err != nil {
 				return err
 			}
 			return nil
 		},
 	}
 
-	cmd.Flags().StringP("access-token", "t", "", "Access token of the current user.")
-	cmd.Flags().
-		StringP("workflow", "w", "", "Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.")
-	cmd.Flags().StringP("image", "i", "", openImageFlagDesc)
+	f := cmd.Flags()
+	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.workflow,
+		"workflow",
+		"w", "",
+		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
+	)
+	f.StringVarP(&o.image, "image", "i", "", openImageFlagDesc)
 
 	return cmd
 }
 
-func open(
-	cmd *cobra.Command,
-	token string,
-	serverURL string,
-	workflow string,
-	interactiveSessionType string,
-) error {
-	image, _ := cmd.Flags().GetString("image")
-
+func (o *openOptions) run(cmd *cobra.Command) error {
 	openParams := operations.NewOpenInteractiveSessionParams()
-	openParams.SetAccessToken(&token)
-	openParams.SetWorkflowIDOrName(workflow)
-	openParams.SetInteractiveSessionType(interactiveSessionType)
+	openParams.SetAccessToken(&o.token)
+	openParams.SetWorkflowIDOrName(o.workflow)
+	openParams.SetInteractiveSessionType(o.interactiveSessionType)
 	openParams.SetInteractiveSessionConfiguration(
-		operations.OpenInteractiveSessionBody{Image: image},
+		operations.OpenInteractiveSessionBody{Image: o.image},
 	)
 
 	api, err := client.ApiClient()
@@ -115,7 +120,7 @@ func open(
 	}
 
 	cmd.Println("Interactive session opened successfully")
-	cmd.Println(utils.FormatSessionURI(serverURL, openResp.Payload.Path, token))
+	cmd.Println(utils.FormatSessionURI(o.serverURL, openResp.Payload.Path, o.token))
 	cmd.Println("It could take several minutes to start the interactive session.")
 	return nil
 }

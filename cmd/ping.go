@@ -25,39 +25,46 @@ Check connection to REANA server.
 The ` + "``ping``" + ` command allows to test connection to REANA server.
 `
 
+type pingOptions struct {
+	token     string
+	serverURL string
+}
+
 func newPingCmd() *cobra.Command {
+	o := &pingOptions{}
+
 	cmd := &cobra.Command{
 		Use:   "ping",
 		Short: "Check connection to REANA server.",
 		Long:  pingDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			token, _ := cmd.Flags().GetString("access-token")
-			if token == "" {
-				token = os.Getenv("REANA_ACCESS_TOKEN")
+			if o.token == "" {
+				o.token = os.Getenv("REANA_ACCESS_TOKEN")
 			}
-			serverURL := os.Getenv("REANA_SERVER_URL")
+			o.serverURL = os.Getenv("REANA_SERVER_URL")
 
-			if err := validation.ValidateAccessToken(token); err != nil {
+			if err := validation.ValidateAccessToken(o.token); err != nil {
 				return err
 			}
-			if err := validation.ValidateServerURL(serverURL); err != nil {
+			if err := validation.ValidateServerURL(o.serverURL); err != nil {
 				return err
 			}
-			if err := ping(cmd, token, serverURL); err != nil {
+			if err := o.run(cmd); err != nil {
 				return err
 			}
 			return nil
 		},
 	}
 
-	cmd.Flags().StringP("access-token", "t", "", "Access token of the current user.")
+	f := cmd.Flags()
+	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
 
 	return cmd
 }
 
-func ping(cmd *cobra.Command, token string, serverURL string) error {
+func (o *pingOptions) run(cmd *cobra.Command) error {
 	pingParams := operations.NewGetYouParams()
-	pingParams.SetAccessToken(&token)
+	pingParams.SetAccessToken(&o.token)
 
 	api, err := client.ApiClient()
 	if err != nil {
@@ -69,7 +76,7 @@ func ping(cmd *cobra.Command, token string, serverURL string) error {
 	}
 
 	p := pingResp.Payload
-	response := fmt.Sprintf("REANA server: %s \n", serverURL) +
+	response := fmt.Sprintf("REANA server: %s \n", o.serverURL) +
 		fmt.Sprintf("REANA server version: %s \n", p.ReanaServerVersion) +
 		fmt.Sprintf("REANA client version: %s \n", version) +
 		fmt.Sprintf("Authenticated as: <%s> \n", p.Email) +

@@ -39,64 +39,80 @@ criteria such as file name or size.
 Use --filter <columm_name>=<column_value> pairs.
 Available filters are 'name' and 'size'.`
 
+type duOptions struct {
+	token         string
+	serverURL     string
+	workflow      string
+	summarize     bool
+	humanReadable bool
+	filter        []string
+}
+
 func newDuCmd() *cobra.Command {
+	o := &duOptions{}
+
 	cmd := &cobra.Command{
 		Use:   "du",
 		Short: "Get workspace disk usage.",
 		Long:  duDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			token, _ := cmd.Flags().GetString("access-token")
-			if token == "" {
-				token = os.Getenv("REANA_ACCESS_TOKEN")
+			if o.token == "" {
+				o.token = os.Getenv("REANA_ACCESS_TOKEN")
 			}
-			serverURL := os.Getenv("REANA_SERVER_URL")
-			workflow, _ := cmd.Flags().GetString("workflow")
-			if workflow == "" {
-				workflow = os.Getenv("REANA_WORKON")
+			o.serverURL = os.Getenv("REANA_SERVER_URL")
+			if o.workflow == "" {
+				o.workflow = os.Getenv("REANA_WORKON")
 			}
 
-			if err := validation.ValidateAccessToken(token); err != nil {
+			if err := validation.ValidateAccessToken(o.token); err != nil {
 				return err
 			}
-			if err := validation.ValidateServerURL(serverURL); err != nil {
+			if err := validation.ValidateServerURL(o.serverURL); err != nil {
 				return err
 			}
-			if err := validation.ValidateWorkflow(workflow); err != nil {
+			if err := validation.ValidateWorkflow(o.workflow); err != nil {
 				return err
 			}
-			if err := du(cmd, token, workflow); err != nil {
+			if err := o.run(cmd); err != nil {
 				return err
 			}
 			return nil
 		},
 	}
 
-	cmd.Flags().StringP("access-token", "t", "", "Access token of the current user.")
-	cmd.Flags().
-		StringP("workflow", "w", "", "Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.")
-	cmd.Flags().BoolP("summarize", "s", false, "Display total.")
-	cmd.Flags().BoolP("human-readable", "r", false, "Show disk size in human readable format.")
-	cmd.Flags().StringSlice("filter", []string{}, duFilterFlagDesc)
+	f := cmd.Flags()
+	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.workflow,
+		"workflow",
+		"w", "",
+		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
+	)
+	f.BoolVarP(&o.summarize, "summarize", "s", false, "Display total.")
+	f.BoolVarP(
+		&o.humanReadable,
+		"human-readable",
+		"r",
+		false,
+		"Show disk size in human readable format.",
+	)
+	f.StringSliceVar(&o.filter, "filter", []string{}, duFilterFlagDesc)
 
 	return cmd
 }
 
-func du(cmd *cobra.Command, token string, workflow string) error {
-	summarize, _ := cmd.Flags().GetBool("summarize")
-	humanReadable, _ := cmd.Flags().GetBool("human-readable")
-	filter, _ := cmd.Flags().GetStringSlice("filter")
-
+func (o *duOptions) run(cmd *cobra.Command) error {
 	filterNames := []string{"size", "name"}
-	_, searchFilter, err := utils.ParseFilterParameters(filter, filterNames)
+	_, searchFilter, err := utils.ParseFilterParameters(o.filter, filterNames)
 	if err != nil {
 		return err
 	}
 
 	duParams := operations.NewGetWorkflowDiskUsageParams()
-	duParams.SetAccessToken(&token)
-	duParams.SetWorkflowIDOrName(workflow)
+	duParams.SetAccessToken(&o.token)
+	duParams.SetWorkflowIDOrName(o.workflow)
 	additionalParams := operations.GetWorkflowDiskUsageBody{
-		Summarize: summarize,
+		Summarize: o.summarize,
 		Search:    searchFilter,
 	}
 	duParams.SetParameters(additionalParams)
@@ -110,7 +126,7 @@ func du(cmd *cobra.Command, token string, workflow string) error {
 		return fmt.Errorf("disk usage could not be retrieved:\n%v", err)
 	}
 
-	err = displayDuPayload(cmd, duResp.Payload, humanReadable)
+	err = displayDuPayload(cmd, duResp.Payload, o.humanReadable)
 	if err != nil {
 		return err
 	}

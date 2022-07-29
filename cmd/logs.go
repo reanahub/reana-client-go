@@ -23,26 +23,6 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-// Pointers used for nullable values
-type Logs struct {
-	WorkflowLogs   *string               `json:"workflow_logs"`
-	JobLogs        map[string]JobLogItem `json:"job_logs"`
-	EngineSpecific *string               `json:"engine_specific"`
-}
-
-type JobLogItem struct {
-	WorkflowUuid   string  `json:"workflow_uuid"`
-	JobName        string  `json:"job_name"`
-	ComputeBackend string  `json:"compute_backend"`
-	BackendJobId   string  `json:"backend_job_id"`
-	DockerImg      string  `json:"docker_img"`
-	Cmd            string  `json:"cmd"`
-	Status         string  `json:"status"`
-	Logs           string  `json:"logs"`
-	StartedAt      *string `json:"started_at"`
-	FinishedAt     *string `json:"finished_at"`
-}
-
 const logsDesc = `
 Get workflow logs.
 
@@ -63,67 +43,98 @@ name=value pairs. Available filters are
 compute_backend, docker_img, status and step.
 `
 
+// Pointers used for nullable values
+type Logs struct {
+	WorkflowLogs   *string               `json:"workflow_logs"`
+	JobLogs        map[string]JobLogItem `json:"job_logs"`
+	EngineSpecific *string               `json:"engine_specific"`
+}
+
+type JobLogItem struct {
+	WorkflowUuid   string  `json:"workflow_uuid"`
+	JobName        string  `json:"job_name"`
+	ComputeBackend string  `json:"compute_backend"`
+	BackendJobId   string  `json:"backend_job_id"`
+	DockerImg      string  `json:"docker_img"`
+	Cmd            string  `json:"cmd"`
+	Status         string  `json:"status"`
+	Logs           string  `json:"logs"`
+	StartedAt      *string `json:"started_at"`
+	FinishedAt     *string `json:"finished_at"`
+}
+
+type logsOptions struct {
+	token      string
+	serverURL  string
+	workflow   string
+	jsonOutput bool
+	filters    []string
+	page       int64
+	size       int64
+}
+
 func newLogsCmd() *cobra.Command {
+	o := &logsOptions{}
+
 	cmd := &cobra.Command{
 		Use:   "logs",
 		Short: "Get workflow logs.",
 		Long:  logsDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			token, _ := cmd.Flags().GetString("access-token")
-			if token == "" {
-				token = os.Getenv("REANA_ACCESS_TOKEN")
+			if o.token == "" {
+				o.token = os.Getenv("REANA_ACCESS_TOKEN")
 			}
-			serverURL := os.Getenv("REANA_SERVER_URL")
-			workflow, _ := cmd.Flags().GetString("workflow")
-			if workflow == "" {
-				workflow = os.Getenv("REANA_WORKON")
+			o.serverURL = os.Getenv("REANA_SERVER_URL")
+			if o.workflow == "" {
+				o.workflow = os.Getenv("REANA_WORKON")
 			}
 
-			if err := validation.ValidateAccessToken(token); err != nil {
+			if err := validation.ValidateAccessToken(o.token); err != nil {
 				return err
 			}
-			if err := validation.ValidateServerURL(serverURL); err != nil {
+			if err := validation.ValidateServerURL(o.serverURL); err != nil {
 				return err
 			}
-			if err := validation.ValidateWorkflow(workflow); err != nil {
+			if err := validation.ValidateWorkflow(o.workflow); err != nil {
 				return err
 			}
-			if err := logs(cmd, token, workflow); err != nil {
+			if err := o.run(cmd); err != nil {
 				return err
 			}
 			return nil
 		},
 	}
 
-	cmd.Flags().Bool("json", false, "Get output in JSON format.")
-	cmd.Flags().StringP("access-token", "t", "", "Access token of the current user.")
-	cmd.Flags().
-		StringP("workflow", "w", "", "Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.")
-	cmd.Flags().StringSlice("filter", []string{}, logsFilterFlagDesc)
-	cmd.Flags().Int64("page", 1, "Results page number (to be used with --size).")
-	cmd.Flags().Int64("size", 0, "Size of results per page (to be used with --page).")
+	f := cmd.Flags()
+	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.workflow,
+		"workflow",
+		"w",
+		"",
+		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
+	)
+	f.BoolVar(&o.jsonOutput, "json", false, "Get output in JSON format.")
+	f.StringSliceVar(&o.filters, "filter", []string{}, logsFilterFlagDesc)
+	f.Int64Var(&o.page, "page", 1, "Results page number (to be used with --size).")
+	f.Int64Var(&o.size, "size", 0, "Size of results per page (to be used with --page).")
 
 	return cmd
 }
 
-func logs(cmd *cobra.Command, token string, workflow string) error {
-	filters, _ := cmd.Flags().GetStringSlice("filter")
-	jsonOutput, _ := cmd.Flags().GetBool("json")
-	page, _ := cmd.Flags().GetInt64("page")
-	size, _ := cmd.Flags().GetInt64("size")
-
-	steps, chosenFilters, err := parseLogsFilters(filters)
+func (o *logsOptions) run(cmd *cobra.Command) error {
+	steps, chosenFilters, err := parseLogsFilters(o.filters)
 	if err != nil {
 		return err
 	}
 
 	logsParams := operations.NewGetWorkflowLogsParams()
-	logsParams.SetAccessToken(&token)
-	logsParams.SetWorkflowIDOrName(workflow)
-	logsParams.SetPage(&page)
+	logsParams.SetAccessToken(&o.token)
+	logsParams.SetWorkflowIDOrName(o.workflow)
+	logsParams.SetPage(&o.page)
 	logsParams.SetSteps(steps)
 	if cmd.Flags().Changed("size") {
-		logsParams.SetSize(&size)
+		logsParams.SetSize(&o.size)
 	}
 
 	api, err := client.ApiClient()
@@ -146,7 +157,7 @@ func logs(cmd *cobra.Command, token string, workflow string) error {
 		return err
 	}
 
-	if jsonOutput {
+	if o.jsonOutput {
 		err := utils.DisplayJsonOutput(workflowLogs, cmd.OutOrStdout())
 		if err != nil {
 			return err

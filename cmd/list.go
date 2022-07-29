@@ -54,102 +54,138 @@ Examples:
   $ reana-client list --verbose --bytes
 `
 
+type listOptions struct {
+	token                string
+	serverURL            string
+	workflow             string
+	listSessions         bool
+	formatFilters        []string
+	jsonOutput           bool
+	showAll              bool
+	verbose              bool
+	humanReadable        bool
+	sortColumn           string
+	filters              []string
+	includeDuration      bool
+	includeProgress      bool
+	includeWorkspaceSize bool
+	showDeletedRuns      bool
+	page                 int64
+	size                 int64
+}
+
 func newListCmd() *cobra.Command {
+	o := &listOptions{}
+
 	cmd := &cobra.Command{
 		Use:   "list",
 		Short: "List all workflows and sessions.",
 		Long:  listDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			token, _ := cmd.Flags().GetString("access-token")
-			if token == "" {
-				token = os.Getenv("REANA_ACCESS_TOKEN")
+			if o.token == "" {
+				o.token = os.Getenv("REANA_ACCESS_TOKEN")
 			}
-			serverURL := os.Getenv("REANA_SERVER_URL")
+			o.serverURL = os.Getenv("REANA_SERVER_URL")
 
-			if err := validation.ValidateAccessToken(token); err != nil {
+			if err := validation.ValidateAccessToken(o.token); err != nil {
 				return err
 			}
-			if err := validation.ValidateServerURL(serverURL); err != nil {
+			if err := validation.ValidateServerURL(o.serverURL); err != nil {
 				return err
 			}
-			if err := list(cmd, token, serverURL); err != nil {
+			if err := o.run(cmd); err != nil {
 				return err
 			}
 			return nil
 		},
 	}
 
-	cmd.Flags().StringP("access-token", "t", "", "Access token of the current user.")
-	cmd.Flags().StringP("workflow", "w", "", "List all runs of the given workflow.")
-	cmd.Flags().BoolP("sessions", "s", false, "List all open interactive sessions.")
-	cmd.Flags().StringSlice("format", []string{}, listFormatFlagDesc)
-	cmd.Flags().Bool("json", false, "Get output in JSON format.")
-	cmd.Flags().Bool("all", false, "Show all workflows including deleted ones.")
-	cmd.Flags().
-		BoolP("verbose", "v", false, `Print out extra information: workflow id, user id, disk usage,
-progress, duration.`)
-	cmd.Flags().BoolP("human-readable", "r", false, "Show disk size in human readable format.")
-	cmd.Flags().String("sort", "CREATED", "Sort the output by specified column.")
-	cmd.Flags().StringSlice("filter", []string{}, listFilterFlagDesc)
-	cmd.Flags().
-		Bool("include-duration", false, `Include the duration of the workflows in seconds. In case a workflow is in
-progress, its duration as of now will be shown.`)
-	cmd.Flags().Bool("include-progress", false, "Include progress information of the workflows.")
-	cmd.Flags().Bool("include-workspace-size", false, "Include size information of the workspace.")
-	cmd.Flags().Bool("show-deleted-runs", false, "Include deleted workflows in the output.")
-	cmd.Flags().Int64("page", 1, "Results page number (to be used with --size).")
-	cmd.Flags().Int64("size", 0, "Size of results per page (to be used with --page).")
+	f := cmd.Flags()
+	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(&o.workflow, "workflow", "w", "", "List all runs of the given workflow.")
+	f.BoolVarP(&o.listSessions, "sessions", "s", false, "List all open interactive sessions.")
+	f.StringSliceVar(&o.formatFilters, "format", []string{}, listFormatFlagDesc)
+	f.BoolVar(&o.jsonOutput, "json", false, "Get output in JSON format.")
+	f.BoolVar(&o.showAll, "all", false, "Show all workflows including deleted ones.")
+	f.BoolVarP(
+		&o.verbose,
+		"verbose",
+		"v",
+		false,
+		`Print out extra information: workflow id, user id, disk usage,
+progress, duration.`,
+	)
+	f.BoolVarP(
+		&o.humanReadable,
+		"human-readable",
+		"r",
+		false,
+		"Show disk size in human readable format.",
+	)
+	f.StringVar(&o.sortColumn, "sort", "CREATED", "Sort the output by specified column.")
+	f.StringSliceVar(&o.filters, "filter", []string{}, listFilterFlagDesc)
+	f.BoolVar(
+		&o.includeDuration,
+		"include-duration",
+		false,
+		`Include the duration of the workflows in seconds. 
+In case a workflow is in progress, its duration as of now will be shown.`,
+	)
+	f.BoolVar(
+		&o.includeProgress,
+		"include-progress",
+		false,
+		"Include progress information of the workflows.",
+	)
+	f.BoolVar(
+		&o.includeWorkspaceSize,
+		"include-workspace-size",
+		false,
+		"Include size information of the workspace.",
+	)
+	f.BoolVar(
+		&o.showDeletedRuns,
+		"show-deleted-runs",
+		false,
+		"Include deleted workflows in the output.",
+	)
+	f.Int64Var(&o.page, "page", 1, "Results page number (to be used with --size).")
+	f.Int64Var(&o.size, "size", 0, "Size of results per page (to be used with --page).")
 
 	return cmd
 }
 
-func list(cmd *cobra.Command, token string, serverURL string) error {
-	workflow, _ := cmd.Flags().GetString("workflow")
-	listSessions, _ := cmd.Flags().GetBool("sessions")
-	formatFilters, _ := cmd.Flags().GetStringSlice("format")
-	jsonOutput, _ := cmd.Flags().GetBool("json")
-	showAll, _ := cmd.Flags().GetBool("all")
-	verbose, _ := cmd.Flags().GetBool("verbose")
-	humanReadable, _ := cmd.Flags().GetBool("human-readable")
-	sortColumn, _ := cmd.Flags().GetString("sort")
-	filters, _ := cmd.Flags().GetStringSlice("filter")
-	includeDuration, _ := cmd.Flags().GetBool("include-duration")
-	includeProgress, _ := cmd.Flags().GetBool("include-progress")
-	includeWorkspaceSize, _ := cmd.Flags().GetBool("include-workspace-size")
-	showDeletedRuns, _ := cmd.Flags().GetBool("show-deleted-runs")
-	page, _ := cmd.Flags().GetInt64("page")
-	size, _ := cmd.Flags().GetInt64("size")
-
+func (o *listOptions) run(cmd *cobra.Command) error {
 	var runType string
-	if listSessions {
+	if o.listSessions {
 		runType = "interactive"
 	} else {
 		runType = "batch"
 	}
 
-	statusFilters := utils.GetRunStatuses(showDeletedRuns || showAll)
+	statusFilters := utils.GetRunStatuses(o.showDeletedRuns || o.showAll)
 	var searchFilter string
-	if len(filters) > 0 {
+	if len(o.filters) > 0 {
 		filterNames := []string{"name", "status"}
 		var err error
-		statusFilters, searchFilter, err = utils.ParseFilterParameters(filters, filterNames)
+		statusFilters, searchFilter, err = utils.ParseFilterParameters(o.filters, filterNames)
 		if err != nil {
 			return err
 		}
 	}
 
 	listParams := operations.NewGetWorkflowsParams()
-	listParams.SetAccessToken(&token)
+	listParams.SetAccessToken(&o.token)
 	listParams.SetType(runType)
-	listParams.SetVerbose(&verbose)
-	listParams.SetPage(&page)
-	listParams.SetWorkflowIDOrName(&workflow)
+	listParams.SetVerbose(&o.verbose)
+	listParams.SetPage(&o.page)
+	listParams.SetWorkflowIDOrName(&o.workflow)
 	listParams.SetStatus(statusFilters)
 	listParams.SetSearch(&searchFilter)
-	listParams.SetIncludeProgress(&includeProgress)
-	listParams.SetIncludeWorkspaceSize(&includeWorkspaceSize)
+	listParams.SetIncludeProgress(&o.includeProgress)
+	listParams.SetIncludeWorkspaceSize(&o.includeWorkspaceSize)
 	if cmd.Flags().Changed("size") {
-		listParams.SetSize(&size)
+		listParams.SetSize(&o.size)
 	}
 
 	api, err := client.ApiClient()
@@ -163,22 +199,22 @@ func list(cmd *cobra.Command, token string, serverURL string) error {
 
 	header := buildListHeader(
 		runType,
-		verbose,
-		includeWorkspaceSize,
-		includeProgress,
-		includeDuration,
+		o.verbose,
+		o.includeWorkspaceSize,
+		o.includeProgress,
+		o.includeDuration,
 	)
-	parsedFormatFilters := utils.ParseFormatParameters(formatFilters)
+	parsedFormatFilters := utils.ParseFormatParameters(o.formatFilters)
 	err = displayListPayload(
 		cmd,
 		listResp.Payload,
 		header,
 		parsedFormatFilters,
-		serverURL,
-		token,
-		sortColumn,
-		jsonOutput,
-		humanReadable,
+		o.serverURL,
+		o.token,
+		o.sortColumn,
+		o.jsonOutput,
+		o.humanReadable,
 	)
 	if err != nil {
 		return err

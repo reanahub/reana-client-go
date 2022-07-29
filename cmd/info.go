@@ -30,41 +30,48 @@ Lists all the available workspaces. It also returns the default workspace
 defined by the admin.
 `
 
+type infoOptions struct {
+	token      string
+	serverURL  string
+	jsonOutput bool
+}
+
 func newInfoCmd() *cobra.Command {
+	o := &infoOptions{}
+
 	cmd := &cobra.Command{
 		Use:   "info",
 		Short: "List cluster general information.",
 		Long:  infoDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			token, _ := cmd.Flags().GetString("access-token")
-			if token == "" {
-				token = os.Getenv("REANA_ACCESS_TOKEN")
+			if o.token == "" {
+				o.token = os.Getenv("REANA_ACCESS_TOKEN")
 			}
-			serverURL := os.Getenv("REANA_SERVER_URL")
+			o.serverURL = os.Getenv("REANA_SERVER_URL")
 
-			if err := validation.ValidateAccessToken(token); err != nil {
+			if err := validation.ValidateAccessToken(o.token); err != nil {
 				return err
 			}
-			if err := validation.ValidateServerURL(serverURL); err != nil {
+			if err := validation.ValidateServerURL(o.serverURL); err != nil {
 				return err
 			}
-			if err := info(cmd, token); err != nil {
+			if err := o.run(cmd); err != nil {
 				return err
 			}
 			return nil
 		},
 	}
 
-	cmd.Flags().BoolP("json", "", false, "Get output in JSON format.")
-	cmd.Flags().StringP("access-token", "t", "", "Access token of the current user.")
+	f := cmd.Flags()
+	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.BoolVarP(&o.jsonOutput, "json", "", false, "Get output in JSON format.")
 
 	return cmd
 }
 
-func info(cmd *cobra.Command, token string) error {
-	jsonOutput, _ := cmd.Flags().GetBool("json")
+func (o *infoOptions) run(cmd *cobra.Command) error {
 	infoParams := operations.NewInfoParams()
-	infoParams.SetAccessToken(token)
+	infoParams.SetAccessToken(o.token)
 
 	api, err := client.ApiClient()
 	if err != nil {
@@ -76,7 +83,7 @@ func info(cmd *cobra.Command, token string) error {
 	}
 
 	p := infoResp.Payload
-	if jsonOutput {
+	if o.jsonOutput {
 		err := utils.DisplayJsonOutput(p, cmd.OutOrStdout())
 		if err != nil {
 			return err

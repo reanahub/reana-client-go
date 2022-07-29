@@ -31,45 +31,60 @@ Examples:
   $ reana-client close -w myanalysis.42
 `
 
+type closeOptions struct {
+	token     string
+	serverURL string
+	workflow  string
+}
+
 func newCloseCmd() *cobra.Command {
+	o := &closeOptions{}
+
 	cmd := &cobra.Command{
 		Use:   "close",
 		Short: "Close an interactive session.",
 		Long:  closeDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			token, _ := cmd.Flags().GetString("access-token")
-			if token == "" {
-				token = os.Getenv("REANA_ACCESS_TOKEN")
+			if o.token == "" {
+				o.token = os.Getenv("REANA_ACCESS_TOKEN")
 			}
-			workflow, _ := cmd.Flags().GetString("workflow")
-			if workflow == "" {
-				workflow = os.Getenv("REANA_WORKON")
+			o.serverURL = os.Getenv("REANA_SERVER_URL")
+			if o.workflow == "" {
+				o.workflow = os.Getenv("REANA_WORKON")
 			}
 
-			if err := validation.ValidateAccessToken(token); err != nil {
+			if err := validation.ValidateAccessToken(o.token); err != nil {
 				return err
 			}
-			if err := validation.ValidateWorkflow(workflow); err != nil {
+			if err := validation.ValidateServerURL(o.serverURL); err != nil {
 				return err
 			}
-			if err := close(cmd, token, workflow); err != nil {
+			if err := validation.ValidateWorkflow(o.workflow); err != nil {
+				return err
+			}
+			if err := o.run(cmd); err != nil {
 				return err
 			}
 			return nil
 		},
 	}
 
-	cmd.Flags().StringP("access-token", "t", "", "Access token of the current user.")
-	cmd.Flags().
-		StringP("workflow", "w", "", "Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.")
+	f := cmd.Flags()
+	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.workflow,
+		"workflow",
+		"w", "",
+		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
+	)
 
 	return cmd
 }
 
-func close(cmd *cobra.Command, token string, workflow string) error {
+func (o *closeOptions) run(cmd *cobra.Command) error {
 	closeParams := operations.NewCloseInteractiveSessionParams()
-	closeParams.SetAccessToken(&token)
-	closeParams.SetWorkflowIDOrName(workflow)
+	closeParams.SetAccessToken(&o.token)
+	closeParams.SetWorkflowIDOrName(o.workflow)
 
 	api, err := client.ApiClient()
 	if err != nil {
@@ -80,6 +95,6 @@ func close(cmd *cobra.Command, token string, workflow string) error {
 		return fmt.Errorf("interactive session could not be closed:\n%v", err)
 	}
 
-	cmd.Println("Interactive session for workflow", workflow, "was successfully closed")
+	cmd.Println("Interactive session for workflow", o.workflow, "was successfully closed")
 	return nil
 }
