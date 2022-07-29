@@ -11,9 +11,9 @@ package cmd
 import (
 	"fmt"
 	"os"
-
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
+	"reanahub/reana-client-go/utils"
 	"reanahub/reana-client-go/validation"
 
 	"github.com/spf13/cobra"
@@ -65,7 +65,7 @@ func ping(cmd *cobra.Command, token string, serverURL string) error {
 	}
 	pingResp, err := api.Operations.GetYou(pingParams)
 	if err != nil {
-		return err
+		return utils.HandleBasicApiError(err)
 	}
 
 	p := pingResp.Payload

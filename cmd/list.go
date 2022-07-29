@@ -158,7 +158,7 @@ func list(cmd *cobra.Command, token string, serverURL string) error {
 	}
 	listResp, err := api.Operations.GetWorkflows(listParams)
 	if err != nil {
-		return err
+		return utils.HandleBasicApiError(err)
 	}
 
 	header := buildListHeader(
