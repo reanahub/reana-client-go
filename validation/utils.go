@@ -41,9 +41,14 @@ func ValidateWorkflow(workflow string) error {
 	return nil
 }
 
-func ValidateArgChoice(arg string, choices []string, name string) error {
+func ValidateChoice(arg string, choices []string, name string) error {
 	if !slices.Contains(choices, arg) {
-		return fmt.Errorf("Invalid value for '%s': '%s' is not part of %v\n", name, arg, choices)
+		return fmt.Errorf(
+			"invalid value for '%s': '%s' is not part of '%s'",
+			name,
+			arg,
+			strings.Join(choices, "', '"),
+		)
 	}
 	return nil
 }

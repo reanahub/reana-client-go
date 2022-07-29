@@ -10,7 +10,9 @@ package cmd
 
 import (
 	"os"
+	"reanahub/reana-client-go/validation"
 
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -20,11 +22,14 @@ func NewRootCmd() *cobra.Command {
 		Short:        "REANA client for interacting with REANA server.",
 		Long:         "REANA client for interacting with REANA server.",
 		SilenceUsage: true,
+		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
+			return runE(cmd)
+		},
 	}
 
 	cmd.SetOut(os.Stdout)
 
-	cmd.PersistentFlags().BoolP("loglevel", "l", false, "Sets log level [DEBUG|INFO|WARNING]")
+	cmd.PersistentFlags().StringP("loglevel", "l", "WARNING", "Sets log level [DEBUG|INFO|WARNING]")
 
 	// Add commands
 	cmd.AddCommand(newVersionCmd())
@@ -37,4 +42,34 @@ func NewRootCmd() *cobra.Command {
 	cmd.AddCommand(newLogsCmd())
 
 	return cmd
+}
+
+func runE(cmd *cobra.Command) error {
+	logLevelFlag, _ := cmd.Flags().GetString("loglevel")
+
+	if err := addLogger(logLevelFlag); err != nil {
+		return err
+	}
+	return nil
+}
+
+func addLogger(logLevelFlag string) error {
+	if err := validation.ValidateChoice(
+		logLevelFlag,
+		[]string{"DEBUG", "INFO", "WARNING"},
+		"loglevel",
+	); err != nil {
+		return err
+	}
+	level, err := log.ParseLevel(logLevelFlag)
+	if err != nil {
+		return err
+	}
+	log.SetLevel(level)
+	log.SetOutput(os.Stdout)
+	log.SetFormatter(&log.TextFormatter{
+		FullTimestamp:   true,
+		TimestampFormat: "2006-01-02 15:04:05.1234",
+	})
+	return nil
 }
