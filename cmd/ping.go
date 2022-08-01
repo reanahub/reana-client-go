@@ -10,11 +10,11 @@ package cmd
 
 import (
 	"fmt"
-	"os"
-
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/validation"
+
+	. "reanahub/reana-client-go/config"
 
 	"github.com/spf13/cobra"
 )
@@ -39,9 +39,9 @@ func newPingCmd() *cobra.Command {
 		Long:  pingDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if o.token == "" {
-				o.token = os.Getenv("REANA_ACCESS_TOKEN")
+				o.token = Config.AccessToken
 			}
-			o.serverURL = os.Getenv("REANA_SERVER_URL")
+			o.serverURL = Config.ServerURL
 
 			if err := validation.ValidateAccessToken(o.token); err != nil {
 				return err

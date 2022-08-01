@@ -5,9 +5,10 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"os"
 
 	"github.com/go-openapi/strfmt"
+
+	. "reanahub/reana-client-go/config"
 
 	httptransport "github.com/go-openapi/runtime/client"
 )
@@ -32,8 +33,7 @@ func newApiClient() (*API, error) {
 	}
 
 	// parse REANA server URL
-	serverURL := os.Getenv("REANA_SERVER_URL")
-	u, err := url.Parse(serverURL)
+	u, err := url.Parse(Config.ServerURL)
 	if err != nil {
 		return nil, err
 	}

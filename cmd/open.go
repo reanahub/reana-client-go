@@ -10,11 +10,12 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/utils"
 	"reanahub/reana-client-go/validation"
+
+	. "reanahub/reana-client-go/config"
 
 	"github.com/spf13/cobra"
 )
@@ -54,11 +55,11 @@ func newOpenCmd() *cobra.Command {
 		Long:  openDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if o.token == "" {
-				o.token = os.Getenv("REANA_ACCESS_TOKEN")
+				o.token = Config.AccessToken
 			}
-			o.serverURL = os.Getenv("REANA_SERVER_URL")
+			o.serverURL = Config.ServerURL
 			if o.workflow == "" {
-				o.workflow = os.Getenv("REANA_WORKON")
+				o.workflow = Config.Workflow
 			}
 			o.interactiveSessionType = utils.InteractiveSessionTypes[0]
 			if len(args) > 0 {

@@ -11,13 +11,14 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/utils"
 	"reanahub/reana-client-go/validation"
 	"sort"
 	"strings"
+
+	. "reanahub/reana-client-go/config"
 
 	"github.com/spf13/cobra"
 	"golang.org/x/exp/slices"
@@ -82,11 +83,11 @@ func newLogsCmd() *cobra.Command {
 		Long:  logsDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if o.token == "" {
-				o.token = os.Getenv("REANA_ACCESS_TOKEN")
+				o.token = Config.AccessToken
 			}
-			o.serverURL = os.Getenv("REANA_SERVER_URL")
+			o.serverURL = Config.ServerURL
 			if o.workflow == "" {
-				o.workflow = os.Getenv("REANA_WORKON")
+				o.workflow = Config.Workflow
 			}
 
 			if err := validation.ValidateAccessToken(o.token); err != nil {
