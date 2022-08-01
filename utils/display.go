@@ -14,7 +14,25 @@ import (
 	"io"
 
 	"github.com/jedib0t/go-pretty/v6/table"
+	"github.com/jedib0t/go-pretty/v6/text"
 )
+
+type MessageType int
+
+const (
+	Success MessageType = iota
+	Warning
+	Error
+	Info
+)
+
+func (m MessageType) String() string {
+	return []string{"SUCCESS", "WARNING", "ERROR", "INFO"}[m]
+}
+
+func (m MessageType) Color() text.Color {
+	return []text.Color{text.FgGreen, text.FgYellow, text.FgRed, text.FgCyan}[m]
+}
 
 func DisplayTable(header []string, rows [][]any, out io.Writer) {
 	// Convert to table.Row type
@@ -50,4 +68,28 @@ func DisplayJsonOutput(output any, out io.Writer) error {
 		return err
 	}
 	return nil
+}
+
+func DisplayMessage(message string, messageType MessageType, indented bool, out io.Writer) {
+	prefix := "==>"
+	if indented {
+		prefix = "  ->"
+	}
+
+	if messageType == Info && !indented {
+		msg := text.Bold.Sprintf("%s %s\n", prefix, message)
+		fmt.Fprint(out, msg)
+		return
+	}
+
+	prefixTpl := colorizeMessage(
+		fmt.Sprintf("%s %s: ", prefix, messageType),
+		messageType,
+	)
+
+	fmt.Fprintf(out, "%s%s\n", prefixTpl, message)
+}
+
+func colorizeMessage(msg string, msgType MessageType) string {
+	return text.Colors{msgType.Color(), text.Bold}.Sprint(msg)
 }

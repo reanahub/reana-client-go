@@ -9,9 +9,11 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
+	"fmt"
 	"os"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
+	"reanahub/reana-client-go/utils"
 	"reanahub/reana-client-go/validation"
 
 	log "github.com/sirupsen/logrus"
@@ -96,6 +98,11 @@ func (o *closeOptions) run(cmd *cobra.Command) error {
 		return err
 	}
 
-	cmd.Println("Interactive session for workflow", o.workflow, "was successfully closed")
+	utils.DisplayMessage(
+		fmt.Sprintf("Interactive session for workflow %s was successfully closed", o.workflow),
+		utils.Success,
+		false,
+		cmd.OutOrStdout(),
+	)
 	return nil
 }

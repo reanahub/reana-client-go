@@ -120,7 +120,12 @@ func (o *openOptions) run(cmd *cobra.Command) error {
 		return err
 	}
 
-	cmd.Println("Interactive session opened successfully")
+	utils.DisplayMessage(
+		"Interactive session opened successfully",
+		utils.Success,
+		false,
+		cmd.OutOrStdout(),
+	)
 	cmd.Println(utils.FormatSessionURI(o.serverURL, openResp.Payload.Path, o.token))
 	cmd.Println("It could take several minutes to start the interactive session.")
 	return nil
