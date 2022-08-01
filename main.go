@@ -6,6 +6,11 @@ REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
 */
 
+/*
+REANA client for interacting with REANA server.
+
+Use --help for more information.
+*/
 package main
 
 import (

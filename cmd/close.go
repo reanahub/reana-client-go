@@ -39,6 +39,7 @@ type closeOptions struct {
 	workflow  string
 }
 
+// newCloseCmd creates a command to close an interactive session.
 func newCloseCmd() *cobra.Command {
 	o := &closeOptions{}
 

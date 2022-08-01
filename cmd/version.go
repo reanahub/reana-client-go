@@ -20,6 +20,7 @@ Show version.
 The ` + "``version``" + ` command shows REANA client version.
 `
 
+// newVersionCmd creates a command to show the version of the client.
 func newVersionCmd() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "version",

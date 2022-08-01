@@ -36,6 +36,7 @@ type infoOptions struct {
 	jsonOutput bool
 }
 
+// newInfoCmd creates a command to list cluster general information.
 func newInfoCmd() *cobra.Command {
 	o := &infoOptions{}
 

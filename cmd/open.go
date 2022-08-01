@@ -45,6 +45,7 @@ type openOptions struct {
 	interactiveSessionType string
 }
 
+// newOpenCmd creates a command to open an interactive session inside the workspace.
 func newOpenCmd() *cobra.Command {
 	o := &openOptions{}
 

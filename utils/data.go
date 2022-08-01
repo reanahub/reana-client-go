@@ -25,6 +25,9 @@ type FormatFilter struct {
 	filterRows bool
 }
 
+// ParseFilterParameters parses a list of filters in the format 'filter=value'.
+// The 'status' filters are returned as a slice of strings, while the remaining filters are returned as a JSON string.
+// Every given filter must be included in filterNames.
 func ParseFilterParameters(filter []string, filterNames []string) ([]string, string, error) {
 	searchFilters := make(map[string][]string)
 	var statusFilters []string
@@ -62,6 +65,7 @@ func ParseFilterParameters(filter []string, filterNames []string) ([]string, str
 	return statusFilters, searchFiltersString, nil
 }
 
+// GetFilterNameAndValue parses a filter in the format 'filter=value' and returns them.
 func GetFilterNameAndValue(filter string) (string, string, error) {
 	if !strings.Contains(filter, "=") {
 		return "", "", errors.New(
@@ -75,9 +79,11 @@ func GetFilterNameAndValue(filter string) (string, string, error) {
 	return filterName, filterValue, nil
 }
 
-func ParseFormatParameters(filters []string) []FormatFilter {
+// ParseFormatParameters parses a list of formatOptions to a slice of FormatFilter.
+// If the format option has a filter, that will be the value in the struct and the filterRows boolean will be true.
+func ParseFormatParameters(formatOptions []string) []FormatFilter {
 	var parsedFilters []FormatFilter
-	for _, filter := range filters {
+	for _, filter := range formatOptions {
 		filterNameAndValue := strings.SplitN(filter, "=", 2)
 		formatFilter := FormatFilter{column: filterNameAndValue[0], filterRows: false}
 		if len(filterNameAndValue) >= 2 {
@@ -89,6 +95,8 @@ func ParseFormatParameters(filters []string) []FormatFilter {
 	return parsedFilters
 }
 
+// FormatDataFrame formats a dataFrame according to the formatFilters provided.
+// The formatFilters can be previously obtained with ParseFormatParameters.
 func FormatDataFrame(df dataframe.DataFrame, formatFilters []FormatFilter) dataframe.DataFrame {
 	if len(formatFilters) == 0 {
 		return df
@@ -110,6 +118,8 @@ func FormatDataFrame(df dataframe.DataFrame, formatFilters []FormatFilter) dataf
 	return df
 }
 
+// SortDataFrame sorts the given dataFrame according to the sortColumn and whether the order is reversed.
+// The sortColumn must be included in the df header.
 func SortDataFrame(
 	df dataframe.DataFrame,
 	sortColumn string,
@@ -123,6 +133,8 @@ func SortDataFrame(
 	return df.Arrange(dataframe.Order{Colname: sortColumn, Reverse: reverse}), nil
 }
 
+// DataFrameToStringData converts a given dataFrame to a 2D slice of strings.
+// Converts null values to "-".
 func DataFrameToStringData(df dataframe.DataFrame) [][]string {
 	data := df.Records()[1:] // Ignore col names
 	for i, row := range data {

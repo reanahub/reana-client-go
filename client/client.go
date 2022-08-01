@@ -1,3 +1,4 @@
+// Package client provides the automatically generated API client, provided by the swagger tool.
 package client
 
 import (
@@ -15,6 +16,7 @@ import (
 
 var apiClient *API
 
+// ApiClient provides the API client used to communicate with the REANA server.
 func ApiClient() (*API, error) {
 	if apiClient == nil {
 		var err error

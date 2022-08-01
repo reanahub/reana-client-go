@@ -6,6 +6,7 @@ REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
 */
 
+// Package cmd provides all the commands for interacting with the REANA server.
 package cmd
 
 import (
@@ -21,6 +22,8 @@ type rootOptions struct {
 	logLevel string
 }
 
+// NewRootCmd creates a new root command, responsible for creating all the other subcommands and
+// setting up the logger and persistent flags.
 func NewRootCmd() *cobra.Command {
 	o := &rootOptions{}
 	cmd := &cobra.Command{
@@ -61,6 +64,7 @@ func (o *rootOptions) run(cmd *cobra.Command) error {
 	return nil
 }
 
+// setupLogger validates the logging level flag and configures the logger.
 func setupLogger(logLevelFlag string) error {
 	if err := validation.ValidateChoice(
 		logLevelFlag,

@@ -29,6 +29,7 @@ type pingOptions struct {
 	serverURL string
 }
 
+// newPingCmd creates a command to ping the REANA server.
 func newPingCmd() *cobra.Command {
 	o := &pingOptions{}
 

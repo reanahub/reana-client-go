@@ -72,6 +72,7 @@ type listOptions struct {
 	size                 int64
 }
 
+// newListCmd creates a new command for listing workflows and sessions.
 func newListCmd() *cobra.Command {
 	o := &listOptions{}
 
@@ -221,6 +222,7 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 	return nil
 }
 
+// displayListPayload displays the list payload, according to the given header, filters and output format.
 func displayListPayload(
 	cmd *cobra.Command,
 	p *operations.GetWorkflowsOKBody,
@@ -305,6 +307,7 @@ func displayListPayload(
 	return nil
 }
 
+// getWorkflowDuration calculates and returns the duration of the given workflow.
 func getWorkflowDuration(workflow *operations.GetWorkflowsOKBodyItemsItems0) (any, error) {
 	runStartedAt := workflow.Progress.RunStartedAt
 	runFinishedAt := workflow.Progress.RunFinishedAt
@@ -329,6 +332,8 @@ func getWorkflowDuration(workflow *operations.GetWorkflowsOKBodyItemsItems0) (an
 	return endTime.Sub(startTime).Round(time.Second).Seconds(), nil
 }
 
+// buildListHeader builds the header of the list table, according to the given runType and whether to include
+// verbose information, workspace size, progress and duration.
 func buildListHeader(
 	runType string,
 	verbose, includeWorkspaceSize, includeProgress, includeDuration bool,
@@ -362,6 +367,7 @@ func buildListHeader(
 	return header
 }
 
+// buildListSeries returns a Series of the right type, according to the column name.
 func buildListSeries(col string, humanReadable bool) series.Series {
 	if col == "duration" || (col == "size" && !humanReadable) {
 		return series.New([]int{}, series.Int, col)
@@ -369,6 +375,7 @@ func buildListSeries(col string, humanReadable bool) series.Series {
 	return series.New([]string{}, series.String, col)
 }
 
+// getOptionalStringField returns the given string field, if it is not nil or empty, otherwise "-".
 func getOptionalStringField(value *string) any {
 	if value == nil || *value == "" {
 		return nil
@@ -376,6 +383,7 @@ func getOptionalStringField(value *string) any {
 	return *value
 }
 
+// getProgressField returns the given int value converted to string, if it is not 0, otherwise "-".
 func getProgressField(value int64) string {
 	if value == 0 {
 		return "-"

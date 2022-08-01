@@ -47,6 +47,7 @@ type duOptions struct {
 	filter        []string
 }
 
+// newDuCmd creates a command to get workspace disk usage.
 func newDuCmd() *cobra.Command {
 	o := &duOptions{}
 
@@ -132,6 +133,7 @@ func (o *duOptions) run(cmd *cobra.Command) error {
 	return nil
 }
 
+// displayDuPayload displays the disk usage payload, according to the humanReadable flag.
 func displayDuPayload(
 	cmd *cobra.Command,
 	p *operations.GetWorkflowDiskUsageOKBody,

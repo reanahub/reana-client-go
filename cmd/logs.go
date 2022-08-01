@@ -43,6 +43,7 @@ name=value pairs. Available filters are
 compute_backend, docker_img, status and step.
 `
 
+// Logs struct that contains the logs of a workflow.
 // Pointers used for nullable values
 type Logs struct {
 	WorkflowLogs   *string               `json:"workflow_logs"`
@@ -50,6 +51,7 @@ type Logs struct {
 	EngineSpecific *string               `json:"engine_specific"`
 }
 
+// JobLogItem struct that contains the log information of a job.
 type JobLogItem struct {
 	WorkflowUuid   string  `json:"workflow_uuid"`
 	JobName        string  `json:"job_name"`
@@ -73,6 +75,7 @@ type logsOptions struct {
 	size       int64
 }
 
+// newLogsCmd creates a command to get workflow logs.
 func newLogsCmd() *cobra.Command {
 	o := &logsOptions{}
 
@@ -169,6 +172,9 @@ func (o *logsOptions) run(cmd *cobra.Command) error {
 	return nil
 }
 
+// parseLogsFilters parses a list of filters in the format 'filter=value', for the 'logs' command.
+// The steps filters are returned as a slice of strings, while the other filters are returned as a map.
+// Returns an error if any of the given filters are not valid.
 func parseLogsFilters(filters []string) ([]string, map[string]string, error) {
 	availableFilters := map[string]string{
 		"step":            "job_name",
@@ -220,6 +226,7 @@ func parseLogsFilters(filters []string) ([]string, map[string]string, error) {
 	return steps, chosenFilters, nil
 }
 
+// displayHumanFriendlyLogs displays the logs in a human friendly way.
 func displayHumanFriendlyLogs(cmd *cobra.Command, logs Logs, steps []string) {
 	leadingMark := "==>"
 
@@ -281,6 +288,7 @@ func displayHumanFriendlyLogs(cmd *cobra.Command, logs Logs, steps []string) {
 	}
 }
 
+// displayOptionalItem displays an optional item if it is not nil or an empty string.
 func displayOptionalItem(cmd *cobra.Command, item *string, title string, leadingMark string) {
 	if item == nil || *item == "" {
 		return
@@ -288,6 +296,7 @@ func displayOptionalItem(cmd *cobra.Command, item *string, title string, leading
 	cmd.Printf("%s %s: %s\n", leadingMark, title, *item)
 }
 
+// filterJobLogs returns a subset of jobLogs based on the given filters.
 func filterJobLogs(jobLogs *map[string]JobLogItem, filters map[string]string) error {
 	if len(filters) == 0 {
 		return nil
