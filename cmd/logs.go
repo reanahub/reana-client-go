@@ -43,16 +43,16 @@ name=value pairs. Available filters are
 compute_backend, docker_img, status and step.
 `
 
-// Logs struct that contains the logs of a workflow.
+// logs struct that contains the logs of a workflow.
 // Pointers used for nullable values
-type Logs struct {
+type logs struct {
 	WorkflowLogs   *string               `json:"workflow_logs"`
-	JobLogs        map[string]JobLogItem `json:"job_logs"`
+	JobLogs        map[string]jobLogItem `json:"job_logs"`
 	EngineSpecific *string               `json:"engine_specific"`
 }
 
-// JobLogItem struct that contains the log information of a job.
-type JobLogItem struct {
+// jobLogItem struct that contains the log information of a job.
+type jobLogItem struct {
 	WorkflowUuid   string  `json:"workflow_uuid"`
 	JobName        string  `json:"job_name"`
 	ComputeBackend string  `json:"compute_backend"`
@@ -149,7 +149,7 @@ func (o *logsOptions) run(cmd *cobra.Command) error {
 		return err
 	}
 
-	var workflowLogs Logs
+	var workflowLogs logs
 	err = json.Unmarshal([]byte(logsResp.GetPayload().Logs), &workflowLogs)
 	if err != nil {
 		return err
@@ -227,7 +227,7 @@ func parseLogsFilters(filters []string) ([]string, map[string]string, error) {
 }
 
 // displayHumanFriendlyLogs displays the logs in a human friendly way.
-func displayHumanFriendlyLogs(cmd *cobra.Command, logs Logs, steps []string) {
+func displayHumanFriendlyLogs(cmd *cobra.Command, logs logs, steps []string) {
 	leadingMark := "==>"
 
 	if logs.WorkflowLogs != nil && *logs.WorkflowLogs != "" {
@@ -297,7 +297,7 @@ func displayOptionalItem(cmd *cobra.Command, item *string, title string, leading
 }
 
 // filterJobLogs returns a subset of jobLogs based on the given filters.
-func filterJobLogs(jobLogs *map[string]JobLogItem, filters map[string]string) error {
+func filterJobLogs(jobLogs *map[string]jobLogItem, filters map[string]string) error {
 	if len(filters) == 0 {
 		return nil
 	}
