@@ -10,12 +10,12 @@ package cmd
 
 import (
 	"fmt"
-	"os"
+
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/validation"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 const pingDesc = `
@@ -38,21 +38,8 @@ func newPingCmd() *cobra.Command {
 		Short: "Check connection to REANA server.",
 		Long:  pingDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if o.token == "" {
-				o.token = os.Getenv("REANA_ACCESS_TOKEN")
-			}
-			o.serverURL = os.Getenv("REANA_SERVER_URL")
-
-			if err := validation.ValidateAccessToken(o.token); err != nil {
-				return err
-			}
-			if err := validation.ValidateServerURL(o.serverURL); err != nil {
-				return err
-			}
-			if err := o.run(cmd); err != nil {
-				return err
-			}
-			return nil
+			o.serverURL = viper.GetString("server-url")
+			return o.run(cmd)
 		},
 	}
 

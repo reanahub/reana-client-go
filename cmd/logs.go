@@ -10,11 +10,9 @@ package cmd
 
 import (
 	"encoding/json"
-	"os"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/utils"
-	"reanahub/reana-client-go/validation"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -65,7 +63,6 @@ type jobLogItem struct {
 
 type logsOptions struct {
 	token      string
-	serverURL  string
 	workflow   string
 	jsonOutput bool
 	filters    []string
@@ -82,27 +79,7 @@ func newLogsCmd() *cobra.Command {
 		Short: "Get workflow logs.",
 		Long:  logsDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if o.token == "" {
-				o.token = os.Getenv("REANA_ACCESS_TOKEN")
-			}
-			o.serverURL = os.Getenv("REANA_SERVER_URL")
-			if o.workflow == "" {
-				o.workflow = os.Getenv("REANA_WORKON")
-			}
-
-			if err := validation.ValidateAccessToken(o.token); err != nil {
-				return err
-			}
-			if err := validation.ValidateServerURL(o.serverURL); err != nil {
-				return err
-			}
-			if err := validation.ValidateWorkflow(o.workflow); err != nil {
-				return err
-			}
-			if err := o.run(cmd); err != nil {
-				return err
-			}
-			return nil
+			return o.run(cmd)
 		},
 	}
 

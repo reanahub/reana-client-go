@@ -10,17 +10,16 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/utils"
-	"reanahub/reana-client-go/validation"
 	"time"
 
-	"github.com/go-gota/gota/series"
-
 	"github.com/go-gota/gota/dataframe"
+	"github.com/go-gota/gota/series"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 const listFormatFlagDesc = `Format output according to column titles or column
@@ -81,21 +80,8 @@ func newListCmd() *cobra.Command {
 		Short: "List all workflows and sessions.",
 		Long:  listDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if o.token == "" {
-				o.token = os.Getenv("REANA_ACCESS_TOKEN")
-			}
-			o.serverURL = os.Getenv("REANA_SERVER_URL")
-
-			if err := validation.ValidateAccessToken(o.token); err != nil {
-				return err
-			}
-			if err := validation.ValidateServerURL(o.serverURL); err != nil {
-				return err
-			}
-			if err := o.run(cmd); err != nil {
-				return err
-			}
-			return nil
+			o.serverURL = viper.GetString("server-url")
+			return o.run(cmd)
 		},
 	}
 
@@ -151,6 +137,10 @@ In case a workflow is in progress, its duration as of now will be shown.`,
 	f.Int64Var(&o.page, "page", 1, "Results page number (to be used with --size).")
 	f.Int64Var(&o.size, "size", 0, "Size of results per page (to be used with --page).")
 
+	err := f.SetAnnotation("workflow", "properties", []string{"optional"})
+	if err != nil {
+		log.Debugf("Failed to set workflow annotation: %s", err.Error())
+	}
 	return cmd
 }
 

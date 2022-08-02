@@ -10,11 +10,9 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/utils"
-	"reanahub/reana-client-go/validation"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -34,9 +32,8 @@ Examples:
 `
 
 type closeOptions struct {
-	token     string
-	serverURL string
-	workflow  string
+	token    string
+	workflow string
 }
 
 // newCloseCmd creates a command to close an interactive session.
@@ -48,27 +45,7 @@ func newCloseCmd() *cobra.Command {
 		Short: "Close an interactive session.",
 		Long:  closeDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if o.token == "" {
-				o.token = os.Getenv("REANA_ACCESS_TOKEN")
-			}
-			o.serverURL = os.Getenv("REANA_SERVER_URL")
-			if o.workflow == "" {
-				o.workflow = os.Getenv("REANA_WORKON")
-			}
-
-			if err := validation.ValidateAccessToken(o.token); err != nil {
-				return err
-			}
-			if err := validation.ValidateServerURL(o.serverURL); err != nil {
-				return err
-			}
-			if err := validation.ValidateWorkflow(o.workflow); err != nil {
-				return err
-			}
-			if err := o.run(cmd); err != nil {
-				return err
-			}
-			return nil
+			return o.run(cmd)
 		},
 	}
 

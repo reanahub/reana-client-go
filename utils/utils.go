@@ -22,6 +22,7 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
+	"github.com/spf13/viper"
 )
 
 // FilesBlacklist list of files to be ignored.
@@ -144,4 +145,15 @@ func HandleApiError(err error) error {
 	}
 
 	return err
+}
+
+// BindViperToCmdFlag applies viper config value to the flag when the flag is not set and viper has a value.
+func BindViperToCmdFlag(f *pflag.Flag) error {
+	if f != nil && !f.Changed && viper.IsSet(f.Name) {
+		value := viper.GetString(f.Name)
+		if err := f.Value.Set(value); err != nil {
+			return err
+		}
+	}
+	return nil
 }

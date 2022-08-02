@@ -9,7 +9,6 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
-	"os"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/utils"
@@ -17,6 +16,7 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 const openDesc = `
@@ -54,26 +54,10 @@ func newOpenCmd() *cobra.Command {
 		Short: "Open an interactive session inside the workspace.",
 		Long:  openDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if o.token == "" {
-				o.token = os.Getenv("REANA_ACCESS_TOKEN")
-			}
-			o.serverURL = os.Getenv("REANA_SERVER_URL")
-			if o.workflow == "" {
-				o.workflow = os.Getenv("REANA_WORKON")
-			}
+			o.serverURL = viper.GetString("server-url")
 			o.interactiveSessionType = utils.InteractiveSessionTypes[0]
 			if len(args) > 0 {
 				o.interactiveSessionType = args[0]
-			}
-
-			if err := validation.ValidateAccessToken(o.token); err != nil {
-				return err
-			}
-			if err := validation.ValidateServerURL(o.serverURL); err != nil {
-				return err
-			}
-			if err := validation.ValidateWorkflow(o.workflow); err != nil {
-				return err
 			}
 			if err := validation.ValidateChoice(
 				o.interactiveSessionType,
@@ -82,10 +66,7 @@ func newOpenCmd() *cobra.Command {
 			); err != nil {
 				return err
 			}
-			if err := o.run(cmd); err != nil {
-				return err
-			}
-			return nil
+			return o.run(cmd)
 		},
 	}
 

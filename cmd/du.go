@@ -10,11 +10,9 @@ package cmd
 
 import (
 	"errors"
-	"os"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/utils"
-	"reanahub/reana-client-go/validation"
 
 	"github.com/spf13/cobra"
 )
@@ -40,7 +38,6 @@ Available filters are 'name' and 'size'.`
 
 type duOptions struct {
 	token         string
-	serverURL     string
 	workflow      string
 	summarize     bool
 	humanReadable bool
@@ -56,27 +53,7 @@ func newDuCmd() *cobra.Command {
 		Short: "Get workspace disk usage.",
 		Long:  duDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if o.token == "" {
-				o.token = os.Getenv("REANA_ACCESS_TOKEN")
-			}
-			o.serverURL = os.Getenv("REANA_SERVER_URL")
-			if o.workflow == "" {
-				o.workflow = os.Getenv("REANA_WORKON")
-			}
-
-			if err := validation.ValidateAccessToken(o.token); err != nil {
-				return err
-			}
-			if err := validation.ValidateServerURL(o.serverURL); err != nil {
-				return err
-			}
-			if err := validation.ValidateWorkflow(o.workflow); err != nil {
-				return err
-			}
-			if err := o.run(cmd); err != nil {
-				return err
-			}
-			return nil
+			return o.run(cmd)
 		},
 	}
 

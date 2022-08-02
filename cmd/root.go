@@ -16,6 +16,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
+	"golang.org/x/exp/slices"
 )
 
 type rootOptions struct {
@@ -60,7 +62,65 @@ func (o *rootOptions) run(cmd *cobra.Command) error {
 		return err
 	}
 
+	if err := setupViper(cmd); err != nil {
+		return err
+	}
+
+	if err := validateFlags(cmd); err != nil {
+		return err
+	}
+
 	utils.LogCmdFlags(cmd)
+	return nil
+}
+
+// validateFlags validates access token, server URL and workflow flag values.
+func validateFlags(cmd *cobra.Command) error {
+	token := cmd.Flags().Lookup("access-token")
+	serverURL := viper.GetString("server-url")
+	workflow := cmd.Flags().Lookup("workflow")
+
+	if token != nil {
+		if err := utils.BindViperToCmdFlag(token); err != nil {
+			return err
+		}
+		tokenValue := token.Value.String()
+		if err := validation.ValidateAccessToken(tokenValue); err != nil {
+			return err
+		}
+		if err := validation.ValidateServerURL(serverURL); err != nil {
+			return err
+		}
+	}
+	if workflow != nil {
+		properties, ok := workflow.Annotations["properties"]
+		optional := ok && slices.Contains(properties, "optional")
+		if optional {
+			return nil
+		}
+
+		if err := utils.BindViperToCmdFlag(workflow); err != nil {
+			return err
+		}
+		workflowValue := workflow.Value.String()
+		if err := validation.ValidateWorkflow(workflowValue); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// setupViper binds environment variable values to the viper keys.
+func setupViper(cmd *cobra.Command) error {
+	if err := viper.BindEnv("server-url", "REANA_SERVER_URL"); err != nil {
+		return err
+	}
+	if err := viper.BindEnv("access-token", "REANA_ACCESS_TOKEN"); err != nil {
+		return err
+	}
+	if err := viper.BindEnv("workflow", "REANA_WORKON"); err != nil {
+		return err
+	}
 	return nil
 }
 

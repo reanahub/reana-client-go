@@ -10,13 +10,11 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/utils"
-	"reanahub/reana-client-go/validation"
 
 	"github.com/spf13/cobra"
 )
@@ -32,7 +30,6 @@ defined by the admin.
 
 type infoOptions struct {
 	token      string
-	serverURL  string
 	jsonOutput bool
 }
 
@@ -45,21 +42,7 @@ func newInfoCmd() *cobra.Command {
 		Short: "List cluster general information.",
 		Long:  infoDesc,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			if o.token == "" {
-				o.token = os.Getenv("REANA_ACCESS_TOKEN")
-			}
-			o.serverURL = os.Getenv("REANA_SERVER_URL")
-
-			if err := validation.ValidateAccessToken(o.token); err != nil {
-				return err
-			}
-			if err := validation.ValidateServerURL(o.serverURL); err != nil {
-				return err
-			}
-			if err := o.run(cmd); err != nil {
-				return err
-			}
-			return nil
+			return o.run(cmd)
 		},
 	}
 
