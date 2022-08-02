@@ -34,11 +34,15 @@ func (m MessageType) Color() text.Color {
 	return []text.Color{text.FgGreen, text.FgYellow, text.FgRed, text.FgCyan}[m]
 }
 
-func DisplayTable(header []string, rows [][]any, out io.Writer) {
+func DisplayTable[T any](header []string, rows [][]T, out io.Writer) {
 	// Convert to table.Row type
 	rowList := make([]table.Row, len(rows))
-	for i, r := range rows {
-		rowList[i] = r
+	for i, row := range rows {
+		tableRow := make(table.Row, len(row))
+		for j, cell := range row {
+			tableRow[j] = cell
+		}
+		rowList[i] = tableRow
 	}
 
 	headerRow := make(table.Row, len(header))

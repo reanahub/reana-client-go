@@ -9,19 +9,17 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"os"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/utils"
 	"reanahub/reana-client-go/validation"
-	"sort"
-	"strings"
 	"time"
 
-	"golang.org/x/exp/slices"
+	"github.com/go-gota/gota/series"
 
+	"github.com/go-gota/gota/dataframe"
 	"github.com/spf13/cobra"
 )
 
@@ -227,17 +225,16 @@ func displayListPayload(
 	cmd *cobra.Command,
 	p *operations.GetWorkflowsOKBody,
 	header []string,
-	formatFilters map[string]string,
+	formatFilters []utils.FormatFilter,
 	serverURL, token, sortColumn string,
 	jsonOutput, humanReadable bool,
 ) error {
-	var data [][]any
-	for _, workflow := range p.Items {
-		name, runNumber := utils.GetWorkflowNameAndRunNumber(workflow.Name)
-
-		var row []any
-		for _, col := range header {
-			var value any
+	var df dataframe.DataFrame
+	for _, col := range header {
+		colSeries := buildListSeries(col, humanReadable)
+		for _, workflow := range p.Items {
+			name, runNumber := utils.GetWorkflowNameAndRunNumber(workflow.Name)
+			var value any = nil
 
 			switch col {
 			case "id":
@@ -248,12 +245,12 @@ func displayListPayload(
 				if humanReadable {
 					value = workflow.Size.HumanReadable
 				} else {
-					value = workflow.Size.Raw
+					value = int(workflow.Size.Raw)
 				}
 			case "progress":
 				progress := workflow.Progress
-				finishedInfo := getOptionalIntField(progress.Finished.Total)
-				totalInfo := getOptionalIntField(progress.Total.Total)
+				finishedInfo := getProgressField(progress.Finished.Total)
+				totalInfo := getProgressField(progress.Total.Total)
 				value = finishedInfo + "/" + totalInfo
 			case "duration":
 				var err error
@@ -276,42 +273,35 @@ func displayListPayload(
 			case "session_type":
 				value = getOptionalStringField(&workflow.SessionType)
 			case "session_uri":
-				if workflow.SessionURI == "" {
-					value = "-"
-				} else {
+				if workflow.SessionURI != "" {
 					value = utils.FormatSessionURI(serverURL, workflow.SessionURI, token)
 				}
 			case "session_status":
 				value = getOptionalStringField(&workflow.SessionStatus)
 			}
 
-			row = append(row, value)
+			colSeries.Append(value)
 		}
-		data = append(data, row)
+
+		df = df.CBind(dataframe.New(colSeries))
 	}
 
-	err := sortListData(data, header, sortColumn)
+	df, err := utils.SortDataFrame(df, sortColumn, true)
 	if err != nil {
-		cmd.PrintErrf("Warning: sort operation was aborted, \"%v\"\n", err)
+		cmd.PrintErrf("Warning: sort operation was aborted, %s\n", err)
 	}
-	utils.FormatData(&data, &header, formatFilters)
+	df = utils.FormatDataFrame(df, formatFilters)
 
 	if jsonOutput {
-		jsonData := make([]map[string]any, len(data))
-		for i, row := range data {
-			jsonData[i] = map[string]any{}
-			for j, col := range header {
-				jsonData[i][col] = row[j]
-			}
-		}
-
-		err := utils.DisplayJsonOutput(jsonData, cmd.OutOrStdout())
+		err := utils.DisplayJsonOutput(df.Maps(), cmd.OutOrStdout())
 		if err != nil {
 			return err
 		}
 	} else {
-		utils.DisplayTable(header, data, cmd.OutOrStdout())
+		data := utils.DataFrameToStringData(df)
+		utils.DisplayTable(df.Names(), data, cmd.OutOrStdout())
 	}
+
 	return nil
 }
 
@@ -319,7 +309,7 @@ func getWorkflowDuration(workflow *operations.GetWorkflowsOKBodyItemsItems0) (an
 	runStartedAt := workflow.Progress.RunStartedAt
 	runFinishedAt := workflow.Progress.RunFinishedAt
 	if runStartedAt == nil {
-		return "-", nil
+		return nil, nil
 	}
 
 	startTime, err := utils.FromIsoToTimestamp(*runStartedAt)
@@ -372,55 +362,23 @@ func buildListHeader(
 	return header
 }
 
-func getOptionalStringField(value *string) string {
+func buildListSeries(col string, humanReadable bool) series.Series {
+	if col == "duration" || (col == "size" && !humanReadable) {
+		return series.New([]int{}, series.Int, col)
+	}
+	return series.New([]string{}, series.String, col)
+}
+
+func getOptionalStringField(value *string) any {
 	if value == nil || *value == "" {
-		return "-"
+		return nil
 	}
 	return *value
 }
 
-func getOptionalIntField(value int64) string {
+func getProgressField(value int64) string {
 	if value == 0 {
 		return "-"
 	}
 	return fmt.Sprintf("%d", value)
-}
-
-func sortListData(data [][]any, header []string, sortColumn string) error {
-	sortColumn = strings.ToLower(sortColumn)
-	if !slices.Contains(header, sortColumn) {
-		return fmt.Errorf("column '%s' does not exist", sortColumn)
-	}
-
-	sortColumnId := slices.Index(header, sortColumn)
-	ok := true
-	sort.SliceStable(data, func(i, j int) bool {
-		value1 := data[i][sortColumnId]
-		value2 := data[j][sortColumnId]
-
-		// Make sure missing values are at the bottom of the list
-		if value1 == "-" {
-			return false
-		}
-		if value2 == "-" {
-			return true
-		}
-
-		switch value1.(type) {
-		case int64:
-			return value1.(int64) > value2.(int64)
-		case float64:
-			return value1.(float64) > value2.(float64)
-		case string:
-			return value1.(string) > value2.(string)
-		default:
-			ok = false
-			return false
-		}
-	})
-
-	if !ok {
-		return errors.New("unexpected value type received")
-	}
-	return nil
 }

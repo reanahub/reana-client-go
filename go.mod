@@ -3,6 +3,7 @@ module reanahub/reana-client-go
 go 1.18
 
 require (
+	github.com/go-gota/gota v0.12.0
 	github.com/go-openapi/errors v0.20.2
 	github.com/go-openapi/runtime v0.24.1
 	github.com/go-openapi/strfmt v0.21.3
@@ -11,7 +12,6 @@ require (
 	github.com/jedib0t/go-pretty/v6 v6.3.5
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.5.0
-	github.com/spf13/pflag v1.0.5
 	golang.org/x/exp v0.0.0-20220722155223-a9213eeb770e
 )
 
@@ -30,7 +30,10 @@ require (
 	github.com/oklog/ulid v1.3.1 // indirect
 	github.com/opentracing/opentracing-go v1.2.0 // indirect
 	github.com/rivo/uniseg v0.3.1 // indirect
+	github.com/spf13/pflag v1.0.5 // indirect
 	go.mongodb.org/mongo-driver v1.10.0 // indirect
+	golang.org/x/net v0.0.0-20220728211354-c7608f3a8462 // indirect
 	golang.org/x/sys v0.0.0-20220728004956-3c1f35247d10 // indirect
+	gonum.org/v1/gonum v0.11.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 )
