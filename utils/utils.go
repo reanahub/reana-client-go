@@ -10,9 +10,6 @@ package utils
 
 import (
 	"bytes"
-	"crypto/tls"
-	"io/ioutil"
-	"net/http"
 	"strings"
 	"time"
 
@@ -54,31 +51,6 @@ func ExecuteCommand(cmd *cobra.Command, args ...string) (output string, err erro
 	err = cmd.Execute()
 
 	return buf.String(), err
-}
-
-func NewRequest(token string, serverURL string, endpoint string) ([]byte, error) {
-	// disable certificate security checks
-	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{
-		InsecureSkipVerify: true,
-	}
-
-	url := serverURL + endpoint + "?access_token=" + token
-	request, err := http.NewRequest(http.MethodGet, url, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := http.DefaultClient.Do(request)
-	if err != nil {
-		return nil, err
-	}
-
-	respBytes, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return respBytes, nil
 }
 
 func HasAnyPrefix(s string, prefixes []string) bool {
