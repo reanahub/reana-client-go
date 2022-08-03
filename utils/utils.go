@@ -32,6 +32,10 @@ var ReanaComputeBackends = map[string]string{
 	"slurm":      "Slurm",
 }
 
+// ReanaComputeBackendKeys valid options for compute backends, used in the command line.
+// These keys are the same used in ReanaComputeBackends.
+var ReanaComputeBackendKeys = []string{"kubernetes", "htcondor", "slurm"}
+
 // GetRunStatuses provides a list of currently supported run statuses.
 // Includes the deleted status if includeDeleted is set to true.
 func GetRunStatuses(includeDeleted bool) []string {
@@ -103,4 +107,14 @@ func LogCmdFlags(cmd *cobra.Command) {
 	cmd.Flags().Visit(func(f *pflag.Flag) {
 		log.Debugf("%s: %s", f.Name, f.Value)
 	})
+}
+
+// RemoveFromSlice removes an element from the slice and returns the updated one.
+func RemoveFromSlice[T comparable](slice []T, item T) []T {
+	for i, elem := range slice {
+		if elem == item {
+			return append(slice[:i], slice[i+1:]...)
+		}
+	}
+	return slice
 }

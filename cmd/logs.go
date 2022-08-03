@@ -10,13 +10,11 @@ package cmd
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/utils"
 	"reanahub/reana-client-go/validation"
-	"sort"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -126,7 +124,11 @@ func newLogsCmd() *cobra.Command {
 }
 
 func (o *logsOptions) run(cmd *cobra.Command) error {
-	steps, chosenFilters, err := parseLogsFilters(o.filters)
+	filters, err := parseLogsFilters(o.filters)
+	if err != nil {
+		return err
+	}
+	steps, err := filters.GetMulti("step")
 	if err != nil {
 		return err
 	}
@@ -155,7 +157,7 @@ func (o *logsOptions) run(cmd *cobra.Command) error {
 		return err
 	}
 
-	err = filterJobLogs(&workflowLogs.JobLogs, chosenFilters)
+	err = filterJobLogs(&workflowLogs.JobLogs, filters)
 	if err != nil {
 		return err
 	}
@@ -175,55 +177,59 @@ func (o *logsOptions) run(cmd *cobra.Command) error {
 // parseLogsFilters parses a list of filters in the format 'filter=value', for the 'logs' command.
 // The steps filters are returned as a slice of strings, while the other filters are returned as a map.
 // Returns an error if any of the given filters are not valid.
-func parseLogsFilters(filters []string) ([]string, map[string]string, error) {
-	availableFilters := map[string]string{
-		"step":            "job_name",
-		"compute_backend": "compute_backend",
-		"docker_img":      "docker_img",
-		"status":          "status",
+func parseLogsFilters(filterInput []string) (utils.Filters, error) {
+	singleValueFilters := []string{"compute_backend", "docker_img", "status"}
+	multiValueFilters := []string{"step"}
+
+	filters, err := utils.NewFilters(singleValueFilters, multiValueFilters, filterInput)
+	if err != nil {
+		return filters, err
 	}
 
-	var steps []string
-	chosenFilters := make(map[string]string)
-	for _, filter := range filters {
-		filterName, filterValue, err := utils.GetFilterNameAndValue(filter)
-		if err != nil {
-			return nil, nil, err
-		}
+	err = filters.ValidateValues("status", utils.GetRunStatuses(true))
+	if err != nil {
+		return filters, err
+	}
 
-		_, isFilterValid := availableFilters[filterName]
-		if !isFilterValid {
-			validFilters := make([]string, 0, len(availableFilters))
-			for key := range availableFilters {
-				validFilters = append(validFilters, key)
+	err = filters.ValidateValues("compute_backend", utils.ReanaComputeBackendKeys)
+	if err != nil {
+		return filters, err
+	}
+
+	return filters, nil
+}
+
+// filterJobLogs returns a subset of jobLogs based on the given filters.
+func filterJobLogs(jobLogs *map[string]jobLogItem, filters utils.Filters) error {
+	// Convert to a map based on json properties
+	var jobLogsMap map[string]map[string]string
+	jsonLogs, err := json.Marshal(jobLogs)
+	if err != nil {
+		return err
+	}
+	err = json.Unmarshal(jsonLogs, &jobLogsMap)
+	if err != nil {
+		return err
+	}
+
+	var unwantedLogs []string
+	for jobLogKey, jobLogValue := range jobLogsMap {
+		for _, filterKey := range filters.SingleFilterKeys {
+			filterValue, _ := filters.GetSingle(filterKey)
+			if filterKey == "compute_backend" {
+				filterValue = utils.ReanaComputeBackends[strings.ToLower(filterValue)]
 			}
-			sort.Strings(validFilters)
-
-			return nil, nil, fmt.Errorf(
-				"filter '%s' is not valid\nAvailable filters are '%s'",
-				filterName,
-				strings.Join(validFilters, "' '"),
-			)
-		}
-
-		if filterName == "step" {
-			steps = append(steps, filterValue)
-		} else {
-			realValue, isKnownBackend := utils.ReanaComputeBackends[strings.ToLower(filterValue)]
-			if filterName == "compute_backend" {
-				if !isKnownBackend {
-					return nil, nil, fmt.Errorf("compute_backend value %s is not valid", filterValue)
-				}
-				filterValue = realValue
-			} else if filterName == "status" && !slices.Contains(utils.GetRunStatuses(true), filterValue) {
-				return nil, nil, fmt.Errorf("input status value '%s' is not valid", filterValue)
+			if filterValue != "" && jobLogValue[filterKey] != filterValue {
+				unwantedLogs = append(unwantedLogs, jobLogKey)
+				break
 			}
-			realFilterName := availableFilters[filterName]
-			chosenFilters[realFilterName] = filterValue
 		}
 	}
 
-	return steps, chosenFilters, nil
+	for _, log := range unwantedLogs {
+		delete(*jobLogs, log)
+	}
+	return nil
 }
 
 // displayHumanFriendlyLogs displays the logs in a human friendly way.
@@ -294,37 +300,4 @@ func displayOptionalItem(cmd *cobra.Command, item *string, title string, leading
 		return
 	}
 	cmd.Printf("%s %s: %s\n", leadingMark, title, *item)
-}
-
-// filterJobLogs returns a subset of jobLogs based on the given filters.
-func filterJobLogs(jobLogs *map[string]jobLogItem, filters map[string]string) error {
-	if len(filters) == 0 {
-		return nil
-	}
-
-	// Convert to a map based on json properties
-	var jobLogsMap map[string]map[string]string
-	jsonLogs, err := json.Marshal(jobLogs)
-	if err != nil {
-		return err
-	}
-	err = json.Unmarshal(jsonLogs, &jobLogsMap)
-	if err != nil {
-		return err
-	}
-
-	var unwantedLogs []string
-	for jobLogKey, jobLogValue := range jobLogsMap {
-		for filterKey, filterValue := range filters {
-			if jobLogValue[filterKey] != filterValue {
-				unwantedLogs = append(unwantedLogs, jobLogKey)
-				break
-			}
-		}
-	}
-
-	for _, log := range unwantedLogs {
-		delete(*jobLogs, log)
-	}
-	return nil
 }

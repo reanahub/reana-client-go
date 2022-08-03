@@ -19,54 +19,156 @@ import (
 	"golang.org/x/exp/slices"
 )
 
-type FormatFilter struct {
-	column     string
-	value      string
-	filterRows bool
+// Filters provides a centralized way of handling filters across the different commands.
+type Filters struct {
+	SingleFilterKeys   []string // names (keys) of the single value filters to be considered
+	MultiFilterKeys    []string // names (keys) of the multi value filters to be considered
+	singleValueFilters map[string]string
+	multiValueFilters  map[string][]string
 }
 
-// ParseFilterParameters parses a list of filters in the format 'filter=value'.
-// The 'status' filters are returned as a slice of strings, while the remaining filters are returned as a JSON string.
-// Every given filter must be included in filterNames.
-func ParseFilterParameters(filter []string, filterNames []string) ([]string, string, error) {
-	searchFilters := make(map[string][]string)
-	var statusFilters []string
+// NewFilters returns a new instance of Filters, with the given keys.
+// singleFilterKeys are the filters with only one value at a time, while multiFilterKeys can accumulate values.
+func NewFilters(singleFilterKeys []string, multiFilterKeys []string) Filters {
+	return Filters{
+		SingleFilterKeys:   singleFilterKeys,
+		MultiFilterKeys:    multiFilterKeys,
+		singleValueFilters: make(map[string]string),
+		multiValueFilters:  make(map[string][]string),
+	}
+}
 
-	for _, value := range filter {
-		filterName, filterValue, err := GetFilterNameAndValue(value)
+// AddFilters adds multiple filters, in the format 'key=value'. Works for both single and multi value filters.
+func (f *Filters) AddFilters(filters []string) error {
+	for _, filter := range filters {
+		err := f.AddFilter(filter)
 		if err != nil {
-			return nil, "", err
+			return err
 		}
+	}
+	return nil
+}
 
-		if !slices.Contains(filterNames, filterName) {
-			return nil, "", fmt.Errorf("filter %s is not valid", filterName)
-		}
+// AddFilter adds a filter, in the format 'key=value'. Works for both single and multi value filters.
+func (f *Filters) AddFilter(filter string) error {
+	key, value, err := f.getKeyAndValue(filter)
+	if err != nil {
+		return err
+	}
 
-		if filterName == "status" && !slices.Contains(GetRunStatuses(true), filterValue) {
-			return nil, "", fmt.Errorf("input status value %s is not valid. ", filterValue)
-		}
+	if slices.Contains(f.SingleFilterKeys, key) {
+		f.singleValueFilters[key] = value
+	} else if slices.Contains(f.MultiFilterKeys, key) {
+		f.multiValueFilters[key] = append(f.multiValueFilters[key], value)
+	} else {
+		return fmt.Errorf(
+			"filter key '%s' is not valid\nAvailable filters are '%s'",
+			key,
+			strings.Join(append(f.SingleFilterKeys, f.MultiFilterKeys...), "', '"),
+		)
+	}
+	return nil
+}
 
-		if filterName == "status" {
-			statusFilters = append(statusFilters, filterValue)
+// GetSingle returns the value of a single value filter.
+func (f Filters) GetSingle(key string) (string, error) {
+	if !slices.Contains(f.SingleFilterKeys, key) {
+		return "", fmt.Errorf(
+			"'%s' is not a valid single value filter\nAvailable filters are '%s'",
+			key,
+			strings.Join(f.SingleFilterKeys, "', '"),
+		)
+	}
+
+	return f.singleValueFilters[key], nil
+}
+
+// GetMulti returns a slice with the values of a multi value filter.
+func (f Filters) GetMulti(key string) ([]string, error) {
+	if !slices.Contains(f.MultiFilterKeys, key) {
+		return []string{}, fmt.Errorf(
+			"'%s' is not a valid multi value filter\nAvailable filters are '%s'",
+			key,
+			strings.Join(f.MultiFilterKeys, "', '"),
+		)
+	}
+
+	return f.multiValueFilters[key], nil
+}
+
+// GetJson gets a JSON string with the filters specified in keys.
+func (f Filters) GetJson(keys []string) (string, error) {
+	jsonMap := make(map[string]any)
+	for _, key := range keys {
+		var (
+			value  any
+			exists bool
+		)
+		if slices.Contains(f.SingleFilterKeys, key) {
+			value, exists = f.singleValueFilters[key]
+		} else if slices.Contains(f.MultiFilterKeys, key) {
+			value, exists = f.multiValueFilters[key]
 		} else {
-			searchFilters[filterName] = append(searchFilters[filterName], filterValue)
+			return "", fmt.Errorf(
+				"filter key '%s' is not valid\nAvailable filters are '%s'",
+				key,
+				strings.Join(append(f.SingleFilterKeys, f.MultiFilterKeys...), "', '"),
+			)
+		}
+		if exists {
+			jsonMap[key] = value
 		}
 	}
 
-	searchFiltersString := ""
-	if len(searchFilters) > 0 {
-		searchFiltersByteArray, err := json.Marshal(searchFilters)
+	jsonString := ""
+	if len(jsonMap) > 0 {
+		searchFiltersByteArray, err := json.Marshal(jsonMap)
 		if err != nil {
-			return nil, "", err
+			return "", err
 		}
-		searchFiltersString = string(searchFiltersByteArray)
+		jsonString = string(searchFiltersByteArray)
 	}
 
-	return statusFilters, searchFiltersString, nil
+	return jsonString, nil
 }
 
-// GetFilterNameAndValue parses a filter in the format 'filter=value' and returns them.
-func GetFilterNameAndValue(filter string) (string, string, error) {
+// ValidateValues validates a given filter key, by comparing its value(s) with the possibleValues provided.
+func (f Filters) ValidateValues(key string, possibleValues []string) error {
+	if slices.Contains(f.SingleFilterKeys, key) {
+		value, exists := f.singleValueFilters[key]
+		if exists && !slices.Contains(possibleValues, value) {
+			return fmt.Errorf(
+				"'%s' is not a valid value for the filter '%s'\nAvailable values are '%s'",
+				value, key,
+				strings.Join(possibleValues, "', '"),
+			)
+		}
+	} else if slices.Contains(f.MultiFilterKeys, key) {
+		values, exists := f.multiValueFilters[key]
+		if !exists {
+			return nil
+		}
+		for _, value := range values {
+			if !slices.Contains(possibleValues, value) {
+				return fmt.Errorf(
+					"'%s' is not a valid value for the filter '%s'\nAvailable values are '%s'",
+					value, key,
+					strings.Join(possibleValues, "', '"),
+				)
+			}
+		}
+	} else {
+		return fmt.Errorf(
+			"filter key '%s' is not valid\nAvailable filters are '%s'",
+			key,
+			strings.Join(append(f.SingleFilterKeys, f.MultiFilterKeys...), "', '"),
+		)
+	}
+	return nil
+}
+
+// getKeyAndValue parses a filter in the format 'filter=value' and returns them.
+func (f Filters) getKeyAndValue(filter string) (string, string, error) {
 	if !strings.Contains(filter, "=") {
 		return "", "", errors.New(
 			"wrong input format. Please use --filter filter_name=filter_value",
@@ -77,6 +179,12 @@ func GetFilterNameAndValue(filter string) (string, string, error) {
 	filterName := strings.ToLower(filterNameAndValue[0])
 	filterValue := filterNameAndValue[1]
 	return filterName, filterValue, nil
+}
+
+type FormatFilter struct {
+	column     string
+	value      string
+	filterRows bool
 }
 
 // ParseFormatParameters parses a list of formatOptions to a slice of FormatFilter.

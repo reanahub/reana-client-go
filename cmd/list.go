@@ -162,15 +162,9 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 		runType = "batch"
 	}
 
-	statusFilters := utils.GetRunStatuses(o.showDeletedRuns || o.showAll)
-	var searchFilter string
-	if len(o.filters) > 0 {
-		filterNames := []string{"name", "status"}
-		var err error
-		statusFilters, searchFilter, err = utils.ParseFilterParameters(o.filters, filterNames)
-		if err != nil {
-			return err
-		}
+	statusFilters, searchFilter, err := parseListFilters(o.filters, o.showDeletedRuns, o.showAll)
+	if err != nil {
+		return err
 	}
 
 	listParams := operations.NewGetWorkflowsParams()
@@ -365,6 +359,39 @@ func buildListHeader(
 	}
 
 	return header
+}
+
+// parseListFilters takes the filter input and returns status filters as a slice and the remaining filters
+// as a JSON string, according to whether it should show deleted status.
+func parseListFilters(
+	filterInput []string,
+	showDeletedRuns, showAll bool,
+) ([]string, string, error) {
+	filterNames := []string{"name", "status"}
+	filters, err := utils.NewFilters(nil, filterNames, filterInput)
+	if err != nil {
+		return nil, "", err
+	}
+
+	statusFilters := utils.GetRunStatuses(showDeletedRuns || showAll)
+	err = filters.ValidateValues("status", utils.GetRunStatuses(true))
+	if err != nil {
+		return nil, "", err
+	}
+	userStatusFilters, err := filters.GetMulti("status")
+	if err != nil {
+		return nil, "", err
+	}
+	if len(userStatusFilters) > 0 {
+		statusFilters = userStatusFilters
+	}
+
+	searchFilter, err := filters.GetJson([]string{"name"}) // All the filters except for status
+	if err != nil {
+		return nil, "", err
+	}
+
+	return statusFilters, searchFilter, nil
 }
 
 // buildListSeries returns a Series of the right type, according to the column name.
