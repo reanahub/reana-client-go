@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -384,7 +385,7 @@ type GetWorkflowStatusOKBody struct {
 	Name string `json:"name,omitempty"`
 
 	// progress
-	Progress interface{} `json:"progress,omitempty"`
+	Progress *GetWorkflowStatusOKBodyProgress `json:"progress,omitempty"`
 
 	// status
 	Status string `json:"status,omitempty"`
@@ -395,11 +396,64 @@ type GetWorkflowStatusOKBody struct {
 
 // Validate validates this get workflow status o k body
 func (o *GetWorkflowStatusOKBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateProgress(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
 	return nil
 }
 
-// ContextValidate validates this get workflow status o k body based on context it is used
+func (o *GetWorkflowStatusOKBody) validateProgress(formats strfmt.Registry) error {
+	if swag.IsZero(o.Progress) { // not required
+		return nil
+	}
+
+	if o.Progress != nil {
+		if err := o.Progress.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this get workflow status o k body based on the context it is used
 func (o *GetWorkflowStatusOKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateProgress(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *GetWorkflowStatusOKBody) contextValidateProgress(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.Progress != nil {
+		if err := o.Progress.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -414,6 +468,406 @@ func (o *GetWorkflowStatusOKBody) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *GetWorkflowStatusOKBody) UnmarshalBinary(b []byte) error {
 	var res GetWorkflowStatusOKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GetWorkflowStatusOKBodyProgress get workflow status o k body progress
+swagger:model GetWorkflowStatusOKBodyProgress
+*/
+type GetWorkflowStatusOKBodyProgress struct {
+
+	// current command
+	CurrentCommand string `json:"current_command,omitempty"`
+
+	// current step name
+	CurrentStepName string `json:"current_step_name,omitempty"`
+
+	// failed
+	Failed *GetWorkflowStatusOKBodyProgressFailed `json:"failed,omitempty"`
+
+	// finished
+	Finished *GetWorkflowStatusOKBodyProgressFinished `json:"finished,omitempty"`
+
+	// run finished at
+	RunFinishedAt string `json:"run_finished_at,omitempty"`
+
+	// run started at
+	RunStartedAt string `json:"run_started_at,omitempty"`
+
+	// running
+	Running *GetWorkflowStatusOKBodyProgressRunning `json:"running,omitempty"`
+
+	// total
+	Total *GetWorkflowStatusOKBodyProgressTotal `json:"total,omitempty"`
+}
+
+// Validate validates this get workflow status o k body progress
+func (o *GetWorkflowStatusOKBodyProgress) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateFailed(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateFinished(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateRunning(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateTotal(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *GetWorkflowStatusOKBodyProgress) validateFailed(formats strfmt.Registry) error {
+	if swag.IsZero(o.Failed) { // not required
+		return nil
+	}
+
+	if o.Failed != nil {
+		if err := o.Failed.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "failed")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "failed")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *GetWorkflowStatusOKBodyProgress) validateFinished(formats strfmt.Registry) error {
+	if swag.IsZero(o.Finished) { // not required
+		return nil
+	}
+
+	if o.Finished != nil {
+		if err := o.Finished.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "finished")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "finished")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *GetWorkflowStatusOKBodyProgress) validateRunning(formats strfmt.Registry) error {
+	if swag.IsZero(o.Running) { // not required
+		return nil
+	}
+
+	if o.Running != nil {
+		if err := o.Running.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "running")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "running")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *GetWorkflowStatusOKBodyProgress) validateTotal(formats strfmt.Registry) error {
+	if swag.IsZero(o.Total) { // not required
+		return nil
+	}
+
+	if o.Total != nil {
+		if err := o.Total.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "total")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "total")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// ContextValidate validate this get workflow status o k body progress based on the context it is used
+func (o *GetWorkflowStatusOKBodyProgress) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateFailed(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateFinished(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateRunning(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateTotal(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *GetWorkflowStatusOKBodyProgress) contextValidateFailed(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.Failed != nil {
+		if err := o.Failed.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "failed")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "failed")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *GetWorkflowStatusOKBodyProgress) contextValidateFinished(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.Finished != nil {
+		if err := o.Finished.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "finished")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "finished")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *GetWorkflowStatusOKBodyProgress) contextValidateRunning(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.Running != nil {
+		if err := o.Running.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "running")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "running")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *GetWorkflowStatusOKBodyProgress) contextValidateTotal(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.Total != nil {
+		if err := o.Total.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "total")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "total")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWorkflowStatusOKBodyProgress) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWorkflowStatusOKBodyProgress) UnmarshalBinary(b []byte) error {
+	var res GetWorkflowStatusOKBodyProgress
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GetWorkflowStatusOKBodyProgressFailed get workflow status o k body progress failed
+swagger:model GetWorkflowStatusOKBodyProgressFailed
+*/
+type GetWorkflowStatusOKBodyProgressFailed struct {
+
+	// job ids
+	JobIds []string `json:"job_ids"`
+
+	// total
+	Total int64 `json:"total,omitempty"`
+}
+
+// Validate validates this get workflow status o k body progress failed
+func (o *GetWorkflowStatusOKBodyProgressFailed) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get workflow status o k body progress failed based on context it is used
+func (o *GetWorkflowStatusOKBodyProgressFailed) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWorkflowStatusOKBodyProgressFailed) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWorkflowStatusOKBodyProgressFailed) UnmarshalBinary(b []byte) error {
+	var res GetWorkflowStatusOKBodyProgressFailed
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GetWorkflowStatusOKBodyProgressFinished get workflow status o k body progress finished
+swagger:model GetWorkflowStatusOKBodyProgressFinished
+*/
+type GetWorkflowStatusOKBodyProgressFinished struct {
+
+	// job ids
+	JobIds []string `json:"job_ids"`
+
+	// total
+	Total int64 `json:"total,omitempty"`
+}
+
+// Validate validates this get workflow status o k body progress finished
+func (o *GetWorkflowStatusOKBodyProgressFinished) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get workflow status o k body progress finished based on context it is used
+func (o *GetWorkflowStatusOKBodyProgressFinished) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWorkflowStatusOKBodyProgressFinished) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWorkflowStatusOKBodyProgressFinished) UnmarshalBinary(b []byte) error {
+	var res GetWorkflowStatusOKBodyProgressFinished
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GetWorkflowStatusOKBodyProgressRunning get workflow status o k body progress running
+swagger:model GetWorkflowStatusOKBodyProgressRunning
+*/
+type GetWorkflowStatusOKBodyProgressRunning struct {
+
+	// job ids
+	JobIds []string `json:"job_ids"`
+
+	// total
+	Total int64 `json:"total,omitempty"`
+}
+
+// Validate validates this get workflow status o k body progress running
+func (o *GetWorkflowStatusOKBodyProgressRunning) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get workflow status o k body progress running based on context it is used
+func (o *GetWorkflowStatusOKBodyProgressRunning) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWorkflowStatusOKBodyProgressRunning) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWorkflowStatusOKBodyProgressRunning) UnmarshalBinary(b []byte) error {
+	var res GetWorkflowStatusOKBodyProgressRunning
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*GetWorkflowStatusOKBodyProgressTotal get workflow status o k body progress total
+swagger:model GetWorkflowStatusOKBodyProgressTotal
+*/
+type GetWorkflowStatusOKBodyProgressTotal struct {
+
+	// job ids
+	JobIds []string `json:"job_ids"`
+
+	// total
+	Total int64 `json:"total,omitempty"`
+}
+
+// Validate validates this get workflow status o k body progress total
+func (o *GetWorkflowStatusOKBodyProgressTotal) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get workflow status o k body progress total based on context it is used
+func (o *GetWorkflowStatusOKBodyProgressTotal) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWorkflowStatusOKBodyProgressTotal) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWorkflowStatusOKBodyProgressTotal) UnmarshalBinary(b []byte) error {
+	var res GetWorkflowStatusOKBodyProgressTotal
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

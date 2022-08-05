@@ -31,11 +31,9 @@ Examples:
   $ reana-client open -w myanalysis.42 jupyter
 `
 
-const openImageFlagDesc = `
-Docker image which will be used to spawn the
+const openImageFlagDesc = `Docker image which will be used to spawn the
 interactive session. Overrides the default image
-for the selected type.
-`
+for the selected type.`
 
 type openOptions struct {
 	token                  string

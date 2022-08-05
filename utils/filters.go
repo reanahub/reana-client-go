@@ -193,12 +193,12 @@ type FormatFilter struct {
 
 // ParseFormatParameters parses a list of formatOptions to a slice of FormatFilter.
 // If the format option has a filter, that will be the value in the struct and the filterRows boolean will be true.
-func ParseFormatParameters(formatOptions []string) []FormatFilter {
+func ParseFormatParameters(formatOptions []string, filterRows bool) []FormatFilter {
 	var parsedFilters []FormatFilter
 	for _, filter := range formatOptions {
 		filterNameAndValue := strings.SplitN(filter, "=", 2)
 		formatFilter := FormatFilter{column: filterNameAndValue[0], filterRows: false}
-		if len(filterNameAndValue) >= 2 {
+		if filterRows && len(filterNameAndValue) >= 2 {
 			formatFilter.value = filterNameAndValue[1]
 			formatFilter.filterRows = true
 		}

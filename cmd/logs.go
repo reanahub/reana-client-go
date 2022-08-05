@@ -36,8 +36,7 @@ $ reana-client logs -w myanalysis.42 -s 1st_ste
 const logsFilterFlagDesc = `Filter job logs to include only those steps that
 match certain filtering criteria. Use --filter
 name=value pairs. Available filters are
-compute_backend, docker_img, status and step.
-`
+compute_backend, docker_img, status and step.`
 
 // logs struct that contains the logs of a workflow.
 // Pointers used for nullable values

@@ -102,6 +102,29 @@ func GetWorkflowNameAndRunNumber(workflowName string) (string, string) {
 	return workflowNameAndRunNumber[0], workflowNameAndRunNumber[1]
 }
 
+// GetWorkflowDuration calculates and returns the duration of the given workflow.
+func GetWorkflowDuration(runStartedAt, runFinishedAt *string) (any, error) {
+	if runStartedAt == nil {
+		return nil, nil
+	}
+
+	startTime, err := FromIsoToTimestamp(*runStartedAt)
+	if err != nil {
+		return nil, err
+	}
+
+	var endTime time.Time
+	if runFinishedAt != nil {
+		endTime, err = FromIsoToTimestamp(*runFinishedAt)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		endTime = time.Now()
+	}
+	return endTime.Sub(startTime).Round(time.Second).Seconds(), nil
+}
+
 // FormatSessionURI takes the serverURL, its token and a path, and formats them into a session URI.
 func FormatSessionURI(serverURL string, path string, token string) string {
 	return serverURL + path + "?token=" + token

@@ -13,7 +13,6 @@ import (
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/utils"
-	"time"
 
 	"github.com/go-gota/gota/dataframe"
 	"github.com/go-gota/gota/series"
@@ -25,14 +24,12 @@ import (
 const listFormatFlagDesc = `Format output according to column titles or column
 values. Use <columm_name>=<column_value> format.
 E.g. display workflow with failed status and named test_workflow
---format status=failed,name=test_workflow.
-`
+--format status=failed,name=test_workflow.`
 
 const listFilterFlagDesc = `Filter workflow that contains certain filtering
 criteria. Use --filter
 <columm_name>=<column_value> pairs. Available
-filters are 'name' and 'status'.
-`
+filters are 'name' and 'status'.`
 
 const listDesc = `
 List all workflows and sessions.
@@ -187,7 +184,7 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 		o.includeProgress,
 		o.includeDuration,
 	)
-	parsedFormatFilters := utils.ParseFormatParameters(o.formatFilters)
+	parsedFormatFilters := utils.ParseFormatParameters(o.formatFilters, true)
 	err = displayListPayload(
 		cmd,
 		listResp.Payload,
@@ -220,7 +217,7 @@ func displayListPayload(
 		colSeries := buildListSeries(col, humanReadable)
 		for _, workflow := range p.Items {
 			name, runNumber := utils.GetWorkflowNameAndRunNumber(workflow.Name)
-			var value any = nil
+			var value any
 
 			switch col {
 			case "id":
@@ -240,7 +237,10 @@ func displayListPayload(
 				value = finishedInfo + "/" + totalInfo
 			case "duration":
 				var err error
-				value, err = getWorkflowDuration(workflow)
+				value, err = utils.GetWorkflowDuration(
+					workflow.Progress.RunStartedAt,
+					workflow.Progress.RunFinishedAt,
+				)
 				if err != nil {
 					return err
 				}
@@ -289,31 +289,6 @@ func displayListPayload(
 	}
 
 	return nil
-}
-
-// getWorkflowDuration calculates and returns the duration of the given workflow.
-func getWorkflowDuration(workflow *operations.GetWorkflowsOKBodyItemsItems0) (any, error) {
-	runStartedAt := workflow.Progress.RunStartedAt
-	runFinishedAt := workflow.Progress.RunFinishedAt
-	if runStartedAt == nil {
-		return nil, nil
-	}
-
-	startTime, err := utils.FromIsoToTimestamp(*runStartedAt)
-	if err != nil {
-		return nil, err
-	}
-
-	var endTime time.Time
-	if runFinishedAt != nil {
-		endTime, err = utils.FromIsoToTimestamp(*runFinishedAt)
-		if err != nil {
-			return nil, err
-		}
-	} else {
-		endTime = time.Now()
-	}
-	return endTime.Sub(startTime).Round(time.Second).Seconds(), nil
 }
 
 // buildListHeader builds the header of the list table, according to the given runType and whether to include
