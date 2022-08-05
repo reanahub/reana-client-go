@@ -102,13 +102,24 @@ func NewGetFilesBadRequest() *GetFilesBadRequest {
 Request failed. The incoming payload seems malformed.
 */
 type GetFilesBadRequest struct {
+	Payload *GetFilesBadRequestBody
 }
 
 func (o *GetFilesBadRequest) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesBadRequest ", 400)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesBadRequest  %+v", 400, o.Payload)
+}
+func (o *GetFilesBadRequest) GetPayload() *GetFilesBadRequestBody {
+	return o.Payload
 }
 
 func (o *GetFilesBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GetFilesBadRequestBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -206,6 +217,43 @@ func (o *GetFilesInternalServerError) readResponse(response runtime.ClientRespon
 		return err
 	}
 
+	return nil
+}
+
+/*GetFilesBadRequestBody get files bad request body
+swagger:model GetFilesBadRequestBody
+*/
+type GetFilesBadRequestBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get files bad request body
+func (o *GetFilesBadRequestBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this get files bad request body based on context it is used
+func (o *GetFilesBadRequestBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetFilesBadRequestBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetFilesBadRequestBody) UnmarshalBinary(b []byte) error {
+	var res GetFilesBadRequestBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 

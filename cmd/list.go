@@ -132,7 +132,7 @@ In case a workflow is in progress, its duration as of now will be shown.`,
 		"Include deleted workflows in the output.",
 	)
 	f.Int64Var(&o.page, "page", 1, "Results page number (to be used with --size).")
-	f.Int64Var(&o.size, "size", 0, "Size of results per page (to be used with --page).")
+	f.Int64Var(&o.size, "size", 0, "Number of results per page (to be used with --page).")
 
 	err := f.SetAnnotation("workflow", "properties", []string{"optional"})
 	if err != nil {
