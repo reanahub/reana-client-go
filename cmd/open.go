@@ -51,6 +51,7 @@ func newOpenCmd() *cobra.Command {
 		Use:   "open",
 		Short: "Open an interactive session inside the workspace.",
 		Long:  openDesc,
+		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			o.serverURL = viper.GetString("server-url")
 			o.interactiveSessionType = utils.InteractiveSessionTypes[0]

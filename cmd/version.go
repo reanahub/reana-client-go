@@ -26,6 +26,7 @@ func newVersionCmd() *cobra.Command {
 		Use:   "version",
 		Short: "Show version.",
 		Long:  versionDesc,
+		Args:  cobra.NoArgs,
 		Run: func(cmd *cobra.Command, args []string) {
 			cmd.Println(version)
 		},

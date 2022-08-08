@@ -77,6 +77,7 @@ func newLogsCmd() *cobra.Command {
 		Use:   "logs",
 		Short: "Get workflow logs.",
 		Long:  logsDesc,
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return o.run(cmd)
 		},

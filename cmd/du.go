@@ -52,6 +52,7 @@ func newDuCmd() *cobra.Command {
 		Use:   "du",
 		Short: "Get workspace disk usage.",
 		Long:  duDesc,
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return o.run(cmd)
 		},

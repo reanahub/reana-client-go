@@ -41,6 +41,7 @@ func newInfoCmd() *cobra.Command {
 		Use:   "info",
 		Short: "List cluster general information.",
 		Long:  infoDesc,
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return o.run(cmd)
 		},

@@ -37,6 +37,7 @@ func newPingCmd() *cobra.Command {
 		Use:   "ping",
 		Short: "Check connection to REANA server.",
 		Long:  pingDesc,
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			o.serverURL = viper.GetString("server-url")
 			return o.run(cmd)

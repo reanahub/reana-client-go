@@ -76,6 +76,7 @@ func newListCmd() *cobra.Command {
 		Use:   "list",
 		Short: "List all workflows and sessions.",
 		Long:  listDesc,
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			o.serverURL = viper.GetString("server-url")
 			return o.run(cmd)

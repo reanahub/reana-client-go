@@ -74,6 +74,7 @@ func newLsCmd() *cobra.Command {
 		Use:   "ls",
 		Short: "List workspace files.",
 		Long:  lsDesc,
+		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			o.serverURL = viper.GetString("server-url")
 			if len(args) > 0 {

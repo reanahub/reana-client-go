@@ -57,6 +57,7 @@ func newStatusCmd() *cobra.Command {
 		Use:   "status",
 		Short: "Get status of a workflow.",
 		Long:  statusDesc,
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return o.run(cmd)
 		},

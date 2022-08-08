@@ -44,6 +44,7 @@ func newCloseCmd() *cobra.Command {
 		Use:   "close",
 		Short: "Close an interactive session.",
 		Long:  closeDesc,
+		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return o.run(cmd)
 		},
