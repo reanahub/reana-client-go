@@ -138,16 +138,6 @@ func LogCmdFlags(cmd *cobra.Command) {
 	})
 }
 
-// RemoveFromSlice removes an element from the slice and returns the updated one.
-func RemoveFromSlice[T comparable](slice []T, item T) []T {
-	for i, elem := range slice {
-		if elem == item {
-			return append(slice[:i], slice[i+1:]...)
-		}
-	}
-	return slice
-}
-
 // HandleApiError Handles API Error response which contains a payload with a message
 // Returns the original error when this doesn't happen
 func HandleApiError(err error) error {
