@@ -22,12 +22,16 @@ import (
 	"golang.org/x/exp/slices"
 )
 
+const (
+	invalidAccessTokenMsg = "please provide your access token by using the -t/--access-token flag, or by setting the REANA_ACCESS_TOKEN environment variable"
+	invalidServerURLMsg   = "please set REANA_SERVER_URL environment variable"
+	invalidWorkflowMsg    = "workflow name must be provided either with `--workflow` option or with REANA_WORKON environment variable"
+)
+
 // ValidateAccessToken verifies if the access token has been set, ignoring any white spaces.
 func ValidateAccessToken(token string) error {
 	if strings.TrimSpace(token) == "" {
-		return errors.New(
-			"please provide your access token by using the -t/--access-token flag, or by setting the REANA_ACCESS_TOKEN environment variable",
-		)
+		return errors.New(invalidAccessTokenMsg)
 	}
 	return nil
 }
@@ -35,7 +39,7 @@ func ValidateAccessToken(token string) error {
 // ValidateServerURL verifies if REANA's server URL has been set, ignoring any white spaces.
 func ValidateServerURL(serverURL string) error {
 	if strings.TrimSpace(serverURL) == "" {
-		return errors.New("please set REANA_SERVER_URL environment variable")
+		return errors.New(invalidServerURLMsg)
 	}
 	return nil
 }
@@ -43,9 +47,7 @@ func ValidateServerURL(serverURL string) error {
 // ValidateWorkflow verifies if the workflow's name has been set, ignoring any white spaces.
 func ValidateWorkflow(workflow string) error {
 	if strings.TrimSpace(workflow) == "" {
-		return errors.New(
-			"workflow name must be provided either with `--workflow` option or with REANA_WORKON environment variable",
-		)
+		return errors.New(invalidWorkflowMsg)
 	}
 	return nil
 }
