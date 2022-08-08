@@ -14,6 +14,8 @@ import (
 	"reanahub/reana-client-go/utils"
 	"reanahub/reana-client-go/validation"
 
+	"github.com/jedib0t/go-pretty/v6/text"
+
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -95,7 +97,7 @@ func (o *openOptions) run(cmd *cobra.Command) error {
 	if err != nil {
 		return err
 	}
-	log.Infof("Opening an interactive session on '%s'", o.workflow)
+	log.Infof("Opening an interactive session on %s", o.workflow)
 	openResp, err := api.Operations.OpenInteractiveSession(openParams)
 	if err != nil {
 		return err
@@ -107,7 +109,8 @@ func (o *openOptions) run(cmd *cobra.Command) error {
 		false,
 		cmd.OutOrStdout(),
 	)
-	cmd.Println(utils.FormatSessionURI(o.serverURL, openResp.Payload.Path, o.token))
+	sessionURI := utils.FormatSessionURI(o.serverURL, openResp.Payload.Path, o.token)
+	utils.PrintColorable(sessionURI+"\n", cmd.OutOrStdout(), text.FgGreen)
 	cmd.Println("It could take several minutes to start the interactive session.")
 	return nil
 }

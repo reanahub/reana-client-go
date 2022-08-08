@@ -10,10 +10,13 @@ package cmd
 
 import (
 	"encoding/json"
+	"fmt"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/utils"
 	"strings"
+
+	"github.com/jedib0t/go-pretty/v6/text"
 
 	"github.com/spf13/cobra"
 	"golang.org/x/exp/slices"
@@ -214,12 +217,12 @@ func displayHumanFriendlyLogs(cmd *cobra.Command, logs logs, steps []string) {
 	leadingMark := "==>"
 
 	if logs.WorkflowLogs != nil && *logs.WorkflowLogs != "" {
-		cmd.Printf("%s Workflow engine logs\n", leadingMark)
+		displayLogHeader(cmd, "Workflow engine logs", leadingMark)
 		cmd.Println(*logs.WorkflowLogs)
 	}
 
 	if logs.EngineSpecific != nil && *logs.EngineSpecific != "" {
-		cmd.Printf("\n%s Engine internal logs\n", leadingMark)
+		displayLogHeader(cmd, "Engine internal logs", leadingMark)
 		cmd.Println(*logs.EngineSpecific)
 	}
 
@@ -236,45 +239,69 @@ func displayHumanFriendlyLogs(cmd *cobra.Command, logs logs, steps []string) {
 		}
 
 		if len(missingStepNames) > 0 {
-			cmd.PrintErrf(
-				"The logs of step(s) %s were not found, check for spelling mistakes in the step names\n",
+			errMsg := fmt.Sprintf(
+				"The logs of step(s) %s were not found, check for spelling mistakes in the step names",
 				strings.Join(missingStepNames, ","),
 			)
+			utils.DisplayMessage(errMsg, utils.Error, false, cmd.ErrOrStderr())
 		}
 	}
 
 	if len(logs.JobLogs) > 0 {
-		cmd.Printf("\n%s Job logs\n", leadingMark)
+		displayLogHeader(cmd, "Job logs", leadingMark)
 		for jobId, jobItem := range logs.JobLogs {
 			jobNameOrId := jobId
 			if jobItem.JobName != "" {
 				jobNameOrId = jobItem.JobName
 			}
-			cmd.Printf("%s Step: %s\n", leadingMark, jobNameOrId)
+			utils.PrintColorable(
+				fmt.Sprintf("%s Step: %s\n", leadingMark, jobNameOrId),
+				cmd.OutOrStdout(),
+				text.Bold,
+				utils.JobStatusToColor[jobItem.Status],
+			)
 
-			displayOptionalItem(cmd, &jobItem.WorkflowUuid, "Workflow ID", leadingMark)
-			displayOptionalItem(cmd, &jobItem.ComputeBackend, "Compute backend", leadingMark)
-			displayOptionalItem(cmd, &jobItem.BackendJobId, "Job ID", leadingMark)
-			displayOptionalItem(cmd, &jobItem.DockerImg, "Docker image", leadingMark)
-			displayOptionalItem(cmd, &jobItem.Cmd, "Command", leadingMark)
-			displayOptionalItem(cmd, &jobItem.Status, "Status", leadingMark)
-			displayOptionalItem(cmd, jobItem.StartedAt, "Started", leadingMark)
-			displayOptionalItem(cmd, jobItem.FinishedAt, "Finished", leadingMark)
+			displayLogItem(cmd, &jobItem.WorkflowUuid, "Workflow ID", jobItem.Status, leadingMark)
+			displayLogItem(cmd, &jobItem.ComputeBackend,
+				"Compute backend", jobItem.Status, leadingMark)
+			displayLogItem(cmd, &jobItem.BackendJobId, "Job ID", jobItem.Status, leadingMark)
+			displayLogItem(cmd, &jobItem.DockerImg, "Docker image", jobItem.Status, leadingMark)
+			displayLogItem(cmd, &jobItem.Cmd, "Command", jobItem.Status, leadingMark)
+			displayLogItem(cmd, &jobItem.Status, "Status", jobItem.Status, leadingMark)
+			displayLogItem(cmd, jobItem.StartedAt, "Started", jobItem.Status, leadingMark)
+			displayLogItem(cmd, jobItem.FinishedAt, "Finished", jobItem.Status, leadingMark)
 
 			if jobItem.Logs != "" {
-				cmd.Printf("%s Logs:\n", leadingMark)
-				cmd.Println(jobItem.Logs)
+				logsItem := "\n" + jobItem.Logs // break line after title
+				displayLogItem(cmd, &logsItem, "Logs", jobItem.Status, leadingMark)
 			} else {
-				cmd.Printf("Step %s emitted no logs.", jobNameOrId)
+				msg := fmt.Sprintf("Step %s emitted no logs.", jobNameOrId)
+				utils.DisplayMessage(msg, utils.Info, false, cmd.OutOrStdout())
 			}
 		}
 	}
 }
 
-// displayOptionalItem displays an optional item if it is not nil or an empty string.
-func displayOptionalItem(cmd *cobra.Command, item *string, title string, leadingMark string) {
+// displayLogItem displays an optional log item if it is not nil or an empty string.
+// The title is displayed according to the color associated with the job's status.
+func displayLogItem(cmd *cobra.Command, item *string, title, status, leadingMark string) {
 	if item == nil || *item == "" {
 		return
 	}
-	cmd.Printf("%s %s: %s\n", leadingMark, title, *item)
+	utils.PrintColorable(
+		fmt.Sprintf("%s %s: ", leadingMark, title),
+		cmd.OutOrStdout(),
+		utils.JobStatusToColor[status],
+	)
+	cmd.Println(*item)
+}
+
+// displayLogHeader displays a header for a group of logs represented by title.
+func displayLogHeader(cmd *cobra.Command, title, leadingMark string) {
+	utils.PrintColorable(
+		fmt.Sprintf("\n%s %s\n", leadingMark, title),
+		cmd.OutOrStdout(),
+		text.Bold,
+		text.FgYellow,
+	)
 }

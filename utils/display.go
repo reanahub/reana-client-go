@@ -37,6 +37,13 @@ func (m MessageType) Color() text.Color {
 	return []text.Color{text.FgGreen, text.FgYellow, text.FgRed, text.FgCyan}[m]
 }
 
+// JobStatusToColor Maps the different job status to a matching color. Can be used with PrintColorable.
+var JobStatusToColor = map[string]text.Color{
+	"failed":   text.FgRed,
+	"finished": text.FgGreen,
+	"running":  text.FgCyan,
+}
+
 // DisplayTable takes a header and the respective rows, and formats them in a table.
 // Instead of writing to stdout, it uses the provided io.Writer.
 func DisplayTable[T any](header []string, rows [][]T, out io.Writer) {
@@ -95,16 +102,18 @@ func DisplayMessage(message string, messageType MessageType, indented bool, out 
 		return
 	}
 
-	prefixTpl := colorizeMessage(
+	PrintColorable(
 		fmt.Sprintf("%s %s: ", prefix, messageType),
-		messageType,
+		out,
+		messageType.Color(),
+		text.Bold,
 	)
-
-	fmt.Fprintf(out, "%s%s\n", prefixTpl, message)
+	fmt.Fprintln(out, message)
 }
 
-// colorizeMessage returns the prefix used to colorize messages before printing them.
-// The prefix is chosen according to the given msgType.
-func colorizeMessage(msg string, msgType MessageType) string {
-	return text.Colors{msgType.Color(), text.Bold}.Sprint(msg)
+// PrintColorable prints a colorable string, according to the colorOptions provided.
+func PrintColorable(str string, out io.Writer, colorOptions ...text.Color) {
+	var colors text.Colors
+	colors = append(colors, colorOptions...)
+	fmt.Fprint(out, colors.Sprint(str))
 }

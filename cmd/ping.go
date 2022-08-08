@@ -11,6 +11,8 @@ package cmd
 import (
 	"fmt"
 
+	log "github.com/sirupsen/logrus"
+
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 
@@ -54,6 +56,8 @@ func (o *pingOptions) run(cmd *cobra.Command) error {
 	pingParams := operations.NewGetYouParams()
 	pingParams.SetAccessToken(&o.token)
 
+	log.Info("Connecting to ", o.serverURL)
+
 	api, err := client.ApiClient()
 	if err != nil {
 		return err
@@ -71,5 +75,6 @@ func (o *pingOptions) run(cmd *cobra.Command) error {
 		fmt.Sprintf("Status: %s ", "Connected")
 
 	cmd.Println(response)
+
 	return nil
 }

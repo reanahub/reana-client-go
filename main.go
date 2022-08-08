@@ -14,10 +14,11 @@ Use --help for more information.
 package main
 
 import (
-	"fmt"
 	"os"
 	"reanahub/reana-client-go/cmd"
 	"reanahub/reana-client-go/utils"
+
+	log "github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -25,8 +26,9 @@ func main() {
 	err := rootCmd.Execute()
 
 	if err != nil {
+		log.Debug(err)
 		err := utils.HandleApiError(err)
-		fmt.Fprintf(os.Stderr, "Error: %s\n", err.Error())
+		utils.DisplayMessage(err.Error(), utils.Error, false, os.Stderr)
 		os.Exit(1)
 	}
 }

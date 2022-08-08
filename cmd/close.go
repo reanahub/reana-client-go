@@ -71,7 +71,7 @@ func (o *closeOptions) run(cmd *cobra.Command) error {
 	if err != nil {
 		return err
 	}
-	log.Infof("Closing an interactive session on '%s'", o.workflow)
+	log.Infof("Closing an interactive session on %s", o.workflow)
 	_, err = api.Operations.CloseInteractiveSession(closeParams)
 	if err != nil {
 		return err
