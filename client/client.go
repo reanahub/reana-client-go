@@ -6,10 +6,10 @@ import (
 	"errors"
 	"net/http"
 	"net/url"
-	"os"
 
 	"github.com/go-openapi/strfmt"
 	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 
 	httptransport "github.com/go-openapi/runtime/client"
 )
@@ -35,7 +35,7 @@ func newApiClient() (*API, error) {
 	}
 
 	// parse REANA server URL
-	serverURL := os.Getenv("REANA_SERVER_URL")
+	serverURL := viper.GetString("server-url")
 	u, err := url.Parse(serverURL)
 	if err != nil {
 		return nil, err
