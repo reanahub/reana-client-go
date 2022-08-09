@@ -69,7 +69,7 @@ func ExecuteCommand(cmd *cobra.Command, args ...string) (output string, err erro
 
 	err = cmd.Execute()
 
-	return buf.String(), err
+	return buf.String(), HandleApiError(err)
 }
 
 // HasAnyPrefix checks if the string s has any prefixes, by running strings.HasPrefix for each one.

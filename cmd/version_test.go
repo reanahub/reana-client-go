@@ -14,7 +14,7 @@ import (
 	"testing"
 )
 
-func TestVersionCmd(t *testing.T) {
+func TestVersion(t *testing.T) {
 	cmd := newVersionCmd()
 	out, _ := utils.ExecuteCommand(cmd)
 
