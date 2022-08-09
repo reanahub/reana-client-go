@@ -13,15 +13,15 @@ import (
 )
 
 func TestValidateAccessToken(t *testing.T) {
-	testNonEmptyString(t, ValidateAccessToken, invalidAccessTokenMsg)
+	testNonEmptyString(t, ValidateAccessToken, InvalidAccessTokenMsg)
 }
 
 func TestValidateServerURL(t *testing.T) {
-	testNonEmptyString(t, ValidateServerURL, invalidServerURLMsg)
+	testNonEmptyString(t, ValidateServerURL, InvalidServerURLMsg)
 }
 
 func TestValidateWorkflow(t *testing.T) {
-	testNonEmptyString(t, ValidateWorkflow, invalidWorkflowMsg)
+	testNonEmptyString(t, ValidateWorkflow, InvalidWorkflowMsg)
 }
 
 func TestValidateChoice(t *testing.T) {

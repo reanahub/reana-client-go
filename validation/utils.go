@@ -23,15 +23,15 @@ import (
 )
 
 const (
-	invalidAccessTokenMsg = "please provide your access token by using the -t/--access-token flag, or by setting the REANA_ACCESS_TOKEN environment variable"
-	invalidServerURLMsg   = "please set REANA_SERVER_URL environment variable"
-	invalidWorkflowMsg    = "workflow name must be provided either with `--workflow` option or with REANA_WORKON environment variable"
+	InvalidAccessTokenMsg = "please provide your access token by using the -t/--access-token flag, or by setting the REANA_ACCESS_TOKEN environment variable"
+	InvalidServerURLMsg   = "please set REANA_SERVER_URL environment variable"
+	InvalidWorkflowMsg    = "workflow name must be provided either with `--workflow` option or with REANA_WORKON environment variable"
 )
 
 // ValidateAccessToken verifies if the access token has been set, ignoring any white spaces.
 func ValidateAccessToken(token string) error {
 	if strings.TrimSpace(token) == "" {
-		return errors.New(invalidAccessTokenMsg)
+		return errors.New(InvalidAccessTokenMsg)
 	}
 	return nil
 }
@@ -39,7 +39,7 @@ func ValidateAccessToken(token string) error {
 // ValidateServerURL verifies if REANA's server URL has been set, ignoring any white spaces.
 func ValidateServerURL(serverURL string) error {
 	if strings.TrimSpace(serverURL) == "" {
-		return errors.New(invalidServerURLMsg)
+		return errors.New(InvalidServerURLMsg)
 	}
 	return nil
 }
@@ -47,7 +47,7 @@ func ValidateServerURL(serverURL string) error {
 // ValidateWorkflow verifies if the workflow's name has been set, ignoring any white spaces.
 func ValidateWorkflow(workflow string) error {
 	if strings.TrimSpace(workflow) == "" {
-		return errors.New(invalidWorkflowMsg)
+		return errors.New(InvalidWorkflowMsg)
 	}
 	return nil
 }
