@@ -14,7 +14,6 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
-	"os"
 	"reflect"
 	"strings"
 	"time"
@@ -86,6 +85,7 @@ func HasAnyPrefix(s string, prefixes []string) bool {
 // FromIsoToTimestamp converts a string date in the ISO format to a timestamp.
 func FromIsoToTimestamp(date string) (time.Time, error) {
 	timestamp, err := time.Parse("2006-01-02T15:04:05", date)
+
 	if err != nil {
 		return time.Time{}, err
 	}
@@ -145,7 +145,7 @@ func HandleApiError(err error) error {
 	if isUrlErr {
 		return fmt.Errorf(
 			"'%s' not found, please verify the provided server URL or check your internet connection",
-			os.Getenv("REANA_SERVER_URL"),
+			viper.GetString("server-url"),
 		)
 	}
 
