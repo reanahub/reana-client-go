@@ -213,7 +213,9 @@ func (e *testApiError) Error() string { return e.Payload.Message }
 func TestHandleApiError(t *testing.T) {
 	serverURL := "https://localhost:8080"
 	viper.Set("server-url", serverURL)
-	defer viper.Reset()
+	t.Cleanup(func() {
+		viper.Reset()
+	})
 
 	urlError := url.Error{}
 	apiError := testApiError{Payload: struct{ Message string }{Message: "API Error"}}

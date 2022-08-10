@@ -42,10 +42,12 @@ func testCmdRun(
 			t.Fatalf("Unexpected request to '%v'", r.URL.Path)
 		}
 	}))
-	defer server.Close()
 
 	viper.Set("server-url", server.URL)
-	defer viper.Reset()
+	t.Cleanup(func() {
+		server.Close()
+		viper.Reset()
+	})
 
 	rootCmd := NewRootCmd()
 	args = append([]string{cmd, "-t", "1234"}, args...)
@@ -127,6 +129,9 @@ func TestValidateFlags(t *testing.T) {
 		}
 		if test.hasServerURL {
 			viper.Set("server-url", test.serverURL)
+			t.Cleanup(func() {
+				viper.Reset()
+			})
 		}
 		if test.hasWorkflow {
 			f.String("workflow", test.workflow, "")
@@ -173,6 +178,9 @@ func TestSetupViper(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		t.Cleanup(func() {
+			viper.Reset()
+		})
 
 		viperValue := viper.GetString(test.viperProp)
 		if viperValue != test.value {
@@ -183,8 +191,6 @@ func TestSetupViper(t *testing.T) {
 				viperValue,
 			)
 		}
-
-		viper.Reset()
 	}
 }
 

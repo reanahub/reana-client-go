@@ -23,7 +23,9 @@ func TestPing(t *testing.T) {
 
 func TestUnreachableServer(t *testing.T) {
 	viper.Set("server-url", "unreachable")
-	defer viper.Reset()
+	t.Cleanup(func() {
+		viper.Reset()
+	})
 
 	rootCmd := NewRootCmd()
 	output, err := utils.ExecuteCommand(rootCmd, "ping", "-t", "1234")
