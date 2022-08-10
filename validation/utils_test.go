@@ -40,15 +40,27 @@ func TestValidateChoice(t *testing.T) {
 }
 
 func testNonEmptyString(t *testing.T, f func(string) error, errorMsg string) {
-	for _, arg := range []string{"", "   "} {
-		invalidRes := f(arg)
-		if invalidRes == nil || invalidRes.Error() != errorMsg {
-			t.Errorf("Expected: \"%s\", got: \"%v\"", errorMsg, invalidRes)
-		}
+	tests := map[string]struct {
+		arg       string
+		wantError bool
+	}{
+		"empty":        {arg: "", wantError: true},
+		"white spaces": {arg: "   ", wantError: true},
+		"valid":        {arg: "valid", wantError: false},
 	}
 
-	validRes := f("valid")
-	if validRes != nil {
-		t.Errorf("Expected: \"%v\", got: \"%#v\"", nil, validRes)
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			err := f(test.arg)
+			if test.wantError {
+				if err == nil || err.Error() != errorMsg {
+					t.Errorf("Expected: '%s', got: '%s'", errorMsg, err.Error())
+				}
+			} else {
+				if err != nil {
+					t.Errorf("Expected: 'nil', got: '%s'", err.Error())
+				}
+			}
+		})
 	}
 }

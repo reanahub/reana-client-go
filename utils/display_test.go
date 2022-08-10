@@ -16,13 +16,13 @@ import (
 )
 
 func TestDisplayMessage(t *testing.T) {
-	tests := []struct {
+	tests := map[string]struct {
 		msg      string
 		msgType  MessageType
 		indented bool
 		expected string
 	}{
-		{
+		"success": {
 			msg:      "test success",
 			msgType:  Success,
 			indented: false,
@@ -33,7 +33,7 @@ func TestDisplayMessage(t *testing.T) {
 				"==> SUCCESS: ",
 			) + "test success\n",
 		},
-		{
+		"success indented": {
 			msg:      "test success indented",
 			msgType:  Success,
 			indented: true,
@@ -44,7 +44,7 @@ func TestDisplayMessage(t *testing.T) {
 				"  -> SUCCESS: ",
 			) + "test success indented\n",
 		},
-		{
+		"error": {
 			msg:      "test error",
 			msgType:  Error,
 			indented: false,
@@ -55,13 +55,13 @@ func TestDisplayMessage(t *testing.T) {
 				"==> ERROR: ",
 			) + "test error\n",
 		},
-		{
+		"info": {
 			msg:      "test info",
 			msgType:  Info,
 			indented: false,
 			expected: text.Bold.Sprint("==> test info\n"), // should be bold without any color
 		},
-		{
+		"info indented": {
 			msg:      "test info indented",
 			msgType:  Info,
 			indented: true,
@@ -74,12 +74,14 @@ func TestDisplayMessage(t *testing.T) {
 		},
 	}
 
-	for _, test := range tests {
-		buf := new(bytes.Buffer)
-		DisplayMessage(test.msg, test.msgType, test.indented, buf)
-		result := buf.String()
-		if result != test.expected {
-			t.Fatalf("Expected: \"%s\", got: \"%s\"", test.expected, result)
-		}
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			buf := new(bytes.Buffer)
+			DisplayMessage(test.msg, test.msgType, test.indented, buf)
+			result := buf.String()
+			if result != test.expected {
+				t.Fatalf("Expected: \"%s\", got: \"%s\"", test.expected, result)
+			}
+		})
 	}
 }

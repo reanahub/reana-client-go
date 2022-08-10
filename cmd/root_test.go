@@ -11,7 +11,6 @@ package cmd
 import (
 	"net/http"
 	"net/http/httptest"
-	"os"
 	"reanahub/reana-client-go/utils"
 	"reanahub/reana-client-go/validation"
 	"strings"
@@ -71,7 +70,7 @@ func testCmdRun(
 }
 
 func TestValidateFlags(t *testing.T) {
-	tests := []struct {
+	tests := map[string]struct {
 		hasToken           bool
 		token              string
 		hasServerURL       bool
@@ -82,38 +81,38 @@ func TestValidateFlags(t *testing.T) {
 		wantError          bool
 		errorMsg           string
 	}{
-		{
+		"invalid token": {
 			hasToken: true, token: "",
 			hasServerURL: false, hasWorkflow: false,
 			wantError: true, errorMsg: validation.InvalidAccessTokenMsg,
 		},
-		{
+		"invalid server url": {
 			hasToken: true, token: "token",
 			hasServerURL: true, serverURL: "",
 			hasWorkflow: false,
 			wantError:   true, errorMsg: validation.InvalidServerURLMsg,
 		},
-		{
+		"no workflow": {
 			hasToken: true, token: "token",
 			hasServerURL: true, serverURL: "https://localhost:8080",
 			hasWorkflow: false, wantError: false,
 		},
-		{
+		"invalid mandatory workflow": {
 			hasToken: false, hasServerURL: false,
 			hasWorkflow: true, isWorkflowOptional: false, workflow: "",
 			wantError: true, errorMsg: validation.InvalidWorkflowMsg,
 		},
-		{
+		"optional workflow": {
 			hasToken: false, hasServerURL: false,
 			hasWorkflow: true, isWorkflowOptional: true,
 			workflow: "", wantError: false,
 		},
-		{
+		"valid mandatory workflow": {
 			hasToken: false, hasServerURL: false,
 			hasWorkflow: true, isWorkflowOptional: false,
 			workflow: "workflow", wantError: false,
 		},
-		{
+		"all info": {
 			hasToken: true, token: "token",
 			hasServerURL: true, serverURL: "https://localhost:8080",
 			hasWorkflow: true, isWorkflowOptional: false,
@@ -121,102 +120,108 @@ func TestValidateFlags(t *testing.T) {
 		},
 	}
 
-	for _, test := range tests {
-		cmd := NewRootCmd()
-		f := cmd.Flags()
-		if test.hasToken {
-			f.String("access-token", test.token, "")
-		}
-		if test.hasServerURL {
-			viper.Set("server-url", test.serverURL)
-			t.Cleanup(func() {
-				viper.Reset()
-			})
-		}
-		if test.hasWorkflow {
-			f.String("workflow", test.workflow, "")
-			if test.isWorkflowOptional {
-				err := f.SetAnnotation("workflow", "properties", []string{"optional"})
-				if err != nil {
-					t.Fatal(err)
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			cmd := NewRootCmd()
+			f := cmd.Flags()
+			if test.hasToken {
+				f.String("access-token", test.token, "")
+			}
+			if test.hasServerURL {
+				viper.Set("server-url", test.serverURL)
+				t.Cleanup(func() {
+					viper.Reset()
+				})
+			}
+			if test.hasWorkflow {
+				f.String("workflow", test.workflow, "")
+				if test.isWorkflowOptional {
+					err := f.SetAnnotation("workflow", "properties", []string{"optional"})
+					if err != nil {
+						t.Fatal(err)
+					}
 				}
 			}
-		}
 
-		err := validateFlags(cmd)
-		if test.wantError {
-			if err == nil {
-				t.Error("Expected error, instead got nil")
-			} else if err.Error() != test.errorMsg {
-				t.Errorf("Expected '%s' in error output, instead got '%s'", test.errorMsg, err.Error())
+			err := validateFlags(cmd)
+			if test.wantError {
+				if err == nil {
+					t.Error("Expected error, instead got nil")
+				} else if err.Error() != test.errorMsg {
+					t.Errorf("Expected '%s' in error output, instead got '%s'", test.errorMsg, err.Error())
+				}
+			} else if err != nil {
+				t.Errorf("Got unexpected error '%s'", err.Error())
 			}
-		} else if err != nil {
-			t.Errorf("Got unexpected error '%s'", err.Error())
-		}
-
-		viper.Reset()
+		})
 	}
 }
 
 func TestSetupViper(t *testing.T) {
-	tests := []struct {
+	tests := map[string]struct {
 		env       string
 		viperProp string
 		value     string
 	}{
-		{env: "REANA_SERVER_URL", viperProp: "server-url", value: "https://localhost:8080"},
-		{env: "REANA_ACCESS_TOKEN", viperProp: "access-token", value: "1234"},
-		{env: "REANA_WORKON", viperProp: "workflow", value: "workflow"},
+		"server url": {
+			env:       "REANA_SERVER_URL",
+			viperProp: "server-url",
+			value:     "https://localhost:8080",
+		},
+		"access token": {env: "REANA_ACCESS_TOKEN", viperProp: "access-token", value: "1234"},
+		"workflow":     {env: "REANA_WORKON", viperProp: "workflow", value: "workflow"},
 	}
 
-	for _, test := range tests {
-		err := os.Setenv(test.env, test.value)
-		if err != nil {
-			t.Fatal(err)
-		}
-		err = setupViper(nil)
-		if err != nil {
-			t.Fatal(err)
-		}
-		t.Cleanup(func() {
-			viper.Reset()
-		})
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			t.Setenv(test.env, test.value)
+			err := setupViper(nil)
+			if err != nil {
+				t.Fatal(err)
+			}
 
-		viperValue := viper.GetString(test.viperProp)
-		if viperValue != test.value {
-			t.Errorf(
-				"Expected '%s' to be '%s', instead got '%s'",
-				test.viperProp,
-				test.value,
-				viperValue,
-			)
-		}
+			t.Cleanup(func() {
+				viper.Reset()
+			})
+
+			viperValue := viper.GetString(test.viperProp)
+			if viperValue != test.value {
+				t.Errorf(
+					"Expected '%s' to be '%s', instead got '%s'",
+					test.viperProp,
+					test.value,
+					viperValue,
+				)
+			}
+		})
 	}
 }
 
 func TestSetupLogger(t *testing.T) {
-	tests := []struct {
+	tests := map[string]struct {
 		level   string
 		isValid bool
 	}{
-		{level: "DEBUG", isValid: true},
-		{level: "INFO", isValid: true},
-		{level: "QUIET", isValid: false},
+		"valid debug": {level: "DEBUG", isValid: true},
+		"valid info":  {level: "INFO", isValid: true},
+		"invalid":     {level: "QUIET", isValid: false},
 	}
 
-	for _, test := range tests {
-		err := setupLogger(test.level)
-		if test.isValid {
-			if err != nil {
-				t.Errorf("Got unexpected error '%s'", err.Error())
-			} else {
-				loglevel := log.GetLevel().String()
-				if loglevel != strings.ToLower(test.level) {
-					t.Errorf("Expected log level '%s', instead got '%s'", test.level, loglevel)
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			err := setupLogger(test.level)
+			if test.isValid {
+				if err != nil {
+					t.Errorf("Got unexpected error '%s'", err.Error())
+				} else {
+					loglevel := log.GetLevel().String()
+					if loglevel != strings.ToLower(test.level) {
+						t.Errorf("Expected log level '%s', instead got '%s'", test.level, loglevel)
+					}
 				}
+			} else if err == nil {
+				t.Error("Expected error, instead got nil")
 			}
-		} else if err == nil {
-			t.Error("Expected error, instead got nil")
-		}
+		})
 	}
 }
