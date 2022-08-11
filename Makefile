@@ -35,7 +35,7 @@ swagger-validate-specs: # Validate OpenAPI specification.
 	$(SWAGGER) validate "../reana-server/docs/openapi.json"
 
 test: # Run test suite.
-	go test -cover ./...
+	go test -cover `go list ./... | grep -v /reana-client-go/client`
 
 update: # Update go module dependencies.
 	go get -u
