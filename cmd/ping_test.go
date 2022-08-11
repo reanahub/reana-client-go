@@ -22,7 +22,7 @@ func TestPing(t *testing.T) {
 }
 
 func TestUnreachableServer(t *testing.T) {
-	viper.Set("server-url", "unreachable")
+	viper.Set("server-url", "https://unreachable.invalid")
 	t.Cleanup(func() {
 		viper.Reset()
 	})
@@ -34,7 +34,7 @@ func TestUnreachableServer(t *testing.T) {
 		t.Errorf("Expected an error, instead got '%s'", output)
 	}
 
-	expectedErr := "'unreachable' not found, please verify the provided server URL or check your internet connection"
+	expectedErr := "'https://unreachable.invalid' not found, please verify the provided server URL or check your internet connection"
 	if utils.HandleApiError(err).Error() != expectedErr {
 		t.Errorf("Expected server not found error, instead got '%s'", err.Error())
 	}
