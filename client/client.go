@@ -14,21 +14,8 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 )
 
-var apiClient *API
-
-// ApiClient provides the API client used to communicate with the REANA server.
+// ApiClient provides a new API client used to communicate with the REANA server.
 func ApiClient() (*API, error) {
-	if apiClient == nil {
-		var err error
-		apiClient, err = newApiClient()
-		if err != nil {
-			return nil, err
-		}
-	}
-	return apiClient, nil
-}
-
-func newApiClient() (*API, error) {
 	// disable certificate security checks
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{
 		InsecureSkipVerify: true,
