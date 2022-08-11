@@ -24,7 +24,7 @@ import (
 func testCmdRun(
 	t *testing.T,
 	cmd, serverPath, serverResponse string,
-	wantError bool, expectedMsgs []string,
+	statusCode int, expectedMsgs []string,
 	args ...string,
 ) {
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -33,6 +33,7 @@ func testCmdRun(
 		}
 		if r.URL.Path == serverPath {
 			w.Header().Add("Content-Type", "application/json")
+			w.WriteHeader(statusCode)
 			_, err := w.Write([]byte(serverResponse))
 			if err != nil {
 				t.Fatalf("Error while writing response body: %v", err)
@@ -52,6 +53,7 @@ func testCmdRun(
 	args = append([]string{cmd, "-t", "1234"}, args...)
 	output, err := utils.ExecuteCommand(rootCmd, args...)
 
+	wantError := statusCode != http.StatusOK
 	if !wantError && err != nil {
 		t.Fatalf("Got unexpected error '%s'", err.Error())
 	}

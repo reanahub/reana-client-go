@@ -8,7 +8,10 @@ under the terms of the MIT License; see LICENSE file for more details.
 
 package cmd
 
-import "testing"
+import (
+	"net/http"
+	"testing"
+)
 
 var infoServerPath = "/api/info"
 
@@ -56,7 +59,7 @@ func TestInfo(t *testing.T) {
 				"info",
 				infoServerPath,
 				serverResponse,
-				false,
+				http.StatusOK,
 				test.expected,
 				test.args...)
 		})

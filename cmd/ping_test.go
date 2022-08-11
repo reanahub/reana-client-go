@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"net/http"
 	"reanahub/reana-client-go/utils"
 	"testing"
 
@@ -18,7 +19,7 @@ func TestPing(t *testing.T) {
 		"REANA server version: 0.9.0a5",
 		"Authenticated as: <john.doe@example.org>",
 	}
-	testCmdRun(t, "ping", pingServerPath, serverResponse, false, expected)
+	testCmdRun(t, "ping", pingServerPath, serverResponse, http.StatusOK, expected)
 }
 
 func TestUnreachableServer(t *testing.T) {
