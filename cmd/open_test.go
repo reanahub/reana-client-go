@@ -58,6 +58,7 @@ func TestOpen(t *testing.T) {
 					strings.Join(utils.InteractiveSessionTypes, "', '"),
 				),
 			},
+			wantError: true,
 		},
 		"workflow already open": {
 			serverPath:     fmt.Sprintf(openPathTemplate, workflowName, "jupyter"),
@@ -65,6 +66,7 @@ func TestOpen(t *testing.T) {
 			statusCode:     http.StatusNotFound,
 			args:           []string{"-w", workflowName},
 			expected:       []string{"Interactive session is already open"},
+			wantError:      true,
 		},
 	}
 

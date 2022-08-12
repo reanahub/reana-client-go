@@ -28,6 +28,8 @@ type TestCmdParams struct {
 	statusCode     int
 	args           []string
 	expected       []string
+	unwanted       []string
+	wantError      bool
 }
 
 func testCmdRun(t *testing.T, p TestCmdParams) {
@@ -57,20 +59,32 @@ func testCmdRun(t *testing.T, p TestCmdParams) {
 	args := append([]string{p.cmd, "-t", "1234"}, p.args...)
 	output, err := utils.ExecuteCommand(rootCmd, args...)
 
-	wantError := p.statusCode != http.StatusOK
-	if !wantError && err != nil {
+	if !p.wantError && err != nil {
 		t.Fatalf("Got unexpected error '%s'", err.Error())
 	}
-	if wantError && err == nil {
+	if p.wantError && err == nil {
 		t.Fatalf("Expected error, instead got '%s'", output)
 	}
 
 	for _, test := range p.expected {
-		if !wantError && !strings.Contains(output, test) {
+		if !p.wantError && !strings.Contains(output, test) {
 			t.Errorf("Expected '%s' in output, instead got '%s'", test, output)
 		}
-		if wantError && !strings.Contains(err.Error(), test) {
+		if p.wantError && !strings.Contains(err.Error(), test) {
 			t.Errorf("Expected '%s' in error output, instead got '%s'", test, err.Error())
+		}
+	}
+
+	for _, forbidden := range p.unwanted {
+		if !p.wantError && strings.Contains(output, forbidden) {
+			t.Errorf("Expected '%s' not to be in output, instead got '%s'", forbidden, output)
+		}
+		if p.wantError && strings.Contains(err.Error(), forbidden) {
+			t.Errorf(
+				"Expected '%s' not to be in error output, instead got '%s'",
+				forbidden,
+				err.Error(),
+			)
 		}
 	}
 }

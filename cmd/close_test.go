@@ -33,6 +33,7 @@ func TestClose(t *testing.T) {
 			statusCode:     http.StatusNotFound,
 			args:           []string{"-w", "my_workflow"},
 			expected:       []string{"Workflow - my_workflow has no open interactive session."},
+			wantError:      true,
 		},
 	}
 
