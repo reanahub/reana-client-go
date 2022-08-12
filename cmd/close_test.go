@@ -17,42 +17,29 @@ import (
 var closePathTemplate = "/api/workflows/%s/close/"
 
 func TestClose(t *testing.T) {
-	tests := map[string]struct {
-		serverResponse string
-		status         int
-		expected       []string
-		args           []string
-		workflow       string
-	}{
+	tests := map[string]TestCmdParams{
 		"success": {
+			serverPath:     fmt.Sprintf(closePathTemplate, "my_workflow"),
 			serverResponse: "{}",
-			status:         http.StatusOK,
+			statusCode:     http.StatusOK,
+			args:           []string{"-w", "my_workflow"},
 			expected: []string{
 				"Interactive session for workflow my_workflow was successfully closed",
 			},
-			args:     []string{"-w", "my_workflow"},
-			workflow: "my_workflow",
 		},
 		"error": {
+			serverPath:     fmt.Sprintf(closePathTemplate, "my_workflow"),
 			serverResponse: `{"message": "Workflow - my_workflow has no open interactive session."}`,
-			status:         http.StatusNotFound,
-			expected:       []string{"Workflow - my_workflow has no open interactive session."},
+			statusCode:     http.StatusNotFound,
 			args:           []string{"-w", "my_workflow"},
-			workflow:       "my_workflow",
+			expected:       []string{"Workflow - my_workflow has no open interactive session."},
 		},
 	}
 
-	for name, test := range tests {
+	for name, params := range tests {
 		t.Run(name, func(t *testing.T) {
-			closeServerPath := fmt.Sprintf(closePathTemplate, test.workflow)
-			testCmdRun(
-				t,
-				"close",
-				closeServerPath,
-				test.serverResponse,
-				test.status,
-				test.expected,
-				test.args...)
+			params.cmd = "close"
+			testCmdRun(t, params)
 		})
 	}
 }

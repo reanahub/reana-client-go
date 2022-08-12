@@ -16,7 +16,7 @@ import (
 var infoServerPath = "/api/info"
 
 func TestInfo(t *testing.T) {
-	serverResponse := `{
+	successResponse := `{
   "compute_backends": {
     "value": [
       "kubernetes",
@@ -35,11 +35,10 @@ func TestInfo(t *testing.T) {
 }
 `
 
-	tests := map[string]struct {
-		expected []string
-		args     []string
-	}{
+	tests := map[string]TestCmdParams{
 		"default": {
+			serverResponse: successResponse,
+			statusCode:     http.StatusOK,
 			expected: []string{
 				"List of supported compute backends: kubernetes, slurmcern",
 				"Default workspace: /var/reana",
@@ -47,21 +46,18 @@ func TestInfo(t *testing.T) {
 			},
 		},
 		"json": {
-			args:     []string{"--json"},
-			expected: []string{serverResponse},
+			serverResponse: successResponse,
+			statusCode:     http.StatusOK,
+			args:           []string{"--json"},
+			expected:       []string{successResponse},
 		},
 	}
 
-	for name, test := range tests {
+	for name, params := range tests {
 		t.Run(name, func(t *testing.T) {
-			testCmdRun(
-				t,
-				"info",
-				infoServerPath,
-				serverResponse,
-				http.StatusOK,
-				test.expected,
-				test.args...)
+			params.cmd = "info"
+			params.serverPath = infoServerPath
+			testCmdRun(t, params)
 		})
 	}
 }

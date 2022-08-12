@@ -21,20 +21,24 @@ import (
 	"github.com/spf13/viper"
 )
 
-func testCmdRun(
-	t *testing.T,
-	cmd, serverPath, serverResponse string,
-	statusCode int, expectedMsgs []string,
-	args ...string,
-) {
+type TestCmdParams struct {
+	cmd            string
+	serverPath     string
+	serverResponse string
+	statusCode     int
+	args           []string
+	expected       []string
+}
+
+func testCmdRun(t *testing.T, p TestCmdParams) {
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if accessToken := r.URL.Query().Get("access_token"); accessToken != "1234" {
 			t.Errorf("Expected access token '1234', got '%v'", accessToken)
 		}
-		if r.URL.Path == serverPath {
+		if r.URL.Path == p.serverPath {
 			w.Header().Add("Content-Type", "application/json")
-			w.WriteHeader(statusCode)
-			_, err := w.Write([]byte(serverResponse))
+			w.WriteHeader(p.statusCode)
+			_, err := w.Write([]byte(p.serverResponse))
 			if err != nil {
 				t.Fatalf("Error while writing response body: %v", err)
 			}
@@ -50,10 +54,10 @@ func testCmdRun(
 	})
 
 	rootCmd := NewRootCmd()
-	args = append([]string{cmd, "-t", "1234"}, args...)
+	args := append([]string{p.cmd, "-t", "1234"}, p.args...)
 	output, err := utils.ExecuteCommand(rootCmd, args...)
 
-	wantError := statusCode != http.StatusOK
+	wantError := p.statusCode != http.StatusOK
 	if !wantError && err != nil {
 		t.Fatalf("Got unexpected error '%s'", err.Error())
 	}
@@ -61,7 +65,7 @@ func testCmdRun(
 		t.Fatalf("Expected error, instead got '%s'", output)
 	}
 
-	for _, test := range expectedMsgs {
+	for _, test := range p.expected {
 		if !wantError && !strings.Contains(output, test) {
 			t.Errorf("Expected '%s' in output, instead got '%s'", test, output)
 		}
