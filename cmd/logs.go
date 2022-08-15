@@ -72,6 +72,9 @@ type logsOptions struct {
 	size       int64
 }
 
+var logsSingleFilters = []string{"compute_backend", "docker_img", "status"}
+var logsMultiFilters = []string{"step"}
+
 // newLogsCmd creates a command to get workflow logs.
 func newLogsCmd() *cobra.Command {
 	o := &logsOptions{}
@@ -155,13 +158,9 @@ func (o *logsOptions) run(cmd *cobra.Command) error {
 }
 
 // parseLogsFilters parses a list of filters in the format 'filter=value', for the 'logs' command.
-// The steps filters are returned as a slice of strings, while the other filters are returned as a map.
 // Returns an error if any of the given filters are not valid.
 func parseLogsFilters(filterInput []string) (utils.Filters, error) {
-	singleValueFilters := []string{"compute_backend", "docker_img", "status"}
-	multiValueFilters := []string{"step"}
-
-	filters, err := utils.NewFilters(singleValueFilters, multiValueFilters, filterInput)
+	filters, err := utils.NewFilters(logsSingleFilters, logsMultiFilters, filterInput)
 	if err != nil {
 		return filters, err
 	}
