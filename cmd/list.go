@@ -368,7 +368,7 @@ func buildListSeries(col string, humanReadable bool) series.Series {
 	return series.New([]string{}, series.String, col)
 }
 
-// getOptionalStringField returns the given string field, if it is not nil or empty, otherwise "-".
+// getOptionalStringField returns the given string field, if it is not nil or empty, otherwise nil.
 func getOptionalStringField(value *string) any {
 	if value == nil || *value == "" {
 		return nil
