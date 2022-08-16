@@ -197,12 +197,12 @@ func buildStatusHeader(
 	headers := []string{"name", "run_number", "created"}
 
 	includeProgress := progress.Total != nil
-	isRunOver := slices.Contains([]string{"running", "finished", "failed", "stopped"}, status)
+	hasRunStarted := slices.Contains([]string{"running", "finished", "failed", "stopped"}, status)
 	includeStarted := progress.RunStartedAt != ""
 	includeEnded := progress.RunFinishedAt != ""
 	includeCommand := progress.CurrentCommand != "" || progress.CurrentStepName != ""
 
-	if isRunOver && includeStarted {
+	if hasRunStarted && includeStarted {
 		headers = append(headers, "started")
 		if includeEnded {
 			headers = append(headers, "ended")

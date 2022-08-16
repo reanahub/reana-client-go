@@ -243,7 +243,7 @@ func TestBuildLsSeries(t *testing.T) {
 			col: "name", humanReadable: false, want: series.New([]string{}, series.String, "name"),
 		},
 		"raw size": {
-			col: "size", humanReadable: false, want: series.New([]string{}, series.Int, "size"),
+			col: "size", humanReadable: false, want: series.New([]int{}, series.Int, "size"),
 		},
 		"human readable size": {
 			col: "size", humanReadable: true, want: series.New([]string{}, series.String, "size"),
@@ -257,10 +257,10 @@ func TestBuildLsSeries(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			got := buildLsSeries(test.col, test.humanReadable)
 			if got.Name != test.want.Name {
-				t.Errorf("series has name '%s', wanted '%s'", got.Name, test.col)
+				t.Errorf("series has name '%s', wanted '%s'", got.Name, test.want.Name)
 			}
 			if got.Type() != test.want.Type() {
-				t.Errorf("series has name '%s', wanted '%s'", got.Type(), test.want.Type())
+				t.Errorf("series has type '%s', wanted '%s'", got.Type(), test.want.Type())
 			}
 		})
 	}
