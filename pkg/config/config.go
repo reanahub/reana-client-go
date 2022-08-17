@@ -47,14 +47,17 @@ func GetRunStatuses(includeDeleted bool) []string {
 	return runStatuses
 }
 
-// DuMultiFilters available filters with multiple values in du command
+// DuMultiFilters available filters with multiple values in du command.
 var DuMultiFilters = []string{"size", "name"}
 
-// ListMultiFilters available filters with multiple values in list command
+// ListMultiFilters available filters with multiple values in list command.
 var ListMultiFilters = []string{"name", "status"}
 
-// LogsSingleFilters available filters with a single value in logs command
+// LogsSingleFilters available filters with a single value in logs command.
 var LogsSingleFilters = []string{"compute_backend", "docker_img", "status"}
 
-// LogsMultiFilters available filters with multiple values in logs command
+// LogsMultiFilters available filters with multiple values in logs command.
 var LogsMultiFilters = []string{"step"}
+
+// QuotaReports available reports in quota-show command.
+var QuotaReports = []string{"limit", "usage"}

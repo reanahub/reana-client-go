@@ -46,6 +46,13 @@ var JobStatusToColor = map[string]text.Color{
 	"running":  text.FgCyan,
 }
 
+// ResourceHealthToColor Maps a resource health to a matching color. Can be used with PrintColorable.
+var ResourceHealthToColor = map[string]text.Color{
+	"healthy":  text.FgGreen,
+	"warning":  text.FgYellow,
+	"critical": text.FgRed,
+}
+
 // DisplayTable takes a header and the respective rows, and formats them in a table.
 // Instead of writing to stdout, it uses the provided io.Writer.
 func DisplayTable[T any](header []string, rows [][]T, out io.Writer) {

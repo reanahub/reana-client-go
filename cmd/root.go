@@ -57,6 +57,7 @@ func NewRootCmd() *cobra.Command {
 	cmd.AddCommand(newStatusCmd())
 	cmd.AddCommand(newLsCmd())
 	cmd.AddCommand(newDiffCmd())
+	cmd.AddCommand(newQuotaShowCmd())
 
 	return cmd
 }
@@ -66,7 +67,7 @@ func (o *rootOptions) run(cmd *cobra.Command) error {
 		return err
 	}
 
-	if err := setupViper(cmd); err != nil {
+	if err := setupViper(); err != nil {
 		return err
 	}
 
@@ -115,7 +116,7 @@ func validateFlags(cmd *cobra.Command) error {
 }
 
 // setupViper binds environment variable values to the viper keys.
-func setupViper(cmd *cobra.Command) error {
+func setupViper() error {
 	if err := viper.BindEnv("server-url", "REANA_SERVER_URL"); err != nil {
 		return err
 	}

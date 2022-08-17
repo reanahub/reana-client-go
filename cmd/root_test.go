@@ -211,7 +211,7 @@ func TestSetupViper(t *testing.T) {
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
 			t.Setenv(test.env, test.value)
-			err := setupViper(nil)
+			err := setupViper()
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -19,6 +19,8 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/spf13/pflag"
+
 	"golang.org/x/exp/slices"
 )
 
@@ -64,4 +66,16 @@ func ValidateChoice(arg string, choices []string, name string) error {
 		)
 	}
 	return nil
+}
+
+func ValidateAtLeastOne(f *pflag.FlagSet, options []string) error {
+	for _, option := range options {
+		if f.Changed(option) {
+			return nil
+		}
+	}
+	return fmt.Errorf(
+		"at least one of the options: '%s' is required",
+		strings.Join(options, "', '"),
+	)
 }
