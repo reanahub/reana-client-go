@@ -168,7 +168,7 @@ func printDiff(lines []string, out io.Writer) {
 			lineColor = text.FgGreen
 		}
 
-		line = fmt.Sprintf("%s\n", line)
 		utils.PrintColorable(line, out, lineColor)
+		fmt.Fprintln(out)
 	}
 }
