@@ -11,7 +11,7 @@ package cmd
 import (
 	"fmt"
 	"net/http"
-	"reanahub/reana-client-go/utils"
+	"reanahub/reana-client-go/pkg/config"
 	"strings"
 	"testing"
 )
@@ -26,7 +26,7 @@ func TestOpen(t *testing.T) {
 			serverPath: fmt.Sprintf(
 				openPathTemplate,
 				workflowName,
-				utils.InteractiveSessionTypes[0],
+				config.InteractiveSessionTypes[0],
 			),
 			serverResponse: successResponse,
 			statusCode:     http.StatusOK,
@@ -55,7 +55,7 @@ func TestOpen(t *testing.T) {
 			expected: []string{
 				fmt.Sprintf(
 					"invalid value for 'interactive-session-type': 'invalid' is not part of '%s'",
-					strings.Join(utils.InteractiveSessionTypes, "', '"),
+					strings.Join(config.InteractiveSessionTypes, "', '"),
 				),
 			},
 			wantError: true,

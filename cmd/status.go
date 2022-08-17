@@ -12,7 +12,9 @@ import (
 	"fmt"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/utils"
+	"reanahub/reana-client-go/pkg/displayer"
+	"reanahub/reana-client-go/pkg/formatter"
+	"reanahub/reana-client-go/pkg/workflows"
 	"strings"
 
 	"golang.org/x/exp/slices"
@@ -106,7 +108,7 @@ func (o *statusOptions) run(cmd *cobra.Command) error {
 		payload.Progress,
 		payload.Status,
 	)
-	parsedFormatFilters := utils.ParseFormatParameters(o.formatFilters, false)
+	parsedFormatFilters := formatter.ParseFormatParameters(o.formatFilters, false)
 	err = displayStatusPayload(
 		cmd,
 		payload,
@@ -126,13 +128,13 @@ func displayStatusPayload(
 	cmd *cobra.Command,
 	p *operations.GetWorkflowStatusOKBody,
 	header []string,
-	filters []utils.FormatFilter,
+	filters []formatter.FormatFilter,
 	jsonOutput bool,
 ) error {
 	var df dataframe.DataFrame
 	for _, col := range header {
 		colSeries := buildStatusSeries(col)
-		name, runNumber := utils.GetWorkflowNameAndRunNumber(p.Name)
+		name, runNumber := workflows.GetNameAndRunNumber(p.Name)
 		var value any
 
 		switch col {
@@ -158,7 +160,7 @@ func displayStatusPayload(
 			value = getStatusCommand(p.Progress)
 		case "duration":
 			var err error
-			value, err = utils.GetWorkflowDuration(
+			value, err = workflows.GetDuration(
 				&p.Progress.RunStartedAt,
 				&p.Progress.RunFinishedAt,
 			)
@@ -171,16 +173,16 @@ func displayStatusPayload(
 		df = df.CBind(dataframe.New(colSeries))
 	}
 
-	df = utils.FormatDataFrame(df, filters)
+	df = formatter.FormatDataFrame(df, filters)
 
 	if jsonOutput {
-		err := utils.DisplayJsonOutput(df.Maps(), cmd.OutOrStdout())
+		err := displayer.DisplayJsonOutput(df.Maps(), cmd.OutOrStdout())
 		if err != nil {
 			return err
 		}
 	} else {
-		data := utils.DataFrameToStringData(df)
-		utils.DisplayTable(df.Names(), data, cmd.OutOrStdout())
+		data := formatter.DataFrameToStringData(df)
+		displayer.DisplayTable(df.Names(), data, cmd.OutOrStdout())
 	}
 
 	return nil

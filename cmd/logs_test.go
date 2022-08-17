@@ -13,7 +13,8 @@ import (
 	"fmt"
 	"net/http"
 	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/utils"
+	"reanahub/reana-client-go/pkg/config"
+	"reanahub/reana-client-go/pkg/filterer"
 	"reflect"
 	"testing"
 
@@ -233,17 +234,17 @@ func TestParseLogsFilters(t *testing.T) {
 				err.Error(),
 			)
 		}
-		if !slices.Equal(filters.SingleFilterKeys, logsSingleFilters) {
+		if !slices.Equal(filters.SingleFilterKeys, config.LogsSingleFilters) {
 			t.Fatalf(
 				"expected single filter keys to be %#v but got %#v",
-				logsSingleFilters,
+				config.LogsSingleFilters,
 				filters.SingleFilterKeys,
 			)
 		}
-		if !slices.Equal(filters.MultiFilterKeys, logsMultiFilters) {
+		if !slices.Equal(filters.MultiFilterKeys, config.LogsMultiFilters) {
 			t.Fatalf(
 				"expected multi filter keys to be %#v but got %#v",
-				logsMultiFilters,
+				config.LogsMultiFilters,
 				filters.MultiFilterKeys,
 			)
 		}
@@ -286,7 +287,11 @@ func TestFilterJobLogs(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			filters, err := utils.NewFilters(logsSingleFilters, logsMultiFilters, test.filterInput)
+			filters, err := filterer.NewFilters(
+				config.LogsSingleFilters,
+				config.LogsMultiFilters,
+				test.filterInput,
+			)
 			if err != nil {
 				t.Fatalf("utils.NewFilters returned an unexpected error: %s", err.Error())
 			}

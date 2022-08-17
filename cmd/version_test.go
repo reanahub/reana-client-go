@@ -9,14 +9,13 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
-	"reanahub/reana-client-go/utils"
 	"strings"
 	"testing"
 )
 
 func TestVersion(t *testing.T) {
 	cmd := newVersionCmd()
-	out, _ := utils.ExecuteCommand(cmd)
+	out, _ := ExecuteCommand(cmd)
 
 	if strings.TrimSpace(out) != version {
 		t.Fatalf("Expected: \"%s\", got: \"%s\"", version, out)

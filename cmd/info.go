@@ -10,11 +10,11 @@ package cmd
 
 import (
 	"fmt"
+	"reanahub/reana-client-go/pkg/displayer"
 	"strings"
 
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/utils"
 
 	"github.com/spf13/cobra"
 )
@@ -69,7 +69,7 @@ func (o *infoOptions) run(cmd *cobra.Command) error {
 
 	p := infoResp.Payload
 	if o.jsonOutput {
-		err := utils.DisplayJsonOutput(p, cmd.OutOrStdout())
+		err := displayer.DisplayJsonOutput(p, cmd.OutOrStdout())
 		if err != nil {
 			return err
 		}

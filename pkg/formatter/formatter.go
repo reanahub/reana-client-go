@@ -6,7 +6,8 @@ REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
 */
 
-package utils
+// Package formatter gives data structures and functions to handle formatting of tabular data.
+package formatter
 
 import (
 	"fmt"
@@ -16,6 +17,29 @@ import (
 	"github.com/go-gota/gota/series"
 	"golang.org/x/exp/slices"
 )
+
+// FormatFilter provides a centralized way of handling format options across the different commands.
+type FormatFilter struct {
+	column     string
+	value      string
+	filterRows bool // set to true if a value was provided and the rows should be filtered by this column.
+}
+
+// ParseFormatParameters parses a list of formatOptions to a slice of FormatFilter.
+// If the format option has a filter, that will be the value in the struct and the filterRows boolean will be true.
+func ParseFormatParameters(formatOptions []string, filterRows bool) []FormatFilter {
+	var parsedFilters []FormatFilter
+	for _, filter := range formatOptions {
+		filterNameAndValue := strings.SplitN(filter, "=", 2)
+		formatFilter := FormatFilter{column: filterNameAndValue[0], filterRows: false}
+		if filterRows && len(filterNameAndValue) >= 2 {
+			formatFilter.value = filterNameAndValue[1]
+			formatFilter.filterRows = true
+		}
+		parsedFilters = append(parsedFilters, formatFilter)
+	}
+	return parsedFilters
+}
 
 // FormatDataFrame formats a dataFrame according to the formatFilters provided.
 // The formatFilters can be previously obtained with ParseFormatParameters.
@@ -67,4 +91,9 @@ func DataFrameToStringData(df dataframe.DataFrame) [][]string {
 		}
 	}
 	return data
+}
+
+// FormatSessionURI takes the serverURL, its token and a path, and formats them into a session URI.
+func FormatSessionURI(serverURL string, path string, token string) string {
+	return serverURL + path + "?token=" + token
 }

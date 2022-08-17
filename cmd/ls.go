@@ -12,7 +12,11 @@ import (
 	"fmt"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/utils"
+	"reanahub/reana-client-go/pkg/config"
+	"reanahub/reana-client-go/pkg/datautils"
+	"reanahub/reana-client-go/pkg/displayer"
+	"reanahub/reana-client-go/pkg/filterer"
+	"reanahub/reana-client-go/pkg/formatter"
 
 	"github.com/go-gota/gota/dataframe"
 	"github.com/go-gota/gota/series"
@@ -113,7 +117,7 @@ func newLsCmd() *cobra.Command {
 func (o *lsOptions) run(cmd *cobra.Command) error {
 	header := []string{"name", "size", "last-modified"}
 
-	filters, err := utils.NewFilters(nil, header, o.filters)
+	filters, err := filterer.NewFilters(nil, header, o.filters)
 	if err != nil {
 		return err
 	}
@@ -143,7 +147,7 @@ func (o *lsOptions) run(cmd *cobra.Command) error {
 		return err
 	}
 
-	parsedFormatFilters := utils.ParseFormatParameters(o.formatFilters, true)
+	parsedFormatFilters := formatter.ParseFormatParameters(o.formatFilters, true)
 	if o.displayURLs {
 		displayLsURLs(cmd, lsResp.Payload, o.serverURL, o.workflow)
 	} else {
@@ -167,7 +171,7 @@ func displayLsFiles(
 	cmd *cobra.Command,
 	p *operations.GetFilesOKBody,
 	header []string,
-	formatFilters []utils.FormatFilter,
+	formatFilters []formatter.FormatFilter,
 	jsonOutput bool,
 	humanReadable bool,
 ) error {
@@ -175,7 +179,7 @@ func displayLsFiles(
 	for _, col := range header {
 		colSeries := buildLsSeries(col, humanReadable)
 		for _, file := range p.Items {
-			if utils.HasAnyPrefix(file.Name, utils.FilesBlacklist) {
+			if datautils.HasAnyPrefix(file.Name, config.FilesBlacklist) {
 				continue
 			}
 
@@ -199,16 +203,16 @@ func displayLsFiles(
 		df = df.CBind(dataframe.New(colSeries))
 	}
 
-	df = utils.FormatDataFrame(df, formatFilters)
+	df = formatter.FormatDataFrame(df, formatFilters)
 
 	if jsonOutput {
-		err := utils.DisplayJsonOutput(df.Maps(), cmd.OutOrStdout())
+		err := displayer.DisplayJsonOutput(df.Maps(), cmd.OutOrStdout())
 		if err != nil {
 			return err
 		}
 	} else {
-		data := utils.DataFrameToStringData(df)
-		utils.DisplayTable(df.Names(), data, cmd.OutOrStdout())
+		data := formatter.DataFrameToStringData(df)
+		displayer.DisplayTable(df.Names(), data, cmd.OutOrStdout())
 	}
 
 	return nil

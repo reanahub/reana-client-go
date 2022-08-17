@@ -12,7 +12,12 @@ import (
 	"fmt"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/utils"
+	"reanahub/reana-client-go/pkg/config"
+	"reanahub/reana-client-go/pkg/datautils"
+	"reanahub/reana-client-go/pkg/displayer"
+	"reanahub/reana-client-go/pkg/filterer"
+	"reanahub/reana-client-go/pkg/formatter"
+	"reanahub/reana-client-go/pkg/workflows"
 
 	"github.com/go-gota/gota/dataframe"
 	"github.com/go-gota/gota/series"
@@ -185,7 +190,7 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 		o.includeProgress,
 		o.includeDuration,
 	)
-	parsedFormatFilters := utils.ParseFormatParameters(o.formatFilters, true)
+	parsedFormatFilters := formatter.ParseFormatParameters(o.formatFilters, true)
 	err = displayListPayload(
 		cmd,
 		listResp.Payload,
@@ -209,7 +214,7 @@ func displayListPayload(
 	cmd *cobra.Command,
 	p *operations.GetWorkflowsOKBody,
 	header []string,
-	formatFilters []utils.FormatFilter,
+	formatFilters []formatter.FormatFilter,
 	serverURL, token, sortColumn string,
 	jsonOutput, humanReadable bool,
 ) error {
@@ -217,7 +222,7 @@ func displayListPayload(
 	for _, col := range header {
 		colSeries := buildListSeries(col, humanReadable)
 		for _, workflow := range p.Items {
-			name, runNumber := utils.GetWorkflowNameAndRunNumber(workflow.Name)
+			name, runNumber := workflows.GetNameAndRunNumber(workflow.Name)
 			var value any
 
 			switch col {
@@ -238,7 +243,7 @@ func displayListPayload(
 				value = finishedInfo + "/" + totalInfo
 			case "duration":
 				var err error
-				value, err = utils.GetWorkflowDuration(
+				value, err = workflows.GetDuration(
 					workflow.Progress.RunStartedAt,
 					workflow.Progress.RunFinishedAt,
 				)
@@ -261,7 +266,7 @@ func displayListPayload(
 				value = getOptionalStringField(&workflow.SessionType)
 			case "session_uri":
 				if workflow.SessionURI != "" {
-					value = utils.FormatSessionURI(serverURL, workflow.SessionURI, token)
+					value = formatter.FormatSessionURI(serverURL, workflow.SessionURI, token)
 				}
 			case "session_status":
 				value = getOptionalStringField(&workflow.SessionStatus)
@@ -273,20 +278,20 @@ func displayListPayload(
 		df = df.CBind(dataframe.New(colSeries))
 	}
 
-	df, err := utils.SortDataFrame(df, sortColumn, true)
+	df, err := formatter.SortDataFrame(df, sortColumn, true)
 	if err != nil {
 		cmd.PrintErrf("Warning: sort operation was aborted, %s\n", err)
 	}
-	df = utils.FormatDataFrame(df, formatFilters)
+	df = formatter.FormatDataFrame(df, formatFilters)
 
 	if jsonOutput {
-		err := utils.DisplayJsonOutput(df.Maps(), cmd.OutOrStdout())
+		err := displayer.DisplayJsonOutput(df.Maps(), cmd.OutOrStdout())
 		if err != nil {
 			return err
 		}
 	} else {
-		data := utils.DataFrameToStringData(df)
-		utils.DisplayTable(df.Names(), data, cmd.OutOrStdout())
+		data := formatter.DataFrameToStringData(df)
+		displayer.DisplayTable(df.Names(), data, cmd.OutOrStdout())
 	}
 
 	return nil
@@ -333,14 +338,13 @@ func parseListFilters(
 	filterInput []string,
 	showDeletedRuns, showAll bool,
 ) ([]string, string, error) {
-	filterNames := []string{"name", "status"}
-	filters, err := utils.NewFilters(nil, filterNames, filterInput)
+	filters, err := filterer.NewFilters(nil, config.ListMultiFilters, filterInput)
 	if err != nil {
 		return nil, "", err
 	}
 
-	statusFilters := utils.GetRunStatuses(showDeletedRuns || showAll)
-	err = filters.ValidateValues("status", utils.GetRunStatuses(true))
+	statusFilters := config.GetRunStatuses(showDeletedRuns || showAll)
+	err = filters.ValidateValues("status", config.GetRunStatuses(true))
 	if err != nil {
 		return nil, "", err
 	}
@@ -352,7 +356,8 @@ func parseListFilters(
 		statusFilters = userStatusFilters
 	}
 
-	searchFilter, err := filters.GetJson([]string{"name"}) // All the filters except for status
+	jsonFilters := datautils.RemoveFromSlice(config.ListMultiFilters, "status")
+	searchFilter, err := filters.GetJson(jsonFilters)
 	if err != nil {
 		return nil, "", err
 	}

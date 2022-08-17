@@ -9,17 +9,33 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
+	"bytes"
 	"net/http"
 	"net/http/httptest"
-	"reanahub/reana-client-go/utils"
-	"reanahub/reana-client-go/validation"
+	"reanahub/reana-client-go/pkg/errorhandler"
+	"reanahub/reana-client-go/pkg/validator"
 	"strings"
 	"testing"
+
+	"github.com/spf13/cobra"
 
 	log "github.com/sirupsen/logrus"
 
 	"github.com/spf13/viper"
 )
+
+// ExecuteCommand executes a cobra command with the given args.
+// Returns the output of the command and any error it may provide.
+func ExecuteCommand(cmd *cobra.Command, args ...string) (output string, err error) {
+	buf := new(bytes.Buffer)
+	cmd.SetOut(buf)
+	cmd.SetErr(buf)
+	cmd.SetArgs(args)
+
+	err = cmd.Execute()
+
+	return buf.String(), errorhandler.HandleApiError(err)
+}
 
 type TestCmdParams struct {
 	cmd            string
@@ -57,7 +73,7 @@ func testCmdRun(t *testing.T, p TestCmdParams) {
 
 	rootCmd := NewRootCmd()
 	args := append([]string{p.cmd, "-t", "1234"}, p.args...)
-	output, err := utils.ExecuteCommand(rootCmd, args...)
+	output, err := ExecuteCommand(rootCmd, args...)
 
 	if !p.wantError && err != nil {
 		t.Fatalf("Got unexpected error '%s'", err.Error())
@@ -104,13 +120,13 @@ func TestValidateFlags(t *testing.T) {
 		"invalid token": {
 			hasToken: true, token: "",
 			hasServerURL: false, hasWorkflow: false,
-			wantError: true, errorMsg: validation.InvalidAccessTokenMsg,
+			wantError: true, errorMsg: validator.InvalidAccessTokenMsg,
 		},
 		"invalid server url": {
 			hasToken: true, token: "token",
 			hasServerURL: true, serverURL: "",
 			hasWorkflow: false,
-			wantError:   true, errorMsg: validation.InvalidServerURLMsg,
+			wantError:   true, errorMsg: validator.InvalidServerURLMsg,
 		},
 		"no workflow": {
 			hasToken: true, token: "token",
@@ -120,7 +136,7 @@ func TestValidateFlags(t *testing.T) {
 		"invalid mandatory workflow": {
 			hasToken: false, hasServerURL: false,
 			hasWorkflow: true, isWorkflowOptional: false, workflow: "",
-			wantError: true, errorMsg: validation.InvalidWorkflowMsg,
+			wantError: true, errorMsg: validator.InvalidWorkflowMsg,
 		},
 		"optional workflow": {
 			hasToken: false, hasServerURL: false,

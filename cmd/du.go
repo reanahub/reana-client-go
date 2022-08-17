@@ -12,7 +12,10 @@ import (
 	"errors"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/utils"
+	"reanahub/reana-client-go/pkg/config"
+	"reanahub/reana-client-go/pkg/datautils"
+	"reanahub/reana-client-go/pkg/displayer"
+	"reanahub/reana-client-go/pkg/filterer"
 
 	"github.com/spf13/cobra"
 )
@@ -80,12 +83,11 @@ func newDuCmd() *cobra.Command {
 }
 
 func (o *duOptions) run(cmd *cobra.Command) error {
-	filterNames := []string{"size", "name"}
-	filters, err := utils.NewFilters(nil, filterNames, o.filter)
+	filters, err := filterer.NewFilters(nil, config.DuMultiFilters, o.filter)
 	if err != nil {
 		return err
 	}
-	searchFilter, err := filters.GetJson(filterNames)
+	searchFilter, err := filters.GetJson(config.DuMultiFilters)
 	if err != nil {
 		return err
 	}
@@ -129,7 +131,7 @@ func displayDuPayload(
 	var rows [][]any
 
 	for _, diskUsageInfo := range p.DiskUsageInfo {
-		if utils.HasAnyPrefix(diskUsageInfo.Name, utils.FilesBlacklist) {
+		if datautils.HasAnyPrefix(diskUsageInfo.Name, config.FilesBlacklist) {
 			continue
 		}
 
@@ -143,6 +145,6 @@ func displayDuPayload(
 		rows = append(rows, row)
 	}
 
-	utils.DisplayTable(header, rows, cmd.OutOrStdout())
+	displayer.DisplayTable(header, rows, cmd.OutOrStdout())
 	return nil
 }

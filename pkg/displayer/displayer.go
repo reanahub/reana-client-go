@@ -6,12 +6,14 @@ REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
 */
 
-package utils
+// Package displayer gives utility functions to display messages, tables, amongst others.
+package displayer
 
 import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"reanahub/reana-client-go/pkg/config"
 
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"
@@ -91,7 +93,7 @@ func DisplayJsonOutput(output any, out io.Writer) error {
 // DisplayMessage takes a message, a messageType (e.g. success or error) and displays it according to the color
 // associated with the messageType and whether it is indented or not.
 func DisplayMessage(message string, messageType MessageType, indented bool, out io.Writer) {
-	prefix := "==>"
+	prefix := config.LeadingMark
 	if indented {
 		prefix = "  ->"
 	}

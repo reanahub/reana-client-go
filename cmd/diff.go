@@ -14,7 +14,9 @@ import (
 	"io"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/utils"
+	"reanahub/reana-client-go/pkg/config"
+	"reanahub/reana-client-go/pkg/datautils"
+	"reanahub/reana-client-go/pkg/displayer"
 
 	"github.com/jedib0t/go-pretty/v6/text"
 
@@ -97,8 +99,6 @@ func (o *diffOptions) run(cmd *cobra.Command) error {
 }
 
 func displayDiffPayload(cmd *cobra.Command, p *operations.GetWorkflowDiffOKBody) error {
-	leadingMark := "==>"
-
 	if p.ReanaSpecification != "" {
 		var specificationDiff map[string][]string
 		err := json.Unmarshal([]byte(p.ReanaSpecification), &specificationDiff)
@@ -116,8 +116,8 @@ func displayDiffPayload(cmd *cobra.Command, p *operations.GetWorkflowDiffOKBody)
 		for section, lines := range specificationDiff {
 			if len(lines) != 0 {
 				equalSpecification = false
-				utils.PrintColorable(
-					fmt.Sprintf("%s Differences in workflow %s\n", leadingMark, section),
+				displayer.PrintColorable(
+					fmt.Sprintf("%s Differences in workflow %s\n", config.LeadingMark, section),
 					cmd.OutOrStdout(),
 					text.FgYellow,
 					text.Bold,
@@ -126,8 +126,8 @@ func displayDiffPayload(cmd *cobra.Command, p *operations.GetWorkflowDiffOKBody)
 			}
 		}
 		if equalSpecification {
-			utils.PrintColorable(
-				fmt.Sprintf("%s No differences in REANA specifications.\n", leadingMark),
+			displayer.PrintColorable(
+				fmt.Sprintf("%s No differences in REANA specifications.\n", config.LeadingMark),
 				cmd.OutOrStdout(),
 				text.FgYellow,
 				text.Bold,
@@ -142,10 +142,10 @@ func displayDiffPayload(cmd *cobra.Command, p *operations.GetWorkflowDiffOKBody)
 		return err
 	}
 	if workspaceDiffRaw != "" {
-		workspaceDiff := utils.SplitLinesNoEmpty(workspaceDiffRaw)
+		workspaceDiff := datautils.SplitLinesNoEmpty(workspaceDiffRaw)
 
-		utils.PrintColorable(
-			fmt.Sprintf("%s Differences in workflow workspace\n", leadingMark),
+		displayer.PrintColorable(
+			fmt.Sprintf("%s Differences in workflow workspace\n", config.LeadingMark),
 			cmd.OutOrStdout(),
 			text.FgYellow,
 			text.Bold,
@@ -168,7 +168,7 @@ func printDiff(lines []string, out io.Writer) {
 			lineColor = text.FgGreen
 		}
 
-		utils.PrintColorable(line, out, lineColor)
+		displayer.PrintColorable(line, out, lineColor)
 		fmt.Fprintln(out)
 	}
 }

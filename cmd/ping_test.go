@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"net/http"
-	"reanahub/reana-client-go/utils"
+	"reanahub/reana-client-go/pkg/errorhandler"
 	"testing"
 
 	"github.com/spf13/viper"
@@ -34,14 +34,14 @@ func TestUnreachableServer(t *testing.T) {
 	})
 
 	rootCmd := NewRootCmd()
-	output, err := utils.ExecuteCommand(rootCmd, "ping", "-t", "1234")
+	output, err := ExecuteCommand(rootCmd, "ping", "-t", "1234")
 
 	if err == nil {
 		t.Errorf("Expected an error, instead got '%s'", output)
 	}
 
 	expectedErr := "'https://unreachable.invalid' not found, please verify the provided server URL or check your internet connection"
-	if utils.HandleApiError(err).Error() != expectedErr {
+	if errorhandler.HandleApiError(err).Error() != expectedErr {
 		t.Errorf("Expected server not found error, instead got '%s'", err.Error())
 	}
 }

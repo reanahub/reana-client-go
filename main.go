@@ -16,7 +16,8 @@ package main
 import (
 	"os"
 	"reanahub/reana-client-go/cmd"
-	"reanahub/reana-client-go/utils"
+	"reanahub/reana-client-go/pkg/displayer"
+	"reanahub/reana-client-go/pkg/errorhandler"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -27,8 +28,8 @@ func main() {
 
 	if err != nil {
 		log.Debug(err)
-		err := utils.HandleApiError(err)
-		utils.DisplayMessage(err.Error(), utils.Error, false, os.Stderr)
+		err := errorhandler.HandleApiError(err)
+		displayer.DisplayMessage(err.Error(), displayer.Error, false, os.Stderr)
 		os.Exit(1)
 	}
 }

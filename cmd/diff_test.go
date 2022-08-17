@@ -12,7 +12,8 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
-	"reanahub/reana-client-go/utils"
+	"reanahub/reana-client-go/pkg/datautils"
+	"reanahub/reana-client-go/pkg/displayer"
 	"testing"
 
 	"github.com/jedib0t/go-pretty/v6/text"
@@ -153,14 +154,14 @@ func TestPrintDiff(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			resBuf := new(bytes.Buffer)
 			printDiff(test.lines, resBuf)
-			result := utils.SplitLinesNoEmpty(resBuf.String())
+			result := datautils.SplitLinesNoEmpty(resBuf.String())
 
 			if len(result) != len(test.lines) {
 				t.Fatalf("Expected %d lines, got %d", len(test.lines), len(result))
 			}
 			for i, line := range result {
 				testBuf := new(bytes.Buffer)
-				utils.PrintColorable(test.lines[i], testBuf, test.expectedColors[i])
+				displayer.PrintColorable(test.lines[i], testBuf, test.expectedColors[i])
 				expected := testBuf.String()
 				if line != expected {
 					t.Errorf("Expected %s, got %s", expected, line)

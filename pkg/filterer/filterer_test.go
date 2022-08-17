@@ -6,10 +6,9 @@ REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
 */
 
-package utils
+package filterer
 
 import (
-	"strings"
 	"testing"
 
 	"golang.org/x/exp/slices"
@@ -489,74 +488,6 @@ func TestFiltersGetKeyAndValue(t *testing.T) {
 				t.Errorf("Unexpected error for GetKeyAndValue(%s): '%s'", test.filter, err.Error())
 			} else if name != test.name || value != test.value {
 				t.Errorf("Expected result to be %s,%s, got %s,%s", test.name, test.value, name, value)
-			}
-		})
-	}
-}
-
-func TestParseFormatParameters(t *testing.T) {
-	tests := map[string]struct {
-		formatOptions    []string
-		filterRows       bool
-		wantFilteredRows bool
-	}{
-		"no params": {
-			formatOptions: []string{},
-			filterRows:    false, wantFilteredRows: false,
-		},
-		"without filtering": {
-			formatOptions: []string{"column", "column2"},
-			filterRows:    false, wantFilteredRows: false,
-		},
-		"with filterRows and no filters": {
-			formatOptions: []string{"column"},
-			filterRows:    true, wantFilteredRows: false,
-		},
-		"with filters and filterRows": {
-			formatOptions: []string{"column=value"},
-			filterRows:    true, wantFilteredRows: true,
-		},
-		"with filters and no filterRows": {
-			formatOptions: []string{"column=value"},
-			filterRows:    false, wantFilteredRows: false,
-		},
-		"multiple filters": {
-			formatOptions: []string{"column=value", "column2=value2"},
-			filterRows:    true, wantFilteredRows: true,
-		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			filters := ParseFormatParameters(test.formatOptions, test.filterRows)
-			if len(filters) != len(test.formatOptions) {
-				t.Errorf("Expected %d filters, got %d", len(test.formatOptions), len(filters))
-			}
-			for i, filter := range filters {
-				filterCol := strings.SplitN(test.formatOptions[i], "=", 2)[0]
-				if filter.column != filterCol {
-					t.Errorf(
-						"Expected filter column %s, got %s",
-						test.formatOptions[i],
-						filter.column,
-					)
-				}
-
-				if test.wantFilteredRows {
-					if !filter.filterRows {
-						t.Errorf("Expected filterRows to be true, got false")
-					}
-					if filter.value == "" {
-						t.Errorf("Expected a filter value, got empty string")
-					}
-				} else {
-					if filter.filterRows {
-						t.Errorf("Expected filterRows to be false, got true")
-					}
-					if filter.value != "" {
-						t.Errorf("Expected empty filter value, got %s", filter.value)
-					}
-				}
 			}
 		})
 	}

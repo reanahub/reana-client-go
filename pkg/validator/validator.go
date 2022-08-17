@@ -7,12 +7,12 @@ under the terms of the MIT License; see LICENSE file for more details.
 */
 
 /*
-Package validation provides functions that validate given configurations or command flags.
+Package validator provides functions that validate given configurations or command flags.
 
 In case of a failed validation, every function in this package returns an error explaining why it failed.
 Otherwise, they return nil, meaning that the validation was successful.
 */
-package validation
+package validator
 
 import (
 	"errors"

@@ -10,7 +10,7 @@ package cmd
 
 import (
 	"net/http"
-	"reanahub/reana-client-go/utils"
+	"reanahub/reana-client-go/pkg/config"
 	"testing"
 
 	"github.com/go-gota/gota/series"
@@ -343,19 +343,19 @@ func TestParseListFilters(t *testing.T) {
 	}{
 		"no filters": {
 			filterInput:   []string{},
-			statusFilters: utils.GetRunStatuses(false),
+			statusFilters: config.GetRunStatuses(false),
 			searchFilter:  "",
 		},
 		"with deleted runs": {
 			filterInput:     []string{},
 			showDeletedRuns: true,
-			statusFilters:   utils.GetRunStatuses(true),
+			statusFilters:   config.GetRunStatuses(true),
 			searchFilter:    "",
 		},
 		"with show all": {
 			filterInput:   []string{},
 			showAll:       true,
-			statusFilters: utils.GetRunStatuses(true),
+			statusFilters: config.GetRunStatuses(true),
 			searchFilter:  "",
 		},
 		"valid filters": {

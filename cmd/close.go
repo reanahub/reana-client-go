@@ -12,7 +12,7 @@ import (
 	"fmt"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/utils"
+	"reanahub/reana-client-go/pkg/displayer"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -77,9 +77,9 @@ func (o *closeOptions) run(cmd *cobra.Command) error {
 		return err
 	}
 
-	utils.DisplayMessage(
+	displayer.DisplayMessage(
 		fmt.Sprintf("Interactive session for workflow %s was successfully closed", o.workflow),
-		utils.Success,
+		displayer.Success,
 		false,
 		cmd.OutOrStdout(),
 	)

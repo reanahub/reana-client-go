@@ -11,8 +11,10 @@ package cmd
 import (
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/utils"
-	"reanahub/reana-client-go/validation"
+	"reanahub/reana-client-go/pkg/config"
+	"reanahub/reana-client-go/pkg/displayer"
+	"reanahub/reana-client-go/pkg/formatter"
+	"reanahub/reana-client-go/pkg/validator"
 
 	"github.com/jedib0t/go-pretty/v6/text"
 
@@ -56,13 +58,13 @@ func newOpenCmd() *cobra.Command {
 		Args:  cobra.MaximumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			o.serverURL = viper.GetString("server-url")
-			o.interactiveSessionType = utils.InteractiveSessionTypes[0]
+			o.interactiveSessionType = config.InteractiveSessionTypes[0]
 			if len(args) > 0 {
 				o.interactiveSessionType = args[0]
 			}
-			if err := validation.ValidateChoice(
+			if err := validator.ValidateChoice(
 				o.interactiveSessionType,
-				utils.InteractiveSessionTypes,
+				config.InteractiveSessionTypes,
 				"interactive-session-type",
 			); err != nil {
 				return err
@@ -103,14 +105,14 @@ func (o *openOptions) run(cmd *cobra.Command) error {
 		return err
 	}
 
-	utils.DisplayMessage(
+	displayer.DisplayMessage(
 		"Interactive session opened successfully",
-		utils.Success,
+		displayer.Success,
 		false,
 		cmd.OutOrStdout(),
 	)
-	sessionURI := utils.FormatSessionURI(o.serverURL, openResp.Payload.Path, o.token)
-	utils.PrintColorable(sessionURI+"\n", cmd.OutOrStdout(), text.FgGreen)
+	sessionURI := formatter.FormatSessionURI(o.serverURL, openResp.Payload.Path, o.token)
+	displayer.PrintColorable(sessionURI+"\n", cmd.OutOrStdout(), text.FgGreen)
 	cmd.Println("It could take several minutes to start the interactive session.")
 	return nil
 }

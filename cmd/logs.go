@@ -13,7 +13,9 @@ import (
 	"fmt"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/utils"
+	"reanahub/reana-client-go/pkg/config"
+	"reanahub/reana-client-go/pkg/displayer"
+	"reanahub/reana-client-go/pkg/filterer"
 	"strings"
 
 	"github.com/jedib0t/go-pretty/v6/text"
@@ -71,9 +73,6 @@ type logsOptions struct {
 	page       int64
 	size       int64
 }
-
-var logsSingleFilters = []string{"compute_backend", "docker_img", "status"}
-var logsMultiFilters = []string{"step"}
 
 // newLogsCmd creates a command to get workflow logs.
 func newLogsCmd() *cobra.Command {
@@ -146,7 +145,7 @@ func (o *logsOptions) run(cmd *cobra.Command) error {
 	}
 
 	if o.jsonOutput {
-		err := utils.DisplayJsonOutput(workflowLogs, cmd.OutOrStdout())
+		err := displayer.DisplayJsonOutput(workflowLogs, cmd.OutOrStdout())
 		if err != nil {
 			return err
 		}
@@ -159,18 +158,22 @@ func (o *logsOptions) run(cmd *cobra.Command) error {
 
 // parseLogsFilters parses a list of filters in the format 'filter=value', for the 'logs' command.
 // Returns an error if any of the given filters are not valid.
-func parseLogsFilters(filterInput []string) (utils.Filters, error) {
-	filters, err := utils.NewFilters(logsSingleFilters, logsMultiFilters, filterInput)
+func parseLogsFilters(filterInput []string) (filterer.Filters, error) {
+	filters, err := filterer.NewFilters(
+		config.LogsSingleFilters,
+		config.LogsMultiFilters,
+		filterInput,
+	)
 	if err != nil {
 		return filters, err
 	}
 
-	err = filters.ValidateValues("status", utils.GetRunStatuses(true))
+	err = filters.ValidateValues("status", config.GetRunStatuses(true))
 	if err != nil {
 		return filters, err
 	}
 
-	err = filters.ValidateValues("compute_backend", utils.ReanaComputeBackendKeys)
+	err = filters.ValidateValues("compute_backend", config.ReanaComputeBackendKeys)
 	if err != nil {
 		return filters, err
 	}
@@ -179,7 +182,7 @@ func parseLogsFilters(filterInput []string) (utils.Filters, error) {
 }
 
 // filterJobLogs returns a subset of jobLogs based on the given filters.
-func filterJobLogs(jobLogs *map[string]jobLogItem, filters utils.Filters) error {
+func filterJobLogs(jobLogs *map[string]jobLogItem, filters filterer.Filters) error {
 	// Convert to a map based on json properties
 	var jobLogsMap map[string]map[string]string
 	jsonLogs, err := json.Marshal(jobLogs)
@@ -196,7 +199,7 @@ func filterJobLogs(jobLogs *map[string]jobLogItem, filters utils.Filters) error 
 		for _, filterKey := range filters.SingleFilterKeys {
 			filterValue, _ := filters.GetSingle(filterKey)
 			if filterKey == "compute_backend" {
-				filterValue = utils.ReanaComputeBackends[strings.ToLower(filterValue)]
+				filterValue = config.ReanaComputeBackends[strings.ToLower(filterValue)]
 			}
 			if filterValue != "" && jobLogValue[filterKey] != filterValue {
 				unwantedLogs = append(unwantedLogs, jobLogKey)
@@ -213,15 +216,13 @@ func filterJobLogs(jobLogs *map[string]jobLogItem, filters utils.Filters) error 
 
 // displayHumanFriendlyLogs displays the logs in a human friendly way.
 func displayHumanFriendlyLogs(cmd *cobra.Command, logs logs, steps []string) {
-	leadingMark := "==>"
-
 	if logs.WorkflowLogs != nil && *logs.WorkflowLogs != "" {
-		displayLogHeader(cmd, "Workflow engine logs", leadingMark)
+		displayLogHeader(cmd, "Workflow engine logs")
 		cmd.Println(*logs.WorkflowLogs)
 	}
 
 	if logs.EngineSpecific != nil && *logs.EngineSpecific != "" {
-		displayLogHeader(cmd, "Engine internal logs", leadingMark)
+		displayLogHeader(cmd, "Engine internal logs")
 		cmd.Println(*logs.EngineSpecific)
 	}
 
@@ -242,40 +243,40 @@ func displayHumanFriendlyLogs(cmd *cobra.Command, logs logs, steps []string) {
 				"The logs of step(s) %s were not found, check for spelling mistakes in the step names",
 				strings.Join(missingStepNames, ","),
 			)
-			utils.DisplayMessage(errMsg, utils.Error, false, cmd.ErrOrStderr())
+			displayer.DisplayMessage(errMsg, displayer.Error, false, cmd.ErrOrStderr())
 		}
 	}
 
 	if len(logs.JobLogs) > 0 {
-		displayLogHeader(cmd, "Job logs", leadingMark)
+		displayLogHeader(cmd, "Job logs")
 		for jobId, jobItem := range logs.JobLogs {
 			jobNameOrId := jobId
 			if jobItem.JobName != "" {
 				jobNameOrId = jobItem.JobName
 			}
-			utils.PrintColorable(
-				fmt.Sprintf("%s Step: %s\n", leadingMark, jobNameOrId),
+			displayer.PrintColorable(
+				fmt.Sprintf("%s Step: %s\n", config.LeadingMark, jobNameOrId),
 				cmd.OutOrStdout(),
 				text.Bold,
-				utils.JobStatusToColor[jobItem.Status],
+				displayer.JobStatusToColor[jobItem.Status],
 			)
 
-			displayLogItem(cmd, &jobItem.WorkflowUuid, "Workflow ID", jobItem.Status, leadingMark)
+			displayLogItem(cmd, &jobItem.WorkflowUuid, "Workflow ID", jobItem.Status)
 			displayLogItem(cmd, &jobItem.ComputeBackend,
-				"Compute backend", jobItem.Status, leadingMark)
-			displayLogItem(cmd, &jobItem.BackendJobId, "Job ID", jobItem.Status, leadingMark)
-			displayLogItem(cmd, &jobItem.DockerImg, "Docker image", jobItem.Status, leadingMark)
-			displayLogItem(cmd, &jobItem.Cmd, "Command", jobItem.Status, leadingMark)
-			displayLogItem(cmd, &jobItem.Status, "Status", jobItem.Status, leadingMark)
-			displayLogItem(cmd, jobItem.StartedAt, "Started", jobItem.Status, leadingMark)
-			displayLogItem(cmd, jobItem.FinishedAt, "Finished", jobItem.Status, leadingMark)
+				"Compute backend", jobItem.Status)
+			displayLogItem(cmd, &jobItem.BackendJobId, "Job ID", jobItem.Status)
+			displayLogItem(cmd, &jobItem.DockerImg, "Docker image", jobItem.Status)
+			displayLogItem(cmd, &jobItem.Cmd, "Command", jobItem.Status)
+			displayLogItem(cmd, &jobItem.Status, "Status", jobItem.Status)
+			displayLogItem(cmd, jobItem.StartedAt, "Started", jobItem.Status)
+			displayLogItem(cmd, jobItem.FinishedAt, "Finished", jobItem.Status)
 
 			if jobItem.Logs != "" {
 				logsItem := "\n" + jobItem.Logs // break line after title
-				displayLogItem(cmd, &logsItem, "Logs", jobItem.Status, leadingMark)
+				displayLogItem(cmd, &logsItem, "Logs", jobItem.Status)
 			} else {
 				msg := fmt.Sprintf("Step %s emitted no logs.", jobNameOrId)
-				utils.DisplayMessage(msg, utils.Info, false, cmd.OutOrStdout())
+				displayer.DisplayMessage(msg, displayer.Info, false, cmd.OutOrStdout())
 			}
 		}
 	}
@@ -283,22 +284,22 @@ func displayHumanFriendlyLogs(cmd *cobra.Command, logs logs, steps []string) {
 
 // displayLogItem displays an optional log item if it is not nil or an empty string.
 // The title is displayed according to the color associated with the job's status.
-func displayLogItem(cmd *cobra.Command, item *string, title, status, leadingMark string) {
+func displayLogItem(cmd *cobra.Command, item *string, title, status string) {
 	if item == nil || *item == "" {
 		return
 	}
-	utils.PrintColorable(
-		fmt.Sprintf("%s %s: ", leadingMark, title),
+	displayer.PrintColorable(
+		fmt.Sprintf("%s %s: ", config.LeadingMark, title),
 		cmd.OutOrStdout(),
-		utils.JobStatusToColor[status],
+		displayer.JobStatusToColor[status],
 	)
 	cmd.Println(*item)
 }
 
 // displayLogHeader displays a header for a group of logs represented by title.
-func displayLogHeader(cmd *cobra.Command, title, leadingMark string) {
-	utils.PrintColorable(
-		fmt.Sprintf("\n%s %s\n", leadingMark, title),
+func displayLogHeader(cmd *cobra.Command, title string) {
+	displayer.PrintColorable(
+		fmt.Sprintf("\n%s %s\n", config.LeadingMark, title),
 		cmd.OutOrStdout(),
 		text.Bold,
 		text.FgYellow,

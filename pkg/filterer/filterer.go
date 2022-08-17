@@ -6,7 +6,8 @@ REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
 */
 
-package utils
+// Package filterer gives data structures and respective functions to handle filters across different commands.
+package filterer
 
 import (
 	"encoding/json"
@@ -182,27 +183,4 @@ func (f Filters) getKeyAndValue(filter string) (string, string, error) {
 	filterName := strings.ToLower(filterNameAndValue[0])
 	filterValue := filterNameAndValue[1]
 	return filterName, filterValue, nil
-}
-
-// FormatFilter provides a centralized way of handling format options across the different commands.
-type FormatFilter struct {
-	column     string
-	value      string
-	filterRows bool // set to true if a value was provided and the rows should be filtered by this column.
-}
-
-// ParseFormatParameters parses a list of formatOptions to a slice of FormatFilter.
-// If the format option has a filter, that will be the value in the struct and the filterRows boolean will be true.
-func ParseFormatParameters(formatOptions []string, filterRows bool) []FormatFilter {
-	var parsedFilters []FormatFilter
-	for _, filter := range formatOptions {
-		filterNameAndValue := strings.SplitN(filter, "=", 2)
-		formatFilter := FormatFilter{column: filterNameAndValue[0], filterRows: false}
-		if filterRows && len(filterNameAndValue) >= 2 {
-			formatFilter.value = filterNameAndValue[1]
-			formatFilter.filterRows = true
-		}
-		parsedFilters = append(parsedFilters, formatFilter)
-	}
-	return parsedFilters
 }

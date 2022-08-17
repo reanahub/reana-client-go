@@ -6,11 +6,12 @@ REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
 */
 
-package utils
+package displayer
 
 import (
 	"bytes"
 	"fmt"
+	"reanahub/reana-client-go/pkg/datautils"
 	"strings"
 	"testing"
 
@@ -51,7 +52,7 @@ func TestDisplayTable(t *testing.T) {
 			DisplayTable(test.headers, test.rows, buf)
 			result := buf.String()
 
-			lines := SplitLinesNoEmpty(result)
+			lines := datautils.SplitLinesNoEmpty(result)
 			if len(lines) != len(test.rows)+1 {
 				t.Fatalf("Expected %d table lines, got %d", len(test.rows)+1, len(lines))
 			}

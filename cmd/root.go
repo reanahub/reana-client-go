@@ -11,8 +11,9 @@ package cmd
 
 import (
 	"os"
-	"reanahub/reana-client-go/utils"
-	"reanahub/reana-client-go/validation"
+	"reanahub/reana-client-go/pkg/validator"
+
+	"github.com/spf13/pflag"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -73,7 +74,7 @@ func (o *rootOptions) run(cmd *cobra.Command) error {
 		return err
 	}
 
-	utils.LogCmdFlags(cmd)
+	logCmdFlags(cmd)
 	return nil
 }
 
@@ -84,14 +85,14 @@ func validateFlags(cmd *cobra.Command) error {
 	workflow := cmd.Flags().Lookup("workflow")
 
 	if token != nil {
-		if err := utils.BindViperToCmdFlag(token); err != nil {
+		if err := bindViperToCmdFlag(token); err != nil {
 			return err
 		}
 		tokenValue := token.Value.String()
-		if err := validation.ValidateAccessToken(tokenValue); err != nil {
+		if err := validator.ValidateAccessToken(tokenValue); err != nil {
 			return err
 		}
-		if err := validation.ValidateServerURL(serverURL); err != nil {
+		if err := validator.ValidateServerURL(serverURL); err != nil {
 			return err
 		}
 	}
@@ -102,11 +103,11 @@ func validateFlags(cmd *cobra.Command) error {
 			return nil
 		}
 
-		if err := utils.BindViperToCmdFlag(workflow); err != nil {
+		if err := bindViperToCmdFlag(workflow); err != nil {
 			return err
 		}
 		workflowValue := workflow.Value.String()
-		if err := validation.ValidateWorkflow(workflowValue); err != nil {
+		if err := validator.ValidateWorkflow(workflowValue); err != nil {
 			return err
 		}
 	}
@@ -129,7 +130,7 @@ func setupViper(cmd *cobra.Command) error {
 
 // setupLogger validates the logging level flag and configures the logger.
 func setupLogger(logLevelFlag string) error {
-	if err := validation.ValidateChoice(
+	if err := validator.ValidateChoice(
 		logLevelFlag,
 		[]string{"DEBUG", "INFO", "WARNING"},
 		"loglevel",
@@ -146,5 +147,24 @@ func setupLogger(logLevelFlag string) error {
 		FullTimestamp:   true,
 		TimestampFormat: "2006-01-02 15:04:05.1234",
 	})
+	return nil
+}
+
+// logCmdFlags logs all the flags set in the given command.
+func logCmdFlags(cmd *cobra.Command) {
+	log.Debugf("command: %s", cmd.CalledAs())
+	cmd.Flags().Visit(func(f *pflag.Flag) {
+		log.Debugf("%s: %s", f.Name, f.Value)
+	})
+}
+
+// bindViperToCmdFlag applies viper config value to the flag when the flag is not set and viper has a value.
+func bindViperToCmdFlag(f *pflag.Flag) error {
+	if f != nil && !f.Changed && viper.IsSet(f.Name) {
+		value := viper.GetString(f.Name)
+		if err := f.Value.Set(value); err != nil {
+			return err
+		}
+	}
 	return nil
 }
