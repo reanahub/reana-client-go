@@ -170,3 +170,16 @@ func BindViperToCmdFlag(f *pflag.Flag) error {
 	}
 	return nil
 }
+
+// SplitLinesNoEmpty splits a given string into a list where each line is a list item.
+// In contrary to strings.Split, SplitLinesNoEmpty ignores empty lines.
+func SplitLinesNoEmpty(str string) []string {
+	splitFn := func(c rune) bool {
+		return c == '\n'
+	} // Ignores empty string after \n, unlike strings.Split
+	lines := strings.FieldsFunc(
+		str,
+		splitFn,
+	)
+	return lines
+}

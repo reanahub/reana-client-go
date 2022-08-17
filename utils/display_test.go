@@ -51,13 +51,7 @@ func TestDisplayTable(t *testing.T) {
 			DisplayTable(test.headers, test.rows, buf)
 			result := buf.String()
 
-			splitFn := func(c rune) bool {
-				return c == '\n'
-			} // Ignores empty string after \n, unlike strings.Split
-			lines := strings.FieldsFunc(
-				result,
-				splitFn,
-			)
+			lines := SplitLinesNoEmpty(result)
 			if len(lines) != len(test.rows)+1 {
 				t.Fatalf("Expected %d table lines, got %d", len(test.rows)+1, len(lines))
 			}
