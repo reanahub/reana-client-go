@@ -248,3 +248,23 @@ func TestHandleApiError(t *testing.T) {
 		}
 	}
 }
+
+func TestSplitLinesNoEmpty(t *testing.T) {
+	tests := []struct {
+		arg  string
+		want []string
+	}{
+		{arg: "", want: []string{}},
+		{arg: "a", want: []string{"a"}},
+		{arg: "a\nb", want: []string{"a", "b"}},
+		{arg: "a\nb\nc", want: []string{"a", "b", "c"}},
+		{arg: "a\nb\nc\n", want: []string{"a", "b", "c"}},
+		{arg: "a\n\nb\n\nc", want: []string{"a", "b", "c"}},
+	}
+	for _, test := range tests {
+		got := SplitLinesNoEmpty(test.arg)
+		if !slices.Equal(got, test.want) {
+			t.Errorf("Expected %v, got %v", test.want, got)
+		}
+	}
+}
