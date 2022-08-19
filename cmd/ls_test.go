@@ -125,6 +125,16 @@ func TestLs(t *testing.T) {
 				"results/data.root", "154455", "2022-07-11T13:30:17",
 			},
 		},
+		"invalid format column": {
+			serverPath:     fmt.Sprintf(lsPathTemplate, workflowName),
+			serverResponse: successResponse,
+			statusCode:     http.StatusOK,
+			args:           []string{"-w", workflowName, "--format", "invalid"},
+			expected: []string{
+				"invalid value for 'format column': 'invalid' is not part of 'name', 'size', 'last-modified'",
+			},
+			wantError: true,
+		},
 		"json": {
 			serverPath:     fmt.Sprintf(lsPathTemplate, workflowName),
 			serverResponse: successResponse,

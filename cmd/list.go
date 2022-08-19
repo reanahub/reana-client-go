@@ -282,7 +282,10 @@ func displayListPayload(
 	if err != nil {
 		cmd.PrintErrf("Warning: sort operation was aborted, %s\n", err)
 	}
-	df = formatter.FormatDataFrame(df, formatFilters)
+	df, err = formatter.FormatDataFrame(df, formatFilters)
+	if err != nil {
+		return err
+	}
 
 	if jsonOutput {
 		err := displayer.DisplayJsonOutput(df.Maps(), cmd.OutOrStdout())

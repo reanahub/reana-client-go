@@ -140,6 +140,15 @@ func TestList(t *testing.T) {
 				"my_workflow2", "running",
 			},
 		},
+		"invalid format column": {
+			serverResponse: successResponse,
+			statusCode:     http.StatusOK,
+			args:           []string{"--format", "invalid"},
+			expected: []string{
+				"invalid value for 'format column': 'invalid' is not part of 'name', 'run_number', 'created', 'started', 'ended', 'status'",
+			},
+			wantError: true,
+		},
 		"json": {
 			serverResponse: successResponse,
 			statusCode:     http.StatusOK,

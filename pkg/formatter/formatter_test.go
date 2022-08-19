@@ -129,7 +129,7 @@ func TestFormatDataFrame(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			df := FormatDataFrame(test.df, test.formatFilters)
+			df, _ := FormatDataFrame(test.df, test.formatFilters)
 			if len(test.formatFilters) == 0 {
 				dfNRows, dfNCols := df.Dims()
 				testNRows, testNCols := test.df.Dims()

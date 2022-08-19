@@ -203,7 +203,10 @@ func displayLsFiles(
 		df = df.CBind(dataframe.New(colSeries))
 	}
 
-	df = formatter.FormatDataFrame(df, formatFilters)
+	df, err := formatter.FormatDataFrame(df, formatFilters)
+	if err != nil {
+		return err
+	}
 
 	if jsonOutput {
 		err := displayer.DisplayJsonOutput(df.Maps(), cmd.OutOrStdout())

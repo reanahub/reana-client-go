@@ -81,6 +81,16 @@ func TestStatus(t *testing.T) {
 				"2022-07-20T12:09:24", "finished",
 			},
 		},
+		"invalid format column": {
+			serverPath:     fmt.Sprintf(statusPathTemplate, workflowName),
+			serverResponse: successResponse,
+			statusCode:     http.StatusOK,
+			args:           []string{"-w", workflowName, "--format", "invalid"},
+			expected: []string{
+				"invalid value for 'format column': 'invalid' is not part of 'name', 'run_number', 'created', 'started', 'ended', 'status'",
+			},
+			wantError: true,
+		},
 		"json": {
 			serverPath:     fmt.Sprintf(statusPathTemplate, workflowName),
 			serverResponse: successResponse,

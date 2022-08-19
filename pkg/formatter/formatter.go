@@ -11,6 +11,7 @@ package formatter
 
 import (
 	"fmt"
+	"reanahub/reana-client-go/pkg/validator"
 	"strings"
 
 	"github.com/go-gota/gota/dataframe"
@@ -43,13 +44,19 @@ func ParseFormatParameters(formatOptions []string, filterRows bool) []FormatFilt
 
 // FormatDataFrame formats a dataFrame according to the formatFilters provided.
 // The formatFilters can be previously obtained with ParseFormatParameters.
-func FormatDataFrame(df dataframe.DataFrame, formatFilters []FormatFilter) dataframe.DataFrame {
+func FormatDataFrame(
+	df dataframe.DataFrame,
+	formatFilters []FormatFilter,
+) (dataframe.DataFrame, error) {
 	if len(formatFilters) == 0 {
-		return df
+		return df, nil
 	}
 
 	var newCols []series.Series
 	for _, filter := range formatFilters {
+		if err := validator.ValidateChoice(filter.column, df.Names(), "format column"); err != nil {
+			return df, err
+		}
 		newCols = append(newCols, df.Col(filter.column))
 	}
 	df = dataframe.New(newCols...)
@@ -61,7 +68,7 @@ func FormatDataFrame(df dataframe.DataFrame, formatFilters []FormatFilter) dataf
 			})
 		}
 	}
-	return df
+	return df, nil
 }
 
 // SortDataFrame sorts the given dataFrame according to the sortColumn and whether the order is reversed.

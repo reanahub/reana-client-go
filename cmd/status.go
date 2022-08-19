@@ -173,7 +173,10 @@ func displayStatusPayload(
 		df = df.CBind(dataframe.New(colSeries))
 	}
 
-	df = formatter.FormatDataFrame(df, filters)
+	df, err := formatter.FormatDataFrame(df, filters)
+	if err != nil {
+		return err
+	}
 
 	if jsonOutput {
 		err := displayer.DisplayJsonOutput(df.Maps(), cmd.OutOrStdout())
