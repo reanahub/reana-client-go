@@ -18,6 +18,8 @@ import (
 	"reanahub/reana-client-go/pkg/datautils"
 	"reanahub/reana-client-go/pkg/displayer"
 
+	"github.com/iancoleman/orderedmap"
+
 	"github.com/jedib0t/go-pretty/v6/text"
 
 	"github.com/spf13/cobra"
@@ -100,20 +102,35 @@ func (o *diffOptions) run(cmd *cobra.Command) error {
 
 func displayDiffPayload(cmd *cobra.Command, p *operations.GetWorkflowDiffOKBody) error {
 	if p.ReanaSpecification != "" {
-		var specificationDiff map[string][]string
+		specificationDiff := orderedmap.New()
 		err := json.Unmarshal([]byte(p.ReanaSpecification), &specificationDiff)
 		if err != nil {
 			return err
 		}
 
 		// Rename section workflow to specification
-		val, hasWorkflow := specificationDiff["workflow"]
+		val, hasWorkflow := specificationDiff.Get("workflow")
 		if hasWorkflow {
-			specificationDiff["specification"] = val
-			delete(specificationDiff, "workflow")
+			specificationDiff.Set("specification", val)
+			specificationDiff.Delete("workflow")
 		}
 		equalSpecification := true
-		for section, lines := range specificationDiff {
+		for _, section := range specificationDiff.Keys() {
+			// Convert diff to a slice of strings
+			sectionDiffs, _ := specificationDiff.Get(section)
+			linesInterface, ok := sectionDiffs.([]any)
+			if !ok {
+				return fmt.Errorf("expected diff to be an array, got %v", sectionDiffs)
+			}
+			lines := make([]string, 0, len(linesInterface))
+			for _, line := range linesInterface {
+				lineString, ok := line.(string)
+				if !ok {
+					return fmt.Errorf("expected diff line to be a string, got %v", line)
+				}
+				lines = append(lines, lineString)
+			}
+
 			if len(lines) != 0 {
 				equalSpecification = false
 				displayer.PrintColorable(
