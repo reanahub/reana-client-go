@@ -73,11 +73,13 @@ func newDuCmd() *cobra.Command {
 	f.BoolVarP(
 		&o.humanReadable,
 		"human-readable",
-		"r",
+		"h",
 		false,
 		"Show disk size in human readable format.",
 	)
 	f.StringSliceVar(&o.filter, "filter", []string{}, duFilterFlagDesc)
+	// Remove -h shorthand
+	cmd.PersistentFlags().BoolP("help", "", false, "Help for du")
 
 	return cmd
 }

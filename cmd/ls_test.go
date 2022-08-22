@@ -57,7 +57,7 @@ func TestLs(t *testing.T) {
 			serverPath:     fmt.Sprintf(lsPathTemplate, workflowName),
 			serverResponse: successResponse,
 			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName, "-r"},
+			args:           []string{"-w", workflowName, "-h"},
 			expected: []string{
 				"NAME", "SIZE", "LAST-MODIFIED",
 				"code/gendata.C", "1.89 KiB", "2022-07-11T12:50:33",

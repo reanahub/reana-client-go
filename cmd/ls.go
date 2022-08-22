@@ -103,13 +103,15 @@ func newLsCmd() *cobra.Command {
 	f.BoolVarP(
 		&o.humanReadable,
 		"human-readable",
-		"r",
+		"h",
 		false,
 		"Show disk size in human readable format.",
 	)
 	f.StringSliceVar(&o.filters, "filter", []string{}, lsFilterFlagDesc)
 	f.Int64Var(&o.page, "page", 1, "Results page number (to be used with --size).")
 	f.Int64Var(&o.size, "size", 0, "Number of results per page (to be used with --page).")
+	// Remove -h shorthand
+	cmd.PersistentFlags().BoolP("help", "", false, "Help for du")
 
 	return cmd
 }

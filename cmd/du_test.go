@@ -77,7 +77,7 @@ func TestDu(t *testing.T) {
 			serverPath:     fmt.Sprintf(duPathTemplate, workflowName),
 			serverResponse: successResponse,
 			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName, "-r"},
+			args:           []string{"-w", workflowName, "-h"},
 			expected: []string{
 				"SIZE", "NAME",
 				"2 KiB", "./code/fitdata.C",

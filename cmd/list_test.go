@@ -198,7 +198,7 @@ func TestList(t *testing.T) {
 		"human readable size": {
 			serverResponse: successResponse,
 			statusCode:     http.StatusOK,
-			args:           []string{"--include-workspace-size", "-r"},
+			args:           []string{"--include-workspace-size", "-h"},
 			expected:       []string{"SIZE", "1 KiB"},
 			unwanted:       []string{"1024", " -1 "},
 		},

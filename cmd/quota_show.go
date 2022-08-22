@@ -96,10 +96,12 @@ func newQuotaShowCmd() *cobra.Command {
 	f.BoolVarP(
 		&o.humanReadable,
 		"human-readable",
-		"r",
+		"h",
 		false,
 		"Show disk size in human readable format.",
 	)
+	// Remove -h shorthand
+	cmd.PersistentFlags().BoolP("help", "", false, "Help for quota-show")
 
 	return cmd
 }

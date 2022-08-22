@@ -81,14 +81,14 @@ func TestQuotaShow(t *testing.T) {
 		"cpu limit human": {
 			serverResponse: successResponse,
 			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "cpu", "--report", "limit", "-r"},
+			args:           []string{"--resource", "cpu", "--report", "limit", "-h"},
 			expected:       []string{"10m 50s"},
 			unwanted:       []string{"used", "limit", "usage", "cpu", "disk", "100"},
 		},
 		"cpu usage human": {
 			serverResponse: successResponse,
 			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "cpu", "--report", "usage", "-r"},
+			args:           []string{"--resource", "cpu", "--report", "usage", "-h"},
 			expected:       []string{"1m 5s"},
 			unwanted:       []string{"used", "limit", "usage", "cpu", "disk", "10"},
 		},
@@ -137,14 +137,14 @@ func TestQuotaShow(t *testing.T) {
 		"disk limit human": {
 			serverResponse: successResponse,
 			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "disk", "--report", "limit", "-r"},
+			args:           []string{"--resource", "disk", "--report", "limit", "-h"},
 			expected:       []string{"20 MiB"},
 			unwanted:       []string{"used", "limit", "usage", "cpu", "disk", "200"},
 		},
 		"disk usage human": {
 			serverResponse: successResponse,
 			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "disk", "--report", "usage", "-r"},
+			args:           []string{"--resource", "disk", "--report", "usage", "-h"},
 			expected:       []string{"2 MiB"},
 			unwanted:       []string{"used", "limit", "usage", "cpu", "disk", "20"},
 		},
