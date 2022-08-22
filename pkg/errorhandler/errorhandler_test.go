@@ -34,30 +34,32 @@ func TestHandleApiError(t *testing.T) {
 	apiError := testApiError{Payload: struct{ Message string }{Message: "API Error"}}
 	otherError := errors.New("other Error")
 
-	tests := []struct {
+	tests := map[string]struct {
 		arg  error
 		want string
 	}{
-		{
+		"server not found": {
 			arg: &urlError,
 			want: fmt.Sprintf(
 				"'%s' not found, please verify the provided server URL or check your internet connection",
 				serverURL,
 			),
 		},
-		{
+		"api error": {
 			arg:  &apiError,
 			want: apiError.Error(),
 		},
-		{
+		"other error": {
 			arg:  otherError,
 			want: otherError.Error(),
 		},
 	}
-	for _, test := range tests {
-		got := HandleApiError(test.arg)
-		if got.Error() != test.want {
-			t.Errorf("Expected %s, got %s", test.want, got)
-		}
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := HandleApiError(test.arg)
+			if got.Error() != test.want {
+				t.Errorf("Expected %s, got %s", test.want, got)
+			}
+		})
 	}
 }

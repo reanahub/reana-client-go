@@ -15,25 +15,27 @@ import (
 )
 
 func TestGetRunStatuses(t *testing.T) {
-	tests := []struct {
+	tests := map[string]struct {
 		includeDeleted bool
 		numStatuses    int
 	}{
-		{includeDeleted: false, numStatuses: 7},
-		{includeDeleted: true, numStatuses: 8},
+		"exclude deleted": {includeDeleted: false, numStatuses: 7},
+		"include deleted": {includeDeleted: true, numStatuses: 8},
 	}
-	for _, test := range tests {
-		runStatuses := GetRunStatuses(test.includeDeleted)
-		if len(runStatuses) != test.numStatuses {
-			t.Errorf("Expected %d statuses, got %d", test.numStatuses, len(runStatuses))
-		}
-
-		if test.includeDeleted {
-			if !slices.Contains(runStatuses, "deleted") {
-				t.Errorf("Expected runStatuses to contain deleted")
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			runStatuses := GetRunStatuses(test.includeDeleted)
+			if len(runStatuses) != test.numStatuses {
+				t.Errorf("Expected %d statuses, got %d", test.numStatuses, len(runStatuses))
 			}
-		} else if slices.Contains(runStatuses, "deleted") {
-			t.Errorf("Expected runStatuses not to contain deleted")
-		}
+
+			if test.includeDeleted {
+				if !slices.Contains(runStatuses, "deleted") {
+					t.Errorf("Expected runStatuses to contain deleted")
+				}
+			} else if slices.Contains(runStatuses, "deleted") {
+				t.Errorf("Expected runStatuses not to contain deleted")
+			}
+		})
 	}
 }

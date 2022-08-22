@@ -27,16 +27,20 @@ func TestValidateWorkflow(t *testing.T) {
 func TestValidateChoice(t *testing.T) {
 	choices := []string{"test1", "test2", "test3"}
 
-	invalidRes := ValidateChoice("invalid", choices, "test")
-	expectedErr := "invalid value for 'test': 'invalid' is not part of 'test1', 'test2', 'test3'"
-	if invalidRes == nil || invalidRes.Error() != expectedErr {
-		t.Errorf("Expected: \"%s\", got: \"%v\"", expectedErr, invalidRes)
-	}
+	t.Run("invalid choice", func(t *testing.T) {
+		invalidRes := ValidateChoice("invalid", choices, "test")
+		expectedErr := "invalid value for 'test': 'invalid' is not part of 'test1', 'test2', 'test3'"
+		if invalidRes == nil || invalidRes.Error() != expectedErr {
+			t.Errorf("Expected: \"%s\", got: \"%v\"", expectedErr, invalidRes)
+		}
+	})
 
-	validRes := ValidateChoice("test2", choices, "test")
-	if validRes != nil {
-		t.Errorf("Expected: \"%v\", got: \"%#v\"", nil, validRes)
-	}
+	t.Run("valid choice", func(t *testing.T) {
+		validRes := ValidateChoice("test2", choices, "test")
+		if validRes != nil {
+			t.Errorf("Expected: \"%v\", got: \"%#v\"", nil, validRes)
+		}
+	})
 }
 
 func testNonEmptyString(t *testing.T, f func(string) error, errorMsg string) {
