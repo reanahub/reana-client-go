@@ -107,3 +107,36 @@ func TestSplitLinesNoEmpty(t *testing.T) {
 		})
 	}
 }
+
+func TestRemoveFromSlice(t *testing.T) {
+	tests := map[string]struct {
+		slice []string
+		elem  string
+		want  []string
+	}{
+		"contains elem": {
+			slice: []string{"elem1", "elem2", "elem3"},
+			elem:  "elem2",
+			want:  []string{"elem1", "elem3"},
+		},
+		"doesn't contain elem": {
+			slice: []string{"elem1", "elem3"},
+			elem:  "elem2",
+			want:  []string{"elem1", "elem3"},
+		},
+		"empty slice": {
+			slice: []string{},
+			elem:  "elem",
+			want:  []string{},
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := RemoveFromSlice(test.slice, test.elem)
+			if !slices.Equal(got, test.want) {
+				t.Errorf("Expected %v, got %v", test.want, got)
+			}
+		})
+	}
+}
