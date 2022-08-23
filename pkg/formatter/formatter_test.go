@@ -269,3 +269,33 @@ func TestDataFrameToStringData(t *testing.T) {
 		})
 	}
 }
+
+func TestFormatSessionURI(t *testing.T) {
+	tests := map[string]struct {
+		serverURL string
+		path      string
+		token     string
+		want      string
+	}{
+		"regular uri": {
+			serverURL: "https://server.com",
+			path:      "/api/",
+			token:     "token",
+			want:      "https://server.com/api/?token=token",
+		},
+		"no path": {
+			serverURL: "https://server.com/",
+			path:      "",
+			token:     "token",
+			want:      "https://server.com/?token=token",
+		},
+	}
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := FormatSessionURI(test.serverURL, test.path, test.token)
+			if got != test.want {
+				t.Errorf("Expected %s, got %s", test.want, got)
+			}
+		})
+	}
+}

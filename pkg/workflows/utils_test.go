@@ -9,11 +9,10 @@ under the terms of the MIT License; see LICENSE file for more details.
 package workflows
 
 import (
-	"reanahub/reana-client-go/pkg/formatter"
 	"testing"
 )
 
-func TestGetWorkflowNameAndRunNumber(t *testing.T) {
+func TestGetNameAndRunNumber(t *testing.T) {
 	tests := map[string]struct {
 		arg          string
 		workflowName string
@@ -37,7 +36,7 @@ func TestGetWorkflowNameAndRunNumber(t *testing.T) {
 	}
 }
 
-func TestGetWorkflowDuration(t *testing.T) {
+func TestGetDuration(t *testing.T) {
 	curTime := "2020-01-01T03:16:45"
 	future := "2020-01-01T03:16:46"
 	past := "2020-01-01T03:16:44"
@@ -86,31 +85,46 @@ func TestGetWorkflowDuration(t *testing.T) {
 	}
 }
 
-func TestFormatSessionURI(t *testing.T) {
+func TestStatusChangeMessage(t *testing.T) {
 	tests := map[string]struct {
-		serverURL string
-		path      string
-		token     string
-		want      string
+		workflow  string
+		status    string
+		expected  string
+		wantError bool
 	}{
-		"regular uri": {
-			serverURL: "https://server.com",
-			path:      "/api/",
-			token:     "token",
-			want:      "https://server.com/api/?token=token",
+		"status ending with 'ing": {
+			workflow: "workflow",
+			status:   "running",
+			expected: "workflow is running",
 		},
-		"no path": {
-			serverURL: "https://server.com/",
-			path:      "",
-			token:     "token",
-			want:      "https://server.com/?token=token",
+		"status ending with 'ed": {
+			workflow: "workflow",
+			status:   "deleted",
+			expected: "workflow has been deleted",
+		},
+		"invalid status": {
+			workflow:  "workflow",
+			status:    "invalid",
+			expected:  "unrecognised status invalid",
+			wantError: true,
 		},
 	}
+
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := formatter.FormatSessionURI(test.serverURL, test.path, test.token)
-			if got != test.want {
-				t.Errorf("Expected %s, got %s", test.want, got)
+			got, err := StatusChangeMessage(test.workflow, test.status)
+			if err == nil {
+				if test.wantError {
+					t.Errorf("Expected error, got nil")
+				} else if got != test.expected {
+					t.Errorf("Expected %s, got %s", test.expected, got)
+				}
+			} else {
+				if !test.wantError {
+					t.Errorf("Expected no error, got %s", err.Error())
+				} else if err.Error() != test.expected {
+					t.Errorf("Expected %s error, got %s", test.expected, err.Error())
+				}
 			}
 		})
 	}
