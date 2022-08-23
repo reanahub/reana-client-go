@@ -160,6 +160,7 @@ func TestStatus(t *testing.T) {
 
 func TestBuildStatusHeader(t *testing.T) {
 	progressTotal := operations.GetWorkflowStatusOKBodyProgressTotal{Total: 60}
+	dummyStr := "dummy"
 
 	tests := map[string]struct {
 		verbose         bool
@@ -174,19 +175,19 @@ func TestBuildStatusHeader(t *testing.T) {
 		},
 		"running without started info": {
 			status:   "running",
-			progress: operations.GetWorkflowStatusOKBodyProgress{RunFinishedAt: "dummy"},
+			progress: operations.GetWorkflowStatusOKBodyProgress{RunFinishedAt: &dummyStr},
 			expected: []string{"name", "run_number", "created", "status"},
 		},
 		"running workflow": {
 			status:   "running",
-			progress: operations.GetWorkflowStatusOKBodyProgress{RunStartedAt: "dummy"},
+			progress: operations.GetWorkflowStatusOKBodyProgress{RunStartedAt: &dummyStr},
 			expected: []string{"name", "run_number", "created", "started", "status"},
 		},
 		"finished workflow": {
 			status: "finished",
 			progress: operations.GetWorkflowStatusOKBodyProgress{
-				RunStartedAt:  "dummy",
-				RunFinishedAt: "dummy",
+				RunStartedAt:  &dummyStr,
+				RunFinishedAt: &dummyStr,
 			},
 			expected: []string{"name", "run_number", "created", "started", "ended", "status"},
 		},
@@ -203,7 +204,7 @@ func TestBuildStatusHeader(t *testing.T) {
 		"verbose with command": {
 			status:   "running",
 			verbose:  true,
-			progress: operations.GetWorkflowStatusOKBodyProgress{CurrentCommand: "cmd"},
+			progress: operations.GetWorkflowStatusOKBodyProgress{CurrentCommand: &dummyStr},
 			expected: []string{
 				"name",
 				"run_number",
@@ -218,7 +219,7 @@ func TestBuildStatusHeader(t *testing.T) {
 		"verbose with step": {
 			status:   "running",
 			verbose:  true,
-			progress: operations.GetWorkflowStatusOKBodyProgress{CurrentStepName: "step"},
+			progress: operations.GetWorkflowStatusOKBodyProgress{CurrentStepName: &dummyStr},
 			expected: []string{
 				"name",
 				"run_number",
@@ -291,25 +292,29 @@ func TestGetStatusProgress(t *testing.T) {
 }
 
 func TestGetStatusCommand(t *testing.T) {
+	cmdStr := "cmd"
+	stepStr := "step"
+	bashCmd := "bash -c \"cd folder; ls \""
+
 	tests := map[string]struct {
 		progress operations.GetWorkflowStatusOKBodyProgress
 		expected string
 	}{
 		"no command": {
-			progress: operations.GetWorkflowStatusOKBodyProgress{CurrentStepName: "step"},
-			expected: "step",
+			progress: operations.GetWorkflowStatusOKBodyProgress{CurrentStepName: &stepStr},
+			expected: stepStr,
 		},
 		"with command": {
 			progress: operations.GetWorkflowStatusOKBodyProgress{
-				CurrentCommand:  "cmd",
-				CurrentStepName: "step",
+				CurrentCommand:  &cmdStr,
+				CurrentStepName: &stepStr,
 			},
-			expected: "cmd",
+			expected: cmdStr,
 		},
 		"command with prefix": {
 			progress: operations.GetWorkflowStatusOKBodyProgress{
-				CurrentCommand:  "bash -c \"cd folder; ls \"",
-				CurrentStepName: "step",
+				CurrentCommand:  &bashCmd,
+				CurrentStepName: &stepStr,
 			},
 			expected: "ls",
 		},

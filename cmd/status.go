@@ -149,9 +149,9 @@ func displayStatusPayload(
 		case "progress":
 			value = getStatusProgress(p.Progress)
 		case "started":
-			value = p.Progress.RunStartedAt
+			value = *p.Progress.RunStartedAt
 		case "ended":
-			value = p.Progress.RunFinishedAt
+			value = *p.Progress.RunFinishedAt
 		case "id":
 			value = p.ID
 		case "user":
@@ -161,8 +161,8 @@ func displayStatusPayload(
 		case "duration":
 			var err error
 			value, err = workflows.GetDuration(
-				&p.Progress.RunStartedAt,
-				&p.Progress.RunFinishedAt,
+				p.Progress.RunStartedAt,
+				p.Progress.RunFinishedAt,
 			)
 			if err != nil {
 				return err
@@ -203,9 +203,9 @@ func buildStatusHeader(
 
 	includeProgress := progress.Total != nil
 	hasRunStarted := slices.Contains([]string{"running", "finished", "failed", "stopped"}, status)
-	includeStarted := progress.RunStartedAt != ""
-	includeEnded := progress.RunFinishedAt != ""
-	includeCommand := progress.CurrentCommand != "" || progress.CurrentStepName != ""
+	includeStarted := progress.RunStartedAt != nil
+	includeEnded := progress.RunFinishedAt != nil
+	includeCommand := progress.CurrentCommand != nil || progress.CurrentStepName != nil
 
 	if hasRunStarted && includeStarted {
 		headers = append(headers, "started")
@@ -247,10 +247,10 @@ func getStatusProgress(progress *operations.GetWorkflowStatusOKBodyProgress) any
 // getStatusCommand gets the current command of the workflow.
 // If the command isn't available, it returns the current step name.
 func getStatusCommand(progress *operations.GetWorkflowStatusOKBodyProgress) string {
-	currentCmd := progress.CurrentCommand
-	if currentCmd == "" {
-		return progress.CurrentStepName
+	if progress.CurrentCommand == nil {
+		return *progress.CurrentStepName
 	}
+	currentCmd := *progress.CurrentCommand
 	if strings.HasPrefix(currentCmd, "bash -c \"cd ") {
 		commaIdx := strings.Index(currentCmd, ";")
 		currentCmd = currentCmd[commaIdx+2 : len(currentCmd)-2]

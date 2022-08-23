@@ -9,12 +9,10 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
-	"fmt"
-	"reanahub/reana-client-go/pkg/displayer"
-	"strings"
-
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
+	"reanahub/reana-client-go/pkg/displayer"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -74,11 +72,42 @@ func (o *infoOptions) run(cmd *cobra.Command) error {
 			return err
 		}
 	} else {
-		response := fmt.Sprintf("List of supported compute backends: %s \n", strings.Join(p.ComputeBackends.Value, ", ")) +
-			fmt.Sprintf("Default workspace: %s \n", p.DefaultWorkspace.Value) +
-			fmt.Sprintf("List of available workspaces: %s \n", strings.Join(p.WorkspacesAvailable.Value, ", "))
-
-		cmd.Print(response)
+		if p.ComputeBackends != nil {
+			displayInfoSliceItem(cmd, p.ComputeBackends.Title, p.ComputeBackends.Value)
+		}
+		if p.DefaultKubernetesJobsTimeout != nil {
+			displayInfoStringItem(cmd, p.DefaultKubernetesJobsTimeout.Title, &p.DefaultKubernetesJobsTimeout.Value)
+		}
+		if p.DefaultKubernetesMemoryLimit != nil {
+			displayInfoStringItem(cmd, p.DefaultKubernetesMemoryLimit.Title, &p.DefaultKubernetesMemoryLimit.Value)
+		}
+		if p.DefaultWorkspace != nil {
+			displayInfoStringItem(cmd, p.DefaultWorkspace.Title, &p.DefaultWorkspace.Value)
+		}
+		if p.KubernetesMaxMemoryLimit != nil {
+			displayInfoStringItem(cmd, p.KubernetesMaxMemoryLimit.Title, p.KubernetesMaxMemoryLimit.Value)
+		}
+		if p.MaximumKubernetesJobsTimeout != nil {
+			displayInfoStringItem(cmd, p.MaximumKubernetesJobsTimeout.Title, &p.MaximumKubernetesJobsTimeout.Value)
+		}
+		if p.MaximumWorkspaceRetentionPeriod != nil {
+			displayInfoStringItem(cmd, p.MaximumWorkspaceRetentionPeriod.Title, p.MaximumWorkspaceRetentionPeriod.Value)
+		}
+		if p.WorkspacesAvailable != nil {
+			displayInfoSliceItem(cmd, p.WorkspacesAvailable.Title, p.WorkspacesAvailable.Value)
+		}
 	}
 	return nil
+}
+
+func displayInfoStringItem(cmd *cobra.Command, title string, valuePtr *string) {
+	value := "None"
+	if valuePtr != nil {
+		value = *valuePtr
+	}
+	cmd.Printf("%s: %s\n", title, value)
+}
+
+func displayInfoSliceItem(cmd *cobra.Command, title string, value []string) {
+	cmd.Printf("%s: %s\n", title, strings.Join(value, ", "))
 }

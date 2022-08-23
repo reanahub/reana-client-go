@@ -481,10 +481,10 @@ swagger:model GetWorkflowStatusOKBodyProgress
 type GetWorkflowStatusOKBodyProgress struct {
 
 	// current command
-	CurrentCommand string `json:"current_command,omitempty"`
+	CurrentCommand *string `json:"current_command,omitempty"`
 
 	// current step name
-	CurrentStepName string `json:"current_step_name,omitempty"`
+	CurrentStepName *string `json:"current_step_name,omitempty"`
 
 	// failed
 	Failed *GetWorkflowStatusOKBodyProgressFailed `json:"failed,omitempty"`
@@ -493,10 +493,10 @@ type GetWorkflowStatusOKBodyProgress struct {
 	Finished *GetWorkflowStatusOKBodyProgressFinished `json:"finished,omitempty"`
 
 	// run finished at
-	RunFinishedAt string `json:"run_finished_at,omitempty"`
+	RunFinishedAt *string `json:"run_finished_at,omitempty"`
 
 	// run started at
-	RunStartedAt string `json:"run_started_at,omitempty"`
+	RunStartedAt *string `json:"run_started_at,omitempty"`
 
 	// running
 	Running *GetWorkflowStatusOKBodyProgressRunning `json:"running,omitempty"`
