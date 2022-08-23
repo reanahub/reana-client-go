@@ -10,6 +10,7 @@ under the terms of the MIT License; see LICENSE file for more details.
 package workflows
 
 import (
+	"fmt"
 	"reanahub/reana-client-go/pkg/datautils"
 	"strings"
 	"time"
@@ -46,4 +47,18 @@ func GetDuration(runStartedAt, runFinishedAt *string) (any, error) {
 		endTime = time.Now()
 	}
 	return endTime.Sub(startTime).Round(time.Second).Seconds(), nil
+}
+
+// StatusChangeMessage constructs the message to be displayed when a workflow changes its status.
+func StatusChangeMessage(workflow, status string) (string, error) {
+	var verb string
+	if strings.HasSuffix(status, "ing") {
+		verb = "is"
+	} else if strings.HasSuffix(status, "ed") {
+		verb = "has been"
+	} else {
+		return "", fmt.Errorf("unrecognised status %s", status)
+	}
+
+	return fmt.Sprintf("%s %s %s", workflow, verb, status), nil
 }

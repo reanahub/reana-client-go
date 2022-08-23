@@ -331,6 +331,49 @@ func (o *SetWorkflowStatusBadRequestBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
+/*SetWorkflowStatusBody set workflow status body
+swagger:model SetWorkflowStatusBody
+*/
+type SetWorkflowStatusBody struct {
+
+	// c a c h e
+	CACHE string `json:"CACHE,omitempty"`
+
+	// all runs
+	AllRuns bool `json:"all_runs,omitempty"`
+
+	// workspace
+	Workspace bool `json:"workspace,omitempty"`
+}
+
+// Validate validates this set workflow status body
+func (o *SetWorkflowStatusBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this set workflow status body based on context it is used
+func (o *SetWorkflowStatusBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *SetWorkflowStatusBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *SetWorkflowStatusBody) UnmarshalBinary(b []byte) error {
+	var res SetWorkflowStatusBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
 /*SetWorkflowStatusConflictBody set workflow status conflict body
 swagger:model SetWorkflowStatusConflictBody
 */

@@ -69,7 +69,7 @@ type SetWorkflowStatusParams struct {
 
 	   Optional. Additional input parameters and operational options.
 	*/
-	Parameters interface{}
+	Parameters SetWorkflowStatusBody
 
 	/* Status.
 
@@ -148,13 +148,13 @@ func (o *SetWorkflowStatusParams) SetAccessToken(accessToken *string) {
 }
 
 // WithParameters adds the parameters to the set workflow status params
-func (o *SetWorkflowStatusParams) WithParameters(parameters interface{}) *SetWorkflowStatusParams {
+func (o *SetWorkflowStatusParams) WithParameters(parameters SetWorkflowStatusBody) *SetWorkflowStatusParams {
 	o.SetParameters(parameters)
 	return o
 }
 
 // SetParameters adds the parameters to the set workflow status params
-func (o *SetWorkflowStatusParams) SetParameters(parameters interface{}) {
+func (o *SetWorkflowStatusParams) SetParameters(parameters SetWorkflowStatusBody) {
 	o.Parameters = parameters
 }
 
@@ -204,10 +204,8 @@ func (o *SetWorkflowStatusParams) WriteToRequest(r runtime.ClientRequest, reg st
 			}
 		}
 	}
-	if o.Parameters != nil {
-		if err := r.SetBodyParam(o.Parameters); err != nil {
-			return err
-		}
+	if err := r.SetBodyParam(o.Parameters); err != nil {
+		return err
 	}
 
 	// query param status
