@@ -170,10 +170,15 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 	listParams.SetWorkflowIDOrName(&o.workflow)
 	listParams.SetStatus(statusFilters)
 	listParams.SetSearch(&searchFilter)
-	listParams.SetIncludeProgress(&o.includeProgress)
-	listParams.SetIncludeWorkspaceSize(&o.includeWorkspaceSize)
 	if cmd.Flags().Changed("size") {
 		listParams.SetSize(&o.size)
+	}
+	// Don't set these to false because they override the server's verbose flag
+	if cmd.Flags().Changed("include-progress") {
+		listParams.SetIncludeProgress(&o.includeProgress)
+	}
+	if cmd.Flags().Changed("include-workspace-size") {
+		listParams.SetIncludeWorkspaceSize(&o.includeWorkspaceSize)
 	}
 
 	api, err := client.ApiClient()
