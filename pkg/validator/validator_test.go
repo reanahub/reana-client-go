@@ -10,6 +10,8 @@ package validator
 
 import (
 	"testing"
+
+	"github.com/spf13/pflag"
 )
 
 func TestValidateAccessToken(t *testing.T) {
@@ -41,6 +43,57 @@ func TestValidateChoice(t *testing.T) {
 			t.Errorf("Expected: \"%v\", got: \"%#v\"", nil, validRes)
 		}
 	})
+}
+
+func TestValidateAtLeastOne(t *testing.T) {
+	tests := map[string]struct {
+		flags     []pflag.Flag
+		options   []string
+		wantError bool
+		expected  string
+	}{
+		"one matching": {
+			flags:     []pflag.Flag{{Name: "option1", Changed: true}},
+			options:   []string{"option1", "option2"},
+			wantError: false,
+		},
+		"multiple matching": {
+			flags: []pflag.Flag{
+				{Name: "option1", Changed: true},
+				{Name: "option2", Changed: true},
+			},
+			options:   []string{"option1", "option2"},
+			wantError: false,
+		},
+		"matching not changed": {
+			flags:     []pflag.Flag{{Name: "option1"}},
+			options:   []string{"option1", "option2"},
+			wantError: true,
+			expected:  "at least one of the options: 'option1', 'option2' is required",
+		},
+		"empty flagset": {
+			options:   []string{"option1", "option2"},
+			wantError: true,
+			expected:  "at least one of the options: 'option1', 'option2' is required",
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			f := pflag.FlagSet{}
+			for _, flag := range test.flags {
+				f.AddFlag(&flag)
+			}
+
+			got := ValidateAtLeastOne(&f, test.options)
+			if test.wantError && got == nil {
+				t.Errorf("Expected error: %s, got nil", test.expected)
+			}
+			if !test.wantError && got != nil {
+				t.Errorf("Unexpected error: %s", got.Error())
+			}
+		})
+	}
 }
 
 func testNonEmptyString(t *testing.T, f func(string) error, errorMsg string) {
