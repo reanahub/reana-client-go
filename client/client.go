@@ -36,6 +36,8 @@ func ApiClient() (*API, error) {
 	transport.SetLogger(log.StandardLogger())
 	transport.SetDebug(log.GetLevel() == log.DebugLevel)
 
+	log.Info("Connecting to ", serverURL)
+
 	// create the API client, with the transport
 	return New(transport, strfmt.Default), nil
 }
