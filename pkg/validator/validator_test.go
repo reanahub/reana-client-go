@@ -9,7 +9,10 @@ under the terms of the MIT License; see LICENSE file for more details.
 package validator
 
 import (
+	"reflect"
 	"testing"
+
+	"golang.org/x/exp/slices"
 
 	"github.com/spf13/pflag"
 )
@@ -91,6 +94,123 @@ func TestValidateAtLeastOne(t *testing.T) {
 			}
 			if !test.wantError && got != nil {
 				t.Errorf("Unexpected error: %s", got.Error())
+			}
+		})
+	}
+}
+
+func TestValidateInputParameters(t *testing.T) {
+	tests := map[string]struct {
+		inputParams    map[string]string
+		originalParams map[string]any
+		expected       map[string]string
+		expectedErrors []string
+	}{
+		"empty params": {
+			inputParams: map[string]string{}, originalParams: map[string]any{},
+			expected: map[string]string{},
+		},
+		"valid input": {
+			inputParams:    map[string]string{"param1": "value1", "param2": "value2"},
+			originalParams: map[string]any{"param1": "value1", "param2": "value2"},
+			expected:       map[string]string{"param1": "value1", "param2": "value2"},
+		},
+		"different original values": {
+			inputParams:    map[string]string{"param1": "value1", "param2": "value2"},
+			originalParams: map[string]any{"param1": 1, "param2": false, "param3": "value"},
+			expected:       map[string]string{"param1": "value1", "param2": "value2"},
+		},
+		"with invalid params": {
+			inputParams:    map[string]string{"param1": "value1", "invalid": "value2"},
+			originalParams: map[string]any{"param1": "value1", "param2": "value2"},
+			expected:       map[string]string{"param1": "value1"},
+			expectedErrors: []string{"given parameter - invalid, is not in reana.yaml"},
+		},
+		"only invalid params": {
+			inputParams:    map[string]string{"invalid1": "value1", "invalid2": "value2"},
+			originalParams: map[string]any{"param1": "value1", "param2": "value2"},
+			expected:       map[string]string{},
+			expectedErrors: []string{
+				"given parameter - invalid1, is not in reana.yaml",
+				"given parameter - invalid2, is not in reana.yaml",
+			},
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			got, errors := ValidateInputParameters(test.inputParams, test.originalParams)
+			if !reflect.DeepEqual(got, test.expected) {
+				t.Errorf("Expected %v, got %v", test.expected, got)
+			}
+			if len(test.expectedErrors) != len(errors) {
+				t.Fatalf("Expected errors: %v, got %v", test.expectedErrors, errors)
+			}
+			for _, err := range errors {
+				if !slices.Contains(test.expectedErrors, err.Error()) {
+					t.Errorf(
+						"Expected errors: %v, got unexpected '%s' error",
+						test.expectedErrors,
+						err.Error(),
+					)
+				}
+			}
+		})
+	}
+}
+
+func TestValidateOperationalOptions(t *testing.T) {
+	tests := map[string]struct {
+		workflowType  string
+		options       map[string]string
+		expected      map[string]string
+		wantError     bool
+		expectedError string
+	}{
+		"empty options": {
+			workflowType: "serial",
+			options:      map[string]string{},
+			expected:     map[string]string{},
+		},
+		"valid options": {
+			workflowType: "serial",
+			options:      map[string]string{"CACHE": "value", "FROM": "from"},
+			expected:     map[string]string{"CACHE": "value", "FROM": "from"},
+		},
+		"valid with translation": {
+			workflowType: "cwl",
+			options:      map[string]string{"TARGET": "target"},
+			expected:     map[string]string{"--target": "target"},
+		},
+		"invalid option": {
+			workflowType:  "serial",
+			options:       map[string]string{"INVALID": "value"},
+			wantError:     true,
+			expectedError: "operational option 'INVALID' not supported",
+		},
+		"invalid for workflow type": {
+			workflowType:  "serial",
+			options:       map[string]string{"CACHE": "value", "toplevel": "level"},
+			wantError:     true,
+			expectedError: "operational option 'toplevel' not supported for serial workflows",
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			got, err := ValidateOperationalOptions(test.workflowType, test.options)
+			if test.wantError {
+				if err == nil {
+					t.Errorf("Expected error, got nil")
+				} else if err.Error() != test.expectedError {
+					t.Errorf("Expected error: '%s', got: '%s'", test.expectedError, err.Error())
+				}
+			} else {
+				if err != nil {
+					t.Errorf("Unexpected error: '%s'", err.Error())
+				} else if !reflect.DeepEqual(got, test.expected) {
+					t.Errorf("Expected %v, got %v", test.expected, got)
+				}
 			}
 		})
 	}
