@@ -44,3 +44,21 @@ func UpdateStatus(
 
 	return nil
 }
+
+// GetStatus returns the status information of the specified workflow.
+func GetStatus(token, workflow string) (*operations.GetWorkflowStatusOKBody, error) {
+	getParams := operations.NewGetWorkflowStatusParams()
+	getParams.SetAccessToken(&token)
+	getParams.SetWorkflowIDOrName(workflow)
+
+	api, err := client.ApiClient()
+	if err != nil {
+		return nil, err
+	}
+	resp, err := api.Operations.GetWorkflowStatus(getParams)
+	if err != nil {
+		return nil, err
+	}
+
+	return resp.GetPayload(), nil
+}

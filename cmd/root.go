@@ -59,6 +59,7 @@ func NewRootCmd() *cobra.Command {
 	cmd.AddCommand(newDiffCmd())
 	cmd.AddCommand(newQuotaShowCmd())
 	cmd.AddCommand(newDeleteCmd())
+	cmd.AddCommand(newStartCmd())
 
 	return cmd
 }

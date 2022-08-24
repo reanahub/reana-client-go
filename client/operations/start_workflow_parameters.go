@@ -69,7 +69,7 @@ type StartWorkflowParams struct {
 
 	   Optional. Additional input parameters and operational options.
 	*/
-	Parameters interface{}
+	Parameters StartWorkflowBody
 
 	/* WorkflowIDOrName.
 
@@ -142,13 +142,13 @@ func (o *StartWorkflowParams) SetAccessToken(accessToken *string) {
 }
 
 // WithParameters adds the parameters to the start workflow params
-func (o *StartWorkflowParams) WithParameters(parameters interface{}) *StartWorkflowParams {
+func (o *StartWorkflowParams) WithParameters(parameters StartWorkflowBody) *StartWorkflowParams {
 	o.SetParameters(parameters)
 	return o
 }
 
 // SetParameters adds the parameters to the start workflow params
-func (o *StartWorkflowParams) SetParameters(parameters interface{}) {
+func (o *StartWorkflowParams) SetParameters(parameters StartWorkflowBody) {
 	o.Parameters = parameters
 }
 
@@ -187,10 +187,8 @@ func (o *StartWorkflowParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 			}
 		}
 	}
-	if o.Parameters != nil {
-		if err := r.SetBodyParam(o.Parameters); err != nil {
-			return err
-		}
+	if err := r.SetBodyParam(o.Parameters); err != nil {
+		return err
 	}
 
 	// path param workflow_id_or_name

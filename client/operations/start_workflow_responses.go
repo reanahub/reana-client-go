@@ -331,6 +331,52 @@ func (o *StartWorkflowBadRequestBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
+/*StartWorkflowBody start workflow body
+swagger:model StartWorkflowBody
+*/
+type StartWorkflowBody struct {
+
+	// input parameters
+	InputParameters interface{} `json:"input_parameters,omitempty"`
+
+	// operational options
+	OperationalOptions interface{} `json:"operational_options,omitempty"`
+
+	// reana specification
+	ReanaSpecification interface{} `json:"reana_specification,omitempty"`
+
+	// restart
+	Restart bool `json:"restart,omitempty"`
+}
+
+// Validate validates this start workflow body
+func (o *StartWorkflowBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this start workflow body based on context it is used
+func (o *StartWorkflowBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *StartWorkflowBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *StartWorkflowBody) UnmarshalBinary(b []byte) error {
+	var res StartWorkflowBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
 /*StartWorkflowConflictBody start workflow conflict body
 swagger:model StartWorkflowConflictBody
 */

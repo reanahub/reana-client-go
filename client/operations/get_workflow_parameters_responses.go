@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -378,7 +379,10 @@ type GetWorkflowParametersOKBody struct {
 	Name string `json:"name,omitempty"`
 
 	// parameters
-	Parameters interface{} `json:"parameters,omitempty"`
+	//
+	// Min Properties: 0
+	// Min Properties: 0
+	Parameters map[string]interface{} `json:"parameters,omitempty"`
 
 	// type
 	Type string `json:"type,omitempty"`
@@ -386,6 +390,30 @@ type GetWorkflowParametersOKBody struct {
 
 // Validate validates this get workflow parameters o k body
 func (o *GetWorkflowParametersOKBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateParameters(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *GetWorkflowParametersOKBody) validateParameters(formats strfmt.Registry) error {
+	if swag.IsZero(o.Parameters) { // not required
+		return nil
+	}
+
+	nprops := len(o.Parameters)
+
+	// minProperties: 0
+	if nprops < 0 {
+		return errors.TooFewProperties("getWorkflowParametersOK"+"."+"parameters", "body", 0)
+	}
+
 	return nil
 }
 

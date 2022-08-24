@@ -61,3 +61,18 @@ var LogsMultiFilters = []string{"step"}
 
 // QuotaReports available reports in quota-show command.
 var QuotaReports = []string{"limit", "usage"}
+
+// AvailableOperationalOptions available operational options and respective translations according to the workflow type.
+var AvailableOperationalOptions = map[string]map[string]string{
+	"CACHE":          {"serial": "CACHE"},
+	"FROM":           {"serial": "FROM"},
+	"TARGET":         {"serial": "TARGET", "cwl": "--target"},
+	"toplevel":       {"yadage": "toplevel"},
+	"initdir":        {"yadage": "initdir"},
+	"initfiles":      {"yadage": "initfiles"},
+	"accept_metadir": {"yadage": "accept_metadir"},
+	"report":         {"snakemake": "report"},
+}
+
+// CheckInterval interval between workflow status check, in seconds.
+var CheckInterval = 5

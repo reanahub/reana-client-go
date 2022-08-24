@@ -10,7 +10,6 @@ package cmd
 
 import (
 	"fmt"
-	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/pkg/displayer"
 	"reanahub/reana-client-go/pkg/formatter"
@@ -88,19 +87,10 @@ In case a workflow is in progress, its duration as of now will be shown.`,
 }
 
 func (o *statusOptions) run(cmd *cobra.Command) error {
-	statusParams := operations.NewGetWorkflowStatusParams()
-	statusParams.SetAccessToken(&o.token)
-	statusParams.SetWorkflowIDOrName(o.workflow)
-
-	api, err := client.ApiClient()
+	payload, err := workflows.GetStatus(o.token, o.workflow)
 	if err != nil {
 		return err
 	}
-	statusResp, err := api.Operations.GetWorkflowStatus(statusParams)
-	if err != nil {
-		return err
-	}
-	payload := statusResp.Payload
 
 	header := buildStatusHeader(
 		o.verbose,

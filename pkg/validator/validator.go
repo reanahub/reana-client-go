@@ -17,6 +17,7 @@ package validator
 import (
 	"errors"
 	"fmt"
+	"reanahub/reana-client-go/pkg/config"
 	"strings"
 
 	"github.com/spf13/pflag"
@@ -68,6 +69,7 @@ func ValidateChoice(arg string, choices []string, name string) error {
 	return nil
 }
 
+// ValidateAtLeastOne verifies if the given FlagSet has at least one of the flags given in options changed.
 func ValidateAtLeastOne(f *pflag.FlagSet, options []string) error {
 	for _, option := range options {
 		if f.Changed(option) {
@@ -78,4 +80,48 @@ func ValidateAtLeastOne(f *pflag.FlagSet, options []string) error {
 		"at least one of the options: '%s' is required",
 		strings.Join(options, "', '"),
 	)
+}
+
+// ValidateInputParameters compares input parameters to the given original parameters in reana.yaml.
+// Returns the validated parameters and a slice with the errors detected.
+func ValidateInputParameters(
+	inputParams map[string]string,
+	originalParams map[string]any,
+) (map[string]string, []error) {
+	var errorList []error
+	validatedParams := make(map[string]string)
+	for param, value := range inputParams {
+		_, inOriginalParams := originalParams[param]
+		if inOriginalParams {
+			validatedParams[param] = value
+		} else {
+			errorList = append(errorList, fmt.Errorf("given parameter - %s, is not in reana.yaml", param))
+		}
+	}
+	return validatedParams, errorList
+}
+
+// ValidateOperationalOptions verifies if options are valid according to the available ones specified in config.
+// Returns the validated options, including any necessary translations.
+func ValidateOperationalOptions(
+	workflowType string,
+	options map[string]string,
+) (map[string]string, error) {
+	validatedOptions := make(map[string]string)
+	for option, value := range options {
+		translationPerType, validOption := config.AvailableOperationalOptions[option]
+		if !validOption {
+			return nil, fmt.Errorf("operational option '%s' not supported", option)
+		}
+		translation, validType := translationPerType[workflowType]
+		if !validType {
+			return nil, fmt.Errorf(
+				"operational option '%s' not supported for %s workflows",
+				option,
+				workflowType,
+			)
+		}
+		validatedOptions[translation] = value
+	}
+	return validatedOptions, nil
 }
