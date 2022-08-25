@@ -91,6 +91,7 @@ func TestFormatDataFrame(t *testing.T) {
 	tests := map[string]struct {
 		df            dataframe.DataFrame
 		formatFilters []FormatFilter
+		wantError     bool
 	}{
 		"no format": {
 			df: dataframe.New(
@@ -125,34 +126,48 @@ func TestFormatDataFrame(t *testing.T) {
 				{column: "col3", filterRows: true, value: "false"},
 			},
 		},
+		"invalid format column": {
+			df: dataframe.New(
+				series.New([]string{"a", "b"}, series.String, "col1"),
+				series.New([]int{1, 2}, series.Int, "col2"),
+			),
+			formatFilters: []FormatFilter{{column: "col3"}},
+			wantError:     true,
+		},
 	}
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			df, _ := FormatDataFrame(test.df, test.formatFilters)
-			if len(test.formatFilters) == 0 {
-				dfNRows, dfNCols := df.Dims()
-				testNRows, testNCols := test.df.Dims()
-				if dfNRows != testNRows || dfNCols != testNCols {
-					t.Errorf("Expected dataframe dimensions (%d, %d), got (%d, %d)",
-						testNRows, testNCols, dfNRows, dfNCols)
+			df, err := FormatDataFrame(test.df, test.formatFilters)
+			if test.wantError {
+				if err == nil {
+					t.Fatalf("wanted error, got nil")
 				}
 			} else {
-				if df.Ncol() != len(test.formatFilters) {
-					t.Fatalf("Expected %d columns, got %d", len(test.formatFilters), df.Ncol())
-				}
-				for _, filter := range test.formatFilters {
-					if !slices.Contains(df.Names(), filter.column) {
-						t.Errorf("Expected column '%s' to be present", filter.column)
-						continue
+				if len(test.formatFilters) == 0 {
+					dfNRows, dfNCols := df.Dims()
+					testNRows, testNCols := test.df.Dims()
+					if dfNRows != testNRows || dfNCols != testNCols {
+						t.Errorf("Expected dataframe dimensions (%d, %d), got (%d, %d)",
+							testNRows, testNCols, dfNRows, dfNCols)
 					}
+				} else {
+					if df.Ncol() != len(test.formatFilters) {
+						t.Fatalf("Expected %d columns, got %d", len(test.formatFilters), df.Ncol())
+					}
+					for _, filter := range test.formatFilters {
+						if !slices.Contains(df.Names(), filter.column) {
+							t.Errorf("Expected column '%s' to be present", filter.column)
+							continue
+						}
 
-					if filter.filterRows {
-						col := df.Col(filter.column)
-						for i := 0; i < col.Len(); i++ {
-							if fmt.Sprintf("%v", col.Val(i)) != filter.value {
-								t.Errorf("Expected column '%s' to be filtered to '%s', got %v",
-									filter.column, filter.value, col.Val(i))
+						if filter.filterRows {
+							col := df.Col(filter.column)
+							for i := 0; i < col.Len(); i++ {
+								if fmt.Sprintf("%v", col.Val(i)) != filter.value {
+									t.Errorf("Expected column '%s' to be filtered to '%s', got %v",
+										filter.column, filter.value, col.Val(i))
+								}
 							}
 						}
 					}
