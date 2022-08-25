@@ -39,7 +39,7 @@ func TestLs(t *testing.T) {
 				}
 			}
 		],
-		"total": 4
+		"total": 2
 }`
 	tests := map[string]TestCmdParams{
 		"default": {
