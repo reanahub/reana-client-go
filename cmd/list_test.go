@@ -274,7 +274,7 @@ func TestList(t *testing.T) {
 				},
 			},
 			args:     []string{"--sort", "run_number"},
-			expected: []string{"STATUS   \n my_workflow "},
+			expected: []string{"STATUS  \nmy_workflow "},
 		},
 		"malformed filters": {
 			args: []string{"--filter", "name"},

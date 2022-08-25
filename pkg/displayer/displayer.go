@@ -75,9 +75,21 @@ func DisplayTable[T any](header []string, rows [][]T, out io.Writer) {
 	t.SetOutputMirror(out)
 	t.AppendHeader(headerRow)
 	t.AppendRows(rowList)
+
 	t.Style().Options.DrawBorder = false
-	t.Style().Options.SeparateColumns = false
 	t.Style().Options.SeparateHeader = false
+	t.Style().Box.PaddingLeft = ""
+	t.Style().Box.PaddingRight = ""
+	t.Style().Box.MiddleVertical = "   "
+	var columnConfig []table.ColumnConfig
+	for i := range header {
+		columnConfig = append(columnConfig, table.ColumnConfig{
+			Number:      i + 1,
+			Align:       text.AlignLeft,
+			AlignHeader: text.AlignLeft,
+		})
+	}
+	t.SetColumnConfigs(columnConfig)
 	t.Render()
 }
 
