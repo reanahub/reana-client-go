@@ -16,6 +16,7 @@ package main
 import (
 	"os"
 	"reanahub/reana-client-go/cmd"
+	"reanahub/reana-client-go/pkg/config"
 	"reanahub/reana-client-go/pkg/displayer"
 	"reanahub/reana-client-go/pkg/errorhandler"
 
@@ -28,8 +29,10 @@ func main() {
 
 	if err != nil {
 		log.Debug(err)
-		err := errorhandler.HandleApiError(err)
-		displayer.DisplayMessage(err.Error(), displayer.Error, false, os.Stderr)
+		err = errorhandler.HandleApiError(err)
+		if err != config.EmptyError {
+			displayer.DisplayMessage(err.Error(), displayer.Error, false, os.Stderr)
+		}
 		os.Exit(1)
 	}
 }

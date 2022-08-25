@@ -39,7 +39,7 @@ type ClientService interface {
 
 	CreateWorkflow(params *CreateWorkflowParams, opts ...ClientOption) (*CreateWorkflowCreated, error)
 
-	DeleteFile(params *DeleteFileParams, writer io.Writer, opts ...ClientOption) (*DeleteFileOK, error)
+	DeleteFile(params *DeleteFileParams, opts ...ClientOption) (*DeleteFileOK, error)
 
 	DeleteGitlabWebhook(params *DeleteGitlabWebhookParams, opts ...ClientOption) (*DeleteGitlabWebhookNoContent, error)
 
@@ -263,7 +263,7 @@ func (a *Client) CreateWorkflow(params *CreateWorkflowParams, opts ...ClientOpti
 
   This resource is expecting a workflow UUID and a filename existing inside the workspace to be deleted.
 */
-func (a *Client) DeleteFile(params *DeleteFileParams, writer io.Writer, opts ...ClientOption) (*DeleteFileOK, error) {
+func (a *Client) DeleteFile(params *DeleteFileParams, opts ...ClientOption) (*DeleteFileOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewDeleteFileParams()
@@ -276,7 +276,7 @@ func (a *Client) DeleteFile(params *DeleteFileParams, writer io.Writer, opts ...
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
 		Params:             params,
-		Reader:             &DeleteFileReader{formats: a.formats, writer: writer},
+		Reader:             &DeleteFileReader{formats: a.formats},
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}

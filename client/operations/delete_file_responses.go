@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -18,14 +19,13 @@ import (
 // DeleteFileReader is a Reader for the DeleteFile structure.
 type DeleteFileReader struct {
 	formats strfmt.Registry
-	writer  io.Writer
 }
 
 // ReadResponse reads a server response into the received o.
 func (o *DeleteFileReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
 	case 200:
-		result := NewDeleteFileOK(o.writer)
+		result := NewDeleteFileOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -54,29 +54,28 @@ func (o *DeleteFileReader) ReadResponse(response runtime.ClientResponse, consume
 }
 
 // NewDeleteFileOK creates a DeleteFileOK with default headers values
-func NewDeleteFileOK(writer io.Writer) *DeleteFileOK {
-	return &DeleteFileOK{
-
-		Payload: writer,
-	}
+func NewDeleteFileOK() *DeleteFileOK {
+	return &DeleteFileOK{}
 }
 
 /* DeleteFileOK describes a response with status code 200, with default header values.
 
-Requests succeeded. The file has been downloaded.
+Request succeeded. Details about deleted files and failed deletions are returned.
 */
 type DeleteFileOK struct {
-	Payload io.Writer
+	Payload *DeleteFileOKBody
 }
 
 func (o *DeleteFileOK) Error() string {
 	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileOK  %+v", 200, o.Payload)
 }
-func (o *DeleteFileOK) GetPayload() io.Writer {
+func (o *DeleteFileOK) GetPayload() *DeleteFileOKBody {
 	return o.Payload
 }
 
 func (o *DeleteFileOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(DeleteFileOKBody)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -286,6 +285,228 @@ func (o *DeleteFileNotFoundBody) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *DeleteFileNotFoundBody) UnmarshalBinary(b []byte) error {
 	var res DeleteFileNotFoundBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*DeleteFileOKBody delete file o k body
+swagger:model DeleteFileOKBody
+*/
+type DeleteFileOKBody struct {
+
+	// deleted
+	Deleted map[string]DeleteFileOKBodyDeletedAnon `json:"deleted,omitempty"`
+
+	// failed
+	Failed map[string]DeleteFileOKBodyFailedAnon `json:"failed,omitempty"`
+}
+
+// Validate validates this delete file o k body
+func (o *DeleteFileOKBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateDeleted(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateFailed(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *DeleteFileOKBody) validateDeleted(formats strfmt.Registry) error {
+	if swag.IsZero(o.Deleted) { // not required
+		return nil
+	}
+
+	for k := range o.Deleted {
+
+		if swag.IsZero(o.Deleted[k]) { // not required
+			continue
+		}
+		if val, ok := o.Deleted[k]; ok {
+			if err := val.Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("deleteFileOK" + "." + "deleted" + "." + k)
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("deleteFileOK" + "." + "deleted" + "." + k)
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *DeleteFileOKBody) validateFailed(formats strfmt.Registry) error {
+	if swag.IsZero(o.Failed) { // not required
+		return nil
+	}
+
+	for k := range o.Failed {
+
+		if swag.IsZero(o.Failed[k]) { // not required
+			continue
+		}
+		if val, ok := o.Failed[k]; ok {
+			if err := val.Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("deleteFileOK" + "." + "failed" + "." + k)
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("deleteFileOK" + "." + "failed" + "." + k)
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// ContextValidate validate this delete file o k body based on the context it is used
+func (o *DeleteFileOKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateDeleted(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateFailed(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *DeleteFileOKBody) contextValidateDeleted(ctx context.Context, formats strfmt.Registry) error {
+
+	for k := range o.Deleted {
+
+		if val, ok := o.Deleted[k]; ok {
+			if err := val.ContextValidate(ctx, formats); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+func (o *DeleteFileOKBody) contextValidateFailed(ctx context.Context, formats strfmt.Registry) error {
+
+	for k := range o.Failed {
+
+		if val, ok := o.Failed[k]; ok {
+			if err := val.ContextValidate(ctx, formats); err != nil {
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DeleteFileOKBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DeleteFileOKBody) UnmarshalBinary(b []byte) error {
+	var res DeleteFileOKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*DeleteFileOKBodyDeletedAnon delete file o k body deleted anon
+swagger:model DeleteFileOKBodyDeletedAnon
+*/
+type DeleteFileOKBodyDeletedAnon struct {
+
+	// size
+	Size int64 `json:"size,omitempty"`
+}
+
+// Validate validates this delete file o k body deleted anon
+func (o *DeleteFileOKBodyDeletedAnon) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this delete file o k body deleted anon based on context it is used
+func (o *DeleteFileOKBodyDeletedAnon) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DeleteFileOKBodyDeletedAnon) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DeleteFileOKBodyDeletedAnon) UnmarshalBinary(b []byte) error {
+	var res DeleteFileOKBodyDeletedAnon
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*DeleteFileOKBodyFailedAnon delete file o k body failed anon
+swagger:model DeleteFileOKBodyFailedAnon
+*/
+type DeleteFileOKBodyFailedAnon struct {
+
+	// error
+	Error string `json:"error,omitempty"`
+}
+
+// Validate validates this delete file o k body failed anon
+func (o *DeleteFileOKBodyFailedAnon) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this delete file o k body failed anon based on context it is used
+func (o *DeleteFileOKBodyFailedAnon) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DeleteFileOKBodyFailedAnon) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DeleteFileOKBodyFailedAnon) UnmarshalBinary(b []byte) error {
+	var res DeleteFileOKBodyFailedAnon
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

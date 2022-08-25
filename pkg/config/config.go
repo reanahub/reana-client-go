@@ -9,6 +9,8 @@ under the terms of the MIT License; see LICENSE file for more details.
 // Package config gives constants and small functions that specify the REANA client configuration.
 package config
 
+import "errors"
+
 // FilesBlacklist list of files to be ignored.
 var FilesBlacklist = []string{".git/", "/.git/"}
 
@@ -76,3 +78,7 @@ var AvailableOperationalOptions = map[string]map[string]string{
 
 // CheckInterval interval between workflow status check, in seconds.
 var CheckInterval = 5
+
+// EmptyError Error to be used in case we want to return an error that isn't displayed to the user.
+// Useful when the command already prints the errors occurred.
+var EmptyError = errors.New("")

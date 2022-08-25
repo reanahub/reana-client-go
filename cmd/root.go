@@ -62,6 +62,7 @@ func NewRootCmd() *cobra.Command {
 	cmd.AddCommand(newStartCmd())
 	cmd.AddCommand(newSecretsListCmd())
 	cmd.AddCommand(newSecretsDeleteCmd())
+	cmd.AddCommand(newRmCmd())
 
 	return cmd
 }
