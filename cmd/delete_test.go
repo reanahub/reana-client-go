@@ -28,37 +28,49 @@ func TestDelete(t *testing.T) {
 
 	tests := map[string]TestCmdParams{
 		"default": {
-			serverPath:     fmt.Sprintf(deletePathTemplate, workflowName),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(deletePathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", workflowName},
 			expected: []string{
 				"my_workflow has been deleted",
 			},
 		},
 		"include workspace": {
-			serverPath:     fmt.Sprintf(deletePathTemplate, workflowName),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName, "--include-workspace"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(deletePathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", workflowName, "--include-workspace"},
 			expected: []string{
 				"my_workflow has been deleted",
 			},
 		},
 		"include all runs": {
-			serverPath:     fmt.Sprintf(deletePathTemplate, workflowName),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName, "--include-all-runs"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(deletePathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", workflowName, "--include-all-runs"},
 			expected: []string{
 				"All workflows named 'my_workflow' have been deleted",
 			},
 		},
 		"include all runs complete name": {
-			serverPath:     fmt.Sprintf(deletePathTemplate, "my_workflow.10"),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", "my_workflow.10", "--include-all-runs"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(deletePathTemplate, "my_workflow.10"): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", "my_workflow.10", "--include-all-runs"},
 			expected: []string{
 				"All workflows named 'my_workflow' have been deleted",
 			},

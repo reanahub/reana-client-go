@@ -38,14 +38,17 @@ func ExecuteCommand(cmd *cobra.Command, args ...string) (output string, err erro
 }
 
 type TestCmdParams struct {
-	cmd            string
-	serverPath     string
-	serverResponse string
-	statusCode     int
-	args           []string
-	expected       []string
-	unwanted       []string
-	wantError      bool
+	cmd             string
+	serverResponses map[string]ServerResponse
+	args            []string
+	expected        []string
+	unwanted        []string
+	wantError       bool
+}
+
+type ServerResponse struct {
+	statusCode int
+	body       string
 }
 
 func testCmdRun(t *testing.T, p TestCmdParams) {
@@ -53,10 +56,11 @@ func testCmdRun(t *testing.T, p TestCmdParams) {
 		if accessToken := r.URL.Query().Get("access_token"); accessToken != "1234" {
 			t.Errorf("Expected access token '1234', got '%v'", accessToken)
 		}
-		if r.URL.Path == p.serverPath {
+		res, validPath := p.serverResponses[r.URL.Path]
+		if validPath {
 			w.Header().Add("Content-Type", "application/json")
-			w.WriteHeader(p.statusCode)
-			_, err := w.Write([]byte(p.serverResponse))
+			w.WriteHeader(res.statusCode)
+			_, err := w.Write([]byte(res.body))
 			if err != nil {
 				t.Fatalf("Error while writing response body: %v", err)
 			}

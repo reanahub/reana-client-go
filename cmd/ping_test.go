@@ -12,13 +12,16 @@ var pingServerPath = "/api/you"
 
 func TestPing(t *testing.T) {
 	params := TestCmdParams{
-		cmd:        "ping",
-		serverPath: pingServerPath,
-		serverResponse: `{
-				"email": "john.doe@example.org",
-				"reana_server_version": "0.9.0a5"
-			}`,
-		statusCode: http.StatusOK,
+		cmd: "ping",
+		serverResponses: map[string]ServerResponse{
+			pingServerPath: {
+				statusCode: http.StatusOK,
+				body: `{
+					"email": "john.doe@example.org",
+					"reana_server_version": "0.9.0a5"
+				}`,
+			},
+		},
 		expected: []string{
 			"REANA server version: 0.9.0a5",
 			"Authenticated as: <john.doe@example.org>",

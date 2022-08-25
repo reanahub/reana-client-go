@@ -83,8 +83,12 @@ func TestList(t *testing.T) {
 
 	tests := map[string]TestCmdParams{
 		"default": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
 			expected: []string{
 				"NAME", "RUN_NUMBER", "CREATED", "STARTED", "ENDED", "STATUS",
 				"my_workflow", "23", "2022-07-28T12:04:37", "2022-07-28T12:04:52",
@@ -97,9 +101,13 @@ func TestList(t *testing.T) {
 			},
 		},
 		"interactive sessions": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-s"},
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-s"},
 			expected: []string{
 				"NAME", "RUN_NUMBER", "CREATED", "SESSION_TYPE", "SESSION_URI", "SESSION_STATUS",
 				"my_workflow", "23", "2022-07-28T12:04:37", "jupyter", "/session1uri", "created",
@@ -111,9 +119,13 @@ func TestList(t *testing.T) {
 			},
 		},
 		"format columns": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--format", "name,status"},
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"--format", "name,status"},
 			expected: []string{
 				"NAME", "STATUS",
 				"my_workflow", "finished",
@@ -126,9 +138,13 @@ func TestList(t *testing.T) {
 			},
 		},
 		"format with filter": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--format", "name=my_workflow,status"},
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"--format", "name=my_workflow,status"},
 			expected: []string{
 				"NAME", "STATUS",
 				"my_workflow", "finished",
@@ -141,18 +157,26 @@ func TestList(t *testing.T) {
 			},
 		},
 		"invalid format column": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--format", "invalid"},
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"--format", "invalid"},
 			expected: []string{
 				"invalid value for 'format column': 'invalid' is not part of 'name', 'run_number', 'created', 'started', 'ended', 'status'",
 			},
 			wantError: true,
 		},
 		"json": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--json"},
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"--json"},
 			expected: []string{`[
   {
     "created": "2022-08-10T17:14:12",
@@ -174,9 +198,13 @@ func TestList(t *testing.T) {
 `},
 		},
 		"verbose": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-v"},
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-v"},
 			expected: []string{
 				"NAME", "RUN_NUMBER", "CREATED", "STARTED", "ENDED", "STATUS",
 				"ID", "USER", "SIZE", "PROGRESS", "DURATION",
@@ -189,44 +217,64 @@ func TestList(t *testing.T) {
 			},
 		},
 		"raw size": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--include-workspace-size"},
-			expected:       []string{"SIZE", "1024", " -1 "},
-			unwanted:       []string{"1 KiB"},
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--include-workspace-size"},
+			expected: []string{"SIZE", "1024", " -1 "},
+			unwanted: []string{"1 KiB"},
 		},
 		"human readable size": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--include-workspace-size", "-h"},
-			expected:       []string{"SIZE", "1 KiB"},
-			unwanted:       []string{"1024", " -1 "},
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--include-workspace-size", "-h"},
+			expected: []string{"SIZE", "1 KiB"},
+			unwanted: []string{"1024", " -1 "},
 		},
 		"include duration": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--include-duration"},
-			expected:       []string{"DURATION", "498"},
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--include-duration"},
+			expected: []string{"DURATION", "498"},
 			unwanted: []string{
 				"ID", "USER", "SIZE", "PROGRESS", "SESSION_TYPE",
 				"SESSION_URI", "SESSION_STATUS",
 			},
 		},
 		"include progress": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--include-progress"},
-			expected:       []string{"PROGRESS", "2/2", "1/2"},
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--include-progress"},
+			expected: []string{"PROGRESS", "2/2", "1/2"},
 			unwanted: []string{
 				"ID", "USER", "SIZE", "DURATION", "SESSION_TYPE",
 				"SESSION_URI", "SESSION_STATUS",
 			},
 		},
 		"sorted": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--sort", "run_number"},
-			expected:       []string{"STATUS   \n my_workflow "},
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--sort", "run_number"},
+			expected: []string{"STATUS   \n my_workflow "},
 		},
 		"malformed filters": {
 			args: []string{"--filter", "name"},
@@ -236,25 +284,37 @@ func TestList(t *testing.T) {
 			wantError: true,
 		},
 		"unexisting workflow": {
-			serverResponse: `{"message": "REANA_WORKON is set to invalid, but that workflow does not exist."}`,
-			statusCode:     http.StatusNotFound,
-			args:           []string{"-w", "invalid"},
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode: http.StatusNotFound,
+					body:       `{"message": "REANA_WORKON is set to invalid, but that workflow does not exist."}`,
+				},
+			},
+			args: []string{"-w", "invalid"},
 			expected: []string{
 				"REANA_WORKON is set to invalid, but that workflow does not exist.",
 			},
 			wantError: true,
 		},
 		"invalid size": {
-			serverResponse: `{"message": "Field 'size': Must be at least 1."}`,
-			statusCode:     http.StatusBadRequest,
-			args:           []string{"--size", "0"},
-			expected:       []string{"Field 'size': Must be at least 1."},
-			wantError:      true,
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode: http.StatusBadRequest,
+					body:       `{"message": "Field 'size': Must be at least 1."}`,
+				},
+			},
+			args:      []string{"--size", "0"},
+			expected:  []string{"Field 'size': Must be at least 1."},
+			wantError: true,
 		},
 		"invalid sort columns": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--sort", "invalid"},
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"--sort", "invalid"},
 			expected: []string{
 				"Warning: sort operation was aborted, column 'invalid' does not exist",
 				"NAME", "RUN_NUMBER", "CREATED", "STARTED", "ENDED", "STATUS",
@@ -265,7 +325,6 @@ func TestList(t *testing.T) {
 	for name, params := range tests {
 		t.Run(name, func(t *testing.T) {
 			params.cmd = "list"
-			params.serverPath = listServerPath
 			testCmdRun(t, params)
 		})
 	}

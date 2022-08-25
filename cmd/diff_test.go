@@ -52,9 +52,13 @@ func TestDiff(t *testing.T) {
 
 	tests := map[string]TestCmdParams{
 		"all info": {
-			serverResponse: diffResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{workflowA, workflowB},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(diffPathTemplate, workflowA, workflowB): {
+					statusCode: http.StatusOK,
+					body:       diffResponse,
+				},
+			},
+			args: []string{workflowA, workflowB},
 			expected: []string{
 				"Differences in workflow version", "@@ -1 +1 @@", "- v0.1", "+ v0.2",
 				"Differences in workflow inputs", "@@ -1 +2 @@", "- removed input", "+ added input", "+ more input",
@@ -64,9 +68,13 @@ func TestDiff(t *testing.T) {
 			},
 		},
 		"same specification": {
-			serverResponse: sameSpecResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{workflowA, workflowB},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(diffPathTemplate, workflowA, workflowB): {
+					statusCode: http.StatusOK,
+					body:       sameSpecResponse,
+				},
+			},
+			args: []string{workflowA, workflowB},
 			expected: []string{
 				"No differences in REANA specifications",
 				"Differences in workflow workspace", "Only in my_workflow_a: test.yaml",
@@ -77,9 +85,13 @@ func TestDiff(t *testing.T) {
 			},
 		},
 		"no specification info": {
-			serverResponse: noSpecResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{workflowA, workflowB},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(diffPathTemplate, workflowA, workflowB): {
+					statusCode: http.StatusOK,
+					body:       noSpecResponse,
+				},
+			},
+			args: []string{workflowA, workflowB},
 			expected: []string{
 				"Differences in workflow workspace", "Only in my_workflow_a: test.yaml",
 			},
@@ -90,9 +102,13 @@ func TestDiff(t *testing.T) {
 			},
 		},
 		"no workspace info": {
-			serverResponse: noWorkspaceResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{workflowA, workflowB},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(diffPathTemplate, workflowA, workflowB): {
+					statusCode: http.StatusOK,
+					body:       noWorkspaceResponse,
+				},
+			},
+			args: []string{workflowA, workflowB},
 			expected: []string{
 				"No differences in REANA specifications",
 			},
@@ -101,11 +117,15 @@ func TestDiff(t *testing.T) {
 			},
 		},
 		"unexisting workflow": {
-			serverResponse: `{"message": "Workflow my_workflow_a does not exist."}`,
-			statusCode:     http.StatusNotFound,
-			args:           []string{workflowA, workflowB},
-			expected:       []string{"Workflow my_workflow_a does not exist."},
-			wantError:      true,
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(diffPathTemplate, workflowA, workflowB): {
+					statusCode: http.StatusNotFound,
+					body:       `{"message": "Workflow my_workflow_a does not exist."}`,
+				},
+			},
+			args:      []string{workflowA, workflowB},
+			expected:  []string{"Workflow my_workflow_a does not exist."},
+			wantError: true,
 		},
 		"invalid number of arguments": {
 			args:      []string{workflowA},
@@ -117,7 +137,6 @@ func TestDiff(t *testing.T) {
 	for name, params := range tests {
 		t.Run(name, func(t *testing.T) {
 			params.cmd = "diff"
-			params.serverPath = fmt.Sprintf(diffPathTemplate, workflowA, workflowB)
 			testCmdRun(t, params)
 		})
 	}

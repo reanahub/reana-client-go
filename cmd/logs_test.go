@@ -73,10 +73,13 @@ func TestLogs(t *testing.T) {
 
 	tests := map[string]TestCmdParams{
 		"default": {
-			serverPath:     fmt.Sprintf(logsPathTemplate, workflowName),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", workflowName},
 			expected: []string{
 				"Workflow engine logs", "workflow logs",
 				"Engine internal logs", "engine logs",
@@ -88,25 +91,31 @@ func TestLogs(t *testing.T) {
 			},
 		},
 		"without log information": {
-			serverPath: fmt.Sprintf(logsPathTemplate, workflowName),
-			serverResponse: `{
-				"logs": "{}",
-				"user": "user",
-				"workflow_id": "my_workflow_id",
-				"workflow_name": "my_workflow"
-			}`,
-			statusCode: http.StatusOK,
-			args:       []string{"-w", workflowName},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body: `{
+						"logs": "{}",
+						"user": "user",
+						"workflow_id": "my_workflow_id",
+						"workflow_name": "my_workflow"
+					}`,
+				},
+			},
+			args: []string{"-w", workflowName},
 			unwanted: []string{
 				"Workflow engine logs", "Engine internal logs",
 				"Job logs", "Step:", "job1",
 			},
 		},
 		"json": {
-			serverPath:     fmt.Sprintf(logsPathTemplate, workflowName),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName, "--json"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", workflowName, "--json"},
 			expected: []string{
 				"\"workflow_logs\": \"workflow logs\"",
 				"\"job_logs\": {", "\"1\": {",
@@ -116,28 +125,37 @@ func TestLogs(t *testing.T) {
 			},
 		},
 		"with filters": {
-			serverPath:     fmt.Sprintf(logsPathTemplate, workflowName),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName, "--filter", "compute_backend=kubernetes"},
-			expected:       []string{"Step: job1"},
-			unwanted:       []string{"Step: job2"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"-w", workflowName, "--filter", "compute_backend=kubernetes"},
+			expected: []string{"Step: job1"},
+			unwanted: []string{"Step: job2"},
 		},
 		"missing step names": {
-			serverPath:     fmt.Sprintf(logsPathTemplate, workflowName),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName, "--filter", "step=3"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", workflowName, "--filter", "step=3"},
 			expected: []string{
 				"ERROR:", "The logs of step(s) 3 were not found, check for spelling mistakes in the step names",
 			},
 		},
 		"missing fields": {
-			serverPath:     fmt.Sprintf(logsPathTemplate, workflowName),
-			serverResponse: incompleteResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName, "--filter", "compute_backend=kubernetes"},
-			expected:       []string{"Step: 1", "Step 1 emitted no logs."},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body:       incompleteResponse,
+				},
+			},
+			args:     []string{"-w", workflowName, "--filter", "compute_backend=kubernetes"},
+			expected: []string{"Step: 1", "Step 1 emitted no logs."},
 			unwanted: []string{
 				"job1",
 				"Workflow ID:", "workflow_1",
@@ -145,30 +163,35 @@ func TestLogs(t *testing.T) {
 			},
 		},
 		"malformed filters": {
-			serverPath: fmt.Sprintf(logsPathTemplate, workflowName),
-			args:       []string{"-w", workflowName, "--filter", "name"},
+			args: []string{"-w", workflowName, "--filter", "name"},
 			expected: []string{
 				"wrong input format. Please use --filter filter_name=filter_value",
 			},
 			wantError: true,
 		},
 		"unexisting workflow": {
-			serverPath:     fmt.Sprintf(logsPathTemplate, "invalid"),
-			serverResponse: `{"message": "REANA_WORKON is set to invalid, but that workflow does not exist."}`,
-			statusCode:     http.StatusNotFound,
-			args:           []string{"-w", "invalid"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, "invalid"): {
+					statusCode: http.StatusNotFound,
+					body:       `{"message": "REANA_WORKON is set to invalid, but that workflow does not exist."}`,
+				},
+			},
+			args: []string{"-w", "invalid"},
 			expected: []string{
 				"REANA_WORKON is set to invalid, but that workflow does not exist.",
 			},
 			wantError: true,
 		},
 		"invalid page": {
-			serverPath:     fmt.Sprintf(logsPathTemplate, workflowName),
-			serverResponse: `{"message": "Field 'page': Must be at least 1."}`,
-			statusCode:     http.StatusBadRequest,
-			args:           []string{"-w", workflowName, "--page", "0"},
-			expected:       []string{"Field 'page': Must be at least 1."},
-			wantError:      true,
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode: http.StatusBadRequest,
+					body:       `{"message": "Field 'page': Must be at least 1."}`,
+				},
+			},
+			args:      []string{"-w", workflowName, "--page", "0"},
+			expected:  []string{"Field 'page': Must be at least 1."},
+			wantError: true,
 		},
 	}
 

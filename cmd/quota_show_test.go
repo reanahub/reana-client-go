@@ -58,123 +58,191 @@ func TestQuotaShow(t *testing.T) {
 
 	tests := map[string]TestCmdParams{
 		"show resources": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resources"},
-			expected:       []string{"cpu", "disk"},
-			unwanted:       []string{"used", "limit", "usage"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--resources"},
+			expected: []string{"cpu", "disk"},
+			unwanted: []string{"used", "limit", "usage"},
 		},
 		"cpu limit": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "cpu", "--report", "limit"},
-			expected:       []string{"100"},
-			unwanted:       []string{"used", "limit", "usage", "cpu", "disk"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--resource", "cpu", "--report", "limit"},
+			expected: []string{"100"},
+			unwanted: []string{"used", "limit", "usage", "cpu", "disk"},
 		},
 		"cpu usage": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "cpu", "--report", "usage"},
-			expected:       []string{"10"},
-			unwanted:       []string{"used", "limit", "usage", "cpu", "disk", "100"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--resource", "cpu", "--report", "usage"},
+			expected: []string{"10"},
+			unwanted: []string{"used", "limit", "usage", "cpu", "disk", "100"},
 		},
 		"cpu limit human": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "cpu", "--report", "limit", "-h"},
-			expected:       []string{"10m 50s"},
-			unwanted:       []string{"used", "limit", "usage", "cpu", "disk", "100"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--resource", "cpu", "--report", "limit", "-h"},
+			expected: []string{"10m 50s"},
+			unwanted: []string{"used", "limit", "usage", "cpu", "disk", "100"},
 		},
 		"cpu usage human": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "cpu", "--report", "usage", "-h"},
-			expected:       []string{"1m 5s"},
-			unwanted:       []string{"used", "limit", "usage", "cpu", "disk", "10"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--resource", "cpu", "--report", "usage", "-h"},
+			expected: []string{"1m 5s"},
+			unwanted: []string{"used", "limit", "usage", "cpu", "disk", "10"},
 		},
 		"cpu all reports": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "cpu"},
-			expected:       []string{"10 out of 100 used (10%)"},
-			unwanted:       []string{"limit", "usage", "cpu", "disk"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--resource", "cpu"},
+			expected: []string{"10 out of 100 used (10%)"},
+			unwanted: []string{"limit", "usage", "cpu", "disk"},
 		},
 		"cpu limit no info": {
-			serverResponse: noInfoResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "cpu", "--report", "limit"},
-			expected:       []string{"No limit"},
-			unwanted:       []string{"used", "usage", "cpu", "disk"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       noInfoResponse,
+				},
+			},
+			args:     []string{"--resource", "cpu", "--report", "limit"},
+			expected: []string{"No limit"},
+			unwanted: []string{"used", "usage", "cpu", "disk"},
 		},
 		"cpu usage no info": {
-			serverResponse: noInfoResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "cpu", "--report", "usage"},
-			expected:       []string{"No usage"},
-			unwanted:       []string{"used", "limit", "cpu", "disk"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       noInfoResponse,
+				},
+			},
+			args:     []string{"--resource", "cpu", "--report", "usage"},
+			expected: []string{"No usage"},
+			unwanted: []string{"used", "limit", "cpu", "disk"},
 		},
 		"cpu all reports no info": {
-			serverResponse: noInfoResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "cpu"},
-			expected:       []string{"0 used"},
-			unwanted:       []string{"limit", "usage", "cpu", "disk", "out of", "%"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       noInfoResponse,
+				},
+			},
+			args:     []string{"--resource", "cpu"},
+			expected: []string{"0 used"},
+			unwanted: []string{"limit", "usage", "cpu", "disk", "out of", "%"},
 		},
 		"disk limit": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "disk", "--report", "limit"},
-			expected:       []string{"200"},
-			unwanted:       []string{"used", "limit", "usage", "cpu", "disk"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--resource", "disk", "--report", "limit"},
+			expected: []string{"200"},
+			unwanted: []string{"used", "limit", "usage", "cpu", "disk"},
 		},
 		"disk usage": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "disk", "--report", "usage"},
-			expected:       []string{"20"},
-			unwanted:       []string{"used", "limit", "usage", "cpu", "disk", "200"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--resource", "disk", "--report", "usage"},
+			expected: []string{"20"},
+			unwanted: []string{"used", "limit", "usage", "cpu", "disk", "200"},
 		},
 		"disk limit human": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "disk", "--report", "limit", "-h"},
-			expected:       []string{"20 MiB"},
-			unwanted:       []string{"used", "limit", "usage", "cpu", "disk", "200"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--resource", "disk", "--report", "limit", "-h"},
+			expected: []string{"20 MiB"},
+			unwanted: []string{"used", "limit", "usage", "cpu", "disk", "200"},
 		},
 		"disk usage human": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "disk", "--report", "usage", "-h"},
-			expected:       []string{"2 MiB"},
-			unwanted:       []string{"used", "limit", "usage", "cpu", "disk", "20"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--resource", "disk", "--report", "usage", "-h"},
+			expected: []string{"2 MiB"},
+			unwanted: []string{"used", "limit", "usage", "cpu", "disk", "20"},
 		},
 		"disk all reports": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "disk"},
-			expected:       []string{"20 out of 200 used (10%)"},
-			unwanted:       []string{"limit", "usage", "cpu", "disk"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args:     []string{"--resource", "disk"},
+			expected: []string{"20 out of 200 used (10%)"},
+			unwanted: []string{"limit", "usage", "cpu", "disk"},
 		},
 		"disk limit no info": {
-			serverResponse: noInfoResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "disk", "--report", "limit"},
-			expected:       []string{"No limit"},
-			unwanted:       []string{"used", "usage", "cpu", "disk"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       noInfoResponse,
+				},
+			},
+			args:     []string{"--resource", "disk", "--report", "limit"},
+			expected: []string{"No limit"},
+			unwanted: []string{"used", "usage", "cpu", "disk"},
 		},
 		"disk usage no info": {
-			serverResponse: noInfoResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "disk", "--report", "usage"},
-			expected:       []string{"No usage"},
-			unwanted:       []string{"used", "limit", "cpu", "disk"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       noInfoResponse,
+				},
+			},
+			args:     []string{"--resource", "disk", "--report", "usage"},
+			expected: []string{"No usage"},
+			unwanted: []string{"used", "limit", "cpu", "disk"},
 		},
 		"disk all reports no info": {
-			serverResponse: noInfoResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "disk"},
-			expected:       []string{"0 used"},
-			unwanted:       []string{"limit", "usage", "cpu", "disk", "out of", "%"},
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       noInfoResponse,
+				},
+			},
+			args:     []string{"--resource", "disk"},
+			expected: []string{"0 used"},
+			unwanted: []string{"limit", "usage", "cpu", "disk", "out of", "%"},
 		},
 		"no resources specified": {
 			args: []string{}, wantError: true,
@@ -191,10 +259,14 @@ func TestQuotaShow(t *testing.T) {
 			)},
 		},
 		"invalid resource": {
-			serverResponse: noInfoResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--resource", "invalid"},
-			wantError:      true,
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode: http.StatusOK,
+					body:       noInfoResponse,
+				},
+			},
+			args:      []string{"--resource", "invalid"},
+			wantError: true,
 			expected: []string{
 				"resource 'invalid' is not valid\nAvailable resources are",
 				"cpu",
@@ -206,7 +278,6 @@ func TestQuotaShow(t *testing.T) {
 	for name, params := range tests {
 		t.Run(name, func(t *testing.T) {
 			params.cmd = "quota-show"
-			params.serverPath = quotaShowServerPath
 			testCmdRun(t, params)
 		})
 	}

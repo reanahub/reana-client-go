@@ -69,8 +69,12 @@ func TestInfo(t *testing.T) {
 
 	tests := map[string]TestCmdParams{
 		"default": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
+			serverResponses: map[string]ServerResponse{
+				infoServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
 			expected: []string{
 				"List of supported compute backends: kubernetes, slurmcern",
 				"Default timeout for Kubernetes jobs: 124",
@@ -83,9 +87,13 @@ func TestInfo(t *testing.T) {
 			},
 		},
 		"json": {
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"--json"},
+			serverResponses: map[string]ServerResponse{
+				infoServerPath: {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"--json"},
 			expected: []string{
 				"\"compute_backends\": {", "\"value\": [", "\"kubernetes\",",
 				"\"workspaces_available\": {", "\"/var/reana\",", "\"/var/cern\"",
@@ -93,8 +101,12 @@ func TestInfo(t *testing.T) {
 			},
 		},
 		"missing fields": {
-			serverResponse: minimalResponse,
-			statusCode:     http.StatusOK,
+			serverResponses: map[string]ServerResponse{
+				infoServerPath: {
+					statusCode: http.StatusOK,
+					body:       minimalResponse,
+				},
+			},
 			expected: []string{
 				"Maximum allowed memory limit for Kubernetes jobs: None",
 				"Maximum retention period in days for workspace files: None",
@@ -108,7 +120,6 @@ func TestInfo(t *testing.T) {
 	for name, params := range tests {
 		t.Run(name, func(t *testing.T) {
 			params.cmd = "info"
-			params.serverPath = infoServerPath
 			testCmdRun(t, params)
 		})
 	}

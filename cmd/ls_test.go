@@ -43,10 +43,13 @@ func TestLs(t *testing.T) {
 }`
 	tests := map[string]TestCmdParams{
 		"default": {
-			serverPath:     fmt.Sprintf(lsPathTemplate, workflowName),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(lsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", workflowName},
 			expected: []string{
 				"NAME", "SIZE", "LAST-MODIFIED",
 				"code/gendata.C", "1937", "2022-07-11T12:50:33",
@@ -54,10 +57,13 @@ func TestLs(t *testing.T) {
 			},
 		},
 		"human readable": {
-			serverPath:     fmt.Sprintf(lsPathTemplate, workflowName),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName, "-h"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(lsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", workflowName, "-h"},
 			expected: []string{
 				"NAME", "SIZE", "LAST-MODIFIED",
 				"code/gendata.C", "1.89 KiB", "2022-07-11T12:50:33",
@@ -65,30 +71,33 @@ func TestLs(t *testing.T) {
 			},
 		},
 		"files in black list": {
-			serverPath: fmt.Sprintf(lsPathTemplate, workflowName),
-			serverResponse: `{
-				"items": [
-					{
-						"last-modified": "2022-07-11T12:50:33",
-						"name": ".git/test.C",
-						"size": {
-							"human_readable": "1.89 KiB",
-							"raw": 1937
-						}
-					},
-					{
-						"last-modified": "2022-07-11T13:30:17",
-						"name": "results/data.root",
-						"size": {
-							"human_readable": "150.83 KiB",
-							"raw": 154455
-						}
-					}
-				],
-				"total": 4
-			}`,
-			statusCode: http.StatusOK,
-			args:       []string{"-w", workflowName},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(lsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body: `{
+						"items": [
+							{
+								"last-modified": "2022-07-11T12:50:33",
+								"name": ".git/test.C",
+								"size": {
+									"human_readable": "1.89 KiB",
+									"raw": 1937
+								}
+							},
+							{
+								"last-modified": "2022-07-11T13:30:17",
+								"name": "results/data.root",
+								"size": {
+									"human_readable": "150.83 KiB",
+									"raw": 154455
+								}
+							}
+						],
+						"total": 4
+					}`,
+				},
+			},
+			args: []string{"-w", workflowName},
 			expected: []string{
 				"NAME", "SIZE", "LAST-MODIFIED",
 				"results/data.root", "154455", "2022-07-11T13:30:17",
@@ -98,10 +107,13 @@ func TestLs(t *testing.T) {
 			},
 		},
 		"format columns": {
-			serverPath:     fmt.Sprintf(lsPathTemplate, workflowName),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName, "--format", "name,last-modified"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(lsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", workflowName, "--format", "name,last-modified"},
 			expected: []string{
 				"NAME", "LAST-MODIFIED",
 				"code/gendata.C", "2022-07-11T12:50:33",
@@ -112,10 +124,13 @@ func TestLs(t *testing.T) {
 			},
 		},
 		"format with filters": {
-			serverPath:     fmt.Sprintf(lsPathTemplate, workflowName),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName, "--format", "name=code/gendata.C"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(lsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", workflowName, "--format", "name=code/gendata.C"},
 			expected: []string{
 				"NAME", "code/gendata.C",
 			},
@@ -126,20 +141,26 @@ func TestLs(t *testing.T) {
 			},
 		},
 		"invalid format column": {
-			serverPath:     fmt.Sprintf(lsPathTemplate, workflowName),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName, "--format", "invalid"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(lsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", workflowName, "--format", "invalid"},
 			expected: []string{
 				"invalid value for 'format column': 'invalid' is not part of 'name', 'size', 'last-modified'",
 			},
 			wantError: true,
 		},
 		"json": {
-			serverPath:     fmt.Sprintf(lsPathTemplate, workflowName),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName, "--json"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(lsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", workflowName, "--json"},
 			expected: []string{`[
   {
     "last-modified": "2022-07-11T12:50:33",
@@ -154,84 +175,98 @@ func TestLs(t *testing.T) {
 ]`},
 		},
 		"display URLs": {
-			serverPath:     fmt.Sprintf(lsPathTemplate, workflowName),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName, "--url"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(lsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", workflowName, "--url"},
 			expected: []string{
 				fmt.Sprintf("/api/workflows/%s/workspace/code/gendata.C", workflowName),
 				fmt.Sprintf("/api/workflows/%s/workspace/results/data.root", workflowName),
 			},
 		},
 		"with filters": {
-			serverPath: fmt.Sprintf(lsPathTemplate, workflowName),
-			serverResponse: `{
-				"items": [
-					{
-						"last-modified": "2022-07-11T12:50:33",
-						"name": "code/gendata.C",
-						"size": {
-							"human_readable": "1.89 KiB",
-							"raw": 1937
-						}
-					}
-				],
-				"total": 4
-			}`,
-			statusCode: http.StatusOK,
-			args:       []string{"-w", workflowName, "--filter", "name=code/gendata.C"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(lsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body: `{
+						"items": [
+							{
+								"last-modified": "2022-07-11T12:50:33",
+								"name": "code/gendata.C",
+								"size": {
+									"human_readable": "1.89 KiB",
+									"raw": 1937
+								}
+							}
+						],
+						"total": 4
+					}`,
+				},
+			},
+			args: []string{"-w", workflowName, "--filter", "name=code/gendata.C"},
 			expected: []string{
 				"NAME", "SIZE", "LAST-MODIFIED",
 				"code/gendata.C", "1937", "2022-07-11T12:50:33",
 			},
 		},
 		"filename arg": {
-			serverPath: fmt.Sprintf(lsPathTemplate, workflowName),
-			serverResponse: `{
-				"items": [
-					{
-						"last-modified": "2022-07-11T12:50:33",
-						"name": "code/gendata.C",
-						"size": {
-							"human_readable": "1.89 KiB",
-							"raw": 1937
-						}
-					}
-				],
-				"total": 4
-			}`,
-			statusCode: http.StatusOK,
-			args:       []string{"-w", workflowName, "code/gendata.C"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(lsPathTemplate, workflowName): {
+					statusCode: http.StatusOK,
+					body: `{
+						"items": [
+							{
+								"last-modified": "2022-07-11T12:50:33",
+								"name": "code/gendata.C",
+								"size": {
+									"human_readable": "1.89 KiB",
+									"raw": 1937
+								}
+							}
+						],
+						"total": 4
+					}`,
+				},
+			},
+			args: []string{"-w", workflowName, "code/gendata.C"},
 			expected: []string{
 				"NAME", "SIZE", "LAST-MODIFIED",
 				"code/gendata.C", "1937", "2022-07-11T12:50:33",
 			},
 		},
 		"malformed filters": {
-			serverPath: fmt.Sprintf(lsPathTemplate, workflowName),
-			args:       []string{"-w", workflowName, "--filter", "name"},
+			args: []string{"-w", workflowName, "--filter", "name"},
 			expected: []string{
 				"wrong input format. Please use --filter filter_name=filter_value",
 			},
 			wantError: true,
 		},
 		"unexisting workflow": {
-			serverPath:     fmt.Sprintf(lsPathTemplate, "invalid"),
-			serverResponse: `{"message": "REANA_WORKON is set to invalid, but that workflow does not exist."}`,
-			statusCode:     http.StatusNotFound,
-			args:           []string{"-w", "invalid"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(lsPathTemplate, "invalid"): {
+					statusCode: http.StatusNotFound,
+					body:       `{"message": "REANA_WORKON is set to invalid, but that workflow does not exist."}`,
+				},
+			},
+			args: []string{"-w", "invalid"},
 			expected: []string{
 				"REANA_WORKON is set to invalid, but that workflow does not exist.",
 			},
 			wantError: true,
 		},
 		"invalid size": {
-			serverPath:     fmt.Sprintf(lsPathTemplate, workflowName),
-			serverResponse: `{"message": "Field 'size': Must be at least 1."}`,
-			statusCode:     http.StatusBadRequest,
-			args:           []string{"-w", workflowName, "--size", "0"},
-			expected:       []string{"Field 'size': Must be at least 1."},
-			wantError:      true,
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(lsPathTemplate, workflowName): {
+					statusCode: http.StatusBadRequest,
+					body:       `{"message": "Field 'size': Must be at least 1."}`,
+				},
+			},
+			args:      []string{"-w", workflowName, "--size", "0"},
+			expected:  []string{"Field 'size': Must be at least 1."},
+			wantError: true,
 		},
 	}
 

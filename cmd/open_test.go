@@ -23,14 +23,13 @@ func TestOpen(t *testing.T) {
 	workflowName := "my_workflow"
 	tests := map[string]TestCmdParams{
 		"success default": {
-			serverPath: fmt.Sprintf(
-				openPathTemplate,
-				workflowName,
-				config.InteractiveSessionTypes[0],
-			),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(openPathTemplate, workflowName, config.InteractiveSessionTypes[0]): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", workflowName},
 			expected: []string{
 				"Interactive session opened successfully",
 				"/test/jupyter?token=1234",
@@ -38,10 +37,13 @@ func TestOpen(t *testing.T) {
 			},
 		},
 		"success extra args": {
-			serverPath:     fmt.Sprintf(openPathTemplate, workflowName, "jupyter"),
-			serverResponse: successResponse,
-			statusCode:     http.StatusOK,
-			args:           []string{"-w", workflowName, "-i", "image", "jupyter"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(openPathTemplate, workflowName, "jupyter"): {
+					statusCode: http.StatusOK,
+					body:       successResponse,
+				},
+			},
+			args: []string{"-w", workflowName, "-i", "image", "jupyter"},
 			expected: []string{
 				"Interactive session opened successfully",
 				"/test/jupyter?token=1234",
@@ -49,9 +51,12 @@ func TestOpen(t *testing.T) {
 			},
 		},
 		"invalid session type": {
-			serverPath: fmt.Sprintf(openPathTemplate, workflowName, "invalid"),
-			statusCode: http.StatusBadRequest,
-			args:       []string{"-w", workflowName, "invalid"},
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(openPathTemplate, workflowName, "invalid"): {
+					statusCode: http.StatusBadRequest,
+				},
+			},
+			args: []string{"-w", workflowName, "invalid"},
 			expected: []string{
 				fmt.Sprintf(
 					"invalid value for 'interactive-session-type': 'invalid' is not part of '%s'",
@@ -61,12 +66,15 @@ func TestOpen(t *testing.T) {
 			wantError: true,
 		},
 		"workflow already open": {
-			serverPath:     fmt.Sprintf(openPathTemplate, workflowName, "jupyter"),
-			serverResponse: `{"message": "Interactive session is already open"}`,
-			statusCode:     http.StatusNotFound,
-			args:           []string{"-w", workflowName},
-			expected:       []string{"Interactive session is already open"},
-			wantError:      true,
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(openPathTemplate, workflowName, "jupyter"): {
+					statusCode: http.StatusNotFound,
+					body:       `{"message": "Interactive session is already open"}`,
+				},
+			},
+			args:      []string{"-w", workflowName},
+			expected:  []string{"Interactive session is already open"},
+			wantError: true,
 		},
 	}
 
