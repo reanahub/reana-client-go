@@ -90,7 +90,7 @@ func testCmdRun(t *testing.T, p TestCmdParams) {
 		if !p.wantError && !strings.Contains(output, test) {
 			t.Errorf("Expected '%s' in output, instead got '%s'", test, output)
 		}
-		if p.wantError && !strings.Contains(err.Error(), test) {
+		if p.wantError && !strings.Contains(err.Error(), test) && !strings.Contains(output, test) {
 			t.Errorf("Expected '%s' in error output, instead got '%s'", test, err.Error())
 		}
 	}
@@ -99,7 +99,8 @@ func testCmdRun(t *testing.T, p TestCmdParams) {
 		if !p.wantError && strings.Contains(output, forbidden) {
 			t.Errorf("Expected '%s' not to be in output, instead got '%s'", forbidden, output)
 		}
-		if p.wantError && strings.Contains(err.Error(), forbidden) {
+		if p.wantError && (strings.Contains(err.Error(), forbidden) ||
+			strings.Contains(output, forbidden)) {
 			t.Errorf(
 				"Expected '%s' not to be in error output, instead got '%s'",
 				forbidden,
