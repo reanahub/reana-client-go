@@ -17,6 +17,7 @@ package validator
 import (
 	"errors"
 	"fmt"
+	"os"
 	"reanahub/reana-client-go/pkg/config"
 	"strings"
 
@@ -124,4 +125,32 @@ func ValidateOperationalOptions(
 		validatedOptions[translation] = value
 	}
 	return validatedOptions, nil
+}
+
+// ValidateFile verifies if the file in the given path exists, is readable and if it isn't a directory.
+func ValidateFile(path string) error {
+	file, err := os.Open(path)
+	if os.IsNotExist(err) {
+		return fmt.Errorf("file '%s' does not exist", path)
+	}
+	if os.IsPermission(err) {
+		return fmt.Errorf("file '%s' is not readable", path)
+	}
+	if err != nil {
+		return err
+	}
+
+	fileInfo, err := file.Stat()
+	if err != nil {
+		return err
+	}
+	if fileInfo.IsDir() {
+		return fmt.Errorf("file '%s' is a directory", path)
+	}
+
+	err = file.Close()
+	if err != nil {
+		return err
+	}
+	return nil
 }

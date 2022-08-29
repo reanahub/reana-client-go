@@ -10,6 +10,7 @@ under the terms of the MIT License; see LICENSE file for more details.
 package datautils
 
 import (
+	"errors"
 	"strings"
 	"time"
 )
@@ -45,6 +46,18 @@ func SplitLinesNoEmpty(str string) []string {
 		splitFn,
 	)
 	return lines
+}
+
+// SplitKeyValue parses a string in the format 'key=value' and returns them.
+func SplitKeyValue(str string) (string, string, error) {
+	if !strings.Contains(str, "=") {
+		return "", "", errors.New(
+			"wrong input format. Please use key=value",
+		)
+	}
+
+	keyAndValue := strings.SplitN(str, "=", 2)
+	return keyAndValue[0], keyAndValue[1], nil
 }
 
 // RemoveFromSlice removed the given elem from the slice.

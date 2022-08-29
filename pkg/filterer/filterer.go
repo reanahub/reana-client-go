@@ -13,6 +13,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"reanahub/reana-client-go/pkg/datautils"
 	"strings"
 
 	"golang.org/x/exp/slices"
@@ -173,14 +174,12 @@ func (f Filters) ValidateValues(key string, possibleValues []string) error {
 
 // getKeyAndValue parses a filter in the format 'filter=value' and returns them.
 func (f Filters) getKeyAndValue(filter string) (string, string, error) {
-	if !strings.Contains(filter, "=") {
+	filterName, filterValue, err := datautils.SplitKeyValue(filter)
+	if err != nil {
 		return "", "", errors.New(
 			"wrong input format. Please use --filter filter_name=filter_value",
 		)
 	}
-
-	filterNameAndValue := strings.SplitN(filter, "=", 2)
-	filterName := strings.ToLower(filterNameAndValue[0])
-	filterValue := filterNameAndValue[1]
+	filterName = strings.ToLower(filterName)
 	return filterName, filterValue, nil
 }

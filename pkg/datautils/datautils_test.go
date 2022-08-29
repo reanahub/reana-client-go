@@ -108,6 +108,36 @@ func TestSplitLinesNoEmpty(t *testing.T) {
 	}
 }
 
+func TestSplitKeyValue(t *testing.T) {
+	tests := map[string]struct {
+		str       string
+		key       string
+		value     string
+		wantError bool
+	}{
+		"regular filter":      {str: "key=value", key: "key", value: "value"},
+		"missing value":       {str: "key=", key: "key", value: ""},
+		"missing key":         {str: "=value", key: "", value: "value"},
+		"value including '='": {str: "key=value=value", key: "key", value: "value=value"},
+		"invalid input":       {str: "invalid", wantError: true},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			key, value, err := SplitKeyValue(test.str)
+			if test.wantError {
+				if err == nil {
+					t.Errorf("Expected error for SplitKeyValue(%s), got nil", test.str)
+				}
+			} else if err != nil {
+				t.Errorf("Unexpected error for SplitKeyValue(%s): '%s'", test.str, err.Error())
+			} else if key != test.key || value != test.value {
+				t.Errorf("Expected result to be %s,%s, got %s,%s", test.key, test.value, key, value)
+			}
+		})
+	}
+}
+
 func TestRemoveFromSlice(t *testing.T) {
 	tests := map[string]struct {
 		slice []string
