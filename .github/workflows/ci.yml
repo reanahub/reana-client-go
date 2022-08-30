@@ -19,8 +19,11 @@ jobs:
               with:
                   go-version: '>=1.18.X'
 
-            - name: Run test suit
+            - name: Run test suite
               run: make test
+
+            - name: Codecov Coverage
+              uses: codecov/codecov-action@v3
 
     go-lint:
         runs-on: ubuntu-20.04

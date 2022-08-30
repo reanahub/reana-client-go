@@ -5,6 +5,9 @@ REANA-Client-Go
 .. image:: https://github.com/reanahub/reana-client-go/workflows/CI/badge.svg
    :target: https://github.com/reanahub/reana-client-go/actions
 
+.. image:: https://codecov.io/gh/reanahub/reana-client-go/branch/master/graph/badge.svg
+   :target: https://codecov.io/gh/reanahub/reana-client-go
+
 .. image:: https://badges.gitter.im/Join%20Chat.svg
    :target: https://gitter.im/reanahub/reana?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge
 
