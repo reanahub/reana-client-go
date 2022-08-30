@@ -9,6 +9,8 @@ under the terms of the MIT License; see LICENSE file for more details.
 package validator
 
 import (
+	"fmt"
+	"os"
 	"reflect"
 	"testing"
 
@@ -89,8 +91,12 @@ func TestValidateAtLeastOne(t *testing.T) {
 			}
 
 			got := ValidateAtLeastOne(&f, test.options)
-			if test.wantError && got == nil {
-				t.Errorf("Expected error: %s, got nil", test.expected)
+			if test.wantError {
+				if got == nil {
+					t.Errorf("Expected error: %s, got nil", test.expected)
+				} else if got.Error() != test.expected {
+					t.Errorf("Expected error: %s, got %s", test.expected, got.Error())
+				}
 			}
 			if !test.wantError && got != nil {
 				t.Errorf("Unexpected error: %s", got.Error())
@@ -211,6 +217,60 @@ func TestValidateOperationalOptions(t *testing.T) {
 				} else if !reflect.DeepEqual(got, test.expected) {
 					t.Errorf("Expected %v, got %v", test.expected, got)
 				}
+			}
+		})
+	}
+}
+
+func TestValidateFile(t *testing.T) {
+	tempDir := t.TempDir()
+	emptyFile := tempDir + "/empty.txt"
+	notReadableFile := tempDir + "/noperms.txt"
+	_, err := os.Create(emptyFile)
+	if err != nil {
+		t.Fatalf("Error while creating empty file: %s", err.Error())
+	}
+	err = os.WriteFile(notReadableFile, []byte{}, 0222)
+	if err != nil {
+		t.Fatalf("Error while creating noperms file: %s", err.Error())
+	}
+
+	tests := map[string]struct {
+		path      string
+		wantError bool
+		expected  string
+	}{
+		"existing file": {
+			path: emptyFile,
+		},
+		"unexisting file": {
+			path:      "this_doesnt_exist.txt",
+			wantError: true,
+			expected:  "file 'this_doesnt_exist.txt' does not exist",
+		},
+		"directory": {
+			path:      tempDir,
+			wantError: true,
+			expected:  fmt.Sprintf("file '%s' is a directory", tempDir),
+		},
+		"not readable": {
+			path:      notReadableFile,
+			wantError: true,
+			expected:  fmt.Sprintf("file '%s' is not readable", notReadableFile),
+		},
+	}
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := ValidateFile(test.path)
+			if test.wantError {
+				if got == nil {
+					t.Errorf("Expected error: %s, got nil", test.expected)
+				} else if got.Error() != test.expected {
+					t.Errorf("Expected error: %s, got %s", test.expected, got.Error())
+				}
+			}
+			if !test.wantError && got != nil {
+				t.Errorf("Unexpected error: %s", got.Error())
 			}
 		})
 	}

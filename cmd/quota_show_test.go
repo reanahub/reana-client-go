@@ -246,10 +246,10 @@ func TestQuotaShow(t *testing.T) {
 		},
 		"no resources specified": {
 			args: []string{}, wantError: true,
-			expected: []string{fmt.Sprintf(
-				"at least one of the options: '%s' is required",
-				strings.Join([]string{"resource", "resources"}, "', '"),
-			)},
+			expected: []string{
+				"at least one of the options: 'resource', 'resources' is required",
+				"Usage",
+			},
 		},
 		"invalid report value": {
 			args: []string{"--resource", "cpu", "--report", "invalid"}, wantError: true,
