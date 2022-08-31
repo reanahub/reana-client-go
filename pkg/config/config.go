@@ -11,6 +11,9 @@ package config
 
 import "errors"
 
+// Version of the client.
+var Version = "v0.0.0-alpha.1"
+
 // FilesBlacklist list of files to be ignored.
 var FilesBlacklist = []string{".git/", "/.git/"}
 

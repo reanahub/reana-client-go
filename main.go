@@ -15,7 +15,7 @@ package main
 
 import (
 	"os"
-	"reanahub/reana-client-go/cmd"
+	"reanahub/reana-client-go/cmd/root"
 	"reanahub/reana-client-go/pkg/config"
 	"reanahub/reana-client-go/pkg/displayer"
 	"reanahub/reana-client-go/pkg/errorhandler"
@@ -24,7 +24,7 @@ import (
 )
 
 func main() {
-	rootCmd := cmd.NewRootCmd()
+	rootCmd := root.NewCmd()
 	err := rootCmd.Execute()
 
 	if err != nil {
