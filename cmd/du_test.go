@@ -18,33 +18,12 @@ var duPathTemplate = "/api/workflows/%s/disk_usage"
 
 func TestDu(t *testing.T) {
 	workflowName := "my_workflow"
-	successResponse := `{
-		"disk_usage_info": [
-			{
-				"name": "/code/fitdata.C",
-				"size": {
-					"human_readable": "2 KiB",
-					"raw": 2048
-				}
-			},
-			{
-				"name": "/code/gendata.C",
-				"size": {
-					"human_readable": "4.5 KiB",
-					"raw": 4608
-				}
-			}
-		],
-		"user": "user",
-		"workflow_id": "my_workflow_id",
-		"workflow_name": "my_workflow"
-	}`
 	tests := map[string]TestCmdParams{
 		"default": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(duPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "du.json",
 				},
 			},
 			args: []string{"-w", workflowName},
@@ -57,20 +36,8 @@ func TestDu(t *testing.T) {
 		"summarize": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(duPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body: `{
-						"disk_usage_info": [
-							{
-								"size": {
-									"human_readable": "10 KiB",
-									"raw": 10240
-								}
-							}
-						],
-						"user": "user",
-						"workflow_id": "my_workflow_id",
-						"workflow_name": "my_workflow"
-					}`,
+					statusCode:   http.StatusOK,
+					responseFile: "du_summarize.json",
 				},
 			},
 			args: []string{"-w", workflowName, "-s"},
@@ -82,8 +49,8 @@ func TestDu(t *testing.T) {
 		"human readable": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(duPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "du.json",
 				},
 			},
 			args: []string{"-w", workflowName, "-h"},
@@ -96,28 +63,8 @@ func TestDu(t *testing.T) {
 		"files in black list": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(duPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body: `{
-						"disk_usage_info": [
-							{
-								"name": ".git/test.C",
-								"size": {
-									"human_readable": "2 KiB",
-									"raw": 2048
-								}
-							},
-							{
-								"name": "/code/gendata.C",
-								"size": {
-									"human_readable": "4.5 KiB",
-									"raw": 4608
-								}
-							}
-						],
-						"user": "user",
-						"workflow_id": "my_workflow_id",
-						"workflow_name": "my_workflow"
-					}`,
+					statusCode:   http.StatusOK,
+					responseFile: "du_blacklist.json",
 				},
 			},
 			args: []string{"-w", workflowName},
@@ -132,21 +79,8 @@ func TestDu(t *testing.T) {
 		"with filters": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(duPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body: `{
-						"disk_usage_info": [
-							{
-								"name": "/code/gendata.C",
-								"size": {
-									"human_readable": "4.5 KiB",
-									"raw": 2048
-								}
-							}
-						],
-						"user": "user",
-						"workflow_id": "my_workflow_id",
-						"workflow_name": "my_workflow"
-					}`,
+					statusCode:   http.StatusOK,
+					responseFile: "du_filters.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--filter", "name=./code/gendata.C,size=2048"},
@@ -165,13 +99,8 @@ func TestDu(t *testing.T) {
 		"no matching files:": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(duPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body: `{
-						"disk_usage_info": [],
-						"user": "user",
-						"workflow_id": "my_workflow_id",
-						"workflow_name": "my_workflow"
-					}`,
+					statusCode:   http.StatusOK,
+					responseFile: "du_no_files.json",
 				},
 			},
 			args:      []string{"-w", workflowName, "--filter", "name=nothing.C"},
@@ -181,13 +110,13 @@ func TestDu(t *testing.T) {
 		"unexisting workflow": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(duPathTemplate, "invalid"): {
-					statusCode: http.StatusNotFound,
-					body:       `{"message": "REANA_WORKON is set to invalid, but that workflow does not exist."}`,
+					statusCode:   http.StatusNotFound,
+					responseFile: "invalid_workflow.json",
 				},
 			},
 			args: []string{"-w", "invalid"},
 			expected: []string{
-				"REANA_WORKON is set to invalid, but that workflow does not exist.",
+				"REANA_WORKON is set to invalid, but that workflow does not exist",
 			},
 			wantError: true,
 		},

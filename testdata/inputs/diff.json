@@ -1,0 +1,4 @@
+{
+  "reana_specification": "{\"version\": [\"@@ -1 +1 @@\", \"- v0.1\", \"+ v0.2\"],\"inputs\": [\"@@ -1 +2 @@\", \"- removed input\", \"+ added input\", \"+ more input\"],\"outputs\": [\"@@ -2 +1 @@\", \"- removed output\", \"- more output\", \"+ added output\"],\"workflow\": [\"@@ +1 @@\", \"+ added specs\"]}",
+  "workspace_listing": "\"Only in my_workflow_a: test.yaml\""
+}

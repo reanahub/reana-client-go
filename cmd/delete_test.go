@@ -17,21 +17,14 @@ import (
 var deletePathTemplate = "/api/workflows/%s/status"
 
 func TestDelete(t *testing.T) {
-	successResponse := `{
-		"message": "Workflow successfully deleted",
-		"status": "deleted",
-		"user": "user",
-		"workflow_id": "my_workflow_id",
-		"workflow_name": "my_workflow"
-	}`
 	workflowName := "my_workflow"
 
 	tests := map[string]TestCmdParams{
 		"default": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(deletePathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "delete.json",
 				},
 			},
 			args: []string{"-w", workflowName},
@@ -42,8 +35,8 @@ func TestDelete(t *testing.T) {
 		"include workspace": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(deletePathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "delete.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--include-workspace"},
@@ -54,8 +47,8 @@ func TestDelete(t *testing.T) {
 		"include all runs": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(deletePathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "delete.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--include-all-runs"},
@@ -66,8 +59,8 @@ func TestDelete(t *testing.T) {
 		"include all runs complete name": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(deletePathTemplate, "my_workflow.10"): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "delete.json",
 				},
 			},
 			args: []string{"-w", "my_workflow.10", "--include-all-runs"},

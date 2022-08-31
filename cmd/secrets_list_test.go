@@ -16,23 +16,12 @@ import (
 var secretsListServerPath = "/api/secrets"
 
 func TestSecretsList(t *testing.T) {
-	successResponse := `[
-		{
-			"name": "secret1",
-			"type": "env"
-		},
-		{
-			"name": "secret2",
-			"type": "file"
-		}
-	]`
-
 	tests := map[string]TestCmdParams{
 		"default": {
 			serverResponses: map[string]ServerResponse{
 				secretsListServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "secrets_list.json",
 				},
 			},
 			expected: []string{
@@ -49,8 +38,8 @@ func TestSecretsList(t *testing.T) {
 		"server error": {
 			serverResponses: map[string]ServerResponse{
 				secretsListServerPath: {
-					statusCode: http.StatusInternalServerError,
-					body:       `{"message": "Error while querying"}`,
+					statusCode:   http.StatusInternalServerError,
+					responseFile: "internal_server_error.json",
 				},
 			},
 			expected: []string{

@@ -18,21 +18,12 @@ var movePathTemplate = "/api/workflows/move_files/%s"
 
 func TestMv(t *testing.T) {
 	workflowName := "my_workflow"
-	successResponse := `{
-		"message": "test",
-		"workflow_id": "my_workflow_id",
-		"workflow_name": "my_workflow"
-	}`
-	errorResponse := `{
-		"message": "Path bad/ does not exists"
-	}`
-
 	tests := map[string]TestCmdParams{
 		"success": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(movePathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "mv.json",
 				},
 			},
 			args: []string{"-w", "my_workflow", "good/", "new/"},
@@ -43,8 +34,8 @@ func TestMv(t *testing.T) {
 		"server error": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(movePathTemplate, workflowName): {
-					statusCode: http.StatusConflict,
-					body:       errorResponse,
+					statusCode:   http.StatusConflict,
+					responseFile: "mv_invalid_path.json",
 				},
 			},
 			args: []string{"-w", "my_workflow", "bad/", "new/"},

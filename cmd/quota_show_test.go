@@ -23,45 +23,12 @@ import (
 var quotaShowServerPath = "/api/you"
 
 func TestQuotaShow(t *testing.T) {
-	successResponse := `{
-		"quota": {
-			"cpu": {
-				"health": "healthy",
-				"usage": {
-					"human_readable": "1m 5s",
-					"raw": 10
-				},
-				"limit": {
-					"human_readable": "10m 50s",
-					"raw": 100
-				}
-			},
-			"disk": {
-				"health": "healthy",
-				"usage": {
-					"human_readable": "2 MiB",
-					"raw": 20
-				},
-				"limit": {
-					"human_readable": "20 MiB",
-					"raw": 200
-				}
-			}
-		}
-	}`
-	noInfoResponse := `{
-		"quota": {
-			"cpu": {},
-			"disk": {}
-		}
-	}`
-
 	tests := map[string]TestCmdParams{
 		"show resources": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show.json",
 				},
 			},
 			args:     []string{"--resources"},
@@ -71,8 +38,8 @@ func TestQuotaShow(t *testing.T) {
 		"cpu limit": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show.json",
 				},
 			},
 			args:     []string{"--resource", "cpu", "--report", "limit"},
@@ -82,8 +49,8 @@ func TestQuotaShow(t *testing.T) {
 		"cpu usage": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show.json",
 				},
 			},
 			args:     []string{"--resource", "cpu", "--report", "usage"},
@@ -93,8 +60,8 @@ func TestQuotaShow(t *testing.T) {
 		"cpu limit human": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show.json",
 				},
 			},
 			args:     []string{"--resource", "cpu", "--report", "limit", "-h"},
@@ -104,8 +71,8 @@ func TestQuotaShow(t *testing.T) {
 		"cpu usage human": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show.json",
 				},
 			},
 			args:     []string{"--resource", "cpu", "--report", "usage", "-h"},
@@ -115,8 +82,8 @@ func TestQuotaShow(t *testing.T) {
 		"cpu all reports": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show.json",
 				},
 			},
 			args:     []string{"--resource", "cpu"},
@@ -126,8 +93,8 @@ func TestQuotaShow(t *testing.T) {
 		"cpu limit no info": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       noInfoResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show_no_info.json",
 				},
 			},
 			args:     []string{"--resource", "cpu", "--report", "limit"},
@@ -137,8 +104,8 @@ func TestQuotaShow(t *testing.T) {
 		"cpu usage no info": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       noInfoResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show_no_info.json",
 				},
 			},
 			args:     []string{"--resource", "cpu", "--report", "usage"},
@@ -148,8 +115,8 @@ func TestQuotaShow(t *testing.T) {
 		"cpu all reports no info": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       noInfoResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show_no_info.json",
 				},
 			},
 			args:     []string{"--resource", "cpu"},
@@ -159,8 +126,8 @@ func TestQuotaShow(t *testing.T) {
 		"disk limit": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show.json",
 				},
 			},
 			args:     []string{"--resource", "disk", "--report", "limit"},
@@ -170,8 +137,8 @@ func TestQuotaShow(t *testing.T) {
 		"disk usage": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show.json",
 				},
 			},
 			args:     []string{"--resource", "disk", "--report", "usage"},
@@ -181,8 +148,8 @@ func TestQuotaShow(t *testing.T) {
 		"disk limit human": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show.json",
 				},
 			},
 			args:     []string{"--resource", "disk", "--report", "limit", "-h"},
@@ -192,8 +159,8 @@ func TestQuotaShow(t *testing.T) {
 		"disk usage human": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show.json",
 				},
 			},
 			args:     []string{"--resource", "disk", "--report", "usage", "-h"},
@@ -203,8 +170,8 @@ func TestQuotaShow(t *testing.T) {
 		"disk all reports": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show.json",
 				},
 			},
 			args:     []string{"--resource", "disk"},
@@ -214,8 +181,8 @@ func TestQuotaShow(t *testing.T) {
 		"disk limit no info": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       noInfoResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show_no_info.json",
 				},
 			},
 			args:     []string{"--resource", "disk", "--report", "limit"},
@@ -225,8 +192,8 @@ func TestQuotaShow(t *testing.T) {
 		"disk usage no info": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       noInfoResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show_no_info.json",
 				},
 			},
 			args:     []string{"--resource", "disk", "--report", "usage"},
@@ -236,8 +203,8 @@ func TestQuotaShow(t *testing.T) {
 		"disk all reports no info": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       noInfoResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show_no_info.json",
 				},
 			},
 			args:     []string{"--resource", "disk"},
@@ -261,8 +228,8 @@ func TestQuotaShow(t *testing.T) {
 		"invalid resource": {
 			serverResponses: map[string]ServerResponse{
 				quotaShowServerPath: {
-					statusCode: http.StatusOK,
-					body:       noInfoResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show_no_info.json",
 				},
 			},
 			args:      []string{"--resource", "invalid"},

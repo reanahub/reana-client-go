@@ -16,63 +16,12 @@ import (
 var infoServerPath = "/api/info"
 
 func TestInfo(t *testing.T) {
-	successResponse := `{
-	"compute_backends": {
-		"title": "List of supported compute backends",
-		"value": [
-			"kubernetes",
-			"slurmcern"
-		]
-	},
-	"default_kubernetes_jobs_timeout": {
-		"title": "Default timeout for Kubernetes jobs",
-		"value": "124"
-	},
-	"default_kubernetes_memory_limit": {
-		"title": "Default memory limit for Kubernetes jobs",
-		"value": "248"
-	},
-	"default_workspace": {
-		"title": "Default workspace",
-		"value": "/var/reana"
-	},
-	"kubernetes_max_memory_limit": {
-		"title": "Maximum allowed memory limit for Kubernetes jobs",
-		"value": "1000"
-	},
-	"maximum_kubernetes_jobs_timeout": {
-		"title": "Maximum timeout for Kubernetes jobs",
-		"value": "500"
-	},
-	"maximum_workspace_retention_period": {
-		"title": "Maximum retention period in days for workspace files",
-		"value": "250"
-	},
-	"workspaces_available": {
-		"title": "List of available workspaces",
-		"value": [
-			"/var/reana",
-			"/var/cern"
-		]
-	}
-}
-`
-	minimalResponse := `{
-	"kubernetes_max_memory_limit": {
-		"title": "Maximum allowed memory limit for Kubernetes jobs"
-	},
-	"maximum_workspace_retention_period": {
-		"title": "Maximum retention period in days for workspace files"
-	}
-}
-`
-
 	tests := map[string]TestCmdParams{
 		"default": {
 			serverResponses: map[string]ServerResponse{
 				infoServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "info.json",
 				},
 			},
 			expected: []string{
@@ -89,8 +38,8 @@ func TestInfo(t *testing.T) {
 		"json": {
 			serverResponses: map[string]ServerResponse{
 				infoServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "info.json",
 				},
 			},
 			args: []string{"--json"},
@@ -103,8 +52,8 @@ func TestInfo(t *testing.T) {
 		"missing fields": {
 			serverResponses: map[string]ServerResponse{
 				infoServerPath: {
-					statusCode: http.StatusOK,
-					body:       minimalResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "info_minimal.json",
 				},
 			},
 			expected: []string{

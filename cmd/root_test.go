@@ -12,6 +12,7 @@ import (
 	"bytes"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"reanahub/reana-client-go/pkg/errorhandler"
 	"reanahub/reana-client-go/pkg/validator"
 	"strings"
@@ -47,8 +48,8 @@ type TestCmdParams struct {
 }
 
 type ServerResponse struct {
-	statusCode int
-	body       string
+	statusCode   int
+	responseFile string
 }
 
 func testCmdRun(t *testing.T, p TestCmdParams) {
@@ -60,7 +61,16 @@ func testCmdRun(t *testing.T, p TestCmdParams) {
 		if validPath {
 			w.Header().Add("Content-Type", "application/json")
 			w.WriteHeader(res.statusCode)
-			_, err := w.Write([]byte(res.body))
+
+			var body []byte
+			if res.responseFile != "" {
+				var err error
+				body, err = os.ReadFile("../testdata/api_responses/" + res.responseFile)
+				if err != nil {
+					t.Fatalf("Error while reading response file: %v", err)
+				}
+			}
+			_, err := w.Write(body)
 			if err != nil {
 				t.Fatalf("Error while writing response body: %v", err)
 			}

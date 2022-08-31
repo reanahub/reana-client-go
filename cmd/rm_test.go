@@ -18,32 +18,12 @@ var rmPathTemplate = "/api/workflows/%s/workspace/%s"
 
 func TestRm(t *testing.T) {
 	workflowName := "my_workflow"
-	successResponse := `{
-		"deleted": {
-			"files/one.py": {"size": 20},
-			"files/two.py": {"size": 40}
-		},
-		"failed": {
-			"files/three.py": {"error": "testing error in three.py"}
-		}
-	}`
-	emptyResponse := `{
-		"deleted": {},
-		"failed": {}
-	}`
-	noFreedResponse := `{
-		"deleted": {
-			"files/empty.py": {"size": 0}
-		},
-		"failed": {}
-	}`
-
 	tests := map[string]TestCmdParams{
 		"multiple files": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(rmPathTemplate, workflowName, "files/*"): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "rm.json",
 				},
 			},
 			args: []string{"-w", workflowName, "files/*"},
@@ -59,8 +39,8 @@ func TestRm(t *testing.T) {
 		"no space freed": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(rmPathTemplate, workflowName, "files/*"): {
-					statusCode: http.StatusOK,
-					body:       noFreedResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "rm_no_freed.json",
 				},
 			},
 			args: []string{"-w", workflowName, "files/*"},
@@ -75,8 +55,8 @@ func TestRm(t *testing.T) {
 		"no matching files": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(rmPathTemplate, workflowName, "files/*"): {
-					statusCode: http.StatusOK,
-					body:       emptyResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "rm_empty.json",
 				},
 			},
 			args: []string{"-w", workflowName, "files/*"},

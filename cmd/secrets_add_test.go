@@ -32,8 +32,8 @@ func TestSecretsAdd(t *testing.T) {
 		"valid secrets": {
 			serverResponses: map[string]ServerResponse{
 				secretsAddServerPath: {
-					statusCode: http.StatusCreated,
-					body:       `{"message": "OK"}`,
+					statusCode:   http.StatusCreated,
+					responseFile: "empty.json",
 				},
 			},
 			args: []string{"--env", "PASSWORD=password", "--file", emptyFile},
@@ -65,8 +65,8 @@ func TestSecretsAdd(t *testing.T) {
 		"secret already exists": {
 			serverResponses: map[string]ServerResponse{
 				secretsAddServerPath: {
-					statusCode: http.StatusConflict,
-					body:       `{"message": "Operation cancelled. Secret PASSWORD already exists. If you want to change it use overwrite"}`,
+					statusCode:   http.StatusConflict,
+					responseFile: "secrets_add_repeated.json",
 				},
 			},
 			args:      []string{"--env", "PASSWORD=password"},
