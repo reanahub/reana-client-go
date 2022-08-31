@@ -23,42 +23,12 @@ var statusPathTemplate = "/api/workflows/%s/status"
 
 func TestStatus(t *testing.T) {
 	workflowName := "my_workflow"
-	successResponse := `{
-		"created": "2022-07-20T12:08:40",
-		"id": "my_workflow_id",
-		"name": "my_workflow.10",
-		"status": "finished",
-		"user": "user",
-		"logs": "logs",
-		"progress": {
-			"current_command": "ls",
-			"current_step_name": "step_name",
-			"failed": {
-				"job_ids": [],
-				"total": 0
-			},
-			"finished": {
-				"job_ids": ["job1", "job2"],
-				"total": 2
-			},
-			"run_finished_at": "2022-07-20T12:09:24",
-			"run_started_at": "2022-07-20T12:09:09",
-			"running": {
-				"job_ids": ["job3", "job4"],
-				"total": 2
-			},
-			"total": {
-				"job_ids": [],
-				"total": 2
-			}
-		}
-	}`
 	tests := map[string]TestCmdParams{
 		"default": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(statusPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "status_finished.json",
 				},
 			},
 			args: []string{"-w", workflowName},
@@ -72,8 +42,8 @@ func TestStatus(t *testing.T) {
 		"format columns": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(statusPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "status_finished.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--format", "name,progress"},
@@ -90,8 +60,8 @@ func TestStatus(t *testing.T) {
 		"invalid format column": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(statusPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "status_finished.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--format", "invalid"},
@@ -103,8 +73,8 @@ func TestStatus(t *testing.T) {
 		"json": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(statusPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "status_finished.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--json"},
@@ -124,8 +94,8 @@ func TestStatus(t *testing.T) {
 		"verbose": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(statusPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "status_finished.json",
 				},
 			},
 			args: []string{"-w", workflowName, "-v"},
@@ -140,8 +110,8 @@ func TestStatus(t *testing.T) {
 		"include duration": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(statusPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "status_finished.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--include-duration"},
@@ -159,8 +129,8 @@ func TestStatus(t *testing.T) {
 		"unexisting workflow": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(statusPathTemplate, "invalid"): {
-					statusCode: http.StatusNotFound,
-					body:       `{"message": "REANA_WORKON is set to invalid, but that workflow does not exist."}`,
+					statusCode:   http.StatusNotFound,
+					responseFile: "common_invalid_workflow.json",
 				},
 			},
 			args: []string{"-w", "invalid"},

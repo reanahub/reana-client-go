@@ -21,8 +21,8 @@ func TestClose(t *testing.T) {
 		"success": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(closePathTemplate, "my_workflow"): {
-					statusCode: http.StatusOK,
-					body:       "{}",
+					statusCode:   http.StatusOK,
+					responseFile: "common_empty.json",
 				},
 			},
 			args: []string{"-w", "my_workflow"},
@@ -33,8 +33,8 @@ func TestClose(t *testing.T) {
 		"error": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(closePathTemplate, "my_workflow"): {
-					statusCode: http.StatusNotFound,
-					body:       `{"message": "Workflow - my_workflow has no open interactive session."}`,
+					statusCode:   http.StatusNotFound,
+					responseFile: "close_no_open.json",
 				},
 			},
 			args:      []string{"-w", "my_workflow"},

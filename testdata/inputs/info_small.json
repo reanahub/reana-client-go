@@ -1,0 +1,8 @@
+{
+  "kubernetes_max_memory_limit": {
+    "title": "Maximum allowed memory limit for Kubernetes jobs"
+  },
+  "maximum_workspace_retention_period": {
+    "title": "Maximum retention period in days for workspace files"
+  }
+}

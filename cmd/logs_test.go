@@ -9,10 +9,8 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
-	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/pkg/config"
 	"reanahub/reana-client-go/pkg/filterer"
 	"reflect"
@@ -25,58 +23,12 @@ var logsPathTemplate = "/api/workflows/%s/logs"
 
 func TestLogs(t *testing.T) {
 	workflowName := "my_workflow"
-	logsTemplate := `{
-			"workflow_logs": "workflow logs",
-			"job_logs": {
-				"1": {
-					"workflow_uuid": "%s",
-					"job_name": "%s",
-					"compute_backend": "Kubernetes",
-					"backend_job_id": "backend1",
-					"docker_img": "docker1",
-					"cmd": "ls",
-					"status": "finished",
-					"logs": "%s",
-					"started_at": "2022-07-20T12:09:09",
-					"finished_at": "2022-07-20T19:09:09"
-				},
-				"2": {
-					"workflow_uuid": "workflow_2",
-					"job_name": "job2",
-					"compute_backend": "Slurm",
-					"backend_job_id": "backend2",
-					"docker_img": "docker2",
-					"cmd": "cd folder",
-					"status": "running",
-					"logs": "workflow 2 logs",
-					"started_at": "2022-07-21T12:09:09",
-					"finished_at": "2022-07-21T19:09:09"
-				}
-			},
-			"engine_specific": "engine logs"
-		}`
-	successResponseRaw, _ := json.Marshal(operations.GetWorkflowLogsOKBody{
-		Logs:         fmt.Sprintf(logsTemplate, "workflow_1", "job1", "workflow 1 logs"),
-		User:         "user",
-		WorkflowID:   "my_workflow_id",
-		WorkflowName: "my_workflow",
-	})
-	successResponse := string(successResponseRaw)
-
-	incompleteResponseRaw, _ := json.Marshal(operations.GetWorkflowLogsOKBody{
-		Logs:         fmt.Sprintf(logsTemplate, "", "", ""),
-		User:         "user",
-		WorkflowID:   "my_workflow_id",
-		WorkflowName: "my_workflow",
-	})
-	incompleteResponse := string(incompleteResponseRaw)
-
 	tests := map[string]TestCmdParams{
 		"default": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(logsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "logs_complete.json",
 				},
 			},
 			args: []string{"-w", workflowName},
@@ -93,13 +45,8 @@ func TestLogs(t *testing.T) {
 		"without log information": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(logsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body: `{
-						"logs": "{}",
-						"user": "user",
-						"workflow_id": "my_workflow_id",
-						"workflow_name": "my_workflow"
-					}`,
+					statusCode:   http.StatusOK,
+					responseFile: "logs_empty.json",
 				},
 			},
 			args: []string{"-w", workflowName},
@@ -111,8 +58,8 @@ func TestLogs(t *testing.T) {
 		"json": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(logsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "logs_complete.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--json"},
@@ -127,8 +74,8 @@ func TestLogs(t *testing.T) {
 		"with filters": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(logsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "logs_complete.json",
 				},
 			},
 			args:     []string{"-w", workflowName, "--filter", "compute_backend=kubernetes"},
@@ -138,8 +85,8 @@ func TestLogs(t *testing.T) {
 		"missing step names": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(logsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "logs_complete.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--filter", "step=3"},
@@ -150,8 +97,8 @@ func TestLogs(t *testing.T) {
 		"missing fields": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(logsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       incompleteResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "logs_incomplete.json",
 				},
 			},
 			args:     []string{"-w", workflowName, "--filter", "compute_backend=kubernetes"},
@@ -172,8 +119,8 @@ func TestLogs(t *testing.T) {
 		"unexisting workflow": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(logsPathTemplate, "invalid"): {
-					statusCode: http.StatusNotFound,
-					body:       `{"message": "REANA_WORKON is set to invalid, but that workflow does not exist."}`,
+					statusCode:   http.StatusNotFound,
+					responseFile: "common_invalid_workflow.json",
 				},
 			},
 			args: []string{"-w", "invalid"},
@@ -185,8 +132,8 @@ func TestLogs(t *testing.T) {
 		"invalid page": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(logsPathTemplate, workflowName): {
-					statusCode: http.StatusBadRequest,
-					body:       `{"message": "Field 'page': Must be at least 1."}`,
+					statusCode:   http.StatusBadRequest,
+					responseFile: "common_invalid_page.json",
 				},
 			},
 			args:      []string{"-w", workflowName, "--page", "0"},

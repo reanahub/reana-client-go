@@ -22,8 +22,8 @@ func TestSecretsDelete(t *testing.T) {
 		"valid secrets": {
 			serverResponses: map[string]ServerResponse{
 				secretsDeleteServerPath: {
-					statusCode: http.StatusOK,
-					body:       `["secret1", "secret2"]`,
+					statusCode:   http.StatusOK,
+					responseFile: "secrets_delete_multiple.json",
 				},
 			},
 			args: []string{"secret1", "secret2"},
@@ -41,8 +41,8 @@ func TestSecretsDelete(t *testing.T) {
 		"invalid secrets": {
 			serverResponses: map[string]ServerResponse{
 				secretsDeleteServerPath: {
-					statusCode: http.StatusNotFound,
-					body:       `["secret1", "secret2"]`,
+					statusCode:   http.StatusNotFound,
+					responseFile: "secrets_delete_multiple.json",
 				},
 			},
 			args: []string{"secret1", "secret2"},
@@ -54,8 +54,8 @@ func TestSecretsDelete(t *testing.T) {
 		"valid and invalid secrets": {
 			serverResponses: map[string]ServerResponse{
 				secretsDeleteServerPath: {
-					statusCode: http.StatusNotFound,
-					body:       `["secret1"]`,
+					statusCode:   http.StatusNotFound,
+					responseFile: "secrets_delete_single.json",
 				},
 			},
 			args: []string{"secret1", "secret2"},

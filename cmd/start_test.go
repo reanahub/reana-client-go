@@ -27,57 +27,12 @@ func TestStart(t *testing.T) {
 	})
 
 	workflowName := "my_workflow"
-	startResponse := `{
-		"message": "Workflow successfully started",
-		"status": "running",
-		"user": "user",
-		"workflow_id": "my_workflow_id",
-		"workflow_name": "my_workflow"
-	}`
-	paramsResponse := `{
-		"id": "my_workflow_id",
-		"name": "my_workflow",
-		"type": "serial",
-		"parameters": {
-			"data": "results/data.root",
-			"events": 20,
-			"plot": "results/plot.png"
-		}
-	}`
-	statusFinishedResponse := `{
-		"status": "finished",
-		"user": "user",
-		"workflow_id": "my_workflow_id",
-		"workflow_name": "my_workflow",
-		"created": "2022-07-20T12:08:40"
-	}`
-	statusStoppedResponse := `{
-		"status": "stopped",
-		"user": "user",
-		"workflow_id": "my_workflow_id",
-		"workflow_name": "my_workflow",
-		"created": "2022-07-20T12:08:40"
-	}`
-	lsResponse := `{
-		"items": [
-			{
-				"last-modified": "2022-07-11T12:50:33",
-				"name": "code/gendata.C",
-				"size": {
-					"human_readable": "1.89 KiB",
-					"raw": 1937
-				}
-			}
-		],
-		"total": 1
-}`
-
 	tests := map[string]TestCmdParams{
 		"default": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(startPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       startResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "start_success.json",
 				},
 			},
 			args: []string{"-w", workflowName},
@@ -88,12 +43,12 @@ func TestStart(t *testing.T) {
 		"valid options": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(startPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       startResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "start_success.json",
 				},
 				fmt.Sprintf(paramsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       paramsResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "start_params_multiple.json",
 				},
 			},
 			args: []string{"-w", workflowName, "-o", "CACHE=cache,FROM=from"},
@@ -104,12 +59,12 @@ func TestStart(t *testing.T) {
 		"valid parameters": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(startPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       startResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "start_success.json",
 				},
 				fmt.Sprintf(paramsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       paramsResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "start_params_multiple.json",
 				},
 			},
 			args: []string{"-w", workflowName, "-p", "data=results/data2.root,events=100"},
@@ -120,12 +75,12 @@ func TestStart(t *testing.T) {
 		"unsupported option": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(startPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       startResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "start_success.json",
 				},
 				fmt.Sprintf(paramsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       paramsResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "start_params_multiple.json",
 				},
 			},
 			args: []string{"-w", workflowName, "-o", "CACHE=cache,INVALID=invalid"},
@@ -137,12 +92,12 @@ func TestStart(t *testing.T) {
 		"option not supported for workflow type": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(startPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       startResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "start_success.json",
 				},
 				fmt.Sprintf(paramsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       paramsResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "start_params_multiple.json",
 				},
 			},
 			args: []string{"-w", workflowName, "-o", "CACHE=cache,report=report"},
@@ -154,12 +109,12 @@ func TestStart(t *testing.T) {
 		"parameter not specified": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(startPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       startResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "start_success.json",
 				},
 				fmt.Sprintf(paramsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       paramsResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "start_params_multiple.json",
 				},
 			},
 			args: []string{"-w", workflowName, "-p", "data=results/data2.root,invalid=100"},
@@ -171,19 +126,12 @@ func TestStart(t *testing.T) {
 		"validated options and parameters": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(startPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       startResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "start_success.json",
 				},
 				fmt.Sprintf(paramsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body: `{
-						"id": "my_workflow_id",
-						"name": "my_workflow",
-						"type": "cwl",
-						"parameters": {
-							"data": "results/data.root"
-						}
-					}`,
+					statusCode:   http.StatusOK,
+					responseFile: "start_params_only_data.json",
 				},
 			},
 			args: []string{
@@ -199,8 +147,8 @@ func TestStart(t *testing.T) {
 		"workflow already finished": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(startPathTemplate, workflowName): {
-					statusCode: http.StatusForbidden,
-					body:       `{"message": "Workflow my_workflow is already finished and cannot be started again."}`,
+					statusCode:   http.StatusForbidden,
+					responseFile: "start_already_finished.json",
 				},
 			},
 			args: []string{"-w", workflowName},
@@ -212,12 +160,12 @@ func TestStart(t *testing.T) {
 		"follow stopped": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(startPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       startResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "start_success.json",
 				},
 				fmt.Sprintf(statusPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       statusStoppedResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "status_stopped.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--follow"},
@@ -229,16 +177,16 @@ func TestStart(t *testing.T) {
 		"follow finished": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(startPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       startResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "start_success.json",
 				},
 				fmt.Sprintf(statusPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       statusFinishedResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "status_finished.json",
 				},
 				fmt.Sprintf(lsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       lsResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "ls_complete.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--follow"},
@@ -247,6 +195,7 @@ func TestStart(t *testing.T) {
 				"my_workflow has been finished",
 				"Listing workflow output files...",
 				"/api/workflows/my_workflow/workspace/code/gendata.C",
+				"/api/workflows/my_workflow/workspace/results/data.root",
 			},
 		},
 	}

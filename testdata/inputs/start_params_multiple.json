@@ -1,0 +1,10 @@
+{
+  "id": "my_workflow_id",
+  "name": "my_workflow",
+  "type": "serial",
+  "parameters": {
+    "data": "results/data.root",
+    "events": 20,
+    "plot": "results/plot.png"
+  }
+}

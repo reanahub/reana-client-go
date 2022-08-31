@@ -1,0 +1,9 @@
+{
+  "deleted": {
+    "files/one.py": {"size": 20},
+    "files/two.py": {"size": 40}
+  },
+  "failed": {
+    "files/three.py": {"error": "testing error in three.py"}
+  }
+}

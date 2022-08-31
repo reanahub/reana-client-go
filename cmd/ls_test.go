@@ -20,33 +20,12 @@ var lsPathTemplate = "/api/workflows/%s/workspace"
 
 func TestLs(t *testing.T) {
 	workflowName := "my_workflow"
-	successResponse := `{
-		"items": [
-			{
-				"last-modified": "2022-07-11T12:50:33",
-				"name": "code/gendata.C",
-				"size": {
-					"human_readable": "1.89 KiB",
-					"raw": 1937
-				}
-			},
-			{
-				"last-modified": "2022-07-11T13:30:17",
-				"name": "results/data.root",
-				"size": {
-					"human_readable": "150.83 KiB",
-					"raw": 154455
-				}
-			}
-		],
-		"total": 2
-}`
 	tests := map[string]TestCmdParams{
 		"default": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(lsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "ls_complete.json",
 				},
 			},
 			args: []string{"-w", workflowName},
@@ -59,8 +38,8 @@ func TestLs(t *testing.T) {
 		"human readable": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(lsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "ls_complete.json",
 				},
 			},
 			args: []string{"-w", workflowName, "-h"},
@@ -73,28 +52,8 @@ func TestLs(t *testing.T) {
 		"files in black list": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(lsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body: `{
-						"items": [
-							{
-								"last-modified": "2022-07-11T12:50:33",
-								"name": ".git/test.C",
-								"size": {
-									"human_readable": "1.89 KiB",
-									"raw": 1937
-								}
-							},
-							{
-								"last-modified": "2022-07-11T13:30:17",
-								"name": "results/data.root",
-								"size": {
-									"human_readable": "150.83 KiB",
-									"raw": 154455
-								}
-							}
-						],
-						"total": 4
-					}`,
+					statusCode:   http.StatusOK,
+					responseFile: "ls_ignored_files.json",
 				},
 			},
 			args: []string{"-w", workflowName},
@@ -109,8 +68,8 @@ func TestLs(t *testing.T) {
 		"format columns": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(lsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "ls_complete.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--format", "name,last-modified"},
@@ -126,8 +85,8 @@ func TestLs(t *testing.T) {
 		"format with filters": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(lsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "ls_complete.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--format", "name=code/gendata.C"},
@@ -143,8 +102,8 @@ func TestLs(t *testing.T) {
 		"invalid format column": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(lsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "ls_complete.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--format", "invalid"},
@@ -156,8 +115,8 @@ func TestLs(t *testing.T) {
 		"json": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(lsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "ls_complete.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--json"},
@@ -177,8 +136,8 @@ func TestLs(t *testing.T) {
 		"display URLs": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(lsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "ls_complete.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--url"},
@@ -190,20 +149,8 @@ func TestLs(t *testing.T) {
 		"with filters": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(lsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body: `{
-						"items": [
-							{
-								"last-modified": "2022-07-11T12:50:33",
-								"name": "code/gendata.C",
-								"size": {
-									"human_readable": "1.89 KiB",
-									"raw": 1937
-								}
-							}
-						],
-						"total": 4
-					}`,
+					statusCode:   http.StatusOK,
+					responseFile: "ls_filters.json",
 				},
 			},
 			args: []string{"-w", workflowName, "--filter", "name=code/gendata.C"},
@@ -215,20 +162,8 @@ func TestLs(t *testing.T) {
 		"filename arg": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(lsPathTemplate, workflowName): {
-					statusCode: http.StatusOK,
-					body: `{
-						"items": [
-							{
-								"last-modified": "2022-07-11T12:50:33",
-								"name": "code/gendata.C",
-								"size": {
-									"human_readable": "1.89 KiB",
-									"raw": 1937
-								}
-							}
-						],
-						"total": 4
-					}`,
+					statusCode:   http.StatusOK,
+					responseFile: "ls_filters.json",
 				},
 			},
 			args: []string{"-w", workflowName, "code/gendata.C"},
@@ -247,8 +182,8 @@ func TestLs(t *testing.T) {
 		"unexisting workflow": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(lsPathTemplate, "invalid"): {
-					statusCode: http.StatusNotFound,
-					body:       `{"message": "REANA_WORKON is set to invalid, but that workflow does not exist."}`,
+					statusCode:   http.StatusNotFound,
+					responseFile: "common_invalid_workflow.json",
 				},
 			},
 			args: []string{"-w", "invalid"},
@@ -260,8 +195,8 @@ func TestLs(t *testing.T) {
 		"invalid size": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(lsPathTemplate, workflowName): {
-					statusCode: http.StatusBadRequest,
-					body:       `{"message": "Field 'size': Must be at least 1."}`,
+					statusCode:   http.StatusBadRequest,
+					responseFile: "common_invalid_size.json",
 				},
 			},
 			args:      []string{"-w", workflowName, "--size", "0"},

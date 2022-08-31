@@ -21,72 +21,12 @@ import (
 var listServerPath = "/api/workflows"
 
 func TestList(t *testing.T) {
-	successResponse := `{
-		"total": 2,
-		"items": [
-			{
-				"created": "2022-07-28T12:04:37",
-				"id": "my_workflow_id",
-				"launcher_url": "https://test.test/url",
-				"name": "my_workflow.23",
-				"progress": {
-					"finished": {
-						"job_ids": ["job1", "job2"],
-						"total": 2
-					},
-					"total": {
-						"job_ids": [],
-						"total": 2
-					},
-					"run_finished_at": "2022-07-28T12:13:10",
-					"run_started_at": "2022-07-28T12:04:52"
-				},
-				"size": {
-					"human_readable": "1 KiB",
-					"raw": 1024
-				},
-				"status": "finished",
-				"user": "user",
-				"session_status": "created",
-				"session_type": "jupyter",
-				"session_uri": "/session1uri"
-			},
-			{
-				"created": "2022-08-10T17:14:12",
-				"id": "my_workflow2_id",
-				"launcher_url": "https://test.test/url2",
-				"name": "my_workflow2.12",
-				"progress": {
-					"finished": {
-						"job_ids": ["job3"],
-						"total": 1
-					},
-					"total": {
-						"job_ids": [],
-						"total": 2
-					},
-					"run_finished_at": null,
-					"run_started_at": "2022-08-10T18:04:52"
-				},
-				"size": {
-					"human_readable": "",
-					"raw": -1
-				},
-				"status": "running",
-				"user": "user",
-				"session_status": "created",
-				"session_type": "jupyter",
-				"session_uri": "/session2uri"
-			}
-		]
-	}`
-
 	tests := map[string]TestCmdParams{
 		"default": {
 			serverResponses: map[string]ServerResponse{
 				listServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
 				},
 			},
 			expected: []string{
@@ -103,8 +43,8 @@ func TestList(t *testing.T) {
 		"interactive sessions": {
 			serverResponses: map[string]ServerResponse{
 				listServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
 				},
 			},
 			args: []string{"-s"},
@@ -121,8 +61,8 @@ func TestList(t *testing.T) {
 		"format columns": {
 			serverResponses: map[string]ServerResponse{
 				listServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
 				},
 			},
 			args: []string{"--format", "name,status"},
@@ -140,8 +80,8 @@ func TestList(t *testing.T) {
 		"format with filter": {
 			serverResponses: map[string]ServerResponse{
 				listServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
 				},
 			},
 			args: []string{"--format", "name=my_workflow,status"},
@@ -159,8 +99,8 @@ func TestList(t *testing.T) {
 		"invalid format column": {
 			serverResponses: map[string]ServerResponse{
 				listServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
 				},
 			},
 			args: []string{"--format", "invalid"},
@@ -172,8 +112,8 @@ func TestList(t *testing.T) {
 		"json": {
 			serverResponses: map[string]ServerResponse{
 				listServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
 				},
 			},
 			args: []string{"--json"},
@@ -200,8 +140,8 @@ func TestList(t *testing.T) {
 		"verbose": {
 			serverResponses: map[string]ServerResponse{
 				listServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
 				},
 			},
 			args: []string{"-v"},
@@ -219,8 +159,8 @@ func TestList(t *testing.T) {
 		"raw size": {
 			serverResponses: map[string]ServerResponse{
 				listServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
 				},
 			},
 			args:     []string{"--include-workspace-size"},
@@ -230,8 +170,8 @@ func TestList(t *testing.T) {
 		"human readable size": {
 			serverResponses: map[string]ServerResponse{
 				listServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
 				},
 			},
 			args:     []string{"--include-workspace-size", "-h"},
@@ -241,8 +181,8 @@ func TestList(t *testing.T) {
 		"include duration": {
 			serverResponses: map[string]ServerResponse{
 				listServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
 				},
 			},
 			args:     []string{"--include-duration"},
@@ -255,8 +195,8 @@ func TestList(t *testing.T) {
 		"include progress": {
 			serverResponses: map[string]ServerResponse{
 				listServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
 				},
 			},
 			args:     []string{"--include-progress"},
@@ -269,8 +209,8 @@ func TestList(t *testing.T) {
 		"sorted": {
 			serverResponses: map[string]ServerResponse{
 				listServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
 				},
 			},
 			args:     []string{"--sort", "run_number"},
@@ -286,8 +226,8 @@ func TestList(t *testing.T) {
 		"unexisting workflow": {
 			serverResponses: map[string]ServerResponse{
 				listServerPath: {
-					statusCode: http.StatusNotFound,
-					body:       `{"message": "REANA_WORKON is set to invalid, but that workflow does not exist."}`,
+					statusCode:   http.StatusNotFound,
+					responseFile: "common_invalid_workflow.json",
 				},
 			},
 			args: []string{"-w", "invalid"},
@@ -299,8 +239,8 @@ func TestList(t *testing.T) {
 		"invalid size": {
 			serverResponses: map[string]ServerResponse{
 				listServerPath: {
-					statusCode: http.StatusBadRequest,
-					body:       `{"message": "Field 'size': Must be at least 1."}`,
+					statusCode:   http.StatusBadRequest,
+					responseFile: "common_invalid_size.json",
 				},
 			},
 			args:      []string{"--size", "0"},
@@ -310,8 +250,8 @@ func TestList(t *testing.T) {
 		"invalid sort columns": {
 			serverResponses: map[string]ServerResponse{
 				listServerPath: {
-					statusCode: http.StatusOK,
-					body:       successResponse,
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
 				},
 			},
 			args: []string{"--sort", "invalid"},

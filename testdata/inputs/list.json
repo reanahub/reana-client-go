@@ -1,0 +1,59 @@
+{
+  "total": 2,
+  "items": [
+    {
+      "created": "2022-07-28T12:04:37",
+      "id": "my_workflow_id",
+      "launcher_url": "https://test.test/url",
+      "name": "my_workflow.23",
+      "progress": {
+        "finished": {
+          "job_ids": ["job1", "job2"],
+          "total": 2
+        },
+        "total": {
+          "job_ids": [],
+          "total": 2
+        },
+        "run_finished_at": "2022-07-28T12:13:10",
+        "run_started_at": "2022-07-28T12:04:52"
+      },
+      "size": {
+        "human_readable": "1 KiB",
+        "raw": 1024
+      },
+      "status": "finished",
+      "user": "user",
+      "session_status": "created",
+      "session_type": "jupyter",
+      "session_uri": "/session1uri"
+    },
+    {
+      "created": "2022-08-10T17:14:12",
+      "id": "my_workflow2_id",
+      "launcher_url": "https://test.test/url2",
+      "name": "my_workflow2.12",
+      "progress": {
+        "finished": {
+          "job_ids": ["job3"],
+          "total": 1
+        },
+        "total": {
+          "job_ids": [],
+          "total": 2
+        },
+        "run_finished_at": null,
+        "run_started_at": "2022-08-10T18:04:52"
+      },
+      "size": {
+        "human_readable": "",
+        "raw": -1
+      },
+      "status": "running",
+      "user": "user",
+      "session_status": "created",
+      "session_type": "jupyter",
+      "session_uri": "/session2uri"
+    }
+  ]
+}

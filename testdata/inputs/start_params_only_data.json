@@ -1,0 +1,8 @@
+{
+  "id": "my_workflow_id",
+  "name": "my_workflow",
+  "type": "cwl",
+  "parameters": {
+    "data": "results/data.root"
+  }
+}
