@@ -14,8 +14,8 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 )
 
-// ApiClient provides a new API client used to communicate with the REANA server.
-func ApiClient() (*API, error) {
+// NewApiClient provides a new API client used to communicate with the REANA server.
+func NewApiClient(viper *viper.Viper) (*API, error) {
 	// disable certificate security checks
 	http.DefaultTransport.(*http.Transport).TLSClientConfig = &tls.Config{
 		InsecureSkipVerify: true,

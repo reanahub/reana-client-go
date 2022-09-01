@@ -75,7 +75,7 @@ type logsOptions struct {
 }
 
 // newLogsCmd creates a command to get workflow logs.
-func newLogsCmd() *cobra.Command {
+func newLogsCmd(api *client.API) *cobra.Command {
 	o := &logsOptions{}
 
 	cmd := &cobra.Command{
@@ -84,7 +84,7 @@ func newLogsCmd() *cobra.Command {
 		Long:  logsDesc,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -105,7 +105,7 @@ func newLogsCmd() *cobra.Command {
 	return cmd
 }
 
-func (o *logsOptions) run(cmd *cobra.Command) error {
+func (o *logsOptions) run(cmd *cobra.Command, api *client.API) error {
 	filters, err := parseLogsFilters(o.filters)
 	if err != nil {
 		return err
@@ -124,10 +124,6 @@ func (o *logsOptions) run(cmd *cobra.Command) error {
 		logsParams.SetSize(&o.size)
 	}
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
 	logsResp, err := api.Operations.GetWorkflowLogs(logsParams)
 	if err != nil {
 		return err

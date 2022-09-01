@@ -37,7 +37,7 @@ type closeOptions struct {
 }
 
 // newCloseCmd creates a command to close an interactive session.
-func newCloseCmd() *cobra.Command {
+func newCloseCmd(api *client.API) *cobra.Command {
 	o := &closeOptions{}
 
 	cmd := &cobra.Command{
@@ -46,7 +46,7 @@ func newCloseCmd() *cobra.Command {
 		Long:  closeDesc,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -62,17 +62,13 @@ func newCloseCmd() *cobra.Command {
 	return cmd
 }
 
-func (o *closeOptions) run(cmd *cobra.Command) error {
+func (o *closeOptions) run(cmd *cobra.Command, api *client.API) error {
 	closeParams := operations.NewCloseInteractiveSessionParams()
 	closeParams.SetAccessToken(&o.token)
 	closeParams.SetWorkflowIDOrName(o.workflow)
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
 	log.Infof("Closing an interactive session on %s", o.workflow)
-	_, err = api.Operations.CloseInteractiveSession(closeParams)
+	_, err := api.Operations.CloseInteractiveSession(closeParams)
 	if err != nil {
 		return err
 	}

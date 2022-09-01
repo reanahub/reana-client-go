@@ -32,7 +32,7 @@ type infoOptions struct {
 }
 
 // newInfoCmd creates a command to list cluster general information.
-func newInfoCmd() *cobra.Command {
+func newInfoCmd(api *client.API) *cobra.Command {
 	o := &infoOptions{}
 
 	cmd := &cobra.Command{
@@ -41,7 +41,7 @@ func newInfoCmd() *cobra.Command {
 		Long:  infoDesc,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -52,14 +52,10 @@ func newInfoCmd() *cobra.Command {
 	return cmd
 }
 
-func (o *infoOptions) run(cmd *cobra.Command) error {
+func (o *infoOptions) run(cmd *cobra.Command, api *client.API) error {
 	infoParams := operations.NewInfoParams()
 	infoParams.SetAccessToken(o.token)
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
 	infoResp, err := api.Operations.Info(infoParams)
 	if err != nil {
 		return err

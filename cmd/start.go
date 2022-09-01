@@ -53,7 +53,7 @@ type startOptions struct {
 }
 
 // newStartCmd creates a command to start previously created workflow.
-func newStartCmd() *cobra.Command {
+func newStartCmd(api *client.API, viper *viper.Viper) *cobra.Command {
 	o := &startOptions{}
 
 	cmd := &cobra.Command{
@@ -63,7 +63,7 @@ func newStartCmd() *cobra.Command {
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			o.serverURL = viper.GetString("server-url")
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -102,13 +102,9 @@ E.g. --debug (workflow engine - cwl)`,
 	return cmd
 }
 
-func (o *startOptions) run(cmd *cobra.Command) error {
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
-
+func (o *startOptions) run(cmd *cobra.Command, api *client.API) error {
 	if len(o.parameters) > 0 || len(o.options) > 0 {
+		var err error
 		o.options, o.parameters, err = validateStartOptionsAndParams(
 			api,
 			o.token, o.workflow, o.options, o.parameters,
@@ -144,7 +140,7 @@ func (o *startOptions) run(cmd *cobra.Command) error {
 	)
 
 	if o.follow {
-		err = followWorkflowExecution(cmd, currentStatus, o.token, o.serverURL, o.workflow)
+		err = followWorkflowExecution(cmd, api, currentStatus, o.token, o.serverURL, o.workflow)
 		if err != nil {
 			return err
 		}
@@ -190,12 +186,13 @@ func validateStartOptionsAndParams(
 // If the workflow finishes successfully, this calls the ls command to display the workflow files' URLs.
 func followWorkflowExecution(
 	cmd *cobra.Command,
+	api *client.API,
 	currentStatus string,
 	token, serverURL, workflow string,
 ) error {
 	for slices.Contains([]string{"pending", "queued", "running"}, currentStatus) {
 		time.Sleep(time.Duration(config.CheckInterval) * time.Second)
-		status, err := workflows.GetStatus(token, workflow)
+		status, err := workflows.GetStatus(api, token, workflow)
 		if err != nil {
 			return err
 		}
@@ -226,7 +223,7 @@ func followWorkflowExecution(
 				displayURLs: true,
 				page:        1,
 			}
-			err = lsParams.run(cmd)
+			err = lsParams.run(cmd, api)
 			if err != nil {
 				return err
 			}

@@ -48,7 +48,7 @@ type duOptions struct {
 }
 
 // newDuCmd creates a command to get workspace disk usage.
-func newDuCmd() *cobra.Command {
+func newDuCmd(api *client.API) *cobra.Command {
 	o := &duOptions{}
 
 	cmd := &cobra.Command{
@@ -57,7 +57,7 @@ func newDuCmd() *cobra.Command {
 		Long:  duDesc,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -84,7 +84,7 @@ func newDuCmd() *cobra.Command {
 	return cmd
 }
 
-func (o *duOptions) run(cmd *cobra.Command) error {
+func (o *duOptions) run(cmd *cobra.Command, api *client.API) error {
 	filters, err := filterer.NewFilters(nil, config.DuMultiFilters, o.filter)
 	if err != nil {
 		return err
@@ -103,10 +103,6 @@ func (o *duOptions) run(cmd *cobra.Command) error {
 	}
 	duParams.SetParameters(additionalParams)
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
 	duResp, err := api.Operations.GetWorkflowDiskUsage(duParams)
 	if err != nil {
 		return err

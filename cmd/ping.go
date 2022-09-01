@@ -30,7 +30,7 @@ type pingOptions struct {
 }
 
 // newPingCmd creates a command to ping the REANA server.
-func newPingCmd() *cobra.Command {
+func newPingCmd(api *client.API, viper *viper.Viper) *cobra.Command {
 	o := &pingOptions{}
 
 	cmd := &cobra.Command{
@@ -40,7 +40,7 @@ func newPingCmd() *cobra.Command {
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			o.serverURL = viper.GetString("server-url")
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -50,14 +50,10 @@ func newPingCmd() *cobra.Command {
 	return cmd
 }
 
-func (o *pingOptions) run(cmd *cobra.Command) error {
+func (o *pingOptions) run(cmd *cobra.Command, api *client.API) error {
 	pingParams := operations.NewGetYouParams()
 	pingParams.SetAccessToken(&o.token)
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
 	pingResp, err := api.Operations.GetYou(pingParams)
 	if err != nil {
 		return err

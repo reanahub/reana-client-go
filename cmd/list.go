@@ -74,7 +74,7 @@ type listOptions struct {
 }
 
 // newListCmd creates a new command for listing workflows and sessions.
-func newListCmd() *cobra.Command {
+func newListCmd(api *client.API, viper *viper.Viper) *cobra.Command {
 	o := &listOptions{}
 
 	cmd := &cobra.Command{
@@ -84,7 +84,7 @@ func newListCmd() *cobra.Command {
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			o.serverURL = viper.GetString("server-url")
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -149,7 +149,7 @@ In case a workflow is in progress, its duration as of now will be shown.`,
 	return cmd
 }
 
-func (o *listOptions) run(cmd *cobra.Command) error {
+func (o *listOptions) run(cmd *cobra.Command, api *client.API) error {
 	var runType string
 	if o.listSessions {
 		runType = "interactive"
@@ -181,10 +181,6 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 		listParams.SetIncludeWorkspaceSize(&o.includeWorkspaceSize)
 	}
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
 	listResp, err := api.Operations.GetWorkflows(listParams)
 	if err != nil {
 		return err

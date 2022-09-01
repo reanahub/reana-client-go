@@ -71,7 +71,7 @@ type lsOptions struct {
 }
 
 // newLsCmd creates a command to list workspace files.
-func newLsCmd() *cobra.Command {
+func newLsCmd(api *client.API, viper *viper.Viper) *cobra.Command {
 	o := &lsOptions{}
 
 	cmd := &cobra.Command{
@@ -84,7 +84,7 @@ func newLsCmd() *cobra.Command {
 			if len(args) > 0 {
 				o.fileName = args[0]
 			}
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -116,7 +116,8 @@ func newLsCmd() *cobra.Command {
 	return cmd
 }
 
-func (o *lsOptions) run(cmd *cobra.Command) error {
+// Run runs the ls command with the options provided by o.
+func (o *lsOptions) run(cmd *cobra.Command, api *client.API) error {
 	header := []string{"name", "size", "last-modified"}
 
 	filters, err := filterer.NewFilters(nil, header, o.filters)
@@ -140,10 +141,6 @@ func (o *lsOptions) run(cmd *cobra.Command) error {
 		lsParams.SetSize(&o.size)
 	}
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
 	lsResp, err := api.Operations.GetFiles(lsParams)
 	if err != nil {
 		return err

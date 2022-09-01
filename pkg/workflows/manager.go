@@ -17,6 +17,7 @@ import (
 
 // UpdateStatus updates the status of the specified workflow.
 func UpdateStatus(
+	api *client.API,
 	token, workflow, status string,
 	includeWorkspace, includeAllRuns bool,
 ) error {
@@ -33,11 +34,7 @@ func UpdateStatus(
 		Workspace: includeWorkspace,
 	})
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
-	_, err = api.Operations.SetWorkflowStatus(deleteParams)
+	_, err := api.Operations.SetWorkflowStatus(deleteParams)
 	if err != nil {
 		return err
 	}
@@ -46,15 +43,11 @@ func UpdateStatus(
 }
 
 // GetStatus returns the status information of the specified workflow.
-func GetStatus(token, workflow string) (*operations.GetWorkflowStatusOKBody, error) {
+func GetStatus(api *client.API, token, workflow string) (*operations.GetWorkflowStatusOKBody, error) {
 	getParams := operations.NewGetWorkflowStatusParams()
 	getParams.SetAccessToken(&token)
 	getParams.SetWorkflowIDOrName(workflow)
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return nil, err
-	}
 	resp, err := api.Operations.GetWorkflowStatus(getParams)
 	if err != nil {
 		return nil, err

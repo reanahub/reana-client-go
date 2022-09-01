@@ -61,7 +61,7 @@ type quotaShowOptions struct {
 }
 
 // newQuotaShowCmd creates a command to show user quota.
-func newQuotaShowCmd() *cobra.Command {
+func newQuotaShowCmd(api *client.API) *cobra.Command {
 	o := &quotaShowOptions{}
 
 	cmd := &cobra.Command{
@@ -84,7 +84,7 @@ func newQuotaShowCmd() *cobra.Command {
 			} else {
 				o.unspecifiedReport = true
 			}
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -106,14 +106,10 @@ func newQuotaShowCmd() *cobra.Command {
 	return cmd
 }
 
-func (o *quotaShowOptions) run(cmd *cobra.Command) error {
+func (o *quotaShowOptions) run(cmd *cobra.Command, api *client.API) error {
 	quotaParams := operations.NewGetYouParams()
 	quotaParams.SetAccessToken(&o.token)
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
 	quotaResp, err := api.Operations.GetYou(quotaParams)
 	if err != nil {
 		return err

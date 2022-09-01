@@ -48,7 +48,7 @@ type openOptions struct {
 }
 
 // newOpenCmd creates a command to open an interactive session inside the workspace.
-func newOpenCmd() *cobra.Command {
+func newOpenCmd(api *client.API, viper *viper.Viper) *cobra.Command {
 	o := &openOptions{}
 
 	cmd := &cobra.Command{
@@ -69,7 +69,7 @@ func newOpenCmd() *cobra.Command {
 			); err != nil {
 				return err
 			}
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -86,7 +86,7 @@ func newOpenCmd() *cobra.Command {
 	return cmd
 }
 
-func (o *openOptions) run(cmd *cobra.Command) error {
+func (o *openOptions) run(cmd *cobra.Command, api *client.API) error {
 	openParams := operations.NewOpenInteractiveSessionParams()
 	openParams.SetAccessToken(&o.token)
 	openParams.SetWorkflowIDOrName(o.workflow)
@@ -95,10 +95,6 @@ func (o *openOptions) run(cmd *cobra.Command) error {
 		operations.OpenInteractiveSessionBody{Image: o.image},
 	)
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
 	log.Infof("Opening an interactive session on %s", o.workflow)
 	openResp, err := api.Operations.OpenInteractiveSession(openParams)
 	if err != nil {

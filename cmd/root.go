@@ -10,7 +10,9 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
+	"fmt"
 	"os"
+	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/pkg/validator"
 
 	"github.com/spf13/pflag"
@@ -27,8 +29,17 @@ type rootOptions struct {
 
 // NewRootCmd creates a new root command, responsible for creating all the other subcommands and
 // setting up the logger and persistent flags.
-func NewRootCmd() *cobra.Command {
+func NewRootCmd() (*cobra.Command, error) {
 	o := &rootOptions{}
+	viper := viper.New()
+	if err := setupViper(viper); err != nil {
+		return nil, err
+	}
+	api, err := client.NewApiClient(viper)
+	if err != nil {
+		return nil, fmt.Errorf("error while creating api client:\n%s", err.Error())
+	}
+
 	cmd := &cobra.Command{
 		Use:           "reana-client",
 		Short:         "REANA client for interacting with REANA server.",
@@ -36,7 +47,7 @@ func NewRootCmd() *cobra.Command {
 		SilenceUsage:  true,
 		SilenceErrors: true,
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
-			return o.run(cmd)
+			return o.run(cmd, viper)
 		},
 	}
 
@@ -47,38 +58,34 @@ func NewRootCmd() *cobra.Command {
 
 	// Add commands
 	cmd.AddCommand(newVersionCmd())
-	cmd.AddCommand(newPingCmd())
-	cmd.AddCommand(newInfoCmd())
-	cmd.AddCommand(newListCmd())
-	cmd.AddCommand(newDuCmd())
-	cmd.AddCommand(newOpenCmd())
-	cmd.AddCommand(newCloseCmd())
-	cmd.AddCommand(newLogsCmd())
-	cmd.AddCommand(newStatusCmd())
-	cmd.AddCommand(newLsCmd())
-	cmd.AddCommand(newDiffCmd())
-	cmd.AddCommand(newQuotaShowCmd())
-	cmd.AddCommand(newDeleteCmd())
-	cmd.AddCommand(newStartCmd())
-	cmd.AddCommand(newSecretsAddCmd())
-	cmd.AddCommand(newSecretsListCmd())
-	cmd.AddCommand(newSecretsDeleteCmd())
-	cmd.AddCommand(newRmCmd())
-	cmd.AddCommand(newMvCmd())
+	cmd.AddCommand(newPingCmd(api, viper))
+	cmd.AddCommand(newInfoCmd(api))
+	cmd.AddCommand(newListCmd(api, viper))
+	cmd.AddCommand(newDuCmd(api))
+	cmd.AddCommand(newOpenCmd(api, viper))
+	cmd.AddCommand(newCloseCmd(api))
+	cmd.AddCommand(newLogsCmd(api))
+	cmd.AddCommand(newStatusCmd(api))
+	cmd.AddCommand(newLsCmd(api, viper))
+	cmd.AddCommand(newDiffCmd(api))
+	cmd.AddCommand(newQuotaShowCmd(api))
+	cmd.AddCommand(newDeleteCmd(api))
+	cmd.AddCommand(newStartCmd(api, viper))
+	cmd.AddCommand(newSecretsAddCmd(api))
+	cmd.AddCommand(newSecretsListCmd(api))
+	cmd.AddCommand(newSecretsDeleteCmd(api))
+	cmd.AddCommand(newRmCmd(api))
+	cmd.AddCommand(newMvCmd(api))
 
-	return cmd
+	return cmd, nil
 }
 
-func (o *rootOptions) run(cmd *cobra.Command) error {
+func (o *rootOptions) run(cmd *cobra.Command, viper *viper.Viper) error {
 	if err := setupLogger(o.logLevel); err != nil {
 		return err
 	}
 
-	if err := setupViper(); err != nil {
-		return err
-	}
-
-	if err := validateFlags(cmd); err != nil {
+	if err := validateFlags(cmd, viper); err != nil {
 		return err
 	}
 
@@ -87,13 +94,13 @@ func (o *rootOptions) run(cmd *cobra.Command) error {
 }
 
 // validateFlags validates access token, server URL and workflow flag values.
-func validateFlags(cmd *cobra.Command) error {
+func validateFlags(cmd *cobra.Command, viper *viper.Viper) error {
 	token := cmd.Flags().Lookup("access-token")
 	serverURL := viper.GetString("server-url")
 	workflow := cmd.Flags().Lookup("workflow")
 
 	if token != nil {
-		if err := bindViperToCmdFlag(token); err != nil {
+		if err := bindViperToCmdFlag(token, viper); err != nil {
 			return err
 		}
 		tokenValue := token.Value.String()
@@ -111,7 +118,7 @@ func validateFlags(cmd *cobra.Command) error {
 			return nil
 		}
 
-		if err := bindViperToCmdFlag(workflow); err != nil {
+		if err := bindViperToCmdFlag(workflow, viper); err != nil {
 			return err
 		}
 		workflowValue := workflow.Value.String()
@@ -123,7 +130,7 @@ func validateFlags(cmd *cobra.Command) error {
 }
 
 // setupViper binds environment variable values to the viper keys.
-func setupViper() error {
+func setupViper(viper *viper.Viper) error {
 	if err := viper.BindEnv("server-url", "REANA_SERVER_URL"); err != nil {
 		return err
 	}
@@ -167,7 +174,7 @@ func logCmdFlags(cmd *cobra.Command) {
 }
 
 // bindViperToCmdFlag applies viper config value to the flag when the flag is not set and viper has a value.
-func bindViperToCmdFlag(f *pflag.Flag) error {
+func bindViperToCmdFlag(f *pflag.Flag, viper *viper.Viper) error {
 	if f != nil && !f.Changed && viper.IsSet(f.Name) {
 		value := viper.GetString(f.Name)
 		if err := f.Value.Set(value); err != nil {

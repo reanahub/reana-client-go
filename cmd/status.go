@@ -10,6 +10,7 @@ package cmd
 
 import (
 	"fmt"
+	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/pkg/displayer"
 	"reanahub/reana-client-go/pkg/formatter"
@@ -51,7 +52,7 @@ type statusOptions struct {
 }
 
 // newStatusCmd creates a command to get status of a workflow.
-func newStatusCmd() *cobra.Command {
+func newStatusCmd(api *client.API) *cobra.Command {
 	o := &statusOptions{}
 
 	cmd := &cobra.Command{
@@ -60,7 +61,7 @@ func newStatusCmd() *cobra.Command {
 		Long:  statusDesc,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -86,8 +87,8 @@ In case a workflow is in progress, its duration as of now will be shown.`,
 	return cmd
 }
 
-func (o *statusOptions) run(cmd *cobra.Command) error {
-	payload, err := workflows.GetStatus(o.token, o.workflow)
+func (o *statusOptions) run(cmd *cobra.Command, api *client.API) error {
+	payload, err := workflows.GetStatus(api, o.token, o.workflow)
 	if err != nil {
 		return err
 	}

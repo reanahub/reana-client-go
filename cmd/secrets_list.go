@@ -29,7 +29,7 @@ type secretsListOptions struct {
 }
 
 // newSecretsListCmd creates a command to list user secrets.
-func newSecretsListCmd() *cobra.Command {
+func newSecretsListCmd(api *client.API) *cobra.Command {
 	o := &secretsListOptions{}
 
 	cmd := &cobra.Command{
@@ -38,7 +38,7 @@ func newSecretsListCmd() *cobra.Command {
 		Long:  secretsListDesc,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -48,14 +48,10 @@ func newSecretsListCmd() *cobra.Command {
 	return cmd
 }
 
-func (o *secretsListOptions) run(cmd *cobra.Command) error {
+func (o *secretsListOptions) run(cmd *cobra.Command, api *client.API) error {
 	listSecretsParams := operations.NewGetSecretsParams()
 	listSecretsParams.SetAccessToken(&o.token)
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
 	listSecretsResp, err := api.Operations.GetSecrets(listSecretsParams)
 	if err != nil {
 		return err

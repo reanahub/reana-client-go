@@ -48,7 +48,7 @@ type diffOptions struct {
 }
 
 // newDiffCmd creates a command to show diff between two workflows.
-func newDiffCmd() *cobra.Command {
+func newDiffCmd(api *client.API) *cobra.Command {
 	o := &diffOptions{}
 
 	cmd := &cobra.Command{
@@ -59,7 +59,7 @@ func newDiffCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			o.workflowA = args[0]
 			o.workflowB = args[1]
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -74,7 +74,7 @@ files in the two workspaces are shown.`)
 	return cmd
 }
 
-func (o *diffOptions) run(cmd *cobra.Command) error {
+func (o *diffOptions) run(cmd *cobra.Command, api *client.API) error {
 	diffParams := operations.NewGetWorkflowDiffParams()
 	diffParams.SetAccessToken(&o.token)
 	diffParams.SetWorkflowIDOrNamea(o.workflowA)
@@ -83,10 +83,6 @@ func (o *diffOptions) run(cmd *cobra.Command) error {
 	contextLines := fmt.Sprintf("%d", o.unified)
 	diffParams.SetContextLines(&contextLines)
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
 	diffResp, err := api.Operations.GetWorkflowDiff(diffParams)
 	if err != nil {
 		return err

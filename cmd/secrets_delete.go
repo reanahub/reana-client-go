@@ -32,7 +32,7 @@ type secretsDeleteOptions struct {
 }
 
 // newSecretsDeleteCmd creates a command to delete user secrets by name.
-func newSecretsDeleteCmd() *cobra.Command {
+func newSecretsDeleteCmd(api *client.API) *cobra.Command {
 	o := &secretsDeleteOptions{}
 
 	cmd := &cobra.Command{
@@ -42,7 +42,7 @@ func newSecretsDeleteCmd() *cobra.Command {
 		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			o.secrets = args
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -52,15 +52,11 @@ func newSecretsDeleteCmd() *cobra.Command {
 	return cmd
 }
 
-func (o *secretsDeleteOptions) run(cmd *cobra.Command) error {
+func (o *secretsDeleteOptions) run(cmd *cobra.Command, api *client.API) error {
 	deleteSecretsParams := operations.NewDeleteSecretsParams()
 	deleteSecretsParams.SetAccessToken(&o.token)
 	deleteSecretsParams.SetSecrets(o.secrets)
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
 	deleteSecretsResp, err := api.Operations.DeleteSecrets(deleteSecretsParams)
 	if err != nil {
 		return handleSecretsDeleteApiError(err)

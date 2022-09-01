@@ -24,8 +24,10 @@ import (
 )
 
 func main() {
-	rootCmd := cmd.NewRootCmd()
-	err := rootCmd.Execute()
+	rootCmd, err := cmd.NewRootCmd()
+	if err == nil {
+		err = rootCmd.Execute()
+	}
 
 	if err != nil {
 		log.Debug(err)

@@ -35,7 +35,7 @@ type mvOptions struct {
 }
 
 // newMvCmd creates a command to move files within workspace.
-func newMvCmd() *cobra.Command {
+func newMvCmd(api *client.API) *cobra.Command {
 	o := &mvOptions{}
 
 	cmd := &cobra.Command{
@@ -46,7 +46,7 @@ func newMvCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			o.source = args[0]
 			o.target = args[1]
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -62,18 +62,14 @@ func newMvCmd() *cobra.Command {
 	return cmd
 }
 
-func (o *mvOptions) run(cmd *cobra.Command) error {
+func (o *mvOptions) run(cmd *cobra.Command, api *client.API) error {
 	mvParams := operations.NewMoveFilesParams()
 	mvParams.SetAccessToken(&o.token)
 	mvParams.SetWorkflowIDOrName(o.workflow)
 	mvParams.SetSource(o.source)
 	mvParams.SetTarget(o.target)
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
-	_, err = api.Operations.MoveFiles(mvParams)
+	_, err := api.Operations.MoveFiles(mvParams)
 	if err != nil {
 		return err
 	}

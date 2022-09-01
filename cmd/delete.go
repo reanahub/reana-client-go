@@ -10,6 +10,7 @@ package cmd
 
 import (
 	"fmt"
+	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/pkg/displayer"
 	"reanahub/reana-client-go/pkg/workflows"
 
@@ -39,7 +40,7 @@ type deleteOptions struct {
 }
 
 // newDeleteCmd creates a command to delete a workflow.
-func newDeleteCmd() *cobra.Command {
+func newDeleteCmd(api *client.API) *cobra.Command {
 	o := &deleteOptions{}
 
 	cmd := &cobra.Command{
@@ -48,7 +49,7 @@ func newDeleteCmd() *cobra.Command {
 		Long:  deleteDesc,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -72,8 +73,9 @@ func newDeleteCmd() *cobra.Command {
 	return cmd
 }
 
-func (o *deleteOptions) run(cmd *cobra.Command) error {
+func (o *deleteOptions) run(cmd *cobra.Command, api *client.API) error {
 	err := workflows.UpdateStatus(
+		api,
 		o.token,
 		o.workflow,
 		"deleted",

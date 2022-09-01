@@ -38,7 +38,7 @@ type rmOptions struct {
 }
 
 // newRmCmd creates a command to delete files from workspace.
-func newRmCmd() *cobra.Command {
+func newRmCmd(api *client.API) *cobra.Command {
 	o := &rmOptions{}
 
 	cmd := &cobra.Command{
@@ -48,7 +48,7 @@ func newRmCmd() *cobra.Command {
 		Args:  cobra.MinimumNArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			o.fileNames = args
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -64,12 +64,7 @@ func newRmCmd() *cobra.Command {
 	return cmd
 }
 
-func (o *rmOptions) run(cmd *cobra.Command) error {
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
-
+func (o *rmOptions) run(cmd *cobra.Command, api *client.API) error {
 	hasError := false
 	for _, fileName := range o.fileNames {
 		rmParams := operations.NewDeleteFileParams()

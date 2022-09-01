@@ -47,7 +47,7 @@ type secretsAddOptions struct {
 }
 
 // newSecretsAddCmd creates a command to add secrets from literal string or from file.
-func newSecretsAddCmd() *cobra.Command {
+func newSecretsAddCmd(api *client.API) *cobra.Command {
 	o := &secretsAddOptions{}
 
 	cmd := &cobra.Command{
@@ -66,7 +66,7 @@ func newSecretsAddCmd() *cobra.Command {
 					return fmt.Errorf("invalid value for '--file': %s", err.Error())
 				}
 			}
-			return o.run(cmd)
+			return o.run(cmd, api)
 		},
 	}
 
@@ -80,7 +80,7 @@ e.g. PASSWORD=password123`)
 	return cmd
 }
 
-func (o *secretsAddOptions) run(cmd *cobra.Command) error {
+func (o *secretsAddOptions) run(cmd *cobra.Command, api *client.API) error {
 	secrets, secretNames, err := parseSecrets(o.envSecrets, o.fileSecrets)
 	if err != nil {
 		return err
@@ -91,10 +91,6 @@ func (o *secretsAddOptions) run(cmd *cobra.Command) error {
 	addSecretsParams.SetOverwrite(&o.overwrite)
 	addSecretsParams.SetSecrets(secrets)
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
 	_, err = api.Operations.AddSecrets(addSecretsParams)
 	if err != nil {
 		return err
