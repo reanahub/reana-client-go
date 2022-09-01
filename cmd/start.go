@@ -136,12 +136,16 @@ func (o *startOptions) run(cmd *cobra.Command) error {
 	if err != nil {
 		return err
 	}
-	displayer.DisplayMessage(
-		statusMsg,
-		displayer.Success,
-		false,
-		cmd.OutOrStdout(),
-	)
+	if slices.Contains([]string{"pending", "queued", "running"}, currentStatus) {
+		displayer.DisplayMessage(
+			statusMsg,
+			displayer.Success,
+			false,
+			cmd.OutOrStdout(),
+		)
+	} else {
+		return errors.New(statusMsg)
+	}
 
 	if o.follow {
 		err = followWorkflowExecution(cmd, currentStatus, o.token, o.serverURL, o.workflow)
@@ -205,33 +209,35 @@ func followWorkflowExecution(
 		if err != nil {
 			return err
 		}
+
+		if slices.Contains([]string{"deleted", "failed", "stopped"}, currentStatus) {
+			return errors.New(statusMsg)
+		}
 		displayer.DisplayMessage(
 			statusMsg,
 			displayer.Success,
 			false,
 			cmd.OutOrStdout(),
 		)
+	}
 
-		if currentStatus == "finished" {
-			displayer.DisplayMessage(
-				"Listing workflow output files...",
-				displayer.Info,
-				false,
-				cmd.OutOrStdout(),
-			)
-			lsParams := lsOptions{
-				token:       token,
-				serverURL:   serverURL,
-				workflow:    workflow,
-				displayURLs: true,
-				page:        1,
-			}
-			err = lsParams.run(cmd)
-			if err != nil {
-				return err
-			}
-		} else if slices.Contains([]string{"deleted", "failed", "stopped"}, currentStatus) {
-			return errors.New("the workflow did not finish")
+	if currentStatus == "finished" {
+		displayer.DisplayMessage(
+			"Listing workflow output files...",
+			displayer.Info,
+			false,
+			cmd.OutOrStdout(),
+		)
+		lsParams := lsOptions{
+			token:       token,
+			serverURL:   serverURL,
+			workflow:    workflow,
+			displayURLs: true,
+			page:        1,
+		}
+		err := lsParams.run(cmd)
+		if err != nil {
+			return err
 		}
 	}
 	return nil

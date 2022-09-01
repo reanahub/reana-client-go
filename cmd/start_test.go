@@ -37,8 +37,21 @@ func TestStart(t *testing.T) {
 			},
 			args: []string{"-w", workflowName},
 			expected: []string{
-				"my_workflow is running",
+				workflowName + " is running",
 			},
+		},
+		"failed at start": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(startPathTemplate, workflowName): {
+					statusCode:   http.StatusOK,
+					responseFile: "common_failed.json",
+				},
+			},
+			args: []string{"-w", workflowName},
+			expected: []string{
+				workflowName + " has failed",
+			},
+			wantError: true,
 		},
 		"valid options": {
 			serverResponses: map[string]ServerResponse{
@@ -53,7 +66,7 @@ func TestStart(t *testing.T) {
 			},
 			args: []string{"-w", workflowName, "-o", "CACHE=cache,FROM=from"},
 			expected: []string{
-				"my_workflow is running",
+				workflowName + " is running",
 			},
 		},
 		"valid parameters": {
@@ -69,7 +82,7 @@ func TestStart(t *testing.T) {
 			},
 			args: []string{"-w", workflowName, "-p", "data=results/data2.root,events=100"},
 			expected: []string{
-				"my_workflow is running",
+				workflowName + " is running",
 			},
 		},
 		"unsupported option": {
@@ -120,7 +133,7 @@ func TestStart(t *testing.T) {
 			args: []string{"-w", workflowName, "-p", "data=results/data2.root,invalid=100"},
 			expected: []string{
 				"given parameter - invalid, is not in reana.yaml",
-				"my_workflow is running",
+				workflowName + " is running",
 			},
 		},
 		"validated options and parameters": {
@@ -141,7 +154,7 @@ func TestStart(t *testing.T) {
 			expected: []string{
 				"given parameter - invalid, is not in reana.yaml",
 				"given parameter - removed, is not in reana.yaml",
-				"my_workflow is running",
+				workflowName + " is running",
 			},
 		},
 		"workflow already finished": {
@@ -170,7 +183,7 @@ func TestStart(t *testing.T) {
 			},
 			args: []string{"-w", workflowName, "--follow"},
 			expected: []string{
-				"the workflow did not finish",
+				workflowName + " has been stopped",
 			},
 			wantError: true,
 		},
@@ -191,8 +204,8 @@ func TestStart(t *testing.T) {
 			},
 			args: []string{"-w", workflowName, "--follow"},
 			expected: []string{
-				"my_workflow is running",
-				"my_workflow has finished",
+				workflowName + " is running",
+				workflowName + " has finished",
 				"Listing workflow output files...",
 				"/api/workflows/my_workflow/workspace/code/gendata.C",
 				"/api/workflows/my_workflow/workspace/results/data.root",
