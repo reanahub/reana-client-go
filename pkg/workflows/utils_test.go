@@ -92,15 +92,45 @@ func TestStatusChangeMessage(t *testing.T) {
 		expected  string
 		wantError bool
 	}{
-		"status ending with 'ing": {
+		"running": {
 			workflow: "workflow",
 			status:   "running",
 			expected: "workflow is running",
 		},
-		"status ending with 'ed": {
+		"pending": {
+			workflow: "workflow",
+			status:   "pending",
+			expected: "workflow is pending",
+		},
+		"deleted": {
 			workflow: "workflow",
 			status:   "deleted",
 			expected: "workflow has been deleted",
+		},
+		"created": {
+			workflow: "workflow",
+			status:   "created",
+			expected: "workflow has been created",
+		},
+		"stopped": {
+			workflow: "workflow",
+			status:   "stopped",
+			expected: "workflow has been stopped",
+		},
+		"queued": {
+			workflow: "workflow",
+			status:   "queued",
+			expected: "workflow has been queued",
+		},
+		"finished": {
+			workflow: "workflow",
+			status:   "finished",
+			expected: "workflow has finished",
+		},
+		"failed": {
+			workflow: "workflow",
+			status:   "failed",
+			expected: "workflow has failed",
 		},
 		"invalid status": {
 			workflow:  "workflow",

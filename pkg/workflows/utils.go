@@ -52,11 +52,14 @@ func GetDuration(runStartedAt, runFinishedAt *string) (any, error) {
 // StatusChangeMessage constructs the message to be displayed when a workflow changes its status.
 func StatusChangeMessage(workflow, status string) (string, error) {
 	var verb string
-	if strings.HasSuffix(status, "ing") {
-		verb = "is"
-	} else if strings.HasSuffix(status, "ed") {
+	switch status {
+	case "finished", "failed":
+		verb = "has"
+	case "created", "stopped", "queued", "deleted":
 		verb = "has been"
-	} else {
+	case "running", "pending":
+		verb = "is"
+	default:
 		return "", fmt.Errorf("unrecognised status %s", status)
 	}
 

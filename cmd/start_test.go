@@ -192,7 +192,7 @@ func TestStart(t *testing.T) {
 			args: []string{"-w", workflowName, "--follow"},
 			expected: []string{
 				"my_workflow is running",
-				"my_workflow has been finished",
+				"my_workflow has finished",
 				"Listing workflow output files...",
 				"/api/workflows/my_workflow/workspace/code/gendata.C",
 				"/api/workflows/my_workflow/workspace/results/data.root",
