@@ -11,6 +11,7 @@ package cmd
 
 import (
 	"os"
+	"reanahub/reana-client-go/pkg/commandgroups"
 	"reanahub/reana-client-go/pkg/validator"
 
 	"github.com/spf13/pflag"
@@ -46,26 +47,71 @@ func NewRootCmd() *cobra.Command {
 		StringVarP(&o.logLevel, "loglevel", "l", "WARNING", "Sets log level [DEBUG|INFO|WARNING]")
 
 	// Add commands
-	cmd.AddCommand(newVersionCmd())
-	cmd.AddCommand(newPingCmd())
-	cmd.AddCommand(newInfoCmd())
-	cmd.AddCommand(newListCmd())
-	cmd.AddCommand(newDuCmd())
-	cmd.AddCommand(newOpenCmd())
-	cmd.AddCommand(newCloseCmd())
-	cmd.AddCommand(newLogsCmd())
-	cmd.AddCommand(newStatusCmd())
-	cmd.AddCommand(newLsCmd())
-	cmd.AddCommand(newDiffCmd())
-	cmd.AddCommand(newQuotaShowCmd())
-	cmd.AddCommand(newDeleteCmd())
-	cmd.AddCommand(newStartCmd())
-	cmd.AddCommand(newSecretsAddCmd())
-	cmd.AddCommand(newSecretsListCmd())
-	cmd.AddCommand(newSecretsDeleteCmd())
-	cmd.AddCommand(newRmCmd())
-	cmd.AddCommand(newMvCmd())
-
+	commandGroups := commandgroups.CommandGroups{
+		{
+			Message: "Quota commands:",
+			Commands: []*cobra.Command{
+				newQuotaShowCmd(),
+			},
+		},
+		{
+			Message: "Configuration commands:",
+			Commands: []*cobra.Command{
+				newInfoCmd(),
+				newPingCmd(),
+				newVersionCmd(),
+			},
+		},
+		{
+			Message: "Workflow management commands:",
+			Commands: []*cobra.Command{
+				// create
+				newDiffCmd(),
+				newDeleteCmd(),
+				newListCmd(),
+			},
+		},
+		{
+			Message: "Workflow execution commands:",
+			Commands: []*cobra.Command{
+				// restart
+				// run
+				// stop
+				// validate
+				newLogsCmd(),
+				newStartCmd(),
+				newStatusCmd(),
+			},
+		},
+		{
+			Message: "Workspace interactive commands:",
+			Commands: []*cobra.Command{
+				newOpenCmd(),
+				newCloseCmd(),
+			},
+		},
+		{
+			Message: "Workspace file management commands:",
+			Commands: []*cobra.Command{
+				// download
+				// upload
+				newDuCmd(),
+				newLsCmd(),
+				newRmCmd(),
+				newMvCmd(),
+			},
+		},
+		{
+			Message: "Secret management commands:",
+			Commands: []*cobra.Command{
+				newSecretsAddCmd(),
+				newSecretsListCmd(),
+				newSecretsDeleteCmd(),
+			},
+		},
+	}
+	commandGroups.Add(cmd)
+	commandGroups.SetUsageTemplate(cmd)
 	return cmd
 }
 
