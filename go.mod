@@ -9,6 +9,7 @@ require (
 	github.com/go-openapi/strfmt v0.21.3
 	github.com/go-openapi/swag v0.21.1
 	github.com/go-openapi/validate v0.22.0
+	github.com/iancoleman/orderedmap v0.2.0
 	github.com/jedib0t/go-pretty/v6 v6.3.5
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/cobra v1.5.0
@@ -26,7 +27,6 @@ require (
 	github.com/go-openapi/loads v0.21.1 // indirect
 	github.com/go-openapi/spec v0.20.6 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
-	github.com/iancoleman/orderedmap v0.2.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.6 // indirect

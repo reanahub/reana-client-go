@@ -39,10 +39,17 @@ func NewRootCmd() *cobra.Command {
 		PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 			return o.run(cmd)
 		},
+		PersistentPostRunE: func(*cobra.Command, []string) error {
+			if err := stopProfiler(); err != nil {
+				return err
+			}
+			return nil
+		},
 	}
 
 	cmd.SetOut(os.Stdout)
 
+	addProfilerFlags(cmd.PersistentFlags())
 	cmd.PersistentFlags().
 		StringVarP(&o.logLevel, "loglevel", "l", "WARNING", "Sets log level [DEBUG|INFO|WARNING]")
 
@@ -116,6 +123,9 @@ func NewRootCmd() *cobra.Command {
 }
 
 func (o *rootOptions) run(cmd *cobra.Command) error {
+	if err := setupProfiler(); err != nil {
+		return err
+	}
 	if err := setupLogger(o.logLevel); err != nil {
 		return err
 	}
