@@ -81,10 +81,10 @@ func NewRootCmd() *cobra.Command {
 		{
 			Message: "Workflow execution commands:",
 			Commands: []*cobra.Command{
-				// restart
 				// run
 				// stop
 				// validate
+				newRestartCmd(),
 				newLogsCmd(),
 				newStartCmd(),
 				newStatusCmd(),
