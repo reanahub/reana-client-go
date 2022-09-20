@@ -49,6 +49,9 @@ func GetRunStatuses(includeDeleted bool) []string {
 	return runStatuses
 }
 
+// UpdateStatusActions provides a list of supported actions for updating the workflow status.
+var UpdateStatusActions = []string{"start", "stop", "deleted"}
+
 // DuMultiFilters available filters with multiple values in du command.
 var DuMultiFilters = []string{"size", "name"}
 

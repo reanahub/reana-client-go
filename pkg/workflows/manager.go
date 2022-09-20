@@ -20,7 +20,7 @@ func UpdateStatus(
 	token, workflow, status string,
 	includeWorkspace, includeAllRuns bool,
 ) error {
-	if err := validator.ValidateChoice(status, config.GetRunStatuses(true), "status"); err != nil {
+	if err := validator.ValidateChoice(status, config.UpdateStatusActions, "status"); err != nil {
 		return err
 	}
 

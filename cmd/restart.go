@@ -17,8 +17,6 @@ import (
 	"reanahub/reana-client-go/pkg/validator"
 	"reanahub/reana-client-go/pkg/workflows"
 
-	"github.com/spf13/viper"
-
 	"golang.org/x/exp/slices"
 
 	"github.com/spf13/cobra"
@@ -52,7 +50,6 @@ Examples:
 
 type restartOptions struct {
 	token      string
-	serverURL  string
 	workflow   string
 	parameters map[string]string
 	options    map[string]string
@@ -69,7 +66,6 @@ func newRestartCmd() *cobra.Command {
 		Long:  restartDesc,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			o.serverURL = viper.GetString("server-url")
 			if o.file != "" {
 				if err := validator.ValidateFile(o.file); err != nil {
 					return fmt.Errorf("invalid value for '--file': %s", err.Error())
