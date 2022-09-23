@@ -101,7 +101,7 @@ func NewRootCmd() *cobra.Command {
 			Message: "Workspace file management commands:",
 			Commands: []*cobra.Command{
 				// download
-				// upload
+				newUploadCmd(),
 				newDuCmd(),
 				newLsCmd(),
 				newRmCmd(),
