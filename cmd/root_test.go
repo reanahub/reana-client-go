@@ -48,8 +48,9 @@ type TestCmdParams struct {
 }
 
 type ServerResponse struct {
-	statusCode   int
-	responseFile string
+	statusCode      int
+	responseFile    string
+	responseHeaders map[string]string
 }
 
 func testCmdRun(t *testing.T, p TestCmdParams) {
@@ -60,6 +61,9 @@ func testCmdRun(t *testing.T, p TestCmdParams) {
 		res, validPath := p.serverResponses[r.URL.Path]
 		if validPath {
 			w.Header().Add("Content-Type", "application/json")
+			for name, value := range res.responseHeaders {
+				w.Header().Add(name, value)
+			}
 			w.WriteHeader(res.statusCode)
 
 			var body []byte

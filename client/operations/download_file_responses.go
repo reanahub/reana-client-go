@@ -72,6 +72,9 @@ func NewDownloadFileOK(writer io.Writer) *DownloadFileOK {
 Requests succeeded. The file has been downloaded.
 */
 type DownloadFileOK struct {
+	ContentDisposition string
+	ContentType        string
+
 	Payload io.Writer
 }
 
@@ -83,6 +86,20 @@ func (o *DownloadFileOK) GetPayload() io.Writer {
 }
 
 func (o *DownloadFileOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	// hydrates response header Content-Disposition
+	hdrContentDisposition := response.GetHeader("Content-Disposition")
+
+	if hdrContentDisposition != "" {
+		o.ContentDisposition = hdrContentDisposition
+	}
+
+	// hydrates response header Content-Type
+	hdrContentType := response.GetHeader("Content-Type")
+
+	if hdrContentType != "" {
+		o.ContentType = hdrContentType
+	}
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

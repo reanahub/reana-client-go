@@ -9,7 +9,9 @@ under the terms of the MIT License; see LICENSE file for more details.
 package workflows
 
 import (
+	"bytes"
 	"fmt"
+	"mime"
 	"os"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
@@ -112,4 +114,37 @@ func UploadFile(token, workflow, fileName string) (string, error) {
 		return "", err
 	}
 	return uploadResp.GetPayload().Message, nil
+}
+
+// DownloadFile downloads a file of the specified workflow.
+func DownloadFile(token, workflow, fileName string) (string, *bytes.Buffer, bool, error) {
+	fileBuf := new(bytes.Buffer)
+	downloadParams := operations.NewDownloadFileParams()
+	downloadParams.SetAccessToken(&token)
+	downloadParams.SetWorkflowIDOrName(workflow)
+	downloadParams.SetFileName(fileName)
+
+	api, err := client.ApiClient()
+	if err != nil {
+		return "", nil, false, err
+	}
+	downloadResp, err := api.Operations.DownloadFile(downloadParams, fileBuf)
+	if err != nil {
+		return "", nil, false, err
+	}
+
+	// parse Content-Disposition header to extract a filename
+	_, params, err := mime.ParseMediaType(downloadResp.ContentDisposition)
+	if err != nil {
+		return "", nil, false, err
+	}
+	name := "downloaded_file"
+	if val, ok := params["filename"]; ok {
+		name = val
+	}
+
+	// a zip archive is downloaded if multiple files are requested
+	multipleFilesZipped := downloadResp.ContentType == "application/zip"
+
+	return name, fileBuf, multipleFilesZipped, nil
 }

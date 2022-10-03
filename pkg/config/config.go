@@ -85,3 +85,6 @@ var CheckInterval = 5
 // EmptyError Error to be used in case we want to return an error that isn't displayed to the user.
 // Useful when the command already prints the errors occurred.
 var EmptyError = errors.New("")
+
+// StdoutChar used to refer to the standard output.
+var StdoutChar = "-"

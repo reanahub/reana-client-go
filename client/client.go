@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
@@ -35,6 +36,7 @@ func ApiClient() (*API, error) {
 	transport := httptransport.New(u.Host, "", []string{"https"})
 	transport.SetLogger(log.StandardLogger())
 	transport.SetDebug(log.GetLevel() == log.DebugLevel)
+	transport.Consumers["application/zip"] = runtime.ByteStreamConsumer()
 
 	log.Info("Connecting to ", serverURL)
 
