@@ -47,7 +47,7 @@ func TestSecretsDelete(t *testing.T) {
 			},
 			args: []string{"secret1", "secret2"},
 			expected: []string{
-				"secrets ['secret1', 'secret2'] do not exist. Nothing was deleted",
+				"secrets secret1, secret2 do not exist. Nothing was deleted",
 			},
 			wantError: true,
 		},
@@ -60,7 +60,7 @@ func TestSecretsDelete(t *testing.T) {
 			},
 			args: []string{"secret1", "secret2"},
 			expected: []string{
-				"secrets ['secret1'] do not exist. Nothing was deleted",
+				"secrets secret1 do not exist. Nothing was deleted",
 			},
 			wantError: true,
 		},
@@ -84,7 +84,7 @@ func TestHandleSecretsDeleteApiError(t *testing.T) {
 	}{
 		"not found error": {
 			err:      notFoundError,
-			expected: "secrets ['secret1', 'secret2'] do not exist. Nothing was deleted",
+			expected: "secrets secret1, secret2 do not exist. Nothing was deleted",
 		},
 		"another error": {
 			err:      errors.New("some error"),

@@ -23,7 +23,7 @@ Delete user secrets by name.
 
 Examples:
 
-	$ reana-client secrets-delete PASSWORD
+	$ reana-client secrets-delete RUCIO_USERNAME
 `
 
 type secretsDeleteOptions struct {
@@ -85,8 +85,8 @@ func handleSecretsDeleteApiError(err error) error {
 	notFoundErr, isNotFoundErr := err.(*operations.DeleteSecretsNotFound)
 	if isNotFoundErr {
 		return fmt.Errorf(
-			"secrets ['%s'] do not exist. Nothing was deleted",
-			strings.Join(notFoundErr.Payload, "', '"),
+			"secrets %s do not exist. Nothing was deleted",
+			strings.Join(notFoundErr.Payload, ", "),
 		)
 	}
 	return err
