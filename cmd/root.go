@@ -109,6 +109,12 @@ func NewRootCmd() *cobra.Command {
 			},
 		},
 		{
+			Message: "Workspace file retention commands:",
+			Commands: []*cobra.Command{
+				newRetentionRulesListCmd(),
+			},
+		},
+		{
 			Message: "Secret management commands:",
 			Commands: []*cobra.Command{
 				newSecretsAddCmd(),

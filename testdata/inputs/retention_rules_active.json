@@ -1,0 +1,20 @@
+{
+  "retention_rules": [
+    {
+      "apply_on": "2022-11-26T23:59:59",
+      "id": "2ce01979-a064-4121-bd29-a11629722ab1",
+      "retention_days": 2,
+      "status": "active",
+      "workspace_files": "**/*.txt"
+    },
+    {
+      "apply_on": "2022-11-25T23:59:59",
+      "id": "cba57ace-3a3b-404a-af47-02d432b4ed1c",
+      "retention_days": 1,
+      "status": "active",
+      "workspace_files": "*.csv"
+    }
+  ],
+  "workflow_id": "2c807b7f-1b7a-438c-a929-26d8e1e0aa96",
+  "workflow_name": "my_workflow.1"
+}
