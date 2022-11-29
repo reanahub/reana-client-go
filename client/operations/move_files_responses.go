@@ -69,7 +69,8 @@ func NewMoveFilesOK() *MoveFilesOK {
 	return &MoveFilesOK{}
 }
 
-/* MoveFilesOK describes a response with status code 200, with default header values.
+/*
+MoveFilesOK describes a response with status code 200, with default header values.
 
 Request succeeded. Message about successfully moved files is returned.
 */
@@ -77,9 +78,39 @@ type MoveFilesOK struct {
 	Payload *MoveFilesOKBody
 }
 
+// IsSuccess returns true when this move files o k response has a 2xx status code
+func (o *MoveFilesOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this move files o k response has a 3xx status code
+func (o *MoveFilesOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this move files o k response has a 4xx status code
+func (o *MoveFilesOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this move files o k response has a 5xx status code
+func (o *MoveFilesOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this move files o k response a status code equal to that given
+func (o *MoveFilesOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *MoveFilesOK) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesOK  %+v", 200, o.Payload)
 }
+
+func (o *MoveFilesOK) String() string {
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesOK  %+v", 200, o.Payload)
+}
+
 func (o *MoveFilesOK) GetPayload() *MoveFilesOKBody {
 	return o.Payload
 }
@@ -101,7 +132,8 @@ func NewMoveFilesBadRequest() *MoveFilesBadRequest {
 	return &MoveFilesBadRequest{}
 }
 
-/* MoveFilesBadRequest describes a response with status code 400, with default header values.
+/*
+MoveFilesBadRequest describes a response with status code 400, with default header values.
 
 Request failed. The incoming payload seems malformed.
 */
@@ -109,9 +141,39 @@ type MoveFilesBadRequest struct {
 	Payload *MoveFilesBadRequestBody
 }
 
+// IsSuccess returns true when this move files bad request response has a 2xx status code
+func (o *MoveFilesBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this move files bad request response has a 3xx status code
+func (o *MoveFilesBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this move files bad request response has a 4xx status code
+func (o *MoveFilesBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this move files bad request response has a 5xx status code
+func (o *MoveFilesBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this move files bad request response a status code equal to that given
+func (o *MoveFilesBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *MoveFilesBadRequest) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *MoveFilesBadRequest) String() string {
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *MoveFilesBadRequest) GetPayload() *MoveFilesBadRequestBody {
 	return o.Payload
 }
@@ -133,7 +195,8 @@ func NewMoveFilesForbidden() *MoveFilesForbidden {
 	return &MoveFilesForbidden{}
 }
 
-/* MoveFilesForbidden describes a response with status code 403, with default header values.
+/*
+MoveFilesForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -141,9 +204,39 @@ type MoveFilesForbidden struct {
 	Payload *MoveFilesForbiddenBody
 }
 
+// IsSuccess returns true when this move files forbidden response has a 2xx status code
+func (o *MoveFilesForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this move files forbidden response has a 3xx status code
+func (o *MoveFilesForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this move files forbidden response has a 4xx status code
+func (o *MoveFilesForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this move files forbidden response has a 5xx status code
+func (o *MoveFilesForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this move files forbidden response a status code equal to that given
+func (o *MoveFilesForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *MoveFilesForbidden) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesForbidden  %+v", 403, o.Payload)
 }
+
+func (o *MoveFilesForbidden) String() string {
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesForbidden  %+v", 403, o.Payload)
+}
+
 func (o *MoveFilesForbidden) GetPayload() *MoveFilesForbiddenBody {
 	return o.Payload
 }
@@ -165,7 +258,8 @@ func NewMoveFilesNotFound() *MoveFilesNotFound {
 	return &MoveFilesNotFound{}
 }
 
-/* MoveFilesNotFound describes a response with status code 404, with default header values.
+/*
+MoveFilesNotFound describes a response with status code 404, with default header values.
 
 Request failed. Either User or Workflow does not exist.
 */
@@ -173,9 +267,39 @@ type MoveFilesNotFound struct {
 	Payload *MoveFilesNotFoundBody
 }
 
+// IsSuccess returns true when this move files not found response has a 2xx status code
+func (o *MoveFilesNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this move files not found response has a 3xx status code
+func (o *MoveFilesNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this move files not found response has a 4xx status code
+func (o *MoveFilesNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this move files not found response has a 5xx status code
+func (o *MoveFilesNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this move files not found response a status code equal to that given
+func (o *MoveFilesNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *MoveFilesNotFound) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesNotFound  %+v", 404, o.Payload)
 }
+
+func (o *MoveFilesNotFound) String() string {
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesNotFound  %+v", 404, o.Payload)
+}
+
 func (o *MoveFilesNotFound) GetPayload() *MoveFilesNotFoundBody {
 	return o.Payload
 }
@@ -197,7 +321,8 @@ func NewMoveFilesConflict() *MoveFilesConflict {
 	return &MoveFilesConflict{}
 }
 
-/* MoveFilesConflict describes a response with status code 409, with default header values.
+/*
+MoveFilesConflict describes a response with status code 409, with default header values.
 
 Request failed. The files could not be moved due to a conflict.
 */
@@ -205,9 +330,39 @@ type MoveFilesConflict struct {
 	Payload *MoveFilesConflictBody
 }
 
+// IsSuccess returns true when this move files conflict response has a 2xx status code
+func (o *MoveFilesConflict) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this move files conflict response has a 3xx status code
+func (o *MoveFilesConflict) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this move files conflict response has a 4xx status code
+func (o *MoveFilesConflict) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this move files conflict response has a 5xx status code
+func (o *MoveFilesConflict) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this move files conflict response a status code equal to that given
+func (o *MoveFilesConflict) IsCode(code int) bool {
+	return code == 409
+}
+
 func (o *MoveFilesConflict) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesConflict  %+v", 409, o.Payload)
 }
+
+func (o *MoveFilesConflict) String() string {
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesConflict  %+v", 409, o.Payload)
+}
+
 func (o *MoveFilesConflict) GetPayload() *MoveFilesConflictBody {
 	return o.Payload
 }
@@ -229,7 +384,8 @@ func NewMoveFilesInternalServerError() *MoveFilesInternalServerError {
 	return &MoveFilesInternalServerError{}
 }
 
-/* MoveFilesInternalServerError describes a response with status code 500, with default header values.
+/*
+MoveFilesInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -237,9 +393,39 @@ type MoveFilesInternalServerError struct {
 	Payload *MoveFilesInternalServerErrorBody
 }
 
+// IsSuccess returns true when this move files internal server error response has a 2xx status code
+func (o *MoveFilesInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this move files internal server error response has a 3xx status code
+func (o *MoveFilesInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this move files internal server error response has a 4xx status code
+func (o *MoveFilesInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this move files internal server error response has a 5xx status code
+func (o *MoveFilesInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this move files internal server error response a status code equal to that given
+func (o *MoveFilesInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *MoveFilesInternalServerError) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *MoveFilesInternalServerError) String() string {
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *MoveFilesInternalServerError) GetPayload() *MoveFilesInternalServerErrorBody {
 	return o.Payload
 }
@@ -256,7 +442,8 @@ func (o *MoveFilesInternalServerError) readResponse(response runtime.ClientRespo
 	return nil
 }
 
-/*MoveFilesBadRequestBody move files bad request body
+/*
+MoveFilesBadRequestBody move files bad request body
 swagger:model MoveFilesBadRequestBody
 */
 type MoveFilesBadRequestBody struct {
@@ -293,7 +480,8 @@ func (o *MoveFilesBadRequestBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*MoveFilesConflictBody move files conflict body
+/*
+MoveFilesConflictBody move files conflict body
 swagger:model MoveFilesConflictBody
 */
 type MoveFilesConflictBody struct {
@@ -330,7 +518,8 @@ func (o *MoveFilesConflictBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*MoveFilesForbiddenBody move files forbidden body
+/*
+MoveFilesForbiddenBody move files forbidden body
 swagger:model MoveFilesForbiddenBody
 */
 type MoveFilesForbiddenBody struct {
@@ -367,7 +556,8 @@ func (o *MoveFilesForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*MoveFilesInternalServerErrorBody move files internal server error body
+/*
+MoveFilesInternalServerErrorBody move files internal server error body
 swagger:model MoveFilesInternalServerErrorBody
 */
 type MoveFilesInternalServerErrorBody struct {
@@ -404,7 +594,8 @@ func (o *MoveFilesInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*MoveFilesNotFoundBody move files not found body
+/*
+MoveFilesNotFoundBody move files not found body
 swagger:model MoveFilesNotFoundBody
 */
 type MoveFilesNotFoundBody struct {
@@ -441,7 +632,8 @@ func (o *MoveFilesNotFoundBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*MoveFilesOKBody move files o k body
+/*
+MoveFilesOKBody move files o k body
 swagger:model MoveFilesOKBody
 */
 type MoveFilesOKBody struct {

@@ -75,7 +75,8 @@ func NewSetWorkflowStatusOK() *SetWorkflowStatusOK {
 	return &SetWorkflowStatusOK{}
 }
 
-/* SetWorkflowStatusOK describes a response with status code 200, with default header values.
+/*
+SetWorkflowStatusOK describes a response with status code 200, with default header values.
 
 Request succeeded. Info about a workflow, including the status is returned.
 */
@@ -83,9 +84,39 @@ type SetWorkflowStatusOK struct {
 	Payload *SetWorkflowStatusOKBody
 }
 
+// IsSuccess returns true when this set workflow status o k response has a 2xx status code
+func (o *SetWorkflowStatusOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this set workflow status o k response has a 3xx status code
+func (o *SetWorkflowStatusOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this set workflow status o k response has a 4xx status code
+func (o *SetWorkflowStatusOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this set workflow status o k response has a 5xx status code
+func (o *SetWorkflowStatusOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this set workflow status o k response a status code equal to that given
+func (o *SetWorkflowStatusOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *SetWorkflowStatusOK) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusOK  %+v", 200, o.Payload)
 }
+
+func (o *SetWorkflowStatusOK) String() string {
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusOK  %+v", 200, o.Payload)
+}
+
 func (o *SetWorkflowStatusOK) GetPayload() *SetWorkflowStatusOKBody {
 	return o.Payload
 }
@@ -107,7 +138,8 @@ func NewSetWorkflowStatusBadRequest() *SetWorkflowStatusBadRequest {
 	return &SetWorkflowStatusBadRequest{}
 }
 
-/* SetWorkflowStatusBadRequest describes a response with status code 400, with default header values.
+/*
+SetWorkflowStatusBadRequest describes a response with status code 400, with default header values.
 
 Request failed. The incoming payload seems malformed.
 */
@@ -115,9 +147,39 @@ type SetWorkflowStatusBadRequest struct {
 	Payload *SetWorkflowStatusBadRequestBody
 }
 
+// IsSuccess returns true when this set workflow status bad request response has a 2xx status code
+func (o *SetWorkflowStatusBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this set workflow status bad request response has a 3xx status code
+func (o *SetWorkflowStatusBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this set workflow status bad request response has a 4xx status code
+func (o *SetWorkflowStatusBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this set workflow status bad request response has a 5xx status code
+func (o *SetWorkflowStatusBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this set workflow status bad request response a status code equal to that given
+func (o *SetWorkflowStatusBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *SetWorkflowStatusBadRequest) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *SetWorkflowStatusBadRequest) String() string {
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *SetWorkflowStatusBadRequest) GetPayload() *SetWorkflowStatusBadRequestBody {
 	return o.Payload
 }
@@ -139,7 +201,8 @@ func NewSetWorkflowStatusForbidden() *SetWorkflowStatusForbidden {
 	return &SetWorkflowStatusForbidden{}
 }
 
-/* SetWorkflowStatusForbidden describes a response with status code 403, with default header values.
+/*
+SetWorkflowStatusForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -147,9 +210,39 @@ type SetWorkflowStatusForbidden struct {
 	Payload *SetWorkflowStatusForbiddenBody
 }
 
+// IsSuccess returns true when this set workflow status forbidden response has a 2xx status code
+func (o *SetWorkflowStatusForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this set workflow status forbidden response has a 3xx status code
+func (o *SetWorkflowStatusForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this set workflow status forbidden response has a 4xx status code
+func (o *SetWorkflowStatusForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this set workflow status forbidden response has a 5xx status code
+func (o *SetWorkflowStatusForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this set workflow status forbidden response a status code equal to that given
+func (o *SetWorkflowStatusForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *SetWorkflowStatusForbidden) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusForbidden  %+v", 403, o.Payload)
 }
+
+func (o *SetWorkflowStatusForbidden) String() string {
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusForbidden  %+v", 403, o.Payload)
+}
+
 func (o *SetWorkflowStatusForbidden) GetPayload() *SetWorkflowStatusForbiddenBody {
 	return o.Payload
 }
@@ -171,7 +264,8 @@ func NewSetWorkflowStatusNotFound() *SetWorkflowStatusNotFound {
 	return &SetWorkflowStatusNotFound{}
 }
 
-/* SetWorkflowStatusNotFound describes a response with status code 404, with default header values.
+/*
+SetWorkflowStatusNotFound describes a response with status code 404, with default header values.
 
 Request failed. Either User or Workflow does not exist.
 */
@@ -179,9 +273,39 @@ type SetWorkflowStatusNotFound struct {
 	Payload *SetWorkflowStatusNotFoundBody
 }
 
+// IsSuccess returns true when this set workflow status not found response has a 2xx status code
+func (o *SetWorkflowStatusNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this set workflow status not found response has a 3xx status code
+func (o *SetWorkflowStatusNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this set workflow status not found response has a 4xx status code
+func (o *SetWorkflowStatusNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this set workflow status not found response has a 5xx status code
+func (o *SetWorkflowStatusNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this set workflow status not found response a status code equal to that given
+func (o *SetWorkflowStatusNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *SetWorkflowStatusNotFound) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusNotFound  %+v", 404, o.Payload)
 }
+
+func (o *SetWorkflowStatusNotFound) String() string {
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusNotFound  %+v", 404, o.Payload)
+}
+
 func (o *SetWorkflowStatusNotFound) GetPayload() *SetWorkflowStatusNotFoundBody {
 	return o.Payload
 }
@@ -203,7 +327,8 @@ func NewSetWorkflowStatusConflict() *SetWorkflowStatusConflict {
 	return &SetWorkflowStatusConflict{}
 }
 
-/* SetWorkflowStatusConflict describes a response with status code 409, with default header values.
+/*
+SetWorkflowStatusConflict describes a response with status code 409, with default header values.
 
 Request failed. The workflow could not be started due to a conflict.
 */
@@ -211,9 +336,39 @@ type SetWorkflowStatusConflict struct {
 	Payload *SetWorkflowStatusConflictBody
 }
 
+// IsSuccess returns true when this set workflow status conflict response has a 2xx status code
+func (o *SetWorkflowStatusConflict) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this set workflow status conflict response has a 3xx status code
+func (o *SetWorkflowStatusConflict) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this set workflow status conflict response has a 4xx status code
+func (o *SetWorkflowStatusConflict) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this set workflow status conflict response has a 5xx status code
+func (o *SetWorkflowStatusConflict) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this set workflow status conflict response a status code equal to that given
+func (o *SetWorkflowStatusConflict) IsCode(code int) bool {
+	return code == 409
+}
+
 func (o *SetWorkflowStatusConflict) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusConflict  %+v", 409, o.Payload)
 }
+
+func (o *SetWorkflowStatusConflict) String() string {
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusConflict  %+v", 409, o.Payload)
+}
+
 func (o *SetWorkflowStatusConflict) GetPayload() *SetWorkflowStatusConflictBody {
 	return o.Payload
 }
@@ -235,7 +390,8 @@ func NewSetWorkflowStatusInternalServerError() *SetWorkflowStatusInternalServerE
 	return &SetWorkflowStatusInternalServerError{}
 }
 
-/* SetWorkflowStatusInternalServerError describes a response with status code 500, with default header values.
+/*
+SetWorkflowStatusInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -243,9 +399,39 @@ type SetWorkflowStatusInternalServerError struct {
 	Payload *SetWorkflowStatusInternalServerErrorBody
 }
 
+// IsSuccess returns true when this set workflow status internal server error response has a 2xx status code
+func (o *SetWorkflowStatusInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this set workflow status internal server error response has a 3xx status code
+func (o *SetWorkflowStatusInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this set workflow status internal server error response has a 4xx status code
+func (o *SetWorkflowStatusInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this set workflow status internal server error response has a 5xx status code
+func (o *SetWorkflowStatusInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this set workflow status internal server error response a status code equal to that given
+func (o *SetWorkflowStatusInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *SetWorkflowStatusInternalServerError) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *SetWorkflowStatusInternalServerError) String() string {
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *SetWorkflowStatusInternalServerError) GetPayload() *SetWorkflowStatusInternalServerErrorBody {
 	return o.Payload
 }
@@ -267,7 +453,8 @@ func NewSetWorkflowStatusNotImplemented() *SetWorkflowStatusNotImplemented {
 	return &SetWorkflowStatusNotImplemented{}
 }
 
-/* SetWorkflowStatusNotImplemented describes a response with status code 501, with default header values.
+/*
+SetWorkflowStatusNotImplemented describes a response with status code 501, with default header values.
 
 Request failed. The specified status change is not implemented.
 */
@@ -275,9 +462,39 @@ type SetWorkflowStatusNotImplemented struct {
 	Payload *SetWorkflowStatusNotImplementedBody
 }
 
+// IsSuccess returns true when this set workflow status not implemented response has a 2xx status code
+func (o *SetWorkflowStatusNotImplemented) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this set workflow status not implemented response has a 3xx status code
+func (o *SetWorkflowStatusNotImplemented) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this set workflow status not implemented response has a 4xx status code
+func (o *SetWorkflowStatusNotImplemented) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this set workflow status not implemented response has a 5xx status code
+func (o *SetWorkflowStatusNotImplemented) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this set workflow status not implemented response a status code equal to that given
+func (o *SetWorkflowStatusNotImplemented) IsCode(code int) bool {
+	return code == 501
+}
+
 func (o *SetWorkflowStatusNotImplemented) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusNotImplemented  %+v", 501, o.Payload)
 }
+
+func (o *SetWorkflowStatusNotImplemented) String() string {
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusNotImplemented  %+v", 501, o.Payload)
+}
+
 func (o *SetWorkflowStatusNotImplemented) GetPayload() *SetWorkflowStatusNotImplementedBody {
 	return o.Payload
 }
@@ -294,7 +511,8 @@ func (o *SetWorkflowStatusNotImplemented) readResponse(response runtime.ClientRe
 	return nil
 }
 
-/*SetWorkflowStatusBadRequestBody set workflow status bad request body
+/*
+SetWorkflowStatusBadRequestBody set workflow status bad request body
 swagger:model SetWorkflowStatusBadRequestBody
 */
 type SetWorkflowStatusBadRequestBody struct {
@@ -331,7 +549,8 @@ func (o *SetWorkflowStatusBadRequestBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*SetWorkflowStatusBody set workflow status body
+/*
+SetWorkflowStatusBody set workflow status body
 swagger:model SetWorkflowStatusBody
 */
 type SetWorkflowStatusBody struct {
@@ -374,7 +593,8 @@ func (o *SetWorkflowStatusBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*SetWorkflowStatusConflictBody set workflow status conflict body
+/*
+SetWorkflowStatusConflictBody set workflow status conflict body
 swagger:model SetWorkflowStatusConflictBody
 */
 type SetWorkflowStatusConflictBody struct {
@@ -411,7 +631,8 @@ func (o *SetWorkflowStatusConflictBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*SetWorkflowStatusForbiddenBody set workflow status forbidden body
+/*
+SetWorkflowStatusForbiddenBody set workflow status forbidden body
 swagger:model SetWorkflowStatusForbiddenBody
 */
 type SetWorkflowStatusForbiddenBody struct {
@@ -448,7 +669,8 @@ func (o *SetWorkflowStatusForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*SetWorkflowStatusInternalServerErrorBody set workflow status internal server error body
+/*
+SetWorkflowStatusInternalServerErrorBody set workflow status internal server error body
 swagger:model SetWorkflowStatusInternalServerErrorBody
 */
 type SetWorkflowStatusInternalServerErrorBody struct {
@@ -485,7 +707,8 @@ func (o *SetWorkflowStatusInternalServerErrorBody) UnmarshalBinary(b []byte) err
 	return nil
 }
 
-/*SetWorkflowStatusNotFoundBody set workflow status not found body
+/*
+SetWorkflowStatusNotFoundBody set workflow status not found body
 swagger:model SetWorkflowStatusNotFoundBody
 */
 type SetWorkflowStatusNotFoundBody struct {
@@ -522,7 +745,8 @@ func (o *SetWorkflowStatusNotFoundBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*SetWorkflowStatusNotImplementedBody set workflow status not implemented body
+/*
+SetWorkflowStatusNotImplementedBody set workflow status not implemented body
 swagger:model SetWorkflowStatusNotImplementedBody
 */
 type SetWorkflowStatusNotImplementedBody struct {
@@ -559,7 +783,8 @@ func (o *SetWorkflowStatusNotImplementedBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*SetWorkflowStatusOKBody set workflow status o k body
+/*
+SetWorkflowStatusOKBody set workflow status o k body
 swagger:model SetWorkflowStatusOKBody
 */
 type SetWorkflowStatusOKBody struct {

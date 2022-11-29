@@ -65,7 +65,8 @@ func NewGetWorkflowRetentionRulesOK() *GetWorkflowRetentionRulesOK {
 	return &GetWorkflowRetentionRulesOK{}
 }
 
-/* GetWorkflowRetentionRulesOK describes a response with status code 200, with default header values.
+/*
+GetWorkflowRetentionRulesOK describes a response with status code 200, with default header values.
 
 Request succeeded. The response contains the list of all the retention rules.
 */
@@ -73,9 +74,39 @@ type GetWorkflowRetentionRulesOK struct {
 	Payload *GetWorkflowRetentionRulesOKBody
 }
 
+// IsSuccess returns true when this get workflow retention rules o k response has a 2xx status code
+func (o *GetWorkflowRetentionRulesOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get workflow retention rules o k response has a 3xx status code
+func (o *GetWorkflowRetentionRulesOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow retention rules o k response has a 4xx status code
+func (o *GetWorkflowRetentionRulesOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow retention rules o k response has a 5xx status code
+func (o *GetWorkflowRetentionRulesOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow retention rules o k response a status code equal to that given
+func (o *GetWorkflowRetentionRulesOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetWorkflowRetentionRulesOK) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesOK  %+v", 200, o.Payload)
 }
+
+func (o *GetWorkflowRetentionRulesOK) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesOK  %+v", 200, o.Payload)
+}
+
 func (o *GetWorkflowRetentionRulesOK) GetPayload() *GetWorkflowRetentionRulesOKBody {
 	return o.Payload
 }
@@ -97,7 +128,8 @@ func NewGetWorkflowRetentionRulesUnauthorized() *GetWorkflowRetentionRulesUnauth
 	return &GetWorkflowRetentionRulesUnauthorized{}
 }
 
-/* GetWorkflowRetentionRulesUnauthorized describes a response with status code 401, with default header values.
+/*
+GetWorkflowRetentionRulesUnauthorized describes a response with status code 401, with default header values.
 
 Request failed. User not signed in.
 */
@@ -105,9 +137,39 @@ type GetWorkflowRetentionRulesUnauthorized struct {
 	Payload *GetWorkflowRetentionRulesUnauthorizedBody
 }
 
+// IsSuccess returns true when this get workflow retention rules unauthorized response has a 2xx status code
+func (o *GetWorkflowRetentionRulesUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow retention rules unauthorized response has a 3xx status code
+func (o *GetWorkflowRetentionRulesUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow retention rules unauthorized response has a 4xx status code
+func (o *GetWorkflowRetentionRulesUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow retention rules unauthorized response has a 5xx status code
+func (o *GetWorkflowRetentionRulesUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow retention rules unauthorized response a status code equal to that given
+func (o *GetWorkflowRetentionRulesUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
 func (o *GetWorkflowRetentionRulesUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *GetWorkflowRetentionRulesUnauthorized) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *GetWorkflowRetentionRulesUnauthorized) GetPayload() *GetWorkflowRetentionRulesUnauthorizedBody {
 	return o.Payload
 }
@@ -129,7 +191,8 @@ func NewGetWorkflowRetentionRulesForbidden() *GetWorkflowRetentionRulesForbidden
 	return &GetWorkflowRetentionRulesForbidden{}
 }
 
-/* GetWorkflowRetentionRulesForbidden describes a response with status code 403, with default header values.
+/*
+GetWorkflowRetentionRulesForbidden describes a response with status code 403, with default header values.
 
 Request failed. Credentials are invalid or revoked.
 */
@@ -137,9 +200,39 @@ type GetWorkflowRetentionRulesForbidden struct {
 	Payload *GetWorkflowRetentionRulesForbiddenBody
 }
 
+// IsSuccess returns true when this get workflow retention rules forbidden response has a 2xx status code
+func (o *GetWorkflowRetentionRulesForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow retention rules forbidden response has a 3xx status code
+func (o *GetWorkflowRetentionRulesForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow retention rules forbidden response has a 4xx status code
+func (o *GetWorkflowRetentionRulesForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow retention rules forbidden response has a 5xx status code
+func (o *GetWorkflowRetentionRulesForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow retention rules forbidden response a status code equal to that given
+func (o *GetWorkflowRetentionRulesForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *GetWorkflowRetentionRulesForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesForbidden  %+v", 403, o.Payload)
 }
+
+func (o *GetWorkflowRetentionRulesForbidden) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesForbidden  %+v", 403, o.Payload)
+}
+
 func (o *GetWorkflowRetentionRulesForbidden) GetPayload() *GetWorkflowRetentionRulesForbiddenBody {
 	return o.Payload
 }
@@ -161,7 +254,8 @@ func NewGetWorkflowRetentionRulesNotFound() *GetWorkflowRetentionRulesNotFound {
 	return &GetWorkflowRetentionRulesNotFound{}
 }
 
-/* GetWorkflowRetentionRulesNotFound describes a response with status code 404, with default header values.
+/*
+GetWorkflowRetentionRulesNotFound describes a response with status code 404, with default header values.
 
 Request failed. Workflow does not exist.
 */
@@ -169,9 +263,39 @@ type GetWorkflowRetentionRulesNotFound struct {
 	Payload *GetWorkflowRetentionRulesNotFoundBody
 }
 
+// IsSuccess returns true when this get workflow retention rules not found response has a 2xx status code
+func (o *GetWorkflowRetentionRulesNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow retention rules not found response has a 3xx status code
+func (o *GetWorkflowRetentionRulesNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow retention rules not found response has a 4xx status code
+func (o *GetWorkflowRetentionRulesNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow retention rules not found response has a 5xx status code
+func (o *GetWorkflowRetentionRulesNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow retention rules not found response a status code equal to that given
+func (o *GetWorkflowRetentionRulesNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *GetWorkflowRetentionRulesNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesNotFound  %+v", 404, o.Payload)
 }
+
+func (o *GetWorkflowRetentionRulesNotFound) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesNotFound  %+v", 404, o.Payload)
+}
+
 func (o *GetWorkflowRetentionRulesNotFound) GetPayload() *GetWorkflowRetentionRulesNotFoundBody {
 	return o.Payload
 }
@@ -193,7 +317,8 @@ func NewGetWorkflowRetentionRulesInternalServerError() *GetWorkflowRetentionRule
 	return &GetWorkflowRetentionRulesInternalServerError{}
 }
 
-/* GetWorkflowRetentionRulesInternalServerError describes a response with status code 500, with default header values.
+/*
+GetWorkflowRetentionRulesInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal server error.
 */
@@ -201,9 +326,39 @@ type GetWorkflowRetentionRulesInternalServerError struct {
 	Payload *GetWorkflowRetentionRulesInternalServerErrorBody
 }
 
+// IsSuccess returns true when this get workflow retention rules internal server error response has a 2xx status code
+func (o *GetWorkflowRetentionRulesInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow retention rules internal server error response has a 3xx status code
+func (o *GetWorkflowRetentionRulesInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow retention rules internal server error response has a 4xx status code
+func (o *GetWorkflowRetentionRulesInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow retention rules internal server error response has a 5xx status code
+func (o *GetWorkflowRetentionRulesInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get workflow retention rules internal server error response a status code equal to that given
+func (o *GetWorkflowRetentionRulesInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GetWorkflowRetentionRulesInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GetWorkflowRetentionRulesInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GetWorkflowRetentionRulesInternalServerError) GetPayload() *GetWorkflowRetentionRulesInternalServerErrorBody {
 	return o.Payload
 }
@@ -220,7 +375,8 @@ func (o *GetWorkflowRetentionRulesInternalServerError) readResponse(response run
 	return nil
 }
 
-/*GetWorkflowRetentionRulesForbiddenBody get workflow retention rules forbidden body
+/*
+GetWorkflowRetentionRulesForbiddenBody get workflow retention rules forbidden body
 swagger:model GetWorkflowRetentionRulesForbiddenBody
 */
 type GetWorkflowRetentionRulesForbiddenBody struct {
@@ -257,7 +413,8 @@ func (o *GetWorkflowRetentionRulesForbiddenBody) UnmarshalBinary(b []byte) error
 	return nil
 }
 
-/*GetWorkflowRetentionRulesInternalServerErrorBody get workflow retention rules internal server error body
+/*
+GetWorkflowRetentionRulesInternalServerErrorBody get workflow retention rules internal server error body
 swagger:model GetWorkflowRetentionRulesInternalServerErrorBody
 */
 type GetWorkflowRetentionRulesInternalServerErrorBody struct {
@@ -294,7 +451,8 @@ func (o *GetWorkflowRetentionRulesInternalServerErrorBody) UnmarshalBinary(b []b
 	return nil
 }
 
-/*GetWorkflowRetentionRulesNotFoundBody get workflow retention rules not found body
+/*
+GetWorkflowRetentionRulesNotFoundBody get workflow retention rules not found body
 swagger:model GetWorkflowRetentionRulesNotFoundBody
 */
 type GetWorkflowRetentionRulesNotFoundBody struct {
@@ -331,7 +489,8 @@ func (o *GetWorkflowRetentionRulesNotFoundBody) UnmarshalBinary(b []byte) error 
 	return nil
 }
 
-/*GetWorkflowRetentionRulesOKBody get workflow retention rules o k body
+/*
+GetWorkflowRetentionRulesOKBody get workflow retention rules o k body
 swagger:model GetWorkflowRetentionRulesOKBody
 */
 type GetWorkflowRetentionRulesOKBody struct {
@@ -438,7 +597,8 @@ func (o *GetWorkflowRetentionRulesOKBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowRetentionRulesOKBodyRetentionRulesItems0 get workflow retention rules o k body retention rules items0
+/*
+GetWorkflowRetentionRulesOKBodyRetentionRulesItems0 get workflow retention rules o k body retention rules items0
 swagger:model GetWorkflowRetentionRulesOKBodyRetentionRulesItems0
 */
 type GetWorkflowRetentionRulesOKBodyRetentionRulesItems0 struct {
@@ -487,7 +647,8 @@ func (o *GetWorkflowRetentionRulesOKBodyRetentionRulesItems0) UnmarshalBinary(b 
 	return nil
 }
 
-/*GetWorkflowRetentionRulesUnauthorizedBody get workflow retention rules unauthorized body
+/*
+GetWorkflowRetentionRulesUnauthorizedBody get workflow retention rules unauthorized body
 swagger:model GetWorkflowRetentionRulesUnauthorizedBody
 */
 type GetWorkflowRetentionRulesUnauthorizedBody struct {

@@ -52,10 +52,12 @@ func NewGitlabOauthParamsWithHTTPClient(client *http.Client) *GitlabOauthParams 
 	}
 }
 
-/* GitlabOauthParams contains all the parameters to send to the API endpoint
-   for the gitlab oauth operation.
+/*
+GitlabOauthParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the gitlab oauth operation.
+
+	Typically these are written to a http.Request.
 */
 type GitlabOauthParams struct {
 	timeout    time.Duration

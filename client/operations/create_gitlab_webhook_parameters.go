@@ -52,10 +52,12 @@ func NewCreateGitlabWebhookParamsWithHTTPClient(client *http.Client) *CreateGitl
 	}
 }
 
-/* CreateGitlabWebhookParams contains all the parameters to send to the API endpoint
-   for the create gitlab webhook operation.
+/*
+CreateGitlabWebhookParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the create gitlab webhook operation.
+
+	Typically these are written to a http.Request.
 */
 type CreateGitlabWebhookParams struct {
 

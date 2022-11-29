@@ -36,14 +36,44 @@ func NewGitlabConnectFound() *GitlabConnectFound {
 	return &GitlabConnectFound{}
 }
 
-/* GitlabConnectFound describes a response with status code 302, with default header values.
+/*
+GitlabConnectFound describes a response with status code 302, with default header values.
 
 Redirection to GitLab site.
 */
 type GitlabConnectFound struct {
 }
 
+// IsSuccess returns true when this gitlab connect found response has a 2xx status code
+func (o *GitlabConnectFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this gitlab connect found response has a 3xx status code
+func (o *GitlabConnectFound) IsRedirect() bool {
+	return true
+}
+
+// IsClientError returns true when this gitlab connect found response has a 4xx status code
+func (o *GitlabConnectFound) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this gitlab connect found response has a 5xx status code
+func (o *GitlabConnectFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this gitlab connect found response a status code equal to that given
+func (o *GitlabConnectFound) IsCode(code int) bool {
+	return code == 302
+}
+
 func (o *GitlabConnectFound) Error() string {
+	return fmt.Sprintf("[GET /api/gitlab/connect][%d] gitlabConnectFound ", 302)
+}
+
+func (o *GitlabConnectFound) String() string {
 	return fmt.Sprintf("[GET /api/gitlab/connect][%d] gitlabConnectFound ", 302)
 }
 

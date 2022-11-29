@@ -58,7 +58,8 @@ func NewGetWorkflowSpecificationOK() *GetWorkflowSpecificationOK {
 	return &GetWorkflowSpecificationOK{}
 }
 
-/* GetWorkflowSpecificationOK describes a response with status code 200, with default header values.
+/*
+GetWorkflowSpecificationOK describes a response with status code 200, with default header values.
 
 Request succeeded. Workflow specification is returned.
 */
@@ -66,9 +67,39 @@ type GetWorkflowSpecificationOK struct {
 	Payload *GetWorkflowSpecificationOKBody
 }
 
+// IsSuccess returns true when this get workflow specification o k response has a 2xx status code
+func (o *GetWorkflowSpecificationOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get workflow specification o k response has a 3xx status code
+func (o *GetWorkflowSpecificationOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow specification o k response has a 4xx status code
+func (o *GetWorkflowSpecificationOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow specification o k response has a 5xx status code
+func (o *GetWorkflowSpecificationOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow specification o k response a status code equal to that given
+func (o *GetWorkflowSpecificationOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetWorkflowSpecificationOK) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationOK  %+v", 200, o.Payload)
 }
+
+func (o *GetWorkflowSpecificationOK) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationOK  %+v", 200, o.Payload)
+}
+
 func (o *GetWorkflowSpecificationOK) GetPayload() *GetWorkflowSpecificationOKBody {
 	return o.Payload
 }
@@ -90,7 +121,8 @@ func NewGetWorkflowSpecificationForbidden() *GetWorkflowSpecificationForbidden {
 	return &GetWorkflowSpecificationForbidden{}
 }
 
-/* GetWorkflowSpecificationForbidden describes a response with status code 403, with default header values.
+/*
+GetWorkflowSpecificationForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -98,9 +130,39 @@ type GetWorkflowSpecificationForbidden struct {
 	Payload *GetWorkflowSpecificationForbiddenBody
 }
 
+// IsSuccess returns true when this get workflow specification forbidden response has a 2xx status code
+func (o *GetWorkflowSpecificationForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow specification forbidden response has a 3xx status code
+func (o *GetWorkflowSpecificationForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow specification forbidden response has a 4xx status code
+func (o *GetWorkflowSpecificationForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow specification forbidden response has a 5xx status code
+func (o *GetWorkflowSpecificationForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow specification forbidden response a status code equal to that given
+func (o *GetWorkflowSpecificationForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *GetWorkflowSpecificationForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationForbidden  %+v", 403, o.Payload)
 }
+
+func (o *GetWorkflowSpecificationForbidden) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationForbidden  %+v", 403, o.Payload)
+}
+
 func (o *GetWorkflowSpecificationForbidden) GetPayload() *GetWorkflowSpecificationForbiddenBody {
 	return o.Payload
 }
@@ -122,7 +184,8 @@ func NewGetWorkflowSpecificationNotFound() *GetWorkflowSpecificationNotFound {
 	return &GetWorkflowSpecificationNotFound{}
 }
 
-/* GetWorkflowSpecificationNotFound describes a response with status code 404, with default header values.
+/*
+GetWorkflowSpecificationNotFound describes a response with status code 404, with default header values.
 
 Request failed. User does not exist.
 */
@@ -130,9 +193,39 @@ type GetWorkflowSpecificationNotFound struct {
 	Payload *GetWorkflowSpecificationNotFoundBody
 }
 
+// IsSuccess returns true when this get workflow specification not found response has a 2xx status code
+func (o *GetWorkflowSpecificationNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow specification not found response has a 3xx status code
+func (o *GetWorkflowSpecificationNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow specification not found response has a 4xx status code
+func (o *GetWorkflowSpecificationNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow specification not found response has a 5xx status code
+func (o *GetWorkflowSpecificationNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow specification not found response a status code equal to that given
+func (o *GetWorkflowSpecificationNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *GetWorkflowSpecificationNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationNotFound  %+v", 404, o.Payload)
 }
+
+func (o *GetWorkflowSpecificationNotFound) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationNotFound  %+v", 404, o.Payload)
+}
+
 func (o *GetWorkflowSpecificationNotFound) GetPayload() *GetWorkflowSpecificationNotFoundBody {
 	return o.Payload
 }
@@ -154,7 +247,8 @@ func NewGetWorkflowSpecificationInternalServerError() *GetWorkflowSpecificationI
 	return &GetWorkflowSpecificationInternalServerError{}
 }
 
-/* GetWorkflowSpecificationInternalServerError describes a response with status code 500, with default header values.
+/*
+GetWorkflowSpecificationInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -162,9 +256,39 @@ type GetWorkflowSpecificationInternalServerError struct {
 	Payload *GetWorkflowSpecificationInternalServerErrorBody
 }
 
+// IsSuccess returns true when this get workflow specification internal server error response has a 2xx status code
+func (o *GetWorkflowSpecificationInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow specification internal server error response has a 3xx status code
+func (o *GetWorkflowSpecificationInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow specification internal server error response has a 4xx status code
+func (o *GetWorkflowSpecificationInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow specification internal server error response has a 5xx status code
+func (o *GetWorkflowSpecificationInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get workflow specification internal server error response a status code equal to that given
+func (o *GetWorkflowSpecificationInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GetWorkflowSpecificationInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GetWorkflowSpecificationInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GetWorkflowSpecificationInternalServerError) GetPayload() *GetWorkflowSpecificationInternalServerErrorBody {
 	return o.Payload
 }
@@ -181,7 +305,8 @@ func (o *GetWorkflowSpecificationInternalServerError) readResponse(response runt
 	return nil
 }
 
-/*GetWorkflowSpecificationForbiddenBody get workflow specification forbidden body
+/*
+GetWorkflowSpecificationForbiddenBody get workflow specification forbidden body
 swagger:model GetWorkflowSpecificationForbiddenBody
 */
 type GetWorkflowSpecificationForbiddenBody struct {
@@ -218,7 +343,8 @@ func (o *GetWorkflowSpecificationForbiddenBody) UnmarshalBinary(b []byte) error 
 	return nil
 }
 
-/*GetWorkflowSpecificationInternalServerErrorBody get workflow specification internal server error body
+/*
+GetWorkflowSpecificationInternalServerErrorBody get workflow specification internal server error body
 swagger:model GetWorkflowSpecificationInternalServerErrorBody
 */
 type GetWorkflowSpecificationInternalServerErrorBody struct {
@@ -255,7 +381,8 @@ func (o *GetWorkflowSpecificationInternalServerErrorBody) UnmarshalBinary(b []by
 	return nil
 }
 
-/*GetWorkflowSpecificationNotFoundBody get workflow specification not found body
+/*
+GetWorkflowSpecificationNotFoundBody get workflow specification not found body
 swagger:model GetWorkflowSpecificationNotFoundBody
 */
 type GetWorkflowSpecificationNotFoundBody struct {
@@ -292,7 +419,8 @@ func (o *GetWorkflowSpecificationNotFoundBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowSpecificationOKBody get workflow specification o k body
+/*
+GetWorkflowSpecificationOKBody get workflow specification o k body
 swagger:model GetWorkflowSpecificationOKBody
 */
 type GetWorkflowSpecificationOKBody struct {
@@ -385,7 +513,8 @@ func (o *GetWorkflowSpecificationOKBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowSpecificationOKBodySpecification get workflow specification o k body specification
+/*
+GetWorkflowSpecificationOKBodySpecification get workflow specification o k body specification
 swagger:model GetWorkflowSpecificationOKBodySpecification
 */
 type GetWorkflowSpecificationOKBodySpecification struct {
@@ -570,7 +699,8 @@ func (o *GetWorkflowSpecificationOKBodySpecification) UnmarshalBinary(b []byte) 
 	return nil
 }
 
-/*GetWorkflowSpecificationOKBodySpecificationInputs get workflow specification o k body specification inputs
+/*
+GetWorkflowSpecificationOKBodySpecificationInputs get workflow specification o k body specification inputs
 swagger:model GetWorkflowSpecificationOKBodySpecificationInputs
 */
 type GetWorkflowSpecificationOKBodySpecificationInputs struct {
@@ -616,7 +746,8 @@ func (o *GetWorkflowSpecificationOKBodySpecificationInputs) UnmarshalBinary(b []
 	return nil
 }
 
-/*GetWorkflowSpecificationOKBodySpecificationOutputs get workflow specification o k body specification outputs
+/*
+GetWorkflowSpecificationOKBodySpecificationOutputs get workflow specification o k body specification outputs
 swagger:model GetWorkflowSpecificationOKBodySpecificationOutputs
 */
 type GetWorkflowSpecificationOKBodySpecificationOutputs struct {
@@ -656,7 +787,8 @@ func (o *GetWorkflowSpecificationOKBodySpecificationOutputs) UnmarshalBinary(b [
 	return nil
 }
 
-/*GetWorkflowSpecificationOKBodySpecificationWorkflow get workflow specification o k body specification workflow
+/*
+GetWorkflowSpecificationOKBodySpecificationWorkflow get workflow specification o k body specification workflow
 swagger:model GetWorkflowSpecificationOKBodySpecificationWorkflow
 */
 type GetWorkflowSpecificationOKBodySpecificationWorkflow struct {
@@ -752,7 +884,8 @@ func (o *GetWorkflowSpecificationOKBodySpecificationWorkflow) UnmarshalBinary(b 
 	return nil
 }
 
-/*GetWorkflowSpecificationOKBodySpecificationWorkflowSpecification get workflow specification o k body specification workflow specification
+/*
+GetWorkflowSpecificationOKBodySpecificationWorkflowSpecification get workflow specification o k body specification workflow specification
 swagger:model GetWorkflowSpecificationOKBodySpecificationWorkflowSpecification
 */
 type GetWorkflowSpecificationOKBodySpecificationWorkflowSpecification struct {

@@ -64,7 +64,8 @@ func NewGetWorkflowParametersOK() *GetWorkflowParametersOK {
 	return &GetWorkflowParametersOK{}
 }
 
-/* GetWorkflowParametersOK describes a response with status code 200, with default header values.
+/*
+GetWorkflowParametersOK describes a response with status code 200, with default header values.
 
 Request succeeded. Workflow input parameters, including the status are returned.
 */
@@ -72,9 +73,39 @@ type GetWorkflowParametersOK struct {
 	Payload *GetWorkflowParametersOKBody
 }
 
+// IsSuccess returns true when this get workflow parameters o k response has a 2xx status code
+func (o *GetWorkflowParametersOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get workflow parameters o k response has a 3xx status code
+func (o *GetWorkflowParametersOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow parameters o k response has a 4xx status code
+func (o *GetWorkflowParametersOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow parameters o k response has a 5xx status code
+func (o *GetWorkflowParametersOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow parameters o k response a status code equal to that given
+func (o *GetWorkflowParametersOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetWorkflowParametersOK) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersOK  %+v", 200, o.Payload)
 }
+
+func (o *GetWorkflowParametersOK) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersOK  %+v", 200, o.Payload)
+}
+
 func (o *GetWorkflowParametersOK) GetPayload() *GetWorkflowParametersOKBody {
 	return o.Payload
 }
@@ -96,7 +127,8 @@ func NewGetWorkflowParametersBadRequest() *GetWorkflowParametersBadRequest {
 	return &GetWorkflowParametersBadRequest{}
 }
 
-/* GetWorkflowParametersBadRequest describes a response with status code 400, with default header values.
+/*
+GetWorkflowParametersBadRequest describes a response with status code 400, with default header values.
 
 Request failed. The incoming payload seems malformed.
 */
@@ -104,9 +136,39 @@ type GetWorkflowParametersBadRequest struct {
 	Payload *GetWorkflowParametersBadRequestBody
 }
 
+// IsSuccess returns true when this get workflow parameters bad request response has a 2xx status code
+func (o *GetWorkflowParametersBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow parameters bad request response has a 3xx status code
+func (o *GetWorkflowParametersBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow parameters bad request response has a 4xx status code
+func (o *GetWorkflowParametersBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow parameters bad request response has a 5xx status code
+func (o *GetWorkflowParametersBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow parameters bad request response a status code equal to that given
+func (o *GetWorkflowParametersBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *GetWorkflowParametersBadRequest) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *GetWorkflowParametersBadRequest) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *GetWorkflowParametersBadRequest) GetPayload() *GetWorkflowParametersBadRequestBody {
 	return o.Payload
 }
@@ -128,7 +190,8 @@ func NewGetWorkflowParametersForbidden() *GetWorkflowParametersForbidden {
 	return &GetWorkflowParametersForbidden{}
 }
 
-/* GetWorkflowParametersForbidden describes a response with status code 403, with default header values.
+/*
+GetWorkflowParametersForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -136,9 +199,39 @@ type GetWorkflowParametersForbidden struct {
 	Payload *GetWorkflowParametersForbiddenBody
 }
 
+// IsSuccess returns true when this get workflow parameters forbidden response has a 2xx status code
+func (o *GetWorkflowParametersForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow parameters forbidden response has a 3xx status code
+func (o *GetWorkflowParametersForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow parameters forbidden response has a 4xx status code
+func (o *GetWorkflowParametersForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow parameters forbidden response has a 5xx status code
+func (o *GetWorkflowParametersForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow parameters forbidden response a status code equal to that given
+func (o *GetWorkflowParametersForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *GetWorkflowParametersForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersForbidden  %+v", 403, o.Payload)
 }
+
+func (o *GetWorkflowParametersForbidden) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersForbidden  %+v", 403, o.Payload)
+}
+
 func (o *GetWorkflowParametersForbidden) GetPayload() *GetWorkflowParametersForbiddenBody {
 	return o.Payload
 }
@@ -160,7 +253,8 @@ func NewGetWorkflowParametersNotFound() *GetWorkflowParametersNotFound {
 	return &GetWorkflowParametersNotFound{}
 }
 
-/* GetWorkflowParametersNotFound describes a response with status code 404, with default header values.
+/*
+GetWorkflowParametersNotFound describes a response with status code 404, with default header values.
 
 Request failed. Either User or Analysis does not exist.
 */
@@ -168,9 +262,39 @@ type GetWorkflowParametersNotFound struct {
 	Payload *GetWorkflowParametersNotFoundBody
 }
 
+// IsSuccess returns true when this get workflow parameters not found response has a 2xx status code
+func (o *GetWorkflowParametersNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow parameters not found response has a 3xx status code
+func (o *GetWorkflowParametersNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow parameters not found response has a 4xx status code
+func (o *GetWorkflowParametersNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow parameters not found response has a 5xx status code
+func (o *GetWorkflowParametersNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow parameters not found response a status code equal to that given
+func (o *GetWorkflowParametersNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *GetWorkflowParametersNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersNotFound  %+v", 404, o.Payload)
 }
+
+func (o *GetWorkflowParametersNotFound) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersNotFound  %+v", 404, o.Payload)
+}
+
 func (o *GetWorkflowParametersNotFound) GetPayload() *GetWorkflowParametersNotFoundBody {
 	return o.Payload
 }
@@ -192,7 +316,8 @@ func NewGetWorkflowParametersInternalServerError() *GetWorkflowParametersInterna
 	return &GetWorkflowParametersInternalServerError{}
 }
 
-/* GetWorkflowParametersInternalServerError describes a response with status code 500, with default header values.
+/*
+GetWorkflowParametersInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -200,9 +325,39 @@ type GetWorkflowParametersInternalServerError struct {
 	Payload *GetWorkflowParametersInternalServerErrorBody
 }
 
+// IsSuccess returns true when this get workflow parameters internal server error response has a 2xx status code
+func (o *GetWorkflowParametersInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow parameters internal server error response has a 3xx status code
+func (o *GetWorkflowParametersInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow parameters internal server error response has a 4xx status code
+func (o *GetWorkflowParametersInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow parameters internal server error response has a 5xx status code
+func (o *GetWorkflowParametersInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get workflow parameters internal server error response a status code equal to that given
+func (o *GetWorkflowParametersInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GetWorkflowParametersInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GetWorkflowParametersInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GetWorkflowParametersInternalServerError) GetPayload() *GetWorkflowParametersInternalServerErrorBody {
 	return o.Payload
 }
@@ -219,7 +374,8 @@ func (o *GetWorkflowParametersInternalServerError) readResponse(response runtime
 	return nil
 }
 
-/*GetWorkflowParametersBadRequestBody get workflow parameters bad request body
+/*
+GetWorkflowParametersBadRequestBody get workflow parameters bad request body
 swagger:model GetWorkflowParametersBadRequestBody
 */
 type GetWorkflowParametersBadRequestBody struct {
@@ -256,7 +412,8 @@ func (o *GetWorkflowParametersBadRequestBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowParametersForbiddenBody get workflow parameters forbidden body
+/*
+GetWorkflowParametersForbiddenBody get workflow parameters forbidden body
 swagger:model GetWorkflowParametersForbiddenBody
 */
 type GetWorkflowParametersForbiddenBody struct {
@@ -293,7 +450,8 @@ func (o *GetWorkflowParametersForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowParametersInternalServerErrorBody get workflow parameters internal server error body
+/*
+GetWorkflowParametersInternalServerErrorBody get workflow parameters internal server error body
 swagger:model GetWorkflowParametersInternalServerErrorBody
 */
 type GetWorkflowParametersInternalServerErrorBody struct {
@@ -330,7 +488,8 @@ func (o *GetWorkflowParametersInternalServerErrorBody) UnmarshalBinary(b []byte)
 	return nil
 }
 
-/*GetWorkflowParametersNotFoundBody get workflow parameters not found body
+/*
+GetWorkflowParametersNotFoundBody get workflow parameters not found body
 swagger:model GetWorkflowParametersNotFoundBody
 */
 type GetWorkflowParametersNotFoundBody struct {
@@ -367,7 +526,8 @@ func (o *GetWorkflowParametersNotFoundBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowParametersOKBody get workflow parameters o k body
+/*
+GetWorkflowParametersOKBody get workflow parameters o k body
 swagger:model GetWorkflowParametersOKBody
 */
 type GetWorkflowParametersOKBody struct {

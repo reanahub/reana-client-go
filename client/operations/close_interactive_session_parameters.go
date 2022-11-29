@@ -52,10 +52,12 @@ func NewCloseInteractiveSessionParamsWithHTTPClient(client *http.Client) *CloseI
 	}
 }
 
-/* CloseInteractiveSessionParams contains all the parameters to send to the API endpoint
-   for the close interactive session operation.
+/*
+CloseInteractiveSessionParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the close interactive session operation.
+
+	Typically these are written to a http.Request.
 */
 type CloseInteractiveSessionParams struct {
 

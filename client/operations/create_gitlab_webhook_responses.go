@@ -53,14 +53,44 @@ func NewCreateGitlabWebhookCreated() *CreateGitlabWebhookCreated {
 	return &CreateGitlabWebhookCreated{}
 }
 
-/* CreateGitlabWebhookCreated describes a response with status code 201, with default header values.
+/*
+CreateGitlabWebhookCreated describes a response with status code 201, with default header values.
 
 The webhook was created.
 */
 type CreateGitlabWebhookCreated struct {
 }
 
+// IsSuccess returns true when this create gitlab webhook created response has a 2xx status code
+func (o *CreateGitlabWebhookCreated) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this create gitlab webhook created response has a 3xx status code
+func (o *CreateGitlabWebhookCreated) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this create gitlab webhook created response has a 4xx status code
+func (o *CreateGitlabWebhookCreated) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this create gitlab webhook created response has a 5xx status code
+func (o *CreateGitlabWebhookCreated) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this create gitlab webhook created response a status code equal to that given
+func (o *CreateGitlabWebhookCreated) IsCode(code int) bool {
+	return code == 201
+}
+
 func (o *CreateGitlabWebhookCreated) Error() string {
+	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookCreated ", 201)
+}
+
+func (o *CreateGitlabWebhookCreated) String() string {
 	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookCreated ", 201)
 }
 
@@ -74,7 +104,8 @@ func NewCreateGitlabWebhookForbidden() *CreateGitlabWebhookForbidden {
 	return &CreateGitlabWebhookForbidden{}
 }
 
-/* CreateGitlabWebhookForbidden describes a response with status code 403, with default header values.
+/*
+CreateGitlabWebhookForbidden describes a response with status code 403, with default header values.
 
 Request failed. User token not valid.
 */
@@ -82,9 +113,39 @@ type CreateGitlabWebhookForbidden struct {
 	Payload *CreateGitlabWebhookForbiddenBody
 }
 
+// IsSuccess returns true when this create gitlab webhook forbidden response has a 2xx status code
+func (o *CreateGitlabWebhookForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this create gitlab webhook forbidden response has a 3xx status code
+func (o *CreateGitlabWebhookForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this create gitlab webhook forbidden response has a 4xx status code
+func (o *CreateGitlabWebhookForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this create gitlab webhook forbidden response has a 5xx status code
+func (o *CreateGitlabWebhookForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this create gitlab webhook forbidden response a status code equal to that given
+func (o *CreateGitlabWebhookForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *CreateGitlabWebhookForbidden) Error() string {
 	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookForbidden  %+v", 403, o.Payload)
 }
+
+func (o *CreateGitlabWebhookForbidden) String() string {
+	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookForbidden  %+v", 403, o.Payload)
+}
+
 func (o *CreateGitlabWebhookForbidden) GetPayload() *CreateGitlabWebhookForbiddenBody {
 	return o.Payload
 }
@@ -106,7 +167,8 @@ func NewCreateGitlabWebhookInternalServerError() *CreateGitlabWebhookInternalSer
 	return &CreateGitlabWebhookInternalServerError{}
 }
 
-/* CreateGitlabWebhookInternalServerError describes a response with status code 500, with default header values.
+/*
+CreateGitlabWebhookInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -114,9 +176,39 @@ type CreateGitlabWebhookInternalServerError struct {
 	Payload *CreateGitlabWebhookInternalServerErrorBody
 }
 
+// IsSuccess returns true when this create gitlab webhook internal server error response has a 2xx status code
+func (o *CreateGitlabWebhookInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this create gitlab webhook internal server error response has a 3xx status code
+func (o *CreateGitlabWebhookInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this create gitlab webhook internal server error response has a 4xx status code
+func (o *CreateGitlabWebhookInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this create gitlab webhook internal server error response has a 5xx status code
+func (o *CreateGitlabWebhookInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this create gitlab webhook internal server error response a status code equal to that given
+func (o *CreateGitlabWebhookInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *CreateGitlabWebhookInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *CreateGitlabWebhookInternalServerError) String() string {
+	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *CreateGitlabWebhookInternalServerError) GetPayload() *CreateGitlabWebhookInternalServerErrorBody {
 	return o.Payload
 }
@@ -133,7 +225,8 @@ func (o *CreateGitlabWebhookInternalServerError) readResponse(response runtime.C
 	return nil
 }
 
-/*CreateGitlabWebhookBody create gitlab webhook body
+/*
+CreateGitlabWebhookBody create gitlab webhook body
 swagger:model CreateGitlabWebhookBody
 */
 type CreateGitlabWebhookBody struct {
@@ -189,7 +282,8 @@ func (o *CreateGitlabWebhookBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*CreateGitlabWebhookForbiddenBody create gitlab webhook forbidden body
+/*
+CreateGitlabWebhookForbiddenBody create gitlab webhook forbidden body
 swagger:model CreateGitlabWebhookForbiddenBody
 */
 type CreateGitlabWebhookForbiddenBody struct {
@@ -226,7 +320,8 @@ func (o *CreateGitlabWebhookForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*CreateGitlabWebhookInternalServerErrorBody create gitlab webhook internal server error body
+/*
+CreateGitlabWebhookInternalServerErrorBody create gitlab webhook internal server error body
 swagger:model CreateGitlabWebhookInternalServerErrorBody
 */
 type CreateGitlabWebhookInternalServerErrorBody struct {

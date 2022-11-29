@@ -46,7 +46,8 @@ func NewInfoOK() *InfoOK {
 	return &InfoOK{}
 }
 
-/* InfoOK describes a response with status code 200, with default header values.
+/*
+InfoOK describes a response with status code 200, with default header values.
 
 Request succeeded. The response contains general info about the cluster.
 */
@@ -54,9 +55,39 @@ type InfoOK struct {
 	Payload *InfoOKBody
 }
 
+// IsSuccess returns true when this info o k response has a 2xx status code
+func (o *InfoOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this info o k response has a 3xx status code
+func (o *InfoOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this info o k response has a 4xx status code
+func (o *InfoOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this info o k response has a 5xx status code
+func (o *InfoOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this info o k response a status code equal to that given
+func (o *InfoOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *InfoOK) Error() string {
 	return fmt.Sprintf("[GET /api/info][%d] infoOK  %+v", 200, o.Payload)
 }
+
+func (o *InfoOK) String() string {
+	return fmt.Sprintf("[GET /api/info][%d] infoOK  %+v", 200, o.Payload)
+}
+
 func (o *InfoOK) GetPayload() *InfoOKBody {
 	return o.Payload
 }
@@ -78,7 +109,8 @@ func NewInfoInternalServerError() *InfoInternalServerError {
 	return &InfoInternalServerError{}
 }
 
-/* InfoInternalServerError describes a response with status code 500, with default header values.
+/*
+InfoInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -86,9 +118,39 @@ type InfoInternalServerError struct {
 	Payload *InfoInternalServerErrorBody
 }
 
+// IsSuccess returns true when this info internal server error response has a 2xx status code
+func (o *InfoInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this info internal server error response has a 3xx status code
+func (o *InfoInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this info internal server error response has a 4xx status code
+func (o *InfoInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this info internal server error response has a 5xx status code
+func (o *InfoInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this info internal server error response a status code equal to that given
+func (o *InfoInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *InfoInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/info][%d] infoInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *InfoInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/info][%d] infoInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *InfoInternalServerError) GetPayload() *InfoInternalServerErrorBody {
 	return o.Payload
 }
@@ -105,7 +167,8 @@ func (o *InfoInternalServerError) readResponse(response runtime.ClientResponse, 
 	return nil
 }
 
-/*InfoInternalServerErrorBody info internal server error body
+/*
+InfoInternalServerErrorBody info internal server error body
 swagger:model InfoInternalServerErrorBody
 */
 type InfoInternalServerErrorBody struct {
@@ -142,7 +205,8 @@ func (o *InfoInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*InfoOKBody info o k body
+/*
+InfoOKBody info o k body
 swagger:model InfoOKBody
 */
 type InfoOKBody struct {
@@ -554,7 +618,8 @@ func (o *InfoOKBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*InfoOKBodyComputeBackends info o k body compute backends
+/*
+InfoOKBodyComputeBackends info o k body compute backends
 swagger:model InfoOKBodyComputeBackends
 */
 type InfoOKBodyComputeBackends struct {
@@ -594,7 +659,8 @@ func (o *InfoOKBodyComputeBackends) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*InfoOKBodyDefaultKubernetesJobsTimeout info o k body default kubernetes jobs timeout
+/*
+InfoOKBodyDefaultKubernetesJobsTimeout info o k body default kubernetes jobs timeout
 swagger:model InfoOKBodyDefaultKubernetesJobsTimeout
 */
 type InfoOKBodyDefaultKubernetesJobsTimeout struct {
@@ -634,7 +700,8 @@ func (o *InfoOKBodyDefaultKubernetesJobsTimeout) UnmarshalBinary(b []byte) error
 	return nil
 }
 
-/*InfoOKBodyDefaultKubernetesMemoryLimit info o k body default kubernetes memory limit
+/*
+InfoOKBodyDefaultKubernetesMemoryLimit info o k body default kubernetes memory limit
 swagger:model InfoOKBodyDefaultKubernetesMemoryLimit
 */
 type InfoOKBodyDefaultKubernetesMemoryLimit struct {
@@ -674,7 +741,8 @@ func (o *InfoOKBodyDefaultKubernetesMemoryLimit) UnmarshalBinary(b []byte) error
 	return nil
 }
 
-/*InfoOKBodyDefaultWorkspace info o k body default workspace
+/*
+InfoOKBodyDefaultWorkspace info o k body default workspace
 swagger:model InfoOKBodyDefaultWorkspace
 */
 type InfoOKBodyDefaultWorkspace struct {
@@ -714,7 +782,8 @@ func (o *InfoOKBodyDefaultWorkspace) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*InfoOKBodyKubernetesMaxMemoryLimit info o k body kubernetes max memory limit
+/*
+InfoOKBodyKubernetesMaxMemoryLimit info o k body kubernetes max memory limit
 swagger:model InfoOKBodyKubernetesMaxMemoryLimit
 */
 type InfoOKBodyKubernetesMaxMemoryLimit struct {
@@ -754,7 +823,8 @@ func (o *InfoOKBodyKubernetesMaxMemoryLimit) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*InfoOKBodyMaximumKubernetesJobsTimeout info o k body maximum kubernetes jobs timeout
+/*
+InfoOKBodyMaximumKubernetesJobsTimeout info o k body maximum kubernetes jobs timeout
 swagger:model InfoOKBodyMaximumKubernetesJobsTimeout
 */
 type InfoOKBodyMaximumKubernetesJobsTimeout struct {
@@ -794,7 +864,8 @@ func (o *InfoOKBodyMaximumKubernetesJobsTimeout) UnmarshalBinary(b []byte) error
 	return nil
 }
 
-/*InfoOKBodyMaximumWorkspaceRetentionPeriod info o k body maximum workspace retention period
+/*
+InfoOKBodyMaximumWorkspaceRetentionPeriod info o k body maximum workspace retention period
 swagger:model InfoOKBodyMaximumWorkspaceRetentionPeriod
 */
 type InfoOKBodyMaximumWorkspaceRetentionPeriod struct {
@@ -834,7 +905,8 @@ func (o *InfoOKBodyMaximumWorkspaceRetentionPeriod) UnmarshalBinary(b []byte) er
 	return nil
 }
 
-/*InfoOKBodyWorkspacesAvailable info o k body workspaces available
+/*
+InfoOKBodyWorkspacesAvailable info o k body workspaces available
 swagger:model InfoOKBodyWorkspacesAvailable
 */
 type InfoOKBodyWorkspacesAvailable struct {

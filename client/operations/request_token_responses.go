@@ -58,7 +58,8 @@ func NewRequestTokenOK() *RequestTokenOK {
 	return &RequestTokenOK{}
 }
 
-/* RequestTokenOK describes a response with status code 200, with default header values.
+/*
+RequestTokenOK describes a response with status code 200, with default header values.
 
 User information correspoding to the session cookie sent in the request.
 */
@@ -66,9 +67,39 @@ type RequestTokenOK struct {
 	Payload *RequestTokenOKBody
 }
 
+// IsSuccess returns true when this request token o k response has a 2xx status code
+func (o *RequestTokenOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this request token o k response has a 3xx status code
+func (o *RequestTokenOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this request token o k response has a 4xx status code
+func (o *RequestTokenOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this request token o k response has a 5xx status code
+func (o *RequestTokenOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this request token o k response a status code equal to that given
+func (o *RequestTokenOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *RequestTokenOK) Error() string {
 	return fmt.Sprintf("[PUT /api/token][%d] requestTokenOK  %+v", 200, o.Payload)
 }
+
+func (o *RequestTokenOK) String() string {
+	return fmt.Sprintf("[PUT /api/token][%d] requestTokenOK  %+v", 200, o.Payload)
+}
+
 func (o *RequestTokenOK) GetPayload() *RequestTokenOKBody {
 	return o.Payload
 }
@@ -90,7 +121,8 @@ func NewRequestTokenUnauthorized() *RequestTokenUnauthorized {
 	return &RequestTokenUnauthorized{}
 }
 
-/* RequestTokenUnauthorized describes a response with status code 401, with default header values.
+/*
+RequestTokenUnauthorized describes a response with status code 401, with default header values.
 
 Error message indicating that the uses is not authenticated.
 */
@@ -98,9 +130,39 @@ type RequestTokenUnauthorized struct {
 	Payload *RequestTokenUnauthorizedBody
 }
 
+// IsSuccess returns true when this request token unauthorized response has a 2xx status code
+func (o *RequestTokenUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this request token unauthorized response has a 3xx status code
+func (o *RequestTokenUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this request token unauthorized response has a 4xx status code
+func (o *RequestTokenUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this request token unauthorized response has a 5xx status code
+func (o *RequestTokenUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this request token unauthorized response a status code equal to that given
+func (o *RequestTokenUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
 func (o *RequestTokenUnauthorized) Error() string {
 	return fmt.Sprintf("[PUT /api/token][%d] requestTokenUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *RequestTokenUnauthorized) String() string {
+	return fmt.Sprintf("[PUT /api/token][%d] requestTokenUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *RequestTokenUnauthorized) GetPayload() *RequestTokenUnauthorizedBody {
 	return o.Payload
 }
@@ -122,7 +184,8 @@ func NewRequestTokenForbidden() *RequestTokenForbidden {
 	return &RequestTokenForbidden{}
 }
 
-/* RequestTokenForbidden describes a response with status code 403, with default header values.
+/*
+RequestTokenForbidden describes a response with status code 403, with default header values.
 
 Request failed. User token not valid.
 */
@@ -130,9 +193,39 @@ type RequestTokenForbidden struct {
 	Payload *RequestTokenForbiddenBody
 }
 
+// IsSuccess returns true when this request token forbidden response has a 2xx status code
+func (o *RequestTokenForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this request token forbidden response has a 3xx status code
+func (o *RequestTokenForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this request token forbidden response has a 4xx status code
+func (o *RequestTokenForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this request token forbidden response has a 5xx status code
+func (o *RequestTokenForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this request token forbidden response a status code equal to that given
+func (o *RequestTokenForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *RequestTokenForbidden) Error() string {
 	return fmt.Sprintf("[PUT /api/token][%d] requestTokenForbidden  %+v", 403, o.Payload)
 }
+
+func (o *RequestTokenForbidden) String() string {
+	return fmt.Sprintf("[PUT /api/token][%d] requestTokenForbidden  %+v", 403, o.Payload)
+}
+
 func (o *RequestTokenForbidden) GetPayload() *RequestTokenForbiddenBody {
 	return o.Payload
 }
@@ -154,7 +247,8 @@ func NewRequestTokenInternalServerError() *RequestTokenInternalServerError {
 	return &RequestTokenInternalServerError{}
 }
 
-/* RequestTokenInternalServerError describes a response with status code 500, with default header values.
+/*
+RequestTokenInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal server error.
 */
@@ -162,9 +256,39 @@ type RequestTokenInternalServerError struct {
 	Payload *RequestTokenInternalServerErrorBody
 }
 
+// IsSuccess returns true when this request token internal server error response has a 2xx status code
+func (o *RequestTokenInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this request token internal server error response has a 3xx status code
+func (o *RequestTokenInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this request token internal server error response has a 4xx status code
+func (o *RequestTokenInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this request token internal server error response has a 5xx status code
+func (o *RequestTokenInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this request token internal server error response a status code equal to that given
+func (o *RequestTokenInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *RequestTokenInternalServerError) Error() string {
 	return fmt.Sprintf("[PUT /api/token][%d] requestTokenInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *RequestTokenInternalServerError) String() string {
+	return fmt.Sprintf("[PUT /api/token][%d] requestTokenInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *RequestTokenInternalServerError) GetPayload() *RequestTokenInternalServerErrorBody {
 	return o.Payload
 }
@@ -181,7 +305,8 @@ func (o *RequestTokenInternalServerError) readResponse(response runtime.ClientRe
 	return nil
 }
 
-/*RequestTokenForbiddenBody request token forbidden body
+/*
+RequestTokenForbiddenBody request token forbidden body
 swagger:model RequestTokenForbiddenBody
 */
 type RequestTokenForbiddenBody struct {
@@ -218,7 +343,8 @@ func (o *RequestTokenForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*RequestTokenInternalServerErrorBody request token internal server error body
+/*
+RequestTokenInternalServerErrorBody request token internal server error body
 swagger:model RequestTokenInternalServerErrorBody
 */
 type RequestTokenInternalServerErrorBody struct {
@@ -255,7 +381,8 @@ func (o *RequestTokenInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*RequestTokenOKBody request token o k body
+/*
+RequestTokenOKBody request token o k body
 swagger:model RequestTokenOKBody
 */
 type RequestTokenOKBody struct {
@@ -345,7 +472,8 @@ func (o *RequestTokenOKBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*RequestTokenOKBodyReanaToken request token o k body reana token
+/*
+RequestTokenOKBodyReanaToken request token o k body reana token
 swagger:model RequestTokenOKBodyReanaToken
 */
 type RequestTokenOKBodyReanaToken struct {
@@ -385,7 +513,8 @@ func (o *RequestTokenOKBodyReanaToken) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*RequestTokenUnauthorizedBody request token unauthorized body
+/*
+RequestTokenUnauthorizedBody request token unauthorized body
 swagger:model RequestTokenUnauthorizedBody
 */
 type RequestTokenUnauthorizedBody struct {

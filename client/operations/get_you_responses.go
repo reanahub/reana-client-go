@@ -58,7 +58,8 @@ func NewGetYouOK() *GetYouOK {
 	return &GetYouOK{}
 }
 
-/* GetYouOK describes a response with status code 200, with default header values.
+/*
+GetYouOK describes a response with status code 200, with default header values.
 
 User information correspoding to the session cookie sent in the request.
 */
@@ -66,9 +67,39 @@ type GetYouOK struct {
 	Payload *GetYouOKBody
 }
 
+// IsSuccess returns true when this get you o k response has a 2xx status code
+func (o *GetYouOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get you o k response has a 3xx status code
+func (o *GetYouOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get you o k response has a 4xx status code
+func (o *GetYouOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get you o k response has a 5xx status code
+func (o *GetYouOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get you o k response a status code equal to that given
+func (o *GetYouOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetYouOK) Error() string {
 	return fmt.Sprintf("[GET /api/you][%d] getYouOK  %+v", 200, o.Payload)
 }
+
+func (o *GetYouOK) String() string {
+	return fmt.Sprintf("[GET /api/you][%d] getYouOK  %+v", 200, o.Payload)
+}
+
 func (o *GetYouOK) GetPayload() *GetYouOKBody {
 	return o.Payload
 }
@@ -90,7 +121,8 @@ func NewGetYouUnauthorized() *GetYouUnauthorized {
 	return &GetYouUnauthorized{}
 }
 
-/* GetYouUnauthorized describes a response with status code 401, with default header values.
+/*
+GetYouUnauthorized describes a response with status code 401, with default header values.
 
 Error message indicating that the uses is not authenticated.
 */
@@ -98,9 +130,39 @@ type GetYouUnauthorized struct {
 	Payload *GetYouUnauthorizedBody
 }
 
+// IsSuccess returns true when this get you unauthorized response has a 2xx status code
+func (o *GetYouUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get you unauthorized response has a 3xx status code
+func (o *GetYouUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get you unauthorized response has a 4xx status code
+func (o *GetYouUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get you unauthorized response has a 5xx status code
+func (o *GetYouUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get you unauthorized response a status code equal to that given
+func (o *GetYouUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
 func (o *GetYouUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /api/you][%d] getYouUnauthorized  %+v", 401, o.Payload)
 }
+
+func (o *GetYouUnauthorized) String() string {
+	return fmt.Sprintf("[GET /api/you][%d] getYouUnauthorized  %+v", 401, o.Payload)
+}
+
 func (o *GetYouUnauthorized) GetPayload() *GetYouUnauthorizedBody {
 	return o.Payload
 }
@@ -122,7 +184,8 @@ func NewGetYouForbidden() *GetYouForbidden {
 	return &GetYouForbidden{}
 }
 
-/* GetYouForbidden describes a response with status code 403, with default header values.
+/*
+GetYouForbidden describes a response with status code 403, with default header values.
 
 Request failed. User token not valid.
 */
@@ -130,9 +193,39 @@ type GetYouForbidden struct {
 	Payload *GetYouForbiddenBody
 }
 
+// IsSuccess returns true when this get you forbidden response has a 2xx status code
+func (o *GetYouForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get you forbidden response has a 3xx status code
+func (o *GetYouForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get you forbidden response has a 4xx status code
+func (o *GetYouForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get you forbidden response has a 5xx status code
+func (o *GetYouForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get you forbidden response a status code equal to that given
+func (o *GetYouForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *GetYouForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/you][%d] getYouForbidden  %+v", 403, o.Payload)
 }
+
+func (o *GetYouForbidden) String() string {
+	return fmt.Sprintf("[GET /api/you][%d] getYouForbidden  %+v", 403, o.Payload)
+}
+
 func (o *GetYouForbidden) GetPayload() *GetYouForbiddenBody {
 	return o.Payload
 }
@@ -154,7 +247,8 @@ func NewGetYouInternalServerError() *GetYouInternalServerError {
 	return &GetYouInternalServerError{}
 }
 
-/* GetYouInternalServerError describes a response with status code 500, with default header values.
+/*
+GetYouInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal server error.
 */
@@ -162,9 +256,39 @@ type GetYouInternalServerError struct {
 	Payload *GetYouInternalServerErrorBody
 }
 
+// IsSuccess returns true when this get you internal server error response has a 2xx status code
+func (o *GetYouInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get you internal server error response has a 3xx status code
+func (o *GetYouInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get you internal server error response has a 4xx status code
+func (o *GetYouInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get you internal server error response has a 5xx status code
+func (o *GetYouInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get you internal server error response a status code equal to that given
+func (o *GetYouInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GetYouInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/you][%d] getYouInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GetYouInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/you][%d] getYouInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GetYouInternalServerError) GetPayload() *GetYouInternalServerErrorBody {
 	return o.Payload
 }
@@ -181,7 +305,8 @@ func (o *GetYouInternalServerError) readResponse(response runtime.ClientResponse
 	return nil
 }
 
-/*GetYouForbiddenBody get you forbidden body
+/*
+GetYouForbiddenBody get you forbidden body
 swagger:model GetYouForbiddenBody
 */
 type GetYouForbiddenBody struct {
@@ -218,7 +343,8 @@ func (o *GetYouForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetYouInternalServerErrorBody get you internal server error body
+/*
+GetYouInternalServerErrorBody get you internal server error body
 swagger:model GetYouInternalServerErrorBody
 */
 type GetYouInternalServerErrorBody struct {
@@ -255,7 +381,8 @@ func (o *GetYouInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetYouOKBody get you o k body
+/*
+GetYouOKBody get you o k body
 swagger:model GetYouOKBody
 */
 type GetYouOKBody struct {
@@ -397,7 +524,8 @@ func (o *GetYouOKBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetYouOKBodyQuota get you o k body quota
+/*
+GetYouOKBodyQuota get you o k body quota
 swagger:model GetYouOKBodyQuota
 */
 type GetYouOKBodyQuota struct {
@@ -533,7 +661,8 @@ func (o *GetYouOKBodyQuota) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetYouOKBodyQuotaCPU get you o k body quota CPU
+/*
+GetYouOKBodyQuotaCPU get you o k body quota CPU
 swagger:model GetYouOKBodyQuotaCPU
 */
 type GetYouOKBodyQuotaCPU struct {
@@ -672,7 +801,8 @@ func (o *GetYouOKBodyQuotaCPU) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetYouOKBodyQuotaCPULimit get you o k body quota CPU limit
+/*
+GetYouOKBodyQuotaCPULimit get you o k body quota CPU limit
 swagger:model GetYouOKBodyQuotaCPULimit
 */
 type GetYouOKBodyQuotaCPULimit struct {
@@ -712,7 +842,8 @@ func (o *GetYouOKBodyQuotaCPULimit) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetYouOKBodyQuotaCPUUsage get you o k body quota CPU usage
+/*
+GetYouOKBodyQuotaCPUUsage get you o k body quota CPU usage
 swagger:model GetYouOKBodyQuotaCPUUsage
 */
 type GetYouOKBodyQuotaCPUUsage struct {
@@ -752,7 +883,8 @@ func (o *GetYouOKBodyQuotaCPUUsage) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetYouOKBodyQuotaDisk get you o k body quota disk
+/*
+GetYouOKBodyQuotaDisk get you o k body quota disk
 swagger:model GetYouOKBodyQuotaDisk
 */
 type GetYouOKBodyQuotaDisk struct {
@@ -891,7 +1023,8 @@ func (o *GetYouOKBodyQuotaDisk) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetYouOKBodyQuotaDiskLimit get you o k body quota disk limit
+/*
+GetYouOKBodyQuotaDiskLimit get you o k body quota disk limit
 swagger:model GetYouOKBodyQuotaDiskLimit
 */
 type GetYouOKBodyQuotaDiskLimit struct {
@@ -931,7 +1064,8 @@ func (o *GetYouOKBodyQuotaDiskLimit) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetYouOKBodyQuotaDiskUsage get you o k body quota disk usage
+/*
+GetYouOKBodyQuotaDiskUsage get you o k body quota disk usage
 swagger:model GetYouOKBodyQuotaDiskUsage
 */
 type GetYouOKBodyQuotaDiskUsage struct {
@@ -971,7 +1105,8 @@ func (o *GetYouOKBodyQuotaDiskUsage) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetYouOKBodyReanaToken get you o k body reana token
+/*
+GetYouOKBodyReanaToken get you o k body reana token
 swagger:model GetYouOKBodyReanaToken
 */
 type GetYouOKBodyReanaToken struct {
@@ -1014,7 +1149,8 @@ func (o *GetYouOKBodyReanaToken) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetYouUnauthorizedBody get you unauthorized body
+/*
+GetYouUnauthorizedBody get you unauthorized body
 swagger:model GetYouUnauthorizedBody
 */
 type GetYouUnauthorizedBody struct {

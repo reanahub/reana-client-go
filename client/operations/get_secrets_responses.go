@@ -54,7 +54,8 @@ func NewGetSecretsOK() *GetSecretsOK {
 	return &GetSecretsOK{}
 }
 
-/* GetSecretsOK describes a response with status code 200, with default header values.
+/*
+GetSecretsOK describes a response with status code 200, with default header values.
 
 List of user secrets.
 */
@@ -62,9 +63,39 @@ type GetSecretsOK struct {
 	Payload []*GetSecretsOKBodyItems0
 }
 
+// IsSuccess returns true when this get secrets o k response has a 2xx status code
+func (o *GetSecretsOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get secrets o k response has a 3xx status code
+func (o *GetSecretsOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get secrets o k response has a 4xx status code
+func (o *GetSecretsOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get secrets o k response has a 5xx status code
+func (o *GetSecretsOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get secrets o k response a status code equal to that given
+func (o *GetSecretsOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetSecretsOK) Error() string {
 	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsOK  %+v", 200, o.Payload)
 }
+
+func (o *GetSecretsOK) String() string {
+	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsOK  %+v", 200, o.Payload)
+}
+
 func (o *GetSecretsOK) GetPayload() []*GetSecretsOKBodyItems0 {
 	return o.Payload
 }
@@ -84,7 +115,8 @@ func NewGetSecretsForbidden() *GetSecretsForbidden {
 	return &GetSecretsForbidden{}
 }
 
-/* GetSecretsForbidden describes a response with status code 403, with default header values.
+/*
+GetSecretsForbidden describes a response with status code 403, with default header values.
 
 Request failed. Token is not valid.
 */
@@ -92,9 +124,39 @@ type GetSecretsForbidden struct {
 	Payload *GetSecretsForbiddenBody
 }
 
+// IsSuccess returns true when this get secrets forbidden response has a 2xx status code
+func (o *GetSecretsForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get secrets forbidden response has a 3xx status code
+func (o *GetSecretsForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get secrets forbidden response has a 4xx status code
+func (o *GetSecretsForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get secrets forbidden response has a 5xx status code
+func (o *GetSecretsForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get secrets forbidden response a status code equal to that given
+func (o *GetSecretsForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *GetSecretsForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsForbidden  %+v", 403, o.Payload)
 }
+
+func (o *GetSecretsForbidden) String() string {
+	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsForbidden  %+v", 403, o.Payload)
+}
+
 func (o *GetSecretsForbidden) GetPayload() *GetSecretsForbiddenBody {
 	return o.Payload
 }
@@ -116,7 +178,8 @@ func NewGetSecretsInternalServerError() *GetSecretsInternalServerError {
 	return &GetSecretsInternalServerError{}
 }
 
-/* GetSecretsInternalServerError describes a response with status code 500, with default header values.
+/*
+GetSecretsInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal server error.
 */
@@ -124,9 +187,39 @@ type GetSecretsInternalServerError struct {
 	Payload *GetSecretsInternalServerErrorBody
 }
 
+// IsSuccess returns true when this get secrets internal server error response has a 2xx status code
+func (o *GetSecretsInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get secrets internal server error response has a 3xx status code
+func (o *GetSecretsInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get secrets internal server error response has a 4xx status code
+func (o *GetSecretsInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get secrets internal server error response has a 5xx status code
+func (o *GetSecretsInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get secrets internal server error response a status code equal to that given
+func (o *GetSecretsInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GetSecretsInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GetSecretsInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GetSecretsInternalServerError) GetPayload() *GetSecretsInternalServerErrorBody {
 	return o.Payload
 }
@@ -143,7 +236,8 @@ func (o *GetSecretsInternalServerError) readResponse(response runtime.ClientResp
 	return nil
 }
 
-/*GetSecretsForbiddenBody get secrets forbidden body
+/*
+GetSecretsForbiddenBody get secrets forbidden body
 swagger:model GetSecretsForbiddenBody
 */
 type GetSecretsForbiddenBody struct {
@@ -180,7 +274,8 @@ func (o *GetSecretsForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetSecretsInternalServerErrorBody get secrets internal server error body
+/*
+GetSecretsInternalServerErrorBody get secrets internal server error body
 swagger:model GetSecretsInternalServerErrorBody
 */
 type GetSecretsInternalServerErrorBody struct {
@@ -217,7 +312,8 @@ func (o *GetSecretsInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetSecretsOKBodyItems0 get secrets o k body items0
+/*
+GetSecretsOKBodyItems0 get secrets o k body items0
 swagger:model GetSecretsOKBodyItems0
 */
 type GetSecretsOKBodyItems0 struct {

@@ -52,10 +52,12 @@ func NewMoveFilesParamsWithHTTPClient(client *http.Client) *MoveFilesParams {
 	}
 }
 
-/* MoveFilesParams contains all the parameters to send to the API endpoint
-   for the move files operation.
+/*
+MoveFilesParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the move files operation.
+
+	Typically these are written to a http.Request.
 */
 type MoveFilesParams struct {
 

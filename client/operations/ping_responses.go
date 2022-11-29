@@ -39,7 +39,8 @@ func NewPingOK() *PingOK {
 	return &PingOK{}
 }
 
-/* PingOK describes a response with status code 200, with default header values.
+/*
+PingOK describes a response with status code 200, with default header values.
 
 Ping succeeded. Service is running and accessible.
 */
@@ -47,9 +48,39 @@ type PingOK struct {
 	Payload *PingOKBody
 }
 
+// IsSuccess returns true when this ping o k response has a 2xx status code
+func (o *PingOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this ping o k response has a 3xx status code
+func (o *PingOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this ping o k response has a 4xx status code
+func (o *PingOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this ping o k response has a 5xx status code
+func (o *PingOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this ping o k response a status code equal to that given
+func (o *PingOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *PingOK) Error() string {
 	return fmt.Sprintf("[GET /api/ping][%d] pingOK  %+v", 200, o.Payload)
 }
+
+func (o *PingOK) String() string {
+	return fmt.Sprintf("[GET /api/ping][%d] pingOK  %+v", 200, o.Payload)
+}
+
 func (o *PingOK) GetPayload() *PingOKBody {
 	return o.Payload
 }
@@ -66,7 +97,8 @@ func (o *PingOK) readResponse(response runtime.ClientResponse, consumer runtime.
 	return nil
 }
 
-/*PingOKBody ping o k body
+/*
+PingOKBody ping o k body
 swagger:model PingOKBody
 */
 type PingOKBody struct {

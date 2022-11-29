@@ -63,7 +63,8 @@ func NewOpenInteractiveSessionOK() *OpenInteractiveSessionOK {
 	return &OpenInteractiveSessionOK{}
 }
 
-/* OpenInteractiveSessionOK describes a response with status code 200, with default header values.
+/*
+OpenInteractiveSessionOK describes a response with status code 200, with default header values.
 
 Request succeeded. The interactive session has been opened.
 */
@@ -71,9 +72,39 @@ type OpenInteractiveSessionOK struct {
 	Payload *OpenInteractiveSessionOKBody
 }
 
+// IsSuccess returns true when this open interactive session o k response has a 2xx status code
+func (o *OpenInteractiveSessionOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this open interactive session o k response has a 3xx status code
+func (o *OpenInteractiveSessionOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this open interactive session o k response has a 4xx status code
+func (o *OpenInteractiveSessionOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this open interactive session o k response has a 5xx status code
+func (o *OpenInteractiveSessionOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this open interactive session o k response a status code equal to that given
+func (o *OpenInteractiveSessionOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *OpenInteractiveSessionOK) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionOK  %+v", 200, o.Payload)
 }
+
+func (o *OpenInteractiveSessionOK) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionOK  %+v", 200, o.Payload)
+}
+
 func (o *OpenInteractiveSessionOK) GetPayload() *OpenInteractiveSessionOKBody {
 	return o.Payload
 }
@@ -95,7 +126,8 @@ func NewOpenInteractiveSessionBadRequest() *OpenInteractiveSessionBadRequest {
 	return &OpenInteractiveSessionBadRequest{}
 }
 
-/* OpenInteractiveSessionBadRequest describes a response with status code 400, with default header values.
+/*
+OpenInteractiveSessionBadRequest describes a response with status code 400, with default header values.
 
 Request failed. The incoming payload seems malformed.
 */
@@ -103,9 +135,39 @@ type OpenInteractiveSessionBadRequest struct {
 	Payload *OpenInteractiveSessionBadRequestBody
 }
 
+// IsSuccess returns true when this open interactive session bad request response has a 2xx status code
+func (o *OpenInteractiveSessionBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this open interactive session bad request response has a 3xx status code
+func (o *OpenInteractiveSessionBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this open interactive session bad request response has a 4xx status code
+func (o *OpenInteractiveSessionBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this open interactive session bad request response has a 5xx status code
+func (o *OpenInteractiveSessionBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this open interactive session bad request response a status code equal to that given
+func (o *OpenInteractiveSessionBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *OpenInteractiveSessionBadRequest) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *OpenInteractiveSessionBadRequest) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *OpenInteractiveSessionBadRequest) GetPayload() *OpenInteractiveSessionBadRequestBody {
 	return o.Payload
 }
@@ -127,7 +189,8 @@ func NewOpenInteractiveSessionForbidden() *OpenInteractiveSessionForbidden {
 	return &OpenInteractiveSessionForbidden{}
 }
 
-/* OpenInteractiveSessionForbidden describes a response with status code 403, with default header values.
+/*
+OpenInteractiveSessionForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -135,9 +198,39 @@ type OpenInteractiveSessionForbidden struct {
 	Payload *OpenInteractiveSessionForbiddenBody
 }
 
+// IsSuccess returns true when this open interactive session forbidden response has a 2xx status code
+func (o *OpenInteractiveSessionForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this open interactive session forbidden response has a 3xx status code
+func (o *OpenInteractiveSessionForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this open interactive session forbidden response has a 4xx status code
+func (o *OpenInteractiveSessionForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this open interactive session forbidden response has a 5xx status code
+func (o *OpenInteractiveSessionForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this open interactive session forbidden response a status code equal to that given
+func (o *OpenInteractiveSessionForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *OpenInteractiveSessionForbidden) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionForbidden  %+v", 403, o.Payload)
 }
+
+func (o *OpenInteractiveSessionForbidden) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionForbidden  %+v", 403, o.Payload)
+}
+
 func (o *OpenInteractiveSessionForbidden) GetPayload() *OpenInteractiveSessionForbiddenBody {
 	return o.Payload
 }
@@ -159,7 +252,8 @@ func NewOpenInteractiveSessionNotFound() *OpenInteractiveSessionNotFound {
 	return &OpenInteractiveSessionNotFound{}
 }
 
-/* OpenInteractiveSessionNotFound describes a response with status code 404, with default header values.
+/*
+OpenInteractiveSessionNotFound describes a response with status code 404, with default header values.
 
 Request failed. Either user or workflow does not exist.
 */
@@ -167,9 +261,39 @@ type OpenInteractiveSessionNotFound struct {
 	Payload *OpenInteractiveSessionNotFoundBody
 }
 
+// IsSuccess returns true when this open interactive session not found response has a 2xx status code
+func (o *OpenInteractiveSessionNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this open interactive session not found response has a 3xx status code
+func (o *OpenInteractiveSessionNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this open interactive session not found response has a 4xx status code
+func (o *OpenInteractiveSessionNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this open interactive session not found response has a 5xx status code
+func (o *OpenInteractiveSessionNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this open interactive session not found response a status code equal to that given
+func (o *OpenInteractiveSessionNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *OpenInteractiveSessionNotFound) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionNotFound  %+v", 404, o.Payload)
 }
+
+func (o *OpenInteractiveSessionNotFound) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionNotFound  %+v", 404, o.Payload)
+}
+
 func (o *OpenInteractiveSessionNotFound) GetPayload() *OpenInteractiveSessionNotFoundBody {
 	return o.Payload
 }
@@ -191,7 +315,8 @@ func NewOpenInteractiveSessionInternalServerError() *OpenInteractiveSessionInter
 	return &OpenInteractiveSessionInternalServerError{}
 }
 
-/* OpenInteractiveSessionInternalServerError describes a response with status code 500, with default header values.
+/*
+OpenInteractiveSessionInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -199,9 +324,39 @@ type OpenInteractiveSessionInternalServerError struct {
 	Payload *OpenInteractiveSessionInternalServerErrorBody
 }
 
+// IsSuccess returns true when this open interactive session internal server error response has a 2xx status code
+func (o *OpenInteractiveSessionInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this open interactive session internal server error response has a 3xx status code
+func (o *OpenInteractiveSessionInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this open interactive session internal server error response has a 4xx status code
+func (o *OpenInteractiveSessionInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this open interactive session internal server error response has a 5xx status code
+func (o *OpenInteractiveSessionInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this open interactive session internal server error response a status code equal to that given
+func (o *OpenInteractiveSessionInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *OpenInteractiveSessionInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *OpenInteractiveSessionInternalServerError) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *OpenInteractiveSessionInternalServerError) GetPayload() *OpenInteractiveSessionInternalServerErrorBody {
 	return o.Payload
 }
@@ -218,7 +373,8 @@ func (o *OpenInteractiveSessionInternalServerError) readResponse(response runtim
 	return nil
 }
 
-/*OpenInteractiveSessionBadRequestBody open interactive session bad request body
+/*
+OpenInteractiveSessionBadRequestBody open interactive session bad request body
 swagger:model OpenInteractiveSessionBadRequestBody
 */
 type OpenInteractiveSessionBadRequestBody struct {
@@ -255,7 +411,8 @@ func (o *OpenInteractiveSessionBadRequestBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*OpenInteractiveSessionBody open interactive session body
+/*
+OpenInteractiveSessionBody open interactive session body
 swagger:model OpenInteractiveSessionBody
 */
 type OpenInteractiveSessionBody struct {
@@ -292,7 +449,8 @@ func (o *OpenInteractiveSessionBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*OpenInteractiveSessionForbiddenBody open interactive session forbidden body
+/*
+OpenInteractiveSessionForbiddenBody open interactive session forbidden body
 swagger:model OpenInteractiveSessionForbiddenBody
 */
 type OpenInteractiveSessionForbiddenBody struct {
@@ -329,7 +487,8 @@ func (o *OpenInteractiveSessionForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*OpenInteractiveSessionInternalServerErrorBody open interactive session internal server error body
+/*
+OpenInteractiveSessionInternalServerErrorBody open interactive session internal server error body
 swagger:model OpenInteractiveSessionInternalServerErrorBody
 */
 type OpenInteractiveSessionInternalServerErrorBody struct {
@@ -366,7 +525,8 @@ func (o *OpenInteractiveSessionInternalServerErrorBody) UnmarshalBinary(b []byte
 	return nil
 }
 
-/*OpenInteractiveSessionNotFoundBody open interactive session not found body
+/*
+OpenInteractiveSessionNotFoundBody open interactive session not found body
 swagger:model OpenInteractiveSessionNotFoundBody
 */
 type OpenInteractiveSessionNotFoundBody struct {
@@ -403,7 +563,8 @@ func (o *OpenInteractiveSessionNotFoundBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*OpenInteractiveSessionOKBody open interactive session o k body
+/*
+OpenInteractiveSessionOKBody open interactive session o k body
 swagger:model OpenInteractiveSessionOKBody
 */
 type OpenInteractiveSessionOKBody struct {

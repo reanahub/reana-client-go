@@ -57,7 +57,8 @@ func NewGitlabOauthOK() *GitlabOauthOK {
 	return &GitlabOauthOK{}
 }
 
-/* GitlabOauthOK describes a response with status code 200, with default header values.
+/*
+GitlabOauthOK describes a response with status code 200, with default header values.
 
 Ping succeeded.
 */
@@ -65,9 +66,39 @@ type GitlabOauthOK struct {
 	Payload *GitlabOauthOKBody
 }
 
+// IsSuccess returns true when this gitlab oauth o k response has a 2xx status code
+func (o *GitlabOauthOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this gitlab oauth o k response has a 3xx status code
+func (o *GitlabOauthOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this gitlab oauth o k response has a 4xx status code
+func (o *GitlabOauthOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this gitlab oauth o k response has a 5xx status code
+func (o *GitlabOauthOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this gitlab oauth o k response a status code equal to that given
+func (o *GitlabOauthOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GitlabOauthOK) Error() string {
 	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthOK  %+v", 200, o.Payload)
 }
+
+func (o *GitlabOauthOK) String() string {
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthOK  %+v", 200, o.Payload)
+}
+
 func (o *GitlabOauthOK) GetPayload() *GitlabOauthOKBody {
 	return o.Payload
 }
@@ -89,7 +120,8 @@ func NewGitlabOauthCreated() *GitlabOauthCreated {
 	return &GitlabOauthCreated{}
 }
 
-/* GitlabOauthCreated describes a response with status code 201, with default header values.
+/*
+GitlabOauthCreated describes a response with status code 201, with default header values.
 
 Authorization succeeded. GitLab secret created.
 */
@@ -97,9 +129,39 @@ type GitlabOauthCreated struct {
 	Payload *GitlabOauthCreatedBody
 }
 
+// IsSuccess returns true when this gitlab oauth created response has a 2xx status code
+func (o *GitlabOauthCreated) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this gitlab oauth created response has a 3xx status code
+func (o *GitlabOauthCreated) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this gitlab oauth created response has a 4xx status code
+func (o *GitlabOauthCreated) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this gitlab oauth created response has a 5xx status code
+func (o *GitlabOauthCreated) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this gitlab oauth created response a status code equal to that given
+func (o *GitlabOauthCreated) IsCode(code int) bool {
+	return code == 201
+}
+
 func (o *GitlabOauthCreated) Error() string {
 	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthCreated  %+v", 201, o.Payload)
 }
+
+func (o *GitlabOauthCreated) String() string {
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthCreated  %+v", 201, o.Payload)
+}
+
 func (o *GitlabOauthCreated) GetPayload() *GitlabOauthCreatedBody {
 	return o.Payload
 }
@@ -121,7 +183,8 @@ func NewGitlabOauthForbidden() *GitlabOauthForbidden {
 	return &GitlabOauthForbidden{}
 }
 
-/* GitlabOauthForbidden describes a response with status code 403, with default header values.
+/*
+GitlabOauthForbidden describes a response with status code 403, with default header values.
 
 Request failed. User token not valid.
 */
@@ -129,9 +192,39 @@ type GitlabOauthForbidden struct {
 	Payload *GitlabOauthForbiddenBody
 }
 
+// IsSuccess returns true when this gitlab oauth forbidden response has a 2xx status code
+func (o *GitlabOauthForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this gitlab oauth forbidden response has a 3xx status code
+func (o *GitlabOauthForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this gitlab oauth forbidden response has a 4xx status code
+func (o *GitlabOauthForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this gitlab oauth forbidden response has a 5xx status code
+func (o *GitlabOauthForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this gitlab oauth forbidden response a status code equal to that given
+func (o *GitlabOauthForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *GitlabOauthForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthForbidden  %+v", 403, o.Payload)
 }
+
+func (o *GitlabOauthForbidden) String() string {
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthForbidden  %+v", 403, o.Payload)
+}
+
 func (o *GitlabOauthForbidden) GetPayload() *GitlabOauthForbiddenBody {
 	return o.Payload
 }
@@ -153,7 +246,8 @@ func NewGitlabOauthInternalServerError() *GitlabOauthInternalServerError {
 	return &GitlabOauthInternalServerError{}
 }
 
-/* GitlabOauthInternalServerError describes a response with status code 500, with default header values.
+/*
+GitlabOauthInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -161,9 +255,39 @@ type GitlabOauthInternalServerError struct {
 	Payload *GitlabOauthInternalServerErrorBody
 }
 
+// IsSuccess returns true when this gitlab oauth internal server error response has a 2xx status code
+func (o *GitlabOauthInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this gitlab oauth internal server error response has a 3xx status code
+func (o *GitlabOauthInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this gitlab oauth internal server error response has a 4xx status code
+func (o *GitlabOauthInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this gitlab oauth internal server error response has a 5xx status code
+func (o *GitlabOauthInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this gitlab oauth internal server error response a status code equal to that given
+func (o *GitlabOauthInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GitlabOauthInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GitlabOauthInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GitlabOauthInternalServerError) GetPayload() *GitlabOauthInternalServerErrorBody {
 	return o.Payload
 }
@@ -180,7 +304,8 @@ func (o *GitlabOauthInternalServerError) readResponse(response runtime.ClientRes
 	return nil
 }
 
-/*GitlabOauthCreatedBody gitlab oauth created body
+/*
+GitlabOauthCreatedBody gitlab oauth created body
 swagger:model GitlabOauthCreatedBody
 */
 type GitlabOauthCreatedBody struct {
@@ -220,7 +345,8 @@ func (o *GitlabOauthCreatedBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GitlabOauthForbiddenBody gitlab oauth forbidden body
+/*
+GitlabOauthForbiddenBody gitlab oauth forbidden body
 swagger:model GitlabOauthForbiddenBody
 */
 type GitlabOauthForbiddenBody struct {
@@ -257,7 +383,8 @@ func (o *GitlabOauthForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GitlabOauthInternalServerErrorBody gitlab oauth internal server error body
+/*
+GitlabOauthInternalServerErrorBody gitlab oauth internal server error body
 swagger:model GitlabOauthInternalServerErrorBody
 */
 type GitlabOauthInternalServerErrorBody struct {
@@ -294,7 +421,8 @@ func (o *GitlabOauthInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GitlabOauthOKBody gitlab oauth o k body
+/*
+GitlabOauthOKBody gitlab oauth o k body
 swagger:model GitlabOauthOKBody
 */
 type GitlabOauthOKBody struct {

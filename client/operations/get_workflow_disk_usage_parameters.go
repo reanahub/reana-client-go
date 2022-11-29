@@ -52,10 +52,12 @@ func NewGetWorkflowDiskUsageParamsWithHTTPClient(client *http.Client) *GetWorkfl
 	}
 }
 
-/* GetWorkflowDiskUsageParams contains all the parameters to send to the API endpoint
-   for the get workflow disk usage operation.
+/*
+GetWorkflowDiskUsageParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the get workflow disk usage operation.
+
+	Typically these are written to a http.Request.
 */
 type GetWorkflowDiskUsageParams struct {
 

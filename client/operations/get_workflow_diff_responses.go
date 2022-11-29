@@ -63,7 +63,8 @@ func NewGetWorkflowDiffOK() *GetWorkflowDiffOK {
 	return &GetWorkflowDiffOK{}
 }
 
-/* GetWorkflowDiffOK describes a response with status code 200, with default header values.
+/*
+GetWorkflowDiffOK describes a response with status code 200, with default header values.
 
 Request succeeded. Info about a workflow, including the status is returned.
 */
@@ -71,9 +72,39 @@ type GetWorkflowDiffOK struct {
 	Payload *GetWorkflowDiffOKBody
 }
 
+// IsSuccess returns true when this get workflow diff o k response has a 2xx status code
+func (o *GetWorkflowDiffOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get workflow diff o k response has a 3xx status code
+func (o *GetWorkflowDiffOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow diff o k response has a 4xx status code
+func (o *GetWorkflowDiffOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow diff o k response has a 5xx status code
+func (o *GetWorkflowDiffOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow diff o k response a status code equal to that given
+func (o *GetWorkflowDiffOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetWorkflowDiffOK) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffOK  %+v", 200, o.Payload)
 }
+
+func (o *GetWorkflowDiffOK) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffOK  %+v", 200, o.Payload)
+}
+
 func (o *GetWorkflowDiffOK) GetPayload() *GetWorkflowDiffOKBody {
 	return o.Payload
 }
@@ -95,7 +126,8 @@ func NewGetWorkflowDiffBadRequest() *GetWorkflowDiffBadRequest {
 	return &GetWorkflowDiffBadRequest{}
 }
 
-/* GetWorkflowDiffBadRequest describes a response with status code 400, with default header values.
+/*
+GetWorkflowDiffBadRequest describes a response with status code 400, with default header values.
 
 Request failed. The incoming payload seems malformed.
 */
@@ -103,9 +135,39 @@ type GetWorkflowDiffBadRequest struct {
 	Payload *GetWorkflowDiffBadRequestBody
 }
 
+// IsSuccess returns true when this get workflow diff bad request response has a 2xx status code
+func (o *GetWorkflowDiffBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow diff bad request response has a 3xx status code
+func (o *GetWorkflowDiffBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow diff bad request response has a 4xx status code
+func (o *GetWorkflowDiffBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow diff bad request response has a 5xx status code
+func (o *GetWorkflowDiffBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow diff bad request response a status code equal to that given
+func (o *GetWorkflowDiffBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *GetWorkflowDiffBadRequest) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *GetWorkflowDiffBadRequest) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *GetWorkflowDiffBadRequest) GetPayload() *GetWorkflowDiffBadRequestBody {
 	return o.Payload
 }
@@ -127,7 +189,8 @@ func NewGetWorkflowDiffForbidden() *GetWorkflowDiffForbidden {
 	return &GetWorkflowDiffForbidden{}
 }
 
-/* GetWorkflowDiffForbidden describes a response with status code 403, with default header values.
+/*
+GetWorkflowDiffForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -135,9 +198,39 @@ type GetWorkflowDiffForbidden struct {
 	Payload *GetWorkflowDiffForbiddenBody
 }
 
+// IsSuccess returns true when this get workflow diff forbidden response has a 2xx status code
+func (o *GetWorkflowDiffForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow diff forbidden response has a 3xx status code
+func (o *GetWorkflowDiffForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow diff forbidden response has a 4xx status code
+func (o *GetWorkflowDiffForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow diff forbidden response has a 5xx status code
+func (o *GetWorkflowDiffForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow diff forbidden response a status code equal to that given
+func (o *GetWorkflowDiffForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *GetWorkflowDiffForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffForbidden  %+v", 403, o.Payload)
 }
+
+func (o *GetWorkflowDiffForbidden) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffForbidden  %+v", 403, o.Payload)
+}
+
 func (o *GetWorkflowDiffForbidden) GetPayload() *GetWorkflowDiffForbiddenBody {
 	return o.Payload
 }
@@ -159,7 +252,8 @@ func NewGetWorkflowDiffNotFound() *GetWorkflowDiffNotFound {
 	return &GetWorkflowDiffNotFound{}
 }
 
-/* GetWorkflowDiffNotFound describes a response with status code 404, with default header values.
+/*
+GetWorkflowDiffNotFound describes a response with status code 404, with default header values.
 
 Request failed. Either user or workflow does not exist.
 */
@@ -167,9 +261,39 @@ type GetWorkflowDiffNotFound struct {
 	Payload *GetWorkflowDiffNotFoundBody
 }
 
+// IsSuccess returns true when this get workflow diff not found response has a 2xx status code
+func (o *GetWorkflowDiffNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow diff not found response has a 3xx status code
+func (o *GetWorkflowDiffNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow diff not found response has a 4xx status code
+func (o *GetWorkflowDiffNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow diff not found response has a 5xx status code
+func (o *GetWorkflowDiffNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow diff not found response a status code equal to that given
+func (o *GetWorkflowDiffNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *GetWorkflowDiffNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffNotFound  %+v", 404, o.Payload)
 }
+
+func (o *GetWorkflowDiffNotFound) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffNotFound  %+v", 404, o.Payload)
+}
+
 func (o *GetWorkflowDiffNotFound) GetPayload() *GetWorkflowDiffNotFoundBody {
 	return o.Payload
 }
@@ -191,7 +315,8 @@ func NewGetWorkflowDiffInternalServerError() *GetWorkflowDiffInternalServerError
 	return &GetWorkflowDiffInternalServerError{}
 }
 
-/* GetWorkflowDiffInternalServerError describes a response with status code 500, with default header values.
+/*
+GetWorkflowDiffInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -199,9 +324,39 @@ type GetWorkflowDiffInternalServerError struct {
 	Payload *GetWorkflowDiffInternalServerErrorBody
 }
 
+// IsSuccess returns true when this get workflow diff internal server error response has a 2xx status code
+func (o *GetWorkflowDiffInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow diff internal server error response has a 3xx status code
+func (o *GetWorkflowDiffInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow diff internal server error response has a 4xx status code
+func (o *GetWorkflowDiffInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow diff internal server error response has a 5xx status code
+func (o *GetWorkflowDiffInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get workflow diff internal server error response a status code equal to that given
+func (o *GetWorkflowDiffInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GetWorkflowDiffInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GetWorkflowDiffInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GetWorkflowDiffInternalServerError) GetPayload() *GetWorkflowDiffInternalServerErrorBody {
 	return o.Payload
 }
@@ -218,7 +373,8 @@ func (o *GetWorkflowDiffInternalServerError) readResponse(response runtime.Clien
 	return nil
 }
 
-/*GetWorkflowDiffBadRequestBody get workflow diff bad request body
+/*
+GetWorkflowDiffBadRequestBody get workflow diff bad request body
 swagger:model GetWorkflowDiffBadRequestBody
 */
 type GetWorkflowDiffBadRequestBody struct {
@@ -255,7 +411,8 @@ func (o *GetWorkflowDiffBadRequestBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowDiffForbiddenBody get workflow diff forbidden body
+/*
+GetWorkflowDiffForbiddenBody get workflow diff forbidden body
 swagger:model GetWorkflowDiffForbiddenBody
 */
 type GetWorkflowDiffForbiddenBody struct {
@@ -292,7 +449,8 @@ func (o *GetWorkflowDiffForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowDiffInternalServerErrorBody get workflow diff internal server error body
+/*
+GetWorkflowDiffInternalServerErrorBody get workflow diff internal server error body
 swagger:model GetWorkflowDiffInternalServerErrorBody
 */
 type GetWorkflowDiffInternalServerErrorBody struct {
@@ -329,7 +487,8 @@ func (o *GetWorkflowDiffInternalServerErrorBody) UnmarshalBinary(b []byte) error
 	return nil
 }
 
-/*GetWorkflowDiffNotFoundBody get workflow diff not found body
+/*
+GetWorkflowDiffNotFoundBody get workflow diff not found body
 swagger:model GetWorkflowDiffNotFoundBody
 */
 type GetWorkflowDiffNotFoundBody struct {
@@ -366,7 +525,8 @@ func (o *GetWorkflowDiffNotFoundBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowDiffOKBody get workflow diff o k body
+/*
+GetWorkflowDiffOKBody get workflow diff o k body
 swagger:model GetWorkflowDiffOKBody
 */
 type GetWorkflowDiffOKBody struct {

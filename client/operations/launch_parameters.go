@@ -52,10 +52,12 @@ func NewLaunchParamsWithHTTPClient(client *http.Client) *LaunchParams {
 	}
 }
 
-/* LaunchParams contains all the parameters to send to the API endpoint
-   for the launch operation.
+/*
+LaunchParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the launch operation.
+
+	Typically these are written to a http.Request.
 */
 type LaunchParams struct {
 

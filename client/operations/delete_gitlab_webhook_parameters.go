@@ -52,10 +52,12 @@ func NewDeleteGitlabWebhookParamsWithHTTPClient(client *http.Client) *DeleteGitl
 	}
 }
 
-/* DeleteGitlabWebhookParams contains all the parameters to send to the API endpoint
-   for the delete gitlab webhook operation.
+/*
+DeleteGitlabWebhookParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the delete gitlab webhook operation.
+
+	Typically these are written to a http.Request.
 */
 type DeleteGitlabWebhookParams struct {
 

@@ -52,10 +52,12 @@ func NewGetYouParamsWithHTTPClient(client *http.Client) *GetYouParams {
 	}
 }
 
-/* GetYouParams contains all the parameters to send to the API endpoint
-   for the get you operation.
+/*
+GetYouParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the get you operation.
+
+	Typically these are written to a http.Request.
 */
 type GetYouParams struct {
 

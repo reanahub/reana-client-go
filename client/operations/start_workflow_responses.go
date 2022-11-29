@@ -75,7 +75,8 @@ func NewStartWorkflowOK() *StartWorkflowOK {
 	return &StartWorkflowOK{}
 }
 
-/* StartWorkflowOK describes a response with status code 200, with default header values.
+/*
+StartWorkflowOK describes a response with status code 200, with default header values.
 
 Request succeeded. Info about a workflow, including the execution status is returned.
 */
@@ -83,9 +84,39 @@ type StartWorkflowOK struct {
 	Payload *StartWorkflowOKBody
 }
 
+// IsSuccess returns true when this start workflow o k response has a 2xx status code
+func (o *StartWorkflowOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this start workflow o k response has a 3xx status code
+func (o *StartWorkflowOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this start workflow o k response has a 4xx status code
+func (o *StartWorkflowOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this start workflow o k response has a 5xx status code
+func (o *StartWorkflowOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this start workflow o k response a status code equal to that given
+func (o *StartWorkflowOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *StartWorkflowOK) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowOK  %+v", 200, o.Payload)
 }
+
+func (o *StartWorkflowOK) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowOK  %+v", 200, o.Payload)
+}
+
 func (o *StartWorkflowOK) GetPayload() *StartWorkflowOKBody {
 	return o.Payload
 }
@@ -107,7 +138,8 @@ func NewStartWorkflowBadRequest() *StartWorkflowBadRequest {
 	return &StartWorkflowBadRequest{}
 }
 
-/* StartWorkflowBadRequest describes a response with status code 400, with default header values.
+/*
+StartWorkflowBadRequest describes a response with status code 400, with default header values.
 
 Request failed. The incoming payload seems malformed.
 */
@@ -115,9 +147,39 @@ type StartWorkflowBadRequest struct {
 	Payload *StartWorkflowBadRequestBody
 }
 
+// IsSuccess returns true when this start workflow bad request response has a 2xx status code
+func (o *StartWorkflowBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this start workflow bad request response has a 3xx status code
+func (o *StartWorkflowBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this start workflow bad request response has a 4xx status code
+func (o *StartWorkflowBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this start workflow bad request response has a 5xx status code
+func (o *StartWorkflowBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this start workflow bad request response a status code equal to that given
+func (o *StartWorkflowBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *StartWorkflowBadRequest) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *StartWorkflowBadRequest) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *StartWorkflowBadRequest) GetPayload() *StartWorkflowBadRequestBody {
 	return o.Payload
 }
@@ -139,7 +201,8 @@ func NewStartWorkflowForbidden() *StartWorkflowForbidden {
 	return &StartWorkflowForbidden{}
 }
 
-/* StartWorkflowForbidden describes a response with status code 403, with default header values.
+/*
+StartWorkflowForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -147,9 +210,39 @@ type StartWorkflowForbidden struct {
 	Payload *StartWorkflowForbiddenBody
 }
 
+// IsSuccess returns true when this start workflow forbidden response has a 2xx status code
+func (o *StartWorkflowForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this start workflow forbidden response has a 3xx status code
+func (o *StartWorkflowForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this start workflow forbidden response has a 4xx status code
+func (o *StartWorkflowForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this start workflow forbidden response has a 5xx status code
+func (o *StartWorkflowForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this start workflow forbidden response a status code equal to that given
+func (o *StartWorkflowForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *StartWorkflowForbidden) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowForbidden  %+v", 403, o.Payload)
 }
+
+func (o *StartWorkflowForbidden) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowForbidden  %+v", 403, o.Payload)
+}
+
 func (o *StartWorkflowForbidden) GetPayload() *StartWorkflowForbiddenBody {
 	return o.Payload
 }
@@ -171,7 +264,8 @@ func NewStartWorkflowNotFound() *StartWorkflowNotFound {
 	return &StartWorkflowNotFound{}
 }
 
-/* StartWorkflowNotFound describes a response with status code 404, with default header values.
+/*
+StartWorkflowNotFound describes a response with status code 404, with default header values.
 
 Request failed. Either User or Workflow does not exist.
 */
@@ -179,9 +273,39 @@ type StartWorkflowNotFound struct {
 	Payload *StartWorkflowNotFoundBody
 }
 
+// IsSuccess returns true when this start workflow not found response has a 2xx status code
+func (o *StartWorkflowNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this start workflow not found response has a 3xx status code
+func (o *StartWorkflowNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this start workflow not found response has a 4xx status code
+func (o *StartWorkflowNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this start workflow not found response has a 5xx status code
+func (o *StartWorkflowNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this start workflow not found response a status code equal to that given
+func (o *StartWorkflowNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *StartWorkflowNotFound) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotFound  %+v", 404, o.Payload)
 }
+
+func (o *StartWorkflowNotFound) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotFound  %+v", 404, o.Payload)
+}
+
 func (o *StartWorkflowNotFound) GetPayload() *StartWorkflowNotFoundBody {
 	return o.Payload
 }
@@ -203,7 +327,8 @@ func NewStartWorkflowConflict() *StartWorkflowConflict {
 	return &StartWorkflowConflict{}
 }
 
-/* StartWorkflowConflict describes a response with status code 409, with default header values.
+/*
+StartWorkflowConflict describes a response with status code 409, with default header values.
 
 Request failed. The workflow could not be started due to a conflict.
 */
@@ -211,9 +336,39 @@ type StartWorkflowConflict struct {
 	Payload *StartWorkflowConflictBody
 }
 
+// IsSuccess returns true when this start workflow conflict response has a 2xx status code
+func (o *StartWorkflowConflict) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this start workflow conflict response has a 3xx status code
+func (o *StartWorkflowConflict) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this start workflow conflict response has a 4xx status code
+func (o *StartWorkflowConflict) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this start workflow conflict response has a 5xx status code
+func (o *StartWorkflowConflict) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this start workflow conflict response a status code equal to that given
+func (o *StartWorkflowConflict) IsCode(code int) bool {
+	return code == 409
+}
+
 func (o *StartWorkflowConflict) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowConflict  %+v", 409, o.Payload)
 }
+
+func (o *StartWorkflowConflict) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowConflict  %+v", 409, o.Payload)
+}
+
 func (o *StartWorkflowConflict) GetPayload() *StartWorkflowConflictBody {
 	return o.Payload
 }
@@ -235,7 +390,8 @@ func NewStartWorkflowInternalServerError() *StartWorkflowInternalServerError {
 	return &StartWorkflowInternalServerError{}
 }
 
-/* StartWorkflowInternalServerError describes a response with status code 500, with default header values.
+/*
+StartWorkflowInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -243,9 +399,39 @@ type StartWorkflowInternalServerError struct {
 	Payload *StartWorkflowInternalServerErrorBody
 }
 
+// IsSuccess returns true when this start workflow internal server error response has a 2xx status code
+func (o *StartWorkflowInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this start workflow internal server error response has a 3xx status code
+func (o *StartWorkflowInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this start workflow internal server error response has a 4xx status code
+func (o *StartWorkflowInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this start workflow internal server error response has a 5xx status code
+func (o *StartWorkflowInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this start workflow internal server error response a status code equal to that given
+func (o *StartWorkflowInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *StartWorkflowInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *StartWorkflowInternalServerError) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *StartWorkflowInternalServerError) GetPayload() *StartWorkflowInternalServerErrorBody {
 	return o.Payload
 }
@@ -267,7 +453,8 @@ func NewStartWorkflowNotImplemented() *StartWorkflowNotImplemented {
 	return &StartWorkflowNotImplemented{}
 }
 
-/* StartWorkflowNotImplemented describes a response with status code 501, with default header values.
+/*
+StartWorkflowNotImplemented describes a response with status code 501, with default header values.
 
 Request failed. The specified status change is not implemented.
 */
@@ -275,9 +462,39 @@ type StartWorkflowNotImplemented struct {
 	Payload *StartWorkflowNotImplementedBody
 }
 
+// IsSuccess returns true when this start workflow not implemented response has a 2xx status code
+func (o *StartWorkflowNotImplemented) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this start workflow not implemented response has a 3xx status code
+func (o *StartWorkflowNotImplemented) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this start workflow not implemented response has a 4xx status code
+func (o *StartWorkflowNotImplemented) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this start workflow not implemented response has a 5xx status code
+func (o *StartWorkflowNotImplemented) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this start workflow not implemented response a status code equal to that given
+func (o *StartWorkflowNotImplemented) IsCode(code int) bool {
+	return code == 501
+}
+
 func (o *StartWorkflowNotImplemented) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotImplemented  %+v", 501, o.Payload)
 }
+
+func (o *StartWorkflowNotImplemented) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotImplemented  %+v", 501, o.Payload)
+}
+
 func (o *StartWorkflowNotImplemented) GetPayload() *StartWorkflowNotImplementedBody {
 	return o.Payload
 }
@@ -294,7 +511,8 @@ func (o *StartWorkflowNotImplemented) readResponse(response runtime.ClientRespon
 	return nil
 }
 
-/*StartWorkflowBadRequestBody start workflow bad request body
+/*
+StartWorkflowBadRequestBody start workflow bad request body
 swagger:model StartWorkflowBadRequestBody
 */
 type StartWorkflowBadRequestBody struct {
@@ -331,7 +549,8 @@ func (o *StartWorkflowBadRequestBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*StartWorkflowBody start workflow body
+/*
+StartWorkflowBody start workflow body
 swagger:model StartWorkflowBody
 */
 type StartWorkflowBody struct {
@@ -377,7 +596,8 @@ func (o *StartWorkflowBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*StartWorkflowConflictBody start workflow conflict body
+/*
+StartWorkflowConflictBody start workflow conflict body
 swagger:model StartWorkflowConflictBody
 */
 type StartWorkflowConflictBody struct {
@@ -414,7 +634,8 @@ func (o *StartWorkflowConflictBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*StartWorkflowForbiddenBody start workflow forbidden body
+/*
+StartWorkflowForbiddenBody start workflow forbidden body
 swagger:model StartWorkflowForbiddenBody
 */
 type StartWorkflowForbiddenBody struct {
@@ -451,7 +672,8 @@ func (o *StartWorkflowForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*StartWorkflowInternalServerErrorBody start workflow internal server error body
+/*
+StartWorkflowInternalServerErrorBody start workflow internal server error body
 swagger:model StartWorkflowInternalServerErrorBody
 */
 type StartWorkflowInternalServerErrorBody struct {
@@ -488,7 +710,8 @@ func (o *StartWorkflowInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*StartWorkflowNotFoundBody start workflow not found body
+/*
+StartWorkflowNotFoundBody start workflow not found body
 swagger:model StartWorkflowNotFoundBody
 */
 type StartWorkflowNotFoundBody struct {
@@ -525,7 +748,8 @@ func (o *StartWorkflowNotFoundBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*StartWorkflowNotImplementedBody start workflow not implemented body
+/*
+StartWorkflowNotImplementedBody start workflow not implemented body
 swagger:model StartWorkflowNotImplementedBody
 */
 type StartWorkflowNotImplementedBody struct {
@@ -562,7 +786,8 @@ func (o *StartWorkflowNotImplementedBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*StartWorkflowOKBody start workflow o k body
+/*
+StartWorkflowOKBody start workflow o k body
 swagger:model StartWorkflowOKBody
 */
 type StartWorkflowOKBody struct {

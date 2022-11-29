@@ -63,7 +63,8 @@ func NewUploadFileOK() *UploadFileOK {
 	return &UploadFileOK{}
 }
 
-/* UploadFileOK describes a response with status code 200, with default header values.
+/*
+UploadFileOK describes a response with status code 200, with default header values.
 
 Request succeeded. File successfully transferred.
 */
@@ -71,9 +72,39 @@ type UploadFileOK struct {
 	Payload *UploadFileOKBody
 }
 
+// IsSuccess returns true when this upload file o k response has a 2xx status code
+func (o *UploadFileOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this upload file o k response has a 3xx status code
+func (o *UploadFileOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this upload file o k response has a 4xx status code
+func (o *UploadFileOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this upload file o k response has a 5xx status code
+func (o *UploadFileOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this upload file o k response a status code equal to that given
+func (o *UploadFileOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *UploadFileOK) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileOK  %+v", 200, o.Payload)
 }
+
+func (o *UploadFileOK) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileOK  %+v", 200, o.Payload)
+}
+
 func (o *UploadFileOK) GetPayload() *UploadFileOKBody {
 	return o.Payload
 }
@@ -95,7 +126,8 @@ func NewUploadFileBadRequest() *UploadFileBadRequest {
 	return &UploadFileBadRequest{}
 }
 
-/* UploadFileBadRequest describes a response with status code 400, with default header values.
+/*
+UploadFileBadRequest describes a response with status code 400, with default header values.
 
 Request failed. The incoming payload seems malformed
 */
@@ -103,9 +135,39 @@ type UploadFileBadRequest struct {
 	Payload *UploadFileBadRequestBody
 }
 
+// IsSuccess returns true when this upload file bad request response has a 2xx status code
+func (o *UploadFileBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this upload file bad request response has a 3xx status code
+func (o *UploadFileBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this upload file bad request response has a 4xx status code
+func (o *UploadFileBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this upload file bad request response has a 5xx status code
+func (o *UploadFileBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this upload file bad request response a status code equal to that given
+func (o *UploadFileBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *UploadFileBadRequest) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *UploadFileBadRequest) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *UploadFileBadRequest) GetPayload() *UploadFileBadRequestBody {
 	return o.Payload
 }
@@ -127,7 +189,8 @@ func NewUploadFileForbidden() *UploadFileForbidden {
 	return &UploadFileForbidden{}
 }
 
-/* UploadFileForbidden describes a response with status code 403, with default header values.
+/*
+UploadFileForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -135,9 +198,39 @@ type UploadFileForbidden struct {
 	Payload *UploadFileForbiddenBody
 }
 
+// IsSuccess returns true when this upload file forbidden response has a 2xx status code
+func (o *UploadFileForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this upload file forbidden response has a 3xx status code
+func (o *UploadFileForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this upload file forbidden response has a 4xx status code
+func (o *UploadFileForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this upload file forbidden response has a 5xx status code
+func (o *UploadFileForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this upload file forbidden response a status code equal to that given
+func (o *UploadFileForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *UploadFileForbidden) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileForbidden  %+v", 403, o.Payload)
 }
+
+func (o *UploadFileForbidden) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileForbidden  %+v", 403, o.Payload)
+}
+
 func (o *UploadFileForbidden) GetPayload() *UploadFileForbiddenBody {
 	return o.Payload
 }
@@ -159,7 +252,8 @@ func NewUploadFileNotFound() *UploadFileNotFound {
 	return &UploadFileNotFound{}
 }
 
-/* UploadFileNotFound describes a response with status code 404, with default header values.
+/*
+UploadFileNotFound describes a response with status code 404, with default header values.
 
 Request failed. User does not exist.
 */
@@ -167,9 +261,39 @@ type UploadFileNotFound struct {
 	Payload *UploadFileNotFoundBody
 }
 
+// IsSuccess returns true when this upload file not found response has a 2xx status code
+func (o *UploadFileNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this upload file not found response has a 3xx status code
+func (o *UploadFileNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this upload file not found response has a 4xx status code
+func (o *UploadFileNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this upload file not found response has a 5xx status code
+func (o *UploadFileNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this upload file not found response a status code equal to that given
+func (o *UploadFileNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *UploadFileNotFound) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileNotFound  %+v", 404, o.Payload)
 }
+
+func (o *UploadFileNotFound) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileNotFound  %+v", 404, o.Payload)
+}
+
 func (o *UploadFileNotFound) GetPayload() *UploadFileNotFoundBody {
 	return o.Payload
 }
@@ -191,7 +315,8 @@ func NewUploadFileInternalServerError() *UploadFileInternalServerError {
 	return &UploadFileInternalServerError{}
 }
 
-/* UploadFileInternalServerError describes a response with status code 500, with default header values.
+/*
+UploadFileInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal server error.
 */
@@ -199,9 +324,39 @@ type UploadFileInternalServerError struct {
 	Payload *UploadFileInternalServerErrorBody
 }
 
+// IsSuccess returns true when this upload file internal server error response has a 2xx status code
+func (o *UploadFileInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this upload file internal server error response has a 3xx status code
+func (o *UploadFileInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this upload file internal server error response has a 4xx status code
+func (o *UploadFileInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this upload file internal server error response has a 5xx status code
+func (o *UploadFileInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this upload file internal server error response a status code equal to that given
+func (o *UploadFileInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *UploadFileInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *UploadFileInternalServerError) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *UploadFileInternalServerError) GetPayload() *UploadFileInternalServerErrorBody {
 	return o.Payload
 }
@@ -218,7 +373,8 @@ func (o *UploadFileInternalServerError) readResponse(response runtime.ClientResp
 	return nil
 }
 
-/*UploadFileBadRequestBody upload file bad request body
+/*
+UploadFileBadRequestBody upload file bad request body
 swagger:model UploadFileBadRequestBody
 */
 type UploadFileBadRequestBody struct {
@@ -255,7 +411,8 @@ func (o *UploadFileBadRequestBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*UploadFileForbiddenBody upload file forbidden body
+/*
+UploadFileForbiddenBody upload file forbidden body
 swagger:model UploadFileForbiddenBody
 */
 type UploadFileForbiddenBody struct {
@@ -292,7 +449,8 @@ func (o *UploadFileForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*UploadFileInternalServerErrorBody upload file internal server error body
+/*
+UploadFileInternalServerErrorBody upload file internal server error body
 swagger:model UploadFileInternalServerErrorBody
 */
 type UploadFileInternalServerErrorBody struct {
@@ -329,7 +487,8 @@ func (o *UploadFileInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*UploadFileNotFoundBody upload file not found body
+/*
+UploadFileNotFoundBody upload file not found body
 swagger:model UploadFileNotFoundBody
 */
 type UploadFileNotFoundBody struct {
@@ -366,7 +525,8 @@ func (o *UploadFileNotFoundBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*UploadFileOKBody upload file o k body
+/*
+UploadFileOKBody upload file o k body
 swagger:model UploadFileOKBody
 */
 type UploadFileOKBody struct {

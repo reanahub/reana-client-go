@@ -52,10 +52,12 @@ func NewGitlabConnectParamsWithHTTPClient(client *http.Client) *GitlabConnectPar
 	}
 }
 
-/* GitlabConnectParams contains all the parameters to send to the API endpoint
-   for the gitlab connect operation.
+/*
+GitlabConnectParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the gitlab connect operation.
+
+	Typically these are written to a http.Request.
 */
 type GitlabConnectParams struct {
 	timeout    time.Duration

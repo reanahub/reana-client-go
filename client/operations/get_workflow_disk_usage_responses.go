@@ -65,7 +65,8 @@ func NewGetWorkflowDiskUsageOK() *GetWorkflowDiskUsageOK {
 	return &GetWorkflowDiskUsageOK{}
 }
 
-/* GetWorkflowDiskUsageOK describes a response with status code 200, with default header values.
+/*
+GetWorkflowDiskUsageOK describes a response with status code 200, with default header values.
 
 Request succeeded. Info about the disk usage is returned.
 */
@@ -73,9 +74,39 @@ type GetWorkflowDiskUsageOK struct {
 	Payload *GetWorkflowDiskUsageOKBody
 }
 
+// IsSuccess returns true when this get workflow disk usage o k response has a 2xx status code
+func (o *GetWorkflowDiskUsageOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get workflow disk usage o k response has a 3xx status code
+func (o *GetWorkflowDiskUsageOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow disk usage o k response has a 4xx status code
+func (o *GetWorkflowDiskUsageOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow disk usage o k response has a 5xx status code
+func (o *GetWorkflowDiskUsageOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow disk usage o k response a status code equal to that given
+func (o *GetWorkflowDiskUsageOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetWorkflowDiskUsageOK) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageOK  %+v", 200, o.Payload)
 }
+
+func (o *GetWorkflowDiskUsageOK) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageOK  %+v", 200, o.Payload)
+}
+
 func (o *GetWorkflowDiskUsageOK) GetPayload() *GetWorkflowDiskUsageOKBody {
 	return o.Payload
 }
@@ -97,7 +128,8 @@ func NewGetWorkflowDiskUsageBadRequest() *GetWorkflowDiskUsageBadRequest {
 	return &GetWorkflowDiskUsageBadRequest{}
 }
 
-/* GetWorkflowDiskUsageBadRequest describes a response with status code 400, with default header values.
+/*
+GetWorkflowDiskUsageBadRequest describes a response with status code 400, with default header values.
 
 Request failed. The incoming data specification seems malformed.
 */
@@ -105,9 +137,39 @@ type GetWorkflowDiskUsageBadRequest struct {
 	Payload *GetWorkflowDiskUsageBadRequestBody
 }
 
+// IsSuccess returns true when this get workflow disk usage bad request response has a 2xx status code
+func (o *GetWorkflowDiskUsageBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow disk usage bad request response has a 3xx status code
+func (o *GetWorkflowDiskUsageBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow disk usage bad request response has a 4xx status code
+func (o *GetWorkflowDiskUsageBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow disk usage bad request response has a 5xx status code
+func (o *GetWorkflowDiskUsageBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow disk usage bad request response a status code equal to that given
+func (o *GetWorkflowDiskUsageBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *GetWorkflowDiskUsageBadRequest) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *GetWorkflowDiskUsageBadRequest) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *GetWorkflowDiskUsageBadRequest) GetPayload() *GetWorkflowDiskUsageBadRequestBody {
 	return o.Payload
 }
@@ -129,7 +191,8 @@ func NewGetWorkflowDiskUsageForbidden() *GetWorkflowDiskUsageForbidden {
 	return &GetWorkflowDiskUsageForbidden{}
 }
 
-/* GetWorkflowDiskUsageForbidden describes a response with status code 403, with default header values.
+/*
+GetWorkflowDiskUsageForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -137,9 +200,39 @@ type GetWorkflowDiskUsageForbidden struct {
 	Payload *GetWorkflowDiskUsageForbiddenBody
 }
 
+// IsSuccess returns true when this get workflow disk usage forbidden response has a 2xx status code
+func (o *GetWorkflowDiskUsageForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow disk usage forbidden response has a 3xx status code
+func (o *GetWorkflowDiskUsageForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow disk usage forbidden response has a 4xx status code
+func (o *GetWorkflowDiskUsageForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow disk usage forbidden response has a 5xx status code
+func (o *GetWorkflowDiskUsageForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow disk usage forbidden response a status code equal to that given
+func (o *GetWorkflowDiskUsageForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *GetWorkflowDiskUsageForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageForbidden  %+v", 403, o.Payload)
 }
+
+func (o *GetWorkflowDiskUsageForbidden) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageForbidden  %+v", 403, o.Payload)
+}
+
 func (o *GetWorkflowDiskUsageForbidden) GetPayload() *GetWorkflowDiskUsageForbiddenBody {
 	return o.Payload
 }
@@ -161,7 +254,8 @@ func NewGetWorkflowDiskUsageNotFound() *GetWorkflowDiskUsageNotFound {
 	return &GetWorkflowDiskUsageNotFound{}
 }
 
-/* GetWorkflowDiskUsageNotFound describes a response with status code 404, with default header values.
+/*
+GetWorkflowDiskUsageNotFound describes a response with status code 404, with default header values.
 
 Request failed. User does not exist.
 */
@@ -169,9 +263,39 @@ type GetWorkflowDiskUsageNotFound struct {
 	Payload *GetWorkflowDiskUsageNotFoundBody
 }
 
+// IsSuccess returns true when this get workflow disk usage not found response has a 2xx status code
+func (o *GetWorkflowDiskUsageNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow disk usage not found response has a 3xx status code
+func (o *GetWorkflowDiskUsageNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow disk usage not found response has a 4xx status code
+func (o *GetWorkflowDiskUsageNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow disk usage not found response has a 5xx status code
+func (o *GetWorkflowDiskUsageNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow disk usage not found response a status code equal to that given
+func (o *GetWorkflowDiskUsageNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *GetWorkflowDiskUsageNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageNotFound  %+v", 404, o.Payload)
 }
+
+func (o *GetWorkflowDiskUsageNotFound) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageNotFound  %+v", 404, o.Payload)
+}
+
 func (o *GetWorkflowDiskUsageNotFound) GetPayload() *GetWorkflowDiskUsageNotFoundBody {
 	return o.Payload
 }
@@ -193,7 +317,8 @@ func NewGetWorkflowDiskUsageInternalServerError() *GetWorkflowDiskUsageInternalS
 	return &GetWorkflowDiskUsageInternalServerError{}
 }
 
-/* GetWorkflowDiskUsageInternalServerError describes a response with status code 500, with default header values.
+/*
+GetWorkflowDiskUsageInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -201,9 +326,39 @@ type GetWorkflowDiskUsageInternalServerError struct {
 	Payload *GetWorkflowDiskUsageInternalServerErrorBody
 }
 
+// IsSuccess returns true when this get workflow disk usage internal server error response has a 2xx status code
+func (o *GetWorkflowDiskUsageInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow disk usage internal server error response has a 3xx status code
+func (o *GetWorkflowDiskUsageInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow disk usage internal server error response has a 4xx status code
+func (o *GetWorkflowDiskUsageInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow disk usage internal server error response has a 5xx status code
+func (o *GetWorkflowDiskUsageInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get workflow disk usage internal server error response a status code equal to that given
+func (o *GetWorkflowDiskUsageInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GetWorkflowDiskUsageInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GetWorkflowDiskUsageInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GetWorkflowDiskUsageInternalServerError) GetPayload() *GetWorkflowDiskUsageInternalServerErrorBody {
 	return o.Payload
 }
@@ -220,7 +375,8 @@ func (o *GetWorkflowDiskUsageInternalServerError) readResponse(response runtime.
 	return nil
 }
 
-/*GetWorkflowDiskUsageBadRequestBody get workflow disk usage bad request body
+/*
+GetWorkflowDiskUsageBadRequestBody get workflow disk usage bad request body
 swagger:model GetWorkflowDiskUsageBadRequestBody
 */
 type GetWorkflowDiskUsageBadRequestBody struct {
@@ -257,7 +413,8 @@ func (o *GetWorkflowDiskUsageBadRequestBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowDiskUsageBody get workflow disk usage body
+/*
+GetWorkflowDiskUsageBody get workflow disk usage body
 swagger:model GetWorkflowDiskUsageBody
 */
 type GetWorkflowDiskUsageBody struct {
@@ -297,7 +454,8 @@ func (o *GetWorkflowDiskUsageBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowDiskUsageForbiddenBody get workflow disk usage forbidden body
+/*
+GetWorkflowDiskUsageForbiddenBody get workflow disk usage forbidden body
 swagger:model GetWorkflowDiskUsageForbiddenBody
 */
 type GetWorkflowDiskUsageForbiddenBody struct {
@@ -334,7 +492,8 @@ func (o *GetWorkflowDiskUsageForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowDiskUsageInternalServerErrorBody get workflow disk usage internal server error body
+/*
+GetWorkflowDiskUsageInternalServerErrorBody get workflow disk usage internal server error body
 swagger:model GetWorkflowDiskUsageInternalServerErrorBody
 */
 type GetWorkflowDiskUsageInternalServerErrorBody struct {
@@ -371,7 +530,8 @@ func (o *GetWorkflowDiskUsageInternalServerErrorBody) UnmarshalBinary(b []byte) 
 	return nil
 }
 
-/*GetWorkflowDiskUsageNotFoundBody get workflow disk usage not found body
+/*
+GetWorkflowDiskUsageNotFoundBody get workflow disk usage not found body
 swagger:model GetWorkflowDiskUsageNotFoundBody
 */
 type GetWorkflowDiskUsageNotFoundBody struct {
@@ -408,7 +568,8 @@ func (o *GetWorkflowDiskUsageNotFoundBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowDiskUsageOKBody get workflow disk usage o k body
+/*
+GetWorkflowDiskUsageOKBody get workflow disk usage o k body
 swagger:model GetWorkflowDiskUsageOKBody
 */
 type GetWorkflowDiskUsageOKBody struct {
@@ -518,7 +679,8 @@ func (o *GetWorkflowDiskUsageOKBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowDiskUsageOKBodyDiskUsageInfoItems0 get workflow disk usage o k body disk usage info items0
+/*
+GetWorkflowDiskUsageOKBodyDiskUsageInfoItems0 get workflow disk usage o k body disk usage info items0
 swagger:model GetWorkflowDiskUsageOKBodyDiskUsageInfoItems0
 */
 type GetWorkflowDiskUsageOKBodyDiskUsageInfoItems0 struct {
@@ -611,7 +773,8 @@ func (o *GetWorkflowDiskUsageOKBodyDiskUsageInfoItems0) UnmarshalBinary(b []byte
 	return nil
 }
 
-/*GetWorkflowDiskUsageOKBodyDiskUsageInfoItems0Size get workflow disk usage o k body disk usage info items0 size
+/*
+GetWorkflowDiskUsageOKBodyDiskUsageInfoItems0Size get workflow disk usage o k body disk usage info items0 size
 swagger:model GetWorkflowDiskUsageOKBodyDiskUsageInfoItems0Size
 */
 type GetWorkflowDiskUsageOKBodyDiskUsageInfoItems0Size struct {

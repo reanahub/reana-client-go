@@ -52,10 +52,12 @@ func NewGetWorkflowSpecificationParamsWithHTTPClient(client *http.Client) *GetWo
 	}
 }
 
-/* GetWorkflowSpecificationParams contains all the parameters to send to the API endpoint
-   for the get workflow specification operation.
+/*
+GetWorkflowSpecificationParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the get workflow specification operation.
+
+	Typically these are written to a http.Request.
 */
 type GetWorkflowSpecificationParams struct {
 

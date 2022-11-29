@@ -69,7 +69,8 @@ func NewCreateWorkflowCreated() *CreateWorkflowCreated {
 	return &CreateWorkflowCreated{}
 }
 
-/* CreateWorkflowCreated describes a response with status code 201, with default header values.
+/*
+CreateWorkflowCreated describes a response with status code 201, with default header values.
 
 Request succeeded. The workflow has been created.
 */
@@ -77,9 +78,39 @@ type CreateWorkflowCreated struct {
 	Payload *CreateWorkflowCreatedBody
 }
 
+// IsSuccess returns true when this create workflow created response has a 2xx status code
+func (o *CreateWorkflowCreated) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this create workflow created response has a 3xx status code
+func (o *CreateWorkflowCreated) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this create workflow created response has a 4xx status code
+func (o *CreateWorkflowCreated) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this create workflow created response has a 5xx status code
+func (o *CreateWorkflowCreated) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this create workflow created response a status code equal to that given
+func (o *CreateWorkflowCreated) IsCode(code int) bool {
+	return code == 201
+}
+
 func (o *CreateWorkflowCreated) Error() string {
 	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowCreated  %+v", 201, o.Payload)
 }
+
+func (o *CreateWorkflowCreated) String() string {
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowCreated  %+v", 201, o.Payload)
+}
+
 func (o *CreateWorkflowCreated) GetPayload() *CreateWorkflowCreatedBody {
 	return o.Payload
 }
@@ -101,7 +132,8 @@ func NewCreateWorkflowBadRequest() *CreateWorkflowBadRequest {
 	return &CreateWorkflowBadRequest{}
 }
 
-/* CreateWorkflowBadRequest describes a response with status code 400, with default header values.
+/*
+CreateWorkflowBadRequest describes a response with status code 400, with default header values.
 
 Request failed. The incoming payload seems malformed
 */
@@ -109,9 +141,39 @@ type CreateWorkflowBadRequest struct {
 	Payload *CreateWorkflowBadRequestBody
 }
 
+// IsSuccess returns true when this create workflow bad request response has a 2xx status code
+func (o *CreateWorkflowBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this create workflow bad request response has a 3xx status code
+func (o *CreateWorkflowBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this create workflow bad request response has a 4xx status code
+func (o *CreateWorkflowBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this create workflow bad request response has a 5xx status code
+func (o *CreateWorkflowBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this create workflow bad request response a status code equal to that given
+func (o *CreateWorkflowBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *CreateWorkflowBadRequest) Error() string {
 	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *CreateWorkflowBadRequest) String() string {
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *CreateWorkflowBadRequest) GetPayload() *CreateWorkflowBadRequestBody {
 	return o.Payload
 }
@@ -133,7 +195,8 @@ func NewCreateWorkflowForbidden() *CreateWorkflowForbidden {
 	return &CreateWorkflowForbidden{}
 }
 
-/* CreateWorkflowForbidden describes a response with status code 403, with default header values.
+/*
+CreateWorkflowForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -141,9 +204,39 @@ type CreateWorkflowForbidden struct {
 	Payload *CreateWorkflowForbiddenBody
 }
 
+// IsSuccess returns true when this create workflow forbidden response has a 2xx status code
+func (o *CreateWorkflowForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this create workflow forbidden response has a 3xx status code
+func (o *CreateWorkflowForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this create workflow forbidden response has a 4xx status code
+func (o *CreateWorkflowForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this create workflow forbidden response has a 5xx status code
+func (o *CreateWorkflowForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this create workflow forbidden response a status code equal to that given
+func (o *CreateWorkflowForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *CreateWorkflowForbidden) Error() string {
 	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowForbidden  %+v", 403, o.Payload)
 }
+
+func (o *CreateWorkflowForbidden) String() string {
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowForbidden  %+v", 403, o.Payload)
+}
+
 func (o *CreateWorkflowForbidden) GetPayload() *CreateWorkflowForbiddenBody {
 	return o.Payload
 }
@@ -165,7 +258,8 @@ func NewCreateWorkflowNotFound() *CreateWorkflowNotFound {
 	return &CreateWorkflowNotFound{}
 }
 
-/* CreateWorkflowNotFound describes a response with status code 404, with default header values.
+/*
+CreateWorkflowNotFound describes a response with status code 404, with default header values.
 
 Request failed. User does not exist.
 */
@@ -173,9 +267,39 @@ type CreateWorkflowNotFound struct {
 	Payload *CreateWorkflowNotFoundBody
 }
 
+// IsSuccess returns true when this create workflow not found response has a 2xx status code
+func (o *CreateWorkflowNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this create workflow not found response has a 3xx status code
+func (o *CreateWorkflowNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this create workflow not found response has a 4xx status code
+func (o *CreateWorkflowNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this create workflow not found response has a 5xx status code
+func (o *CreateWorkflowNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this create workflow not found response a status code equal to that given
+func (o *CreateWorkflowNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *CreateWorkflowNotFound) Error() string {
 	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowNotFound  %+v", 404, o.Payload)
 }
+
+func (o *CreateWorkflowNotFound) String() string {
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowNotFound  %+v", 404, o.Payload)
+}
+
 func (o *CreateWorkflowNotFound) GetPayload() *CreateWorkflowNotFoundBody {
 	return o.Payload
 }
@@ -197,7 +321,8 @@ func NewCreateWorkflowInternalServerError() *CreateWorkflowInternalServerError {
 	return &CreateWorkflowInternalServerError{}
 }
 
-/* CreateWorkflowInternalServerError describes a response with status code 500, with default header values.
+/*
+CreateWorkflowInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -205,9 +330,39 @@ type CreateWorkflowInternalServerError struct {
 	Payload *CreateWorkflowInternalServerErrorBody
 }
 
+// IsSuccess returns true when this create workflow internal server error response has a 2xx status code
+func (o *CreateWorkflowInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this create workflow internal server error response has a 3xx status code
+func (o *CreateWorkflowInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this create workflow internal server error response has a 4xx status code
+func (o *CreateWorkflowInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this create workflow internal server error response has a 5xx status code
+func (o *CreateWorkflowInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this create workflow internal server error response a status code equal to that given
+func (o *CreateWorkflowInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *CreateWorkflowInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *CreateWorkflowInternalServerError) String() string {
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *CreateWorkflowInternalServerError) GetPayload() *CreateWorkflowInternalServerErrorBody {
 	return o.Payload
 }
@@ -229,14 +384,44 @@ func NewCreateWorkflowNotImplemented() *CreateWorkflowNotImplemented {
 	return &CreateWorkflowNotImplemented{}
 }
 
-/* CreateWorkflowNotImplemented describes a response with status code 501, with default header values.
+/*
+CreateWorkflowNotImplemented describes a response with status code 501, with default header values.
 
 Request failed. Not implemented.
 */
 type CreateWorkflowNotImplemented struct {
 }
 
+// IsSuccess returns true when this create workflow not implemented response has a 2xx status code
+func (o *CreateWorkflowNotImplemented) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this create workflow not implemented response has a 3xx status code
+func (o *CreateWorkflowNotImplemented) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this create workflow not implemented response has a 4xx status code
+func (o *CreateWorkflowNotImplemented) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this create workflow not implemented response has a 5xx status code
+func (o *CreateWorkflowNotImplemented) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this create workflow not implemented response a status code equal to that given
+func (o *CreateWorkflowNotImplemented) IsCode(code int) bool {
+	return code == 501
+}
+
 func (o *CreateWorkflowNotImplemented) Error() string {
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowNotImplemented ", 501)
+}
+
+func (o *CreateWorkflowNotImplemented) String() string {
 	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowNotImplemented ", 501)
 }
 
@@ -245,7 +430,8 @@ func (o *CreateWorkflowNotImplemented) readResponse(response runtime.ClientRespo
 	return nil
 }
 
-/*CreateWorkflowBadRequestBody create workflow bad request body
+/*
+CreateWorkflowBadRequestBody create workflow bad request body
 swagger:model CreateWorkflowBadRequestBody
 */
 type CreateWorkflowBadRequestBody struct {
@@ -282,7 +468,8 @@ func (o *CreateWorkflowBadRequestBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*CreateWorkflowCreatedBody create workflow created body
+/*
+CreateWorkflowCreatedBody create workflow created body
 swagger:model CreateWorkflowCreatedBody
 */
 type CreateWorkflowCreatedBody struct {
@@ -325,7 +512,8 @@ func (o *CreateWorkflowCreatedBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*CreateWorkflowForbiddenBody create workflow forbidden body
+/*
+CreateWorkflowForbiddenBody create workflow forbidden body
 swagger:model CreateWorkflowForbiddenBody
 */
 type CreateWorkflowForbiddenBody struct {
@@ -362,7 +550,8 @@ func (o *CreateWorkflowForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*CreateWorkflowInternalServerErrorBody create workflow internal server error body
+/*
+CreateWorkflowInternalServerErrorBody create workflow internal server error body
 swagger:model CreateWorkflowInternalServerErrorBody
 */
 type CreateWorkflowInternalServerErrorBody struct {
@@ -399,7 +588,8 @@ func (o *CreateWorkflowInternalServerErrorBody) UnmarshalBinary(b []byte) error 
 	return nil
 }
 
-/*CreateWorkflowNotFoundBody create workflow not found body
+/*
+CreateWorkflowNotFoundBody create workflow not found body
 swagger:model CreateWorkflowNotFoundBody
 */
 type CreateWorkflowNotFoundBody struct {

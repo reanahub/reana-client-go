@@ -46,7 +46,8 @@ func NewStatusOK() *StatusOK {
 	return &StatusOK{}
 }
 
-/* StatusOK describes a response with status code 200, with default header values.
+/*
+StatusOK describes a response with status code 200, with default header values.
 
 Cluster health status information.
 */
@@ -54,9 +55,39 @@ type StatusOK struct {
 	Payload *StatusOKBody
 }
 
+// IsSuccess returns true when this status o k response has a 2xx status code
+func (o *StatusOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this status o k response has a 3xx status code
+func (o *StatusOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this status o k response has a 4xx status code
+func (o *StatusOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this status o k response has a 5xx status code
+func (o *StatusOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this status o k response a status code equal to that given
+func (o *StatusOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *StatusOK) Error() string {
 	return fmt.Sprintf("[GET /api/status][%d] statusOK  %+v", 200, o.Payload)
 }
+
+func (o *StatusOK) String() string {
+	return fmt.Sprintf("[GET /api/status][%d] statusOK  %+v", 200, o.Payload)
+}
+
 func (o *StatusOK) GetPayload() *StatusOKBody {
 	return o.Payload
 }
@@ -78,7 +109,8 @@ func NewStatusInternalServerError() *StatusInternalServerError {
 	return &StatusInternalServerError{}
 }
 
-/* StatusInternalServerError describes a response with status code 500, with default header values.
+/*
+StatusInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -86,9 +118,39 @@ type StatusInternalServerError struct {
 	Payload *StatusInternalServerErrorBody
 }
 
+// IsSuccess returns true when this status internal server error response has a 2xx status code
+func (o *StatusInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this status internal server error response has a 3xx status code
+func (o *StatusInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this status internal server error response has a 4xx status code
+func (o *StatusInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this status internal server error response has a 5xx status code
+func (o *StatusInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this status internal server error response a status code equal to that given
+func (o *StatusInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *StatusInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/status][%d] statusInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *StatusInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/status][%d] statusInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *StatusInternalServerError) GetPayload() *StatusInternalServerErrorBody {
 	return o.Payload
 }
@@ -105,7 +167,8 @@ func (o *StatusInternalServerError) readResponse(response runtime.ClientResponse
 	return nil
 }
 
-/*StatusInternalServerErrorBody status internal server error body
+/*
+StatusInternalServerErrorBody status internal server error body
 swagger:model StatusInternalServerErrorBody
 */
 type StatusInternalServerErrorBody struct {
@@ -142,7 +205,8 @@ func (o *StatusInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*StatusOKBody status o k body
+/*
+StatusOKBody status o k body
 swagger:model StatusOKBody
 */
 type StatusOKBody struct {
@@ -370,7 +434,8 @@ func (o *StatusOKBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*StatusOKBodyJob status o k body job
+/*
+StatusOKBodyJob status o k body job
 swagger:model StatusOKBodyJob
 */
 type StatusOKBodyJob struct {
@@ -425,7 +490,8 @@ func (o *StatusOKBodyJob) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*StatusOKBodyNode status o k body node
+/*
+StatusOKBodyNode status o k body node
 swagger:model StatusOKBodyNode
 */
 type StatusOKBodyNode struct {
@@ -477,7 +543,8 @@ func (o *StatusOKBodyNode) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*StatusOKBodySession status o k body session
+/*
+StatusOKBodySession status o k body session
 swagger:model StatusOKBodySession
 */
 type StatusOKBodySession struct {
@@ -517,7 +584,8 @@ func (o *StatusOKBodySession) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*StatusOKBodyWorkflow status o k body workflow
+/*
+StatusOKBodyWorkflow status o k body workflow
 swagger:model StatusOKBodyWorkflow
 */
 type StatusOKBodyWorkflow struct {

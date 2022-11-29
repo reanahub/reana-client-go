@@ -65,7 +65,8 @@ func NewGetFilesOK() *GetFilesOK {
 	return &GetFilesOK{}
 }
 
-/* GetFilesOK describes a response with status code 200, with default header values.
+/*
+GetFilesOK describes a response with status code 200, with default header values.
 
 Requests succeeded. The list of files has been retrieved.
 */
@@ -73,9 +74,39 @@ type GetFilesOK struct {
 	Payload *GetFilesOKBody
 }
 
+// IsSuccess returns true when this get files o k response has a 2xx status code
+func (o *GetFilesOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get files o k response has a 3xx status code
+func (o *GetFilesOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get files o k response has a 4xx status code
+func (o *GetFilesOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get files o k response has a 5xx status code
+func (o *GetFilesOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get files o k response a status code equal to that given
+func (o *GetFilesOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetFilesOK) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesOK  %+v", 200, o.Payload)
 }
+
+func (o *GetFilesOK) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesOK  %+v", 200, o.Payload)
+}
+
 func (o *GetFilesOK) GetPayload() *GetFilesOKBody {
 	return o.Payload
 }
@@ -97,7 +128,8 @@ func NewGetFilesBadRequest() *GetFilesBadRequest {
 	return &GetFilesBadRequest{}
 }
 
-/* GetFilesBadRequest describes a response with status code 400, with default header values.
+/*
+GetFilesBadRequest describes a response with status code 400, with default header values.
 
 Request failed. The incoming payload seems malformed.
 */
@@ -105,9 +137,39 @@ type GetFilesBadRequest struct {
 	Payload *GetFilesBadRequestBody
 }
 
+// IsSuccess returns true when this get files bad request response has a 2xx status code
+func (o *GetFilesBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get files bad request response has a 3xx status code
+func (o *GetFilesBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get files bad request response has a 4xx status code
+func (o *GetFilesBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get files bad request response has a 5xx status code
+func (o *GetFilesBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get files bad request response a status code equal to that given
+func (o *GetFilesBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *GetFilesBadRequest) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *GetFilesBadRequest) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *GetFilesBadRequest) GetPayload() *GetFilesBadRequestBody {
 	return o.Payload
 }
@@ -129,7 +191,8 @@ func NewGetFilesForbidden() *GetFilesForbidden {
 	return &GetFilesForbidden{}
 }
 
-/* GetFilesForbidden describes a response with status code 403, with default header values.
+/*
+GetFilesForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -137,9 +200,39 @@ type GetFilesForbidden struct {
 	Payload *GetFilesForbiddenBody
 }
 
+// IsSuccess returns true when this get files forbidden response has a 2xx status code
+func (o *GetFilesForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get files forbidden response has a 3xx status code
+func (o *GetFilesForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get files forbidden response has a 4xx status code
+func (o *GetFilesForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get files forbidden response has a 5xx status code
+func (o *GetFilesForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get files forbidden response a status code equal to that given
+func (o *GetFilesForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *GetFilesForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesForbidden  %+v", 403, o.Payload)
 }
+
+func (o *GetFilesForbidden) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesForbidden  %+v", 403, o.Payload)
+}
+
 func (o *GetFilesForbidden) GetPayload() *GetFilesForbiddenBody {
 	return o.Payload
 }
@@ -161,7 +254,8 @@ func NewGetFilesNotFound() *GetFilesNotFound {
 	return &GetFilesNotFound{}
 }
 
-/* GetFilesNotFound describes a response with status code 404, with default header values.
+/*
+GetFilesNotFound describes a response with status code 404, with default header values.
 
 Request failed. Analysis does not exist.
 */
@@ -169,9 +263,39 @@ type GetFilesNotFound struct {
 	Payload *GetFilesNotFoundBody
 }
 
+// IsSuccess returns true when this get files not found response has a 2xx status code
+func (o *GetFilesNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get files not found response has a 3xx status code
+func (o *GetFilesNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get files not found response has a 4xx status code
+func (o *GetFilesNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get files not found response has a 5xx status code
+func (o *GetFilesNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get files not found response a status code equal to that given
+func (o *GetFilesNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *GetFilesNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesNotFound  %+v", 404, o.Payload)
 }
+
+func (o *GetFilesNotFound) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesNotFound  %+v", 404, o.Payload)
+}
+
 func (o *GetFilesNotFound) GetPayload() *GetFilesNotFoundBody {
 	return o.Payload
 }
@@ -193,7 +317,8 @@ func NewGetFilesInternalServerError() *GetFilesInternalServerError {
 	return &GetFilesInternalServerError{}
 }
 
-/* GetFilesInternalServerError describes a response with status code 500, with default header values.
+/*
+GetFilesInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal server error.
 */
@@ -201,9 +326,39 @@ type GetFilesInternalServerError struct {
 	Payload *GetFilesInternalServerErrorBody
 }
 
+// IsSuccess returns true when this get files internal server error response has a 2xx status code
+func (o *GetFilesInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get files internal server error response has a 3xx status code
+func (o *GetFilesInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get files internal server error response has a 4xx status code
+func (o *GetFilesInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get files internal server error response has a 5xx status code
+func (o *GetFilesInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get files internal server error response a status code equal to that given
+func (o *GetFilesInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GetFilesInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GetFilesInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GetFilesInternalServerError) GetPayload() *GetFilesInternalServerErrorBody {
 	return o.Payload
 }
@@ -220,7 +375,8 @@ func (o *GetFilesInternalServerError) readResponse(response runtime.ClientRespon
 	return nil
 }
 
-/*GetFilesBadRequestBody get files bad request body
+/*
+GetFilesBadRequestBody get files bad request body
 swagger:model GetFilesBadRequestBody
 */
 type GetFilesBadRequestBody struct {
@@ -257,7 +413,8 @@ func (o *GetFilesBadRequestBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetFilesForbiddenBody get files forbidden body
+/*
+GetFilesForbiddenBody get files forbidden body
 swagger:model GetFilesForbiddenBody
 */
 type GetFilesForbiddenBody struct {
@@ -294,7 +451,8 @@ func (o *GetFilesForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetFilesInternalServerErrorBody get files internal server error body
+/*
+GetFilesInternalServerErrorBody get files internal server error body
 swagger:model GetFilesInternalServerErrorBody
 */
 type GetFilesInternalServerErrorBody struct {
@@ -331,7 +489,8 @@ func (o *GetFilesInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetFilesNotFoundBody get files not found body
+/*
+GetFilesNotFoundBody get files not found body
 swagger:model GetFilesNotFoundBody
 */
 type GetFilesNotFoundBody struct {
@@ -368,7 +527,8 @@ func (o *GetFilesNotFoundBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetFilesOKBody get files o k body
+/*
+GetFilesOKBody get files o k body
 swagger:model GetFilesOKBody
 */
 type GetFilesOKBody struct {
@@ -472,7 +632,8 @@ func (o *GetFilesOKBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetFilesOKBodyItemsItems0 get files o k body items items0
+/*
+GetFilesOKBodyItemsItems0 get files o k body items items0
 swagger:model GetFilesOKBodyItemsItems0
 */
 type GetFilesOKBodyItemsItems0 struct {
@@ -568,7 +729,8 @@ func (o *GetFilesOKBodyItemsItems0) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetFilesOKBodyItemsItems0Size get files o k body items items0 size
+/*
+GetFilesOKBodyItemsItems0Size get files o k body items items0 size
 swagger:model GetFilesOKBodyItemsItems0Size
 */
 type GetFilesOKBodyItemsItems0Size struct {

@@ -45,7 +45,8 @@ func NewGetConfigOK() *GetConfigOK {
 	return &GetConfigOK{}
 }
 
-/* GetConfigOK describes a response with status code 200, with default header values.
+/*
+GetConfigOK describes a response with status code 200, with default header values.
 
 Configuration information to consume by Reana-UI.
 */
@@ -53,9 +54,39 @@ type GetConfigOK struct {
 	Payload interface{}
 }
 
+// IsSuccess returns true when this get config o k response has a 2xx status code
+func (o *GetConfigOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get config o k response has a 3xx status code
+func (o *GetConfigOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get config o k response has a 4xx status code
+func (o *GetConfigOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get config o k response has a 5xx status code
+func (o *GetConfigOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get config o k response a status code equal to that given
+func (o *GetConfigOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetConfigOK) Error() string {
 	return fmt.Sprintf("[GET /api/config][%d] getConfigOK  %+v", 200, o.Payload)
 }
+
+func (o *GetConfigOK) String() string {
+	return fmt.Sprintf("[GET /api/config][%d] getConfigOK  %+v", 200, o.Payload)
+}
+
 func (o *GetConfigOK) GetPayload() interface{} {
 	return o.Payload
 }
@@ -75,7 +106,8 @@ func NewGetConfigInternalServerError() *GetConfigInternalServerError {
 	return &GetConfigInternalServerError{}
 }
 
-/* GetConfigInternalServerError describes a response with status code 500, with default header values.
+/*
+GetConfigInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal server error.
 */
@@ -83,9 +115,39 @@ type GetConfigInternalServerError struct {
 	Payload *GetConfigInternalServerErrorBody
 }
 
+// IsSuccess returns true when this get config internal server error response has a 2xx status code
+func (o *GetConfigInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get config internal server error response has a 3xx status code
+func (o *GetConfigInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get config internal server error response has a 4xx status code
+func (o *GetConfigInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get config internal server error response has a 5xx status code
+func (o *GetConfigInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get config internal server error response a status code equal to that given
+func (o *GetConfigInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GetConfigInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/config][%d] getConfigInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GetConfigInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/config][%d] getConfigInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GetConfigInternalServerError) GetPayload() *GetConfigInternalServerErrorBody {
 	return o.Payload
 }
@@ -102,7 +164,8 @@ func (o *GetConfigInternalServerError) readResponse(response runtime.ClientRespo
 	return nil
 }
 
-/*GetConfigInternalServerErrorBody get config internal server error body
+/*
+GetConfigInternalServerErrorBody get config internal server error body
 swagger:model GetConfigInternalServerErrorBody
 */
 type GetConfigInternalServerErrorBody struct {

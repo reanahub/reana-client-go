@@ -52,10 +52,12 @@ func NewDeleteSecretsParamsWithHTTPClient(client *http.Client) *DeleteSecretsPar
 	}
 }
 
-/* DeleteSecretsParams contains all the parameters to send to the API endpoint
-   for the delete secrets operation.
+/*
+DeleteSecretsParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the delete secrets operation.
+
+	Typically these are written to a http.Request.
 */
 type DeleteSecretsParams struct {
 

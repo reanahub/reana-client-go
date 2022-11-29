@@ -52,10 +52,12 @@ func NewOpenInteractiveSessionParamsWithHTTPClient(client *http.Client) *OpenInt
 	}
 }
 
-/* OpenInteractiveSessionParams contains all the parameters to send to the API endpoint
-   for the open interactive session operation.
+/*
+OpenInteractiveSessionParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the open interactive session operation.
+
+	Typically these are written to a http.Request.
 */
 type OpenInteractiveSessionParams struct {
 

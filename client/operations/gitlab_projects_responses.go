@@ -51,14 +51,44 @@ func NewGitlabProjectsOK() *GitlabProjectsOK {
 	return &GitlabProjectsOK{}
 }
 
-/* GitlabProjectsOK describes a response with status code 200, with default header values.
+/*
+GitlabProjectsOK describes a response with status code 200, with default header values.
 
 This resource return all projects owned by the user on GitLab in JSON format.
 */
 type GitlabProjectsOK struct {
 }
 
+// IsSuccess returns true when this gitlab projects o k response has a 2xx status code
+func (o *GitlabProjectsOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this gitlab projects o k response has a 3xx status code
+func (o *GitlabProjectsOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this gitlab projects o k response has a 4xx status code
+func (o *GitlabProjectsOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this gitlab projects o k response has a 5xx status code
+func (o *GitlabProjectsOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this gitlab projects o k response a status code equal to that given
+func (o *GitlabProjectsOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GitlabProjectsOK) Error() string {
+	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsOK ", 200)
+}
+
+func (o *GitlabProjectsOK) String() string {
 	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsOK ", 200)
 }
 
@@ -72,7 +102,8 @@ func NewGitlabProjectsForbidden() *GitlabProjectsForbidden {
 	return &GitlabProjectsForbidden{}
 }
 
-/* GitlabProjectsForbidden describes a response with status code 403, with default header values.
+/*
+GitlabProjectsForbidden describes a response with status code 403, with default header values.
 
 Request failed. User token not valid.
 */
@@ -80,9 +111,39 @@ type GitlabProjectsForbidden struct {
 	Payload *GitlabProjectsForbiddenBody
 }
 
+// IsSuccess returns true when this gitlab projects forbidden response has a 2xx status code
+func (o *GitlabProjectsForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this gitlab projects forbidden response has a 3xx status code
+func (o *GitlabProjectsForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this gitlab projects forbidden response has a 4xx status code
+func (o *GitlabProjectsForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this gitlab projects forbidden response has a 5xx status code
+func (o *GitlabProjectsForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this gitlab projects forbidden response a status code equal to that given
+func (o *GitlabProjectsForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *GitlabProjectsForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsForbidden  %+v", 403, o.Payload)
 }
+
+func (o *GitlabProjectsForbidden) String() string {
+	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsForbidden  %+v", 403, o.Payload)
+}
+
 func (o *GitlabProjectsForbidden) GetPayload() *GitlabProjectsForbiddenBody {
 	return o.Payload
 }
@@ -104,7 +165,8 @@ func NewGitlabProjectsInternalServerError() *GitlabProjectsInternalServerError {
 	return &GitlabProjectsInternalServerError{}
 }
 
-/* GitlabProjectsInternalServerError describes a response with status code 500, with default header values.
+/*
+GitlabProjectsInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -112,9 +174,39 @@ type GitlabProjectsInternalServerError struct {
 	Payload *GitlabProjectsInternalServerErrorBody
 }
 
+// IsSuccess returns true when this gitlab projects internal server error response has a 2xx status code
+func (o *GitlabProjectsInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this gitlab projects internal server error response has a 3xx status code
+func (o *GitlabProjectsInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this gitlab projects internal server error response has a 4xx status code
+func (o *GitlabProjectsInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this gitlab projects internal server error response has a 5xx status code
+func (o *GitlabProjectsInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this gitlab projects internal server error response a status code equal to that given
+func (o *GitlabProjectsInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GitlabProjectsInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GitlabProjectsInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GitlabProjectsInternalServerError) GetPayload() *GitlabProjectsInternalServerErrorBody {
 	return o.Payload
 }
@@ -131,7 +223,8 @@ func (o *GitlabProjectsInternalServerError) readResponse(response runtime.Client
 	return nil
 }
 
-/*GitlabProjectsForbiddenBody gitlab projects forbidden body
+/*
+GitlabProjectsForbiddenBody gitlab projects forbidden body
 swagger:model GitlabProjectsForbiddenBody
 */
 type GitlabProjectsForbiddenBody struct {
@@ -168,7 +261,8 @@ func (o *GitlabProjectsForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GitlabProjectsInternalServerErrorBody gitlab projects internal server error body
+/*
+GitlabProjectsInternalServerErrorBody gitlab projects internal server error body
 swagger:model GitlabProjectsInternalServerErrorBody
 */
 type GitlabProjectsInternalServerErrorBody struct {

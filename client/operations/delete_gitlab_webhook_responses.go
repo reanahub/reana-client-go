@@ -59,14 +59,44 @@ func NewDeleteGitlabWebhookNoContent() *DeleteGitlabWebhookNoContent {
 	return &DeleteGitlabWebhookNoContent{}
 }
 
-/* DeleteGitlabWebhookNoContent describes a response with status code 204, with default header values.
+/*
+DeleteGitlabWebhookNoContent describes a response with status code 204, with default header values.
 
 The webhook was properly deleted.
 */
 type DeleteGitlabWebhookNoContent struct {
 }
 
+// IsSuccess returns true when this delete gitlab webhook no content response has a 2xx status code
+func (o *DeleteGitlabWebhookNoContent) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this delete gitlab webhook no content response has a 3xx status code
+func (o *DeleteGitlabWebhookNoContent) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete gitlab webhook no content response has a 4xx status code
+func (o *DeleteGitlabWebhookNoContent) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this delete gitlab webhook no content response has a 5xx status code
+func (o *DeleteGitlabWebhookNoContent) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete gitlab webhook no content response a status code equal to that given
+func (o *DeleteGitlabWebhookNoContent) IsCode(code int) bool {
+	return code == 204
+}
+
 func (o *DeleteGitlabWebhookNoContent) Error() string {
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookNoContent ", 204)
+}
+
+func (o *DeleteGitlabWebhookNoContent) String() string {
 	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookNoContent ", 204)
 }
 
@@ -80,7 +110,8 @@ func NewDeleteGitlabWebhookForbidden() *DeleteGitlabWebhookForbidden {
 	return &DeleteGitlabWebhookForbidden{}
 }
 
-/* DeleteGitlabWebhookForbidden describes a response with status code 403, with default header values.
+/*
+DeleteGitlabWebhookForbidden describes a response with status code 403, with default header values.
 
 Request failed. User token not valid.
 */
@@ -88,9 +119,39 @@ type DeleteGitlabWebhookForbidden struct {
 	Payload *DeleteGitlabWebhookForbiddenBody
 }
 
+// IsSuccess returns true when this delete gitlab webhook forbidden response has a 2xx status code
+func (o *DeleteGitlabWebhookForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete gitlab webhook forbidden response has a 3xx status code
+func (o *DeleteGitlabWebhookForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete gitlab webhook forbidden response has a 4xx status code
+func (o *DeleteGitlabWebhookForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this delete gitlab webhook forbidden response has a 5xx status code
+func (o *DeleteGitlabWebhookForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete gitlab webhook forbidden response a status code equal to that given
+func (o *DeleteGitlabWebhookForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *DeleteGitlabWebhookForbidden) Error() string {
 	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookForbidden  %+v", 403, o.Payload)
 }
+
+func (o *DeleteGitlabWebhookForbidden) String() string {
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookForbidden  %+v", 403, o.Payload)
+}
+
 func (o *DeleteGitlabWebhookForbidden) GetPayload() *DeleteGitlabWebhookForbiddenBody {
 	return o.Payload
 }
@@ -112,14 +173,44 @@ func NewDeleteGitlabWebhookNotFound() *DeleteGitlabWebhookNotFound {
 	return &DeleteGitlabWebhookNotFound{}
 }
 
-/* DeleteGitlabWebhookNotFound describes a response with status code 404, with default header values.
+/*
+DeleteGitlabWebhookNotFound describes a response with status code 404, with default header values.
 
 No webhook found with provided id.
 */
 type DeleteGitlabWebhookNotFound struct {
 }
 
+// IsSuccess returns true when this delete gitlab webhook not found response has a 2xx status code
+func (o *DeleteGitlabWebhookNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete gitlab webhook not found response has a 3xx status code
+func (o *DeleteGitlabWebhookNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete gitlab webhook not found response has a 4xx status code
+func (o *DeleteGitlabWebhookNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this delete gitlab webhook not found response has a 5xx status code
+func (o *DeleteGitlabWebhookNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete gitlab webhook not found response a status code equal to that given
+func (o *DeleteGitlabWebhookNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *DeleteGitlabWebhookNotFound) Error() string {
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookNotFound ", 404)
+}
+
+func (o *DeleteGitlabWebhookNotFound) String() string {
 	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookNotFound ", 404)
 }
 
@@ -133,7 +224,8 @@ func NewDeleteGitlabWebhookInternalServerError() *DeleteGitlabWebhookInternalSer
 	return &DeleteGitlabWebhookInternalServerError{}
 }
 
-/* DeleteGitlabWebhookInternalServerError describes a response with status code 500, with default header values.
+/*
+DeleteGitlabWebhookInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -141,9 +233,39 @@ type DeleteGitlabWebhookInternalServerError struct {
 	Payload *DeleteGitlabWebhookInternalServerErrorBody
 }
 
+// IsSuccess returns true when this delete gitlab webhook internal server error response has a 2xx status code
+func (o *DeleteGitlabWebhookInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete gitlab webhook internal server error response has a 3xx status code
+func (o *DeleteGitlabWebhookInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete gitlab webhook internal server error response has a 4xx status code
+func (o *DeleteGitlabWebhookInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this delete gitlab webhook internal server error response has a 5xx status code
+func (o *DeleteGitlabWebhookInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this delete gitlab webhook internal server error response a status code equal to that given
+func (o *DeleteGitlabWebhookInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *DeleteGitlabWebhookInternalServerError) Error() string {
 	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *DeleteGitlabWebhookInternalServerError) String() string {
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *DeleteGitlabWebhookInternalServerError) GetPayload() *DeleteGitlabWebhookInternalServerErrorBody {
 	return o.Payload
 }
@@ -160,7 +282,8 @@ func (o *DeleteGitlabWebhookInternalServerError) readResponse(response runtime.C
 	return nil
 }
 
-/*DeleteGitlabWebhookBody delete gitlab webhook body
+/*
+DeleteGitlabWebhookBody delete gitlab webhook body
 swagger:model DeleteGitlabWebhookBody
 */
 type DeleteGitlabWebhookBody struct {
@@ -233,7 +356,8 @@ func (o *DeleteGitlabWebhookBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*DeleteGitlabWebhookForbiddenBody delete gitlab webhook forbidden body
+/*
+DeleteGitlabWebhookForbiddenBody delete gitlab webhook forbidden body
 swagger:model DeleteGitlabWebhookForbiddenBody
 */
 type DeleteGitlabWebhookForbiddenBody struct {
@@ -270,7 +394,8 @@ func (o *DeleteGitlabWebhookForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*DeleteGitlabWebhookInternalServerErrorBody delete gitlab webhook internal server error body
+/*
+DeleteGitlabWebhookInternalServerErrorBody delete gitlab webhook internal server error body
 swagger:model DeleteGitlabWebhookInternalServerErrorBody
 */
 type DeleteGitlabWebhookInternalServerErrorBody struct {

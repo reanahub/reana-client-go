@@ -64,7 +64,8 @@ func NewGetWorkflowStatusOK() *GetWorkflowStatusOK {
 	return &GetWorkflowStatusOK{}
 }
 
-/* GetWorkflowStatusOK describes a response with status code 200, with default header values.
+/*
+GetWorkflowStatusOK describes a response with status code 200, with default header values.
 
 Request succeeded. Info about a workflow, including the status is returned.
 */
@@ -72,9 +73,39 @@ type GetWorkflowStatusOK struct {
 	Payload *GetWorkflowStatusOKBody
 }
 
+// IsSuccess returns true when this get workflow status o k response has a 2xx status code
+func (o *GetWorkflowStatusOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get workflow status o k response has a 3xx status code
+func (o *GetWorkflowStatusOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow status o k response has a 4xx status code
+func (o *GetWorkflowStatusOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow status o k response has a 5xx status code
+func (o *GetWorkflowStatusOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow status o k response a status code equal to that given
+func (o *GetWorkflowStatusOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetWorkflowStatusOK) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusOK  %+v", 200, o.Payload)
 }
+
+func (o *GetWorkflowStatusOK) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusOK  %+v", 200, o.Payload)
+}
+
 func (o *GetWorkflowStatusOK) GetPayload() *GetWorkflowStatusOKBody {
 	return o.Payload
 }
@@ -96,7 +127,8 @@ func NewGetWorkflowStatusBadRequest() *GetWorkflowStatusBadRequest {
 	return &GetWorkflowStatusBadRequest{}
 }
 
-/* GetWorkflowStatusBadRequest describes a response with status code 400, with default header values.
+/*
+GetWorkflowStatusBadRequest describes a response with status code 400, with default header values.
 
 Request failed. The incoming payload seems malformed.
 */
@@ -104,9 +136,39 @@ type GetWorkflowStatusBadRequest struct {
 	Payload *GetWorkflowStatusBadRequestBody
 }
 
+// IsSuccess returns true when this get workflow status bad request response has a 2xx status code
+func (o *GetWorkflowStatusBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow status bad request response has a 3xx status code
+func (o *GetWorkflowStatusBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow status bad request response has a 4xx status code
+func (o *GetWorkflowStatusBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow status bad request response has a 5xx status code
+func (o *GetWorkflowStatusBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow status bad request response a status code equal to that given
+func (o *GetWorkflowStatusBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *GetWorkflowStatusBadRequest) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *GetWorkflowStatusBadRequest) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *GetWorkflowStatusBadRequest) GetPayload() *GetWorkflowStatusBadRequestBody {
 	return o.Payload
 }
@@ -128,7 +190,8 @@ func NewGetWorkflowStatusForbidden() *GetWorkflowStatusForbidden {
 	return &GetWorkflowStatusForbidden{}
 }
 
-/* GetWorkflowStatusForbidden describes a response with status code 403, with default header values.
+/*
+GetWorkflowStatusForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -136,9 +199,39 @@ type GetWorkflowStatusForbidden struct {
 	Payload *GetWorkflowStatusForbiddenBody
 }
 
+// IsSuccess returns true when this get workflow status forbidden response has a 2xx status code
+func (o *GetWorkflowStatusForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow status forbidden response has a 3xx status code
+func (o *GetWorkflowStatusForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow status forbidden response has a 4xx status code
+func (o *GetWorkflowStatusForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow status forbidden response has a 5xx status code
+func (o *GetWorkflowStatusForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow status forbidden response a status code equal to that given
+func (o *GetWorkflowStatusForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *GetWorkflowStatusForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusForbidden  %+v", 403, o.Payload)
 }
+
+func (o *GetWorkflowStatusForbidden) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusForbidden  %+v", 403, o.Payload)
+}
+
 func (o *GetWorkflowStatusForbidden) GetPayload() *GetWorkflowStatusForbiddenBody {
 	return o.Payload
 }
@@ -160,7 +253,8 @@ func NewGetWorkflowStatusNotFound() *GetWorkflowStatusNotFound {
 	return &GetWorkflowStatusNotFound{}
 }
 
-/* GetWorkflowStatusNotFound describes a response with status code 404, with default header values.
+/*
+GetWorkflowStatusNotFound describes a response with status code 404, with default header values.
 
 Request failed. Either User or Analysis does not exist.
 */
@@ -168,9 +262,39 @@ type GetWorkflowStatusNotFound struct {
 	Payload *GetWorkflowStatusNotFoundBody
 }
 
+// IsSuccess returns true when this get workflow status not found response has a 2xx status code
+func (o *GetWorkflowStatusNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow status not found response has a 3xx status code
+func (o *GetWorkflowStatusNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow status not found response has a 4xx status code
+func (o *GetWorkflowStatusNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow status not found response has a 5xx status code
+func (o *GetWorkflowStatusNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow status not found response a status code equal to that given
+func (o *GetWorkflowStatusNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *GetWorkflowStatusNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusNotFound  %+v", 404, o.Payload)
 }
+
+func (o *GetWorkflowStatusNotFound) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusNotFound  %+v", 404, o.Payload)
+}
+
 func (o *GetWorkflowStatusNotFound) GetPayload() *GetWorkflowStatusNotFoundBody {
 	return o.Payload
 }
@@ -192,7 +316,8 @@ func NewGetWorkflowStatusInternalServerError() *GetWorkflowStatusInternalServerE
 	return &GetWorkflowStatusInternalServerError{}
 }
 
-/* GetWorkflowStatusInternalServerError describes a response with status code 500, with default header values.
+/*
+GetWorkflowStatusInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -200,9 +325,39 @@ type GetWorkflowStatusInternalServerError struct {
 	Payload *GetWorkflowStatusInternalServerErrorBody
 }
 
+// IsSuccess returns true when this get workflow status internal server error response has a 2xx status code
+func (o *GetWorkflowStatusInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow status internal server error response has a 3xx status code
+func (o *GetWorkflowStatusInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow status internal server error response has a 4xx status code
+func (o *GetWorkflowStatusInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow status internal server error response has a 5xx status code
+func (o *GetWorkflowStatusInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get workflow status internal server error response a status code equal to that given
+func (o *GetWorkflowStatusInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GetWorkflowStatusInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GetWorkflowStatusInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GetWorkflowStatusInternalServerError) GetPayload() *GetWorkflowStatusInternalServerErrorBody {
 	return o.Payload
 }
@@ -219,7 +374,8 @@ func (o *GetWorkflowStatusInternalServerError) readResponse(response runtime.Cli
 	return nil
 }
 
-/*GetWorkflowStatusBadRequestBody get workflow status bad request body
+/*
+GetWorkflowStatusBadRequestBody get workflow status bad request body
 swagger:model GetWorkflowStatusBadRequestBody
 */
 type GetWorkflowStatusBadRequestBody struct {
@@ -256,7 +412,8 @@ func (o *GetWorkflowStatusBadRequestBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowStatusForbiddenBody get workflow status forbidden body
+/*
+GetWorkflowStatusForbiddenBody get workflow status forbidden body
 swagger:model GetWorkflowStatusForbiddenBody
 */
 type GetWorkflowStatusForbiddenBody struct {
@@ -293,7 +450,8 @@ func (o *GetWorkflowStatusForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowStatusInternalServerErrorBody get workflow status internal server error body
+/*
+GetWorkflowStatusInternalServerErrorBody get workflow status internal server error body
 swagger:model GetWorkflowStatusInternalServerErrorBody
 */
 type GetWorkflowStatusInternalServerErrorBody struct {
@@ -330,7 +488,8 @@ func (o *GetWorkflowStatusInternalServerErrorBody) UnmarshalBinary(b []byte) err
 	return nil
 }
 
-/*GetWorkflowStatusNotFoundBody get workflow status not found body
+/*
+GetWorkflowStatusNotFoundBody get workflow status not found body
 swagger:model GetWorkflowStatusNotFoundBody
 */
 type GetWorkflowStatusNotFoundBody struct {
@@ -367,7 +526,8 @@ func (o *GetWorkflowStatusNotFoundBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowStatusOKBody get workflow status o k body
+/*
+GetWorkflowStatusOKBody get workflow status o k body
 swagger:model GetWorkflowStatusOKBody
 */
 type GetWorkflowStatusOKBody struct {
@@ -475,7 +635,8 @@ func (o *GetWorkflowStatusOKBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowStatusOKBodyProgress get workflow status o k body progress
+/*
+GetWorkflowStatusOKBodyProgress get workflow status o k body progress
 swagger:model GetWorkflowStatusOKBodyProgress
 */
 type GetWorkflowStatusOKBodyProgress struct {
@@ -715,7 +876,8 @@ func (o *GetWorkflowStatusOKBodyProgress) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowStatusOKBodyProgressFailed get workflow status o k body progress failed
+/*
+GetWorkflowStatusOKBodyProgressFailed get workflow status o k body progress failed
 swagger:model GetWorkflowStatusOKBodyProgressFailed
 */
 type GetWorkflowStatusOKBodyProgressFailed struct {
@@ -755,7 +917,8 @@ func (o *GetWorkflowStatusOKBodyProgressFailed) UnmarshalBinary(b []byte) error 
 	return nil
 }
 
-/*GetWorkflowStatusOKBodyProgressFinished get workflow status o k body progress finished
+/*
+GetWorkflowStatusOKBodyProgressFinished get workflow status o k body progress finished
 swagger:model GetWorkflowStatusOKBodyProgressFinished
 */
 type GetWorkflowStatusOKBodyProgressFinished struct {
@@ -795,7 +958,8 @@ func (o *GetWorkflowStatusOKBodyProgressFinished) UnmarshalBinary(b []byte) erro
 	return nil
 }
 
-/*GetWorkflowStatusOKBodyProgressRunning get workflow status o k body progress running
+/*
+GetWorkflowStatusOKBodyProgressRunning get workflow status o k body progress running
 swagger:model GetWorkflowStatusOKBodyProgressRunning
 */
 type GetWorkflowStatusOKBodyProgressRunning struct {
@@ -835,7 +999,8 @@ func (o *GetWorkflowStatusOKBodyProgressRunning) UnmarshalBinary(b []byte) error
 	return nil
 }
 
-/*GetWorkflowStatusOKBodyProgressTotal get workflow status o k body progress total
+/*
+GetWorkflowStatusOKBodyProgressTotal get workflow status o k body progress total
 swagger:model GetWorkflowStatusOKBodyProgressTotal
 */
 type GetWorkflowStatusOKBodyProgressTotal struct {

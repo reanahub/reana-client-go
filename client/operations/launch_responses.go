@@ -53,7 +53,8 @@ func NewLaunchOK() *LaunchOK {
 	return &LaunchOK{}
 }
 
-/* LaunchOK describes a response with status code 200, with default header values.
+/*
+LaunchOK describes a response with status code 200, with default header values.
 
 Request succeeded. Information of the workflow launched.
 */
@@ -61,9 +62,39 @@ type LaunchOK struct {
 	Payload *LaunchOKBody
 }
 
+// IsSuccess returns true when this launch o k response has a 2xx status code
+func (o *LaunchOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this launch o k response has a 3xx status code
+func (o *LaunchOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this launch o k response has a 4xx status code
+func (o *LaunchOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this launch o k response has a 5xx status code
+func (o *LaunchOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this launch o k response a status code equal to that given
+func (o *LaunchOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *LaunchOK) Error() string {
 	return fmt.Sprintf("[POST /api/launch][%d] launchOK  %+v", 200, o.Payload)
 }
+
+func (o *LaunchOK) String() string {
+	return fmt.Sprintf("[POST /api/launch][%d] launchOK  %+v", 200, o.Payload)
+}
+
 func (o *LaunchOK) GetPayload() *LaunchOKBody {
 	return o.Payload
 }
@@ -85,7 +116,8 @@ func NewLaunchBadRequest() *LaunchBadRequest {
 	return &LaunchBadRequest{}
 }
 
-/* LaunchBadRequest describes a response with status code 400, with default header values.
+/*
+LaunchBadRequest describes a response with status code 400, with default header values.
 
 Request failed. The incoming payload seems malformed.
 */
@@ -93,9 +125,39 @@ type LaunchBadRequest struct {
 	Payload *LaunchBadRequestBody
 }
 
+// IsSuccess returns true when this launch bad request response has a 2xx status code
+func (o *LaunchBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this launch bad request response has a 3xx status code
+func (o *LaunchBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this launch bad request response has a 4xx status code
+func (o *LaunchBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this launch bad request response has a 5xx status code
+func (o *LaunchBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this launch bad request response a status code equal to that given
+func (o *LaunchBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *LaunchBadRequest) Error() string {
 	return fmt.Sprintf("[POST /api/launch][%d] launchBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *LaunchBadRequest) String() string {
+	return fmt.Sprintf("[POST /api/launch][%d] launchBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *LaunchBadRequest) GetPayload() *LaunchBadRequestBody {
 	return o.Payload
 }
@@ -117,7 +179,8 @@ func NewLaunchInternalServerError() *LaunchInternalServerError {
 	return &LaunchInternalServerError{}
 }
 
-/* LaunchInternalServerError describes a response with status code 500, with default header values.
+/*
+LaunchInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal server error.
 */
@@ -125,9 +188,39 @@ type LaunchInternalServerError struct {
 	Payload *LaunchInternalServerErrorBody
 }
 
+// IsSuccess returns true when this launch internal server error response has a 2xx status code
+func (o *LaunchInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this launch internal server error response has a 3xx status code
+func (o *LaunchInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this launch internal server error response has a 4xx status code
+func (o *LaunchInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this launch internal server error response has a 5xx status code
+func (o *LaunchInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this launch internal server error response a status code equal to that given
+func (o *LaunchInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *LaunchInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /api/launch][%d] launchInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *LaunchInternalServerError) String() string {
+	return fmt.Sprintf("[POST /api/launch][%d] launchInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *LaunchInternalServerError) GetPayload() *LaunchInternalServerErrorBody {
 	return o.Payload
 }
@@ -144,7 +237,8 @@ func (o *LaunchInternalServerError) readResponse(response runtime.ClientResponse
 	return nil
 }
 
-/*LaunchBadRequestBody launch bad request body
+/*
+LaunchBadRequestBody launch bad request body
 swagger:model LaunchBadRequestBody
 */
 type LaunchBadRequestBody struct {
@@ -181,7 +275,8 @@ func (o *LaunchBadRequestBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*LaunchBody launch body
+/*
+LaunchBody launch body
 swagger:model LaunchBody
 */
 type LaunchBody struct {
@@ -246,7 +341,8 @@ func (o *LaunchBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*LaunchInternalServerErrorBody launch internal server error body
+/*
+LaunchInternalServerErrorBody launch internal server error body
 swagger:model LaunchInternalServerErrorBody
 */
 type LaunchInternalServerErrorBody struct {
@@ -283,7 +379,8 @@ func (o *LaunchInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*LaunchOKBody launch o k body
+/*
+LaunchOKBody launch o k body
 swagger:model LaunchOKBody
 */
 type LaunchOKBody struct {

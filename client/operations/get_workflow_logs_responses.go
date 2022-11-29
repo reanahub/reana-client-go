@@ -63,7 +63,8 @@ func NewGetWorkflowLogsOK() *GetWorkflowLogsOK {
 	return &GetWorkflowLogsOK{}
 }
 
-/* GetWorkflowLogsOK describes a response with status code 200, with default header values.
+/*
+GetWorkflowLogsOK describes a response with status code 200, with default header values.
 
 Request succeeded. Info about a workflow, including the status is returned.
 */
@@ -71,9 +72,39 @@ type GetWorkflowLogsOK struct {
 	Payload *GetWorkflowLogsOKBody
 }
 
+// IsSuccess returns true when this get workflow logs o k response has a 2xx status code
+func (o *GetWorkflowLogsOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this get workflow logs o k response has a 3xx status code
+func (o *GetWorkflowLogsOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow logs o k response has a 4xx status code
+func (o *GetWorkflowLogsOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow logs o k response has a 5xx status code
+func (o *GetWorkflowLogsOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow logs o k response a status code equal to that given
+func (o *GetWorkflowLogsOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *GetWorkflowLogsOK) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsOK  %+v", 200, o.Payload)
 }
+
+func (o *GetWorkflowLogsOK) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsOK  %+v", 200, o.Payload)
+}
+
 func (o *GetWorkflowLogsOK) GetPayload() *GetWorkflowLogsOKBody {
 	return o.Payload
 }
@@ -95,7 +126,8 @@ func NewGetWorkflowLogsBadRequest() *GetWorkflowLogsBadRequest {
 	return &GetWorkflowLogsBadRequest{}
 }
 
-/* GetWorkflowLogsBadRequest describes a response with status code 400, with default header values.
+/*
+GetWorkflowLogsBadRequest describes a response with status code 400, with default header values.
 
 Request failed. The incoming data specification seems malformed.
 */
@@ -103,9 +135,39 @@ type GetWorkflowLogsBadRequest struct {
 	Payload *GetWorkflowLogsBadRequestBody
 }
 
+// IsSuccess returns true when this get workflow logs bad request response has a 2xx status code
+func (o *GetWorkflowLogsBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow logs bad request response has a 3xx status code
+func (o *GetWorkflowLogsBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow logs bad request response has a 4xx status code
+func (o *GetWorkflowLogsBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow logs bad request response has a 5xx status code
+func (o *GetWorkflowLogsBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow logs bad request response a status code equal to that given
+func (o *GetWorkflowLogsBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *GetWorkflowLogsBadRequest) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *GetWorkflowLogsBadRequest) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *GetWorkflowLogsBadRequest) GetPayload() *GetWorkflowLogsBadRequestBody {
 	return o.Payload
 }
@@ -127,7 +189,8 @@ func NewGetWorkflowLogsForbidden() *GetWorkflowLogsForbidden {
 	return &GetWorkflowLogsForbidden{}
 }
 
-/* GetWorkflowLogsForbidden describes a response with status code 403, with default header values.
+/*
+GetWorkflowLogsForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -135,9 +198,39 @@ type GetWorkflowLogsForbidden struct {
 	Payload *GetWorkflowLogsForbiddenBody
 }
 
+// IsSuccess returns true when this get workflow logs forbidden response has a 2xx status code
+func (o *GetWorkflowLogsForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow logs forbidden response has a 3xx status code
+func (o *GetWorkflowLogsForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow logs forbidden response has a 4xx status code
+func (o *GetWorkflowLogsForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow logs forbidden response has a 5xx status code
+func (o *GetWorkflowLogsForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow logs forbidden response a status code equal to that given
+func (o *GetWorkflowLogsForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *GetWorkflowLogsForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsForbidden  %+v", 403, o.Payload)
 }
+
+func (o *GetWorkflowLogsForbidden) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsForbidden  %+v", 403, o.Payload)
+}
+
 func (o *GetWorkflowLogsForbidden) GetPayload() *GetWorkflowLogsForbiddenBody {
 	return o.Payload
 }
@@ -159,7 +252,8 @@ func NewGetWorkflowLogsNotFound() *GetWorkflowLogsNotFound {
 	return &GetWorkflowLogsNotFound{}
 }
 
-/* GetWorkflowLogsNotFound describes a response with status code 404, with default header values.
+/*
+GetWorkflowLogsNotFound describes a response with status code 404, with default header values.
 
 Request failed. User does not exist.
 */
@@ -167,9 +261,39 @@ type GetWorkflowLogsNotFound struct {
 	Payload *GetWorkflowLogsNotFoundBody
 }
 
+// IsSuccess returns true when this get workflow logs not found response has a 2xx status code
+func (o *GetWorkflowLogsNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow logs not found response has a 3xx status code
+func (o *GetWorkflowLogsNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow logs not found response has a 4xx status code
+func (o *GetWorkflowLogsNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow logs not found response has a 5xx status code
+func (o *GetWorkflowLogsNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow logs not found response a status code equal to that given
+func (o *GetWorkflowLogsNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *GetWorkflowLogsNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsNotFound  %+v", 404, o.Payload)
 }
+
+func (o *GetWorkflowLogsNotFound) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsNotFound  %+v", 404, o.Payload)
+}
+
 func (o *GetWorkflowLogsNotFound) GetPayload() *GetWorkflowLogsNotFoundBody {
 	return o.Payload
 }
@@ -191,7 +315,8 @@ func NewGetWorkflowLogsInternalServerError() *GetWorkflowLogsInternalServerError
 	return &GetWorkflowLogsInternalServerError{}
 }
 
-/* GetWorkflowLogsInternalServerError describes a response with status code 500, with default header values.
+/*
+GetWorkflowLogsInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -199,9 +324,39 @@ type GetWorkflowLogsInternalServerError struct {
 	Payload *GetWorkflowLogsInternalServerErrorBody
 }
 
+// IsSuccess returns true when this get workflow logs internal server error response has a 2xx status code
+func (o *GetWorkflowLogsInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow logs internal server error response has a 3xx status code
+func (o *GetWorkflowLogsInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow logs internal server error response has a 4xx status code
+func (o *GetWorkflowLogsInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow logs internal server error response has a 5xx status code
+func (o *GetWorkflowLogsInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get workflow logs internal server error response a status code equal to that given
+func (o *GetWorkflowLogsInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *GetWorkflowLogsInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *GetWorkflowLogsInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *GetWorkflowLogsInternalServerError) GetPayload() *GetWorkflowLogsInternalServerErrorBody {
 	return o.Payload
 }
@@ -218,7 +373,8 @@ func (o *GetWorkflowLogsInternalServerError) readResponse(response runtime.Clien
 	return nil
 }
 
-/*GetWorkflowLogsBadRequestBody get workflow logs bad request body
+/*
+GetWorkflowLogsBadRequestBody get workflow logs bad request body
 swagger:model GetWorkflowLogsBadRequestBody
 */
 type GetWorkflowLogsBadRequestBody struct {
@@ -255,7 +411,8 @@ func (o *GetWorkflowLogsBadRequestBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowLogsForbiddenBody get workflow logs forbidden body
+/*
+GetWorkflowLogsForbiddenBody get workflow logs forbidden body
 swagger:model GetWorkflowLogsForbiddenBody
 */
 type GetWorkflowLogsForbiddenBody struct {
@@ -292,7 +449,8 @@ func (o *GetWorkflowLogsForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowLogsInternalServerErrorBody get workflow logs internal server error body
+/*
+GetWorkflowLogsInternalServerErrorBody get workflow logs internal server error body
 swagger:model GetWorkflowLogsInternalServerErrorBody
 */
 type GetWorkflowLogsInternalServerErrorBody struct {
@@ -329,7 +487,8 @@ func (o *GetWorkflowLogsInternalServerErrorBody) UnmarshalBinary(b []byte) error
 	return nil
 }
 
-/*GetWorkflowLogsNotFoundBody get workflow logs not found body
+/*
+GetWorkflowLogsNotFoundBody get workflow logs not found body
 swagger:model GetWorkflowLogsNotFoundBody
 */
 type GetWorkflowLogsNotFoundBody struct {
@@ -366,7 +525,8 @@ func (o *GetWorkflowLogsNotFoundBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*GetWorkflowLogsOKBody get workflow logs o k body
+/*
+GetWorkflowLogsOKBody get workflow logs o k body
 swagger:model GetWorkflowLogsOKBody
 */
 type GetWorkflowLogsOKBody struct {

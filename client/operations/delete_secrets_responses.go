@@ -57,7 +57,8 @@ func NewDeleteSecretsOK() *DeleteSecretsOK {
 	return &DeleteSecretsOK{}
 }
 
-/* DeleteSecretsOK describes a response with status code 200, with default header values.
+/*
+DeleteSecretsOK describes a response with status code 200, with default header values.
 
 Secrets successfully deleted.
 */
@@ -65,9 +66,39 @@ type DeleteSecretsOK struct {
 	Payload []string
 }
 
+// IsSuccess returns true when this delete secrets o k response has a 2xx status code
+func (o *DeleteSecretsOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this delete secrets o k response has a 3xx status code
+func (o *DeleteSecretsOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete secrets o k response has a 4xx status code
+func (o *DeleteSecretsOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this delete secrets o k response has a 5xx status code
+func (o *DeleteSecretsOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete secrets o k response a status code equal to that given
+func (o *DeleteSecretsOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *DeleteSecretsOK) Error() string {
 	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsOK  %+v", 200, o.Payload)
 }
+
+func (o *DeleteSecretsOK) String() string {
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsOK  %+v", 200, o.Payload)
+}
+
 func (o *DeleteSecretsOK) GetPayload() []string {
 	return o.Payload
 }
@@ -87,7 +118,8 @@ func NewDeleteSecretsForbidden() *DeleteSecretsForbidden {
 	return &DeleteSecretsForbidden{}
 }
 
-/* DeleteSecretsForbidden describes a response with status code 403, with default header values.
+/*
+DeleteSecretsForbidden describes a response with status code 403, with default header values.
 
 Request failed. Token is not valid.
 */
@@ -95,9 +127,39 @@ type DeleteSecretsForbidden struct {
 	Payload *DeleteSecretsForbiddenBody
 }
 
+// IsSuccess returns true when this delete secrets forbidden response has a 2xx status code
+func (o *DeleteSecretsForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete secrets forbidden response has a 3xx status code
+func (o *DeleteSecretsForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete secrets forbidden response has a 4xx status code
+func (o *DeleteSecretsForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this delete secrets forbidden response has a 5xx status code
+func (o *DeleteSecretsForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete secrets forbidden response a status code equal to that given
+func (o *DeleteSecretsForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *DeleteSecretsForbidden) Error() string {
 	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsForbidden  %+v", 403, o.Payload)
 }
+
+func (o *DeleteSecretsForbidden) String() string {
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsForbidden  %+v", 403, o.Payload)
+}
+
 func (o *DeleteSecretsForbidden) GetPayload() *DeleteSecretsForbiddenBody {
 	return o.Payload
 }
@@ -119,7 +181,8 @@ func NewDeleteSecretsNotFound() *DeleteSecretsNotFound {
 	return &DeleteSecretsNotFound{}
 }
 
-/* DeleteSecretsNotFound describes a response with status code 404, with default header values.
+/*
+DeleteSecretsNotFound describes a response with status code 404, with default header values.
 
 Request failed. Secrets do not exist.
 */
@@ -127,9 +190,39 @@ type DeleteSecretsNotFound struct {
 	Payload []string
 }
 
+// IsSuccess returns true when this delete secrets not found response has a 2xx status code
+func (o *DeleteSecretsNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete secrets not found response has a 3xx status code
+func (o *DeleteSecretsNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete secrets not found response has a 4xx status code
+func (o *DeleteSecretsNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this delete secrets not found response has a 5xx status code
+func (o *DeleteSecretsNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete secrets not found response a status code equal to that given
+func (o *DeleteSecretsNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *DeleteSecretsNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsNotFound  %+v", 404, o.Payload)
 }
+
+func (o *DeleteSecretsNotFound) String() string {
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsNotFound  %+v", 404, o.Payload)
+}
+
 func (o *DeleteSecretsNotFound) GetPayload() []string {
 	return o.Payload
 }
@@ -149,7 +242,8 @@ func NewDeleteSecretsInternalServerError() *DeleteSecretsInternalServerError {
 	return &DeleteSecretsInternalServerError{}
 }
 
-/* DeleteSecretsInternalServerError describes a response with status code 500, with default header values.
+/*
+DeleteSecretsInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal server error.
 */
@@ -157,9 +251,39 @@ type DeleteSecretsInternalServerError struct {
 	Payload *DeleteSecretsInternalServerErrorBody
 }
 
+// IsSuccess returns true when this delete secrets internal server error response has a 2xx status code
+func (o *DeleteSecretsInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete secrets internal server error response has a 3xx status code
+func (o *DeleteSecretsInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete secrets internal server error response has a 4xx status code
+func (o *DeleteSecretsInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this delete secrets internal server error response has a 5xx status code
+func (o *DeleteSecretsInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this delete secrets internal server error response a status code equal to that given
+func (o *DeleteSecretsInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *DeleteSecretsInternalServerError) Error() string {
 	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *DeleteSecretsInternalServerError) String() string {
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *DeleteSecretsInternalServerError) GetPayload() *DeleteSecretsInternalServerErrorBody {
 	return o.Payload
 }
@@ -176,7 +300,8 @@ func (o *DeleteSecretsInternalServerError) readResponse(response runtime.ClientR
 	return nil
 }
 
-/*DeleteSecretsForbiddenBody delete secrets forbidden body
+/*
+DeleteSecretsForbiddenBody delete secrets forbidden body
 swagger:model DeleteSecretsForbiddenBody
 */
 type DeleteSecretsForbiddenBody struct {
@@ -213,7 +338,8 @@ func (o *DeleteSecretsForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*DeleteSecretsInternalServerErrorBody delete secrets internal server error body
+/*
+DeleteSecretsInternalServerErrorBody delete secrets internal server error body
 swagger:model DeleteSecretsInternalServerErrorBody
 */
 type DeleteSecretsInternalServerErrorBody struct {

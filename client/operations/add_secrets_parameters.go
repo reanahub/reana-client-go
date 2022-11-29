@@ -53,10 +53,12 @@ func NewAddSecretsParamsWithHTTPClient(client *http.Client) *AddSecretsParams {
 	}
 }
 
-/* AddSecretsParams contains all the parameters to send to the API endpoint
-   for the add secrets operation.
+/*
+AddSecretsParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the add secrets operation.
+
+	Typically these are written to a http.Request.
 */
 type AddSecretsParams struct {
 

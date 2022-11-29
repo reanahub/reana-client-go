@@ -60,7 +60,8 @@ func NewAddSecretsCreated() *AddSecretsCreated {
 	return &AddSecretsCreated{}
 }
 
-/* AddSecretsCreated describes a response with status code 201, with default header values.
+/*
+AddSecretsCreated describes a response with status code 201, with default header values.
 
 Secrets successfully added.
 */
@@ -68,9 +69,39 @@ type AddSecretsCreated struct {
 	Payload *AddSecretsCreatedBody
 }
 
+// IsSuccess returns true when this add secrets created response has a 2xx status code
+func (o *AddSecretsCreated) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this add secrets created response has a 3xx status code
+func (o *AddSecretsCreated) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this add secrets created response has a 4xx status code
+func (o *AddSecretsCreated) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this add secrets created response has a 5xx status code
+func (o *AddSecretsCreated) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this add secrets created response a status code equal to that given
+func (o *AddSecretsCreated) IsCode(code int) bool {
+	return code == 201
+}
+
 func (o *AddSecretsCreated) Error() string {
 	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsCreated  %+v", 201, o.Payload)
 }
+
+func (o *AddSecretsCreated) String() string {
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsCreated  %+v", 201, o.Payload)
+}
+
 func (o *AddSecretsCreated) GetPayload() *AddSecretsCreatedBody {
 	return o.Payload
 }
@@ -92,7 +123,8 @@ func NewAddSecretsForbidden() *AddSecretsForbidden {
 	return &AddSecretsForbidden{}
 }
 
-/* AddSecretsForbidden describes a response with status code 403, with default header values.
+/*
+AddSecretsForbidden describes a response with status code 403, with default header values.
 
 Request failed. Token is not valid.
 */
@@ -100,9 +132,39 @@ type AddSecretsForbidden struct {
 	Payload *AddSecretsForbiddenBody
 }
 
+// IsSuccess returns true when this add secrets forbidden response has a 2xx status code
+func (o *AddSecretsForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this add secrets forbidden response has a 3xx status code
+func (o *AddSecretsForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this add secrets forbidden response has a 4xx status code
+func (o *AddSecretsForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this add secrets forbidden response has a 5xx status code
+func (o *AddSecretsForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this add secrets forbidden response a status code equal to that given
+func (o *AddSecretsForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *AddSecretsForbidden) Error() string {
 	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsForbidden  %+v", 403, o.Payload)
 }
+
+func (o *AddSecretsForbidden) String() string {
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsForbidden  %+v", 403, o.Payload)
+}
+
 func (o *AddSecretsForbidden) GetPayload() *AddSecretsForbiddenBody {
 	return o.Payload
 }
@@ -124,7 +186,8 @@ func NewAddSecretsConflict() *AddSecretsConflict {
 	return &AddSecretsConflict{}
 }
 
-/* AddSecretsConflict describes a response with status code 409, with default header values.
+/*
+AddSecretsConflict describes a response with status code 409, with default header values.
 
 Request failed. Secrets could not be added due to a conflict.
 */
@@ -132,9 +195,39 @@ type AddSecretsConflict struct {
 	Payload *AddSecretsConflictBody
 }
 
+// IsSuccess returns true when this add secrets conflict response has a 2xx status code
+func (o *AddSecretsConflict) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this add secrets conflict response has a 3xx status code
+func (o *AddSecretsConflict) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this add secrets conflict response has a 4xx status code
+func (o *AddSecretsConflict) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this add secrets conflict response has a 5xx status code
+func (o *AddSecretsConflict) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this add secrets conflict response a status code equal to that given
+func (o *AddSecretsConflict) IsCode(code int) bool {
+	return code == 409
+}
+
 func (o *AddSecretsConflict) Error() string {
 	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsConflict  %+v", 409, o.Payload)
 }
+
+func (o *AddSecretsConflict) String() string {
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsConflict  %+v", 409, o.Payload)
+}
+
 func (o *AddSecretsConflict) GetPayload() *AddSecretsConflictBody {
 	return o.Payload
 }
@@ -156,7 +249,8 @@ func NewAddSecretsInternalServerError() *AddSecretsInternalServerError {
 	return &AddSecretsInternalServerError{}
 }
 
-/* AddSecretsInternalServerError describes a response with status code 500, with default header values.
+/*
+AddSecretsInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal server error.
 */
@@ -164,9 +258,39 @@ type AddSecretsInternalServerError struct {
 	Payload *AddSecretsInternalServerErrorBody
 }
 
+// IsSuccess returns true when this add secrets internal server error response has a 2xx status code
+func (o *AddSecretsInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this add secrets internal server error response has a 3xx status code
+func (o *AddSecretsInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this add secrets internal server error response has a 4xx status code
+func (o *AddSecretsInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this add secrets internal server error response has a 5xx status code
+func (o *AddSecretsInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this add secrets internal server error response a status code equal to that given
+func (o *AddSecretsInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *AddSecretsInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *AddSecretsInternalServerError) String() string {
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *AddSecretsInternalServerError) GetPayload() *AddSecretsInternalServerErrorBody {
 	return o.Payload
 }
@@ -183,7 +307,8 @@ func (o *AddSecretsInternalServerError) readResponse(response runtime.ClientResp
 	return nil
 }
 
-/*AddSecretsConflictBody add secrets conflict body
+/*
+AddSecretsConflictBody add secrets conflict body
 swagger:model AddSecretsConflictBody
 */
 type AddSecretsConflictBody struct {
@@ -220,7 +345,8 @@ func (o *AddSecretsConflictBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*AddSecretsCreatedBody add secrets created body
+/*
+AddSecretsCreatedBody add secrets created body
 swagger:model AddSecretsCreatedBody
 */
 type AddSecretsCreatedBody struct {
@@ -257,7 +383,8 @@ func (o *AddSecretsCreatedBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*AddSecretsForbiddenBody add secrets forbidden body
+/*
+AddSecretsForbiddenBody add secrets forbidden body
 swagger:model AddSecretsForbiddenBody
 */
 type AddSecretsForbiddenBody struct {
@@ -294,7 +421,8 @@ func (o *AddSecretsForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*AddSecretsInternalServerErrorBody add secrets internal server error body
+/*
+AddSecretsInternalServerErrorBody add secrets internal server error body
 swagger:model AddSecretsInternalServerErrorBody
 */
 type AddSecretsInternalServerErrorBody struct {
@@ -331,7 +459,8 @@ func (o *AddSecretsInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*AddSecretsParamsBodyAnon Secret definition.
+/*
+AddSecretsParamsBodyAnon Secret definition.
 swagger:model AddSecretsParamsBodyAnon
 */
 type AddSecretsParamsBodyAnon struct {

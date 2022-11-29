@@ -101,9 +101,9 @@ type ClientService interface {
 }
 
 /*
-  AddSecrets adds user secrets to r e a n a
+AddSecrets adds user secrets to r e a n a
 
-  This resource adds secrets for the authenticated user.
+This resource adds secrets for the authenticated user.
 */
 func (a *Client) AddSecrets(params *AddSecretsParams, opts ...ClientOption) (*AddSecretsCreated, error) {
 	// TODO: Validate the params before sending
@@ -141,9 +141,9 @@ func (a *Client) AddSecrets(params *AddSecretsParams, opts ...ClientOption) (*Ad
 }
 
 /*
-  CloseInteractiveSession closes an interactive workflow session
+CloseInteractiveSession closes an interactive workflow session
 
-  This resource is expecting a workflow to close an interactive session within its workspace.
+This resource is expecting a workflow to close an interactive session within its workspace.
 */
 func (a *Client) CloseInteractiveSession(params *CloseInteractiveSessionParams, opts ...ClientOption) (*CloseInteractiveSessionOK, error) {
 	// TODO: Validate the params before sending
@@ -181,9 +181,9 @@ func (a *Client) CloseInteractiveSession(params *CloseInteractiveSessionParams, 
 }
 
 /*
-  CreateGitlabWebhook sets a webhook on a user project from git lab
+CreateGitlabWebhook sets a webhook on a user project from git lab
 
-  Setup a webhook for a GitLab project on GitLab.
+Setup a webhook for a GitLab project on GitLab.
 */
 func (a *Client) CreateGitlabWebhook(params *CreateGitlabWebhookParams, opts ...ClientOption) (*CreateGitlabWebhookCreated, error) {
 	// TODO: Validate the params before sending
@@ -221,9 +221,9 @@ func (a *Client) CreateGitlabWebhook(params *CreateGitlabWebhookParams, opts ...
 }
 
 /*
-  CreateWorkflow creates a new workflow based on a r e a n a specification file
+CreateWorkflow creates a new workflow based on a r e a n a specification file
 
-  This resource is expecting a REANA specification in JSON format with all the necessary information to instantiate a workflow.
+This resource is expecting a REANA specification in JSON format with all the necessary information to instantiate a workflow.
 */
 func (a *Client) CreateWorkflow(params *CreateWorkflowParams, opts ...ClientOption) (*CreateWorkflowCreated, error) {
 	// TODO: Validate the params before sending
@@ -261,9 +261,9 @@ func (a *Client) CreateWorkflow(params *CreateWorkflowParams, opts ...ClientOpti
 }
 
 /*
-  DeleteFile deletes the specified file
+DeleteFile deletes the specified file
 
-  This resource is expecting a workflow UUID and a filename existing inside the workspace to be deleted.
+This resource is expecting a workflow UUID and a filename existing inside the workspace to be deleted.
 */
 func (a *Client) DeleteFile(params *DeleteFileParams, opts ...ClientOption) (*DeleteFileOK, error) {
 	// TODO: Validate the params before sending
@@ -301,9 +301,9 @@ func (a *Client) DeleteFile(params *DeleteFileParams, opts ...ClientOption) (*De
 }
 
 /*
-  DeleteGitlabWebhook deletes an existing webhook from git lab
+DeleteGitlabWebhook deletes an existing webhook from git lab
 
-  Remove an existing REANA webhook from a project on GitLab
+Remove an existing REANA webhook from a project on GitLab
 */
 func (a *Client) DeleteGitlabWebhook(params *DeleteGitlabWebhookParams, opts ...ClientOption) (*DeleteGitlabWebhookNoContent, error) {
 	// TODO: Validate the params before sending
@@ -341,9 +341,9 @@ func (a *Client) DeleteGitlabWebhook(params *DeleteGitlabWebhookParams, opts ...
 }
 
 /*
-  DeleteSecrets deletes the specified secret s
+DeleteSecrets deletes the specified secret s
 
-  This resource deletes the requested secrets.
+This resource deletes the requested secrets.
 */
 func (a *Client) DeleteSecrets(params *DeleteSecretsParams, opts ...ClientOption) (*DeleteSecretsOK, error) {
 	// TODO: Validate the params before sending
@@ -381,9 +381,9 @@ func (a *Client) DeleteSecrets(params *DeleteSecretsParams, opts ...ClientOption
 }
 
 /*
-  DownloadFile returns the requested file
+DownloadFile returns the requested file
 
-  This resource is expecting a workflow UUID and a file name existing inside the workspace to return its content.
+This resource is expecting a workflow UUID and a file name existing inside the workspace to return its content.
 */
 func (a *Client) DownloadFile(params *DownloadFileParams, writer io.Writer, opts ...ClientOption) (*DownloadFileOK, error) {
 	// TODO: Validate the params before sending
@@ -421,9 +421,9 @@ func (a *Client) DownloadFile(params *DownloadFileParams, writer io.Writer, opts
 }
 
 /*
-  GetConfig gets information about reana UI configuration user
+GetConfig gets information about reana UI configuration user
 
-  This resource provides configuration needed by Reana-UI.
+This resource provides configuration needed by Reana-UI.
 */
 func (a *Client) GetConfig(params *GetConfigParams, opts ...ClientOption) (*GetConfigOK, error) {
 	// TODO: Validate the params before sending
@@ -461,9 +461,9 @@ func (a *Client) GetConfig(params *GetConfigParams, opts ...ClientOption) (*GetC
 }
 
 /*
-  GetFiles returns the workspace file list
+GetFiles returns the workspace file list
 
-  This resource retrieves the file list of a workspace, given its workflow UUID.
+This resource retrieves the file list of a workspace, given its workflow UUID.
 */
 func (a *Client) GetFiles(params *GetFilesParams, opts ...ClientOption) (*GetFilesOK, error) {
 	// TODO: Validate the params before sending
@@ -501,9 +501,9 @@ func (a *Client) GetFiles(params *GetFilesParams, opts ...ClientOption) (*GetFil
 }
 
 /*
-  GetSecrets gets user secrets requires an user access token
+GetSecrets gets user secrets requires an user access token
 
-  Get user secrets.
+Get user secrets.
 */
 func (a *Client) GetSecrets(params *GetSecretsParams, opts ...ClientOption) (*GetSecretsOK, error) {
 	// TODO: Validate the params before sending
@@ -541,9 +541,9 @@ func (a *Client) GetSecrets(params *GetSecretsParams, opts ...ClientOption) (*Ge
 }
 
 /*
-  GetWorkflowDiff gets diff between two workflows
+GetWorkflowDiff gets diff between two workflows
 
-  This resource shows the differences between the assets of two workflows. Resource is expecting two workflow UUIDs or names.
+This resource shows the differences between the assets of two workflows. Resource is expecting two workflow UUIDs or names.
 */
 func (a *Client) GetWorkflowDiff(params *GetWorkflowDiffParams, opts ...ClientOption) (*GetWorkflowDiffOK, error) {
 	// TODO: Validate the params before sending
@@ -581,9 +581,9 @@ func (a *Client) GetWorkflowDiff(params *GetWorkflowDiffParams, opts ...ClientOp
 }
 
 /*
-  GetWorkflowDiskUsage gets disk usage of a workflow
+GetWorkflowDiskUsage gets disk usage of a workflow
 
-  This resource reports the disk usage of a workflow. Resource is expecting a workflow UUID and some parameters .
+This resource reports the disk usage of a workflow. Resource is expecting a workflow UUID and some parameters .
 */
 func (a *Client) GetWorkflowDiskUsage(params *GetWorkflowDiskUsageParams, opts ...ClientOption) (*GetWorkflowDiskUsageOK, error) {
 	// TODO: Validate the params before sending
@@ -621,9 +621,9 @@ func (a *Client) GetWorkflowDiskUsage(params *GetWorkflowDiskUsageParams, opts .
 }
 
 /*
-  GetWorkflowLogs gets workflow logs of a workflow
+GetWorkflowLogs gets workflow logs of a workflow
 
-  This resource reports the status of a workflow. Resource is expecting a workflow UUID.
+This resource reports the status of a workflow. Resource is expecting a workflow UUID.
 */
 func (a *Client) GetWorkflowLogs(params *GetWorkflowLogsParams, opts ...ClientOption) (*GetWorkflowLogsOK, error) {
 	// TODO: Validate the params before sending
@@ -661,9 +661,9 @@ func (a *Client) GetWorkflowLogs(params *GetWorkflowLogsParams, opts ...ClientOp
 }
 
 /*
-  GetWorkflowParameters gets parameters of a workflow
+GetWorkflowParameters gets parameters of a workflow
 
-  This resource reports the input parameters of a workflow. Resource is expecting a workflow UUID.
+This resource reports the input parameters of a workflow. Resource is expecting a workflow UUID.
 */
 func (a *Client) GetWorkflowParameters(params *GetWorkflowParametersParams, opts ...ClientOption) (*GetWorkflowParametersOK, error) {
 	// TODO: Validate the params before sending
@@ -701,9 +701,9 @@ func (a *Client) GetWorkflowParameters(params *GetWorkflowParametersParams, opts
 }
 
 /*
-  GetWorkflowRetentionRules gets the retention rules of a workflow
+GetWorkflowRetentionRules gets the retention rules of a workflow
 
-  This resource returns all the retention rules of a given workflow.
+This resource returns all the retention rules of a given workflow.
 */
 func (a *Client) GetWorkflowRetentionRules(params *GetWorkflowRetentionRulesParams, opts ...ClientOption) (*GetWorkflowRetentionRulesOK, error) {
 	// TODO: Validate the params before sending
@@ -741,9 +741,9 @@ func (a *Client) GetWorkflowRetentionRules(params *GetWorkflowRetentionRulesPara
 }
 
 /*
-  GetWorkflowSpecification gets the specification used for this workflow run
+GetWorkflowSpecification gets the specification used for this workflow run
 
-  This resource returns the REANA workflow specification used to start the workflow run. Resource is expecting a workflow UUID.
+This resource returns the REANA workflow specification used to start the workflow run. Resource is expecting a workflow UUID.
 */
 func (a *Client) GetWorkflowSpecification(params *GetWorkflowSpecificationParams, opts ...ClientOption) (*GetWorkflowSpecificationOK, error) {
 	// TODO: Validate the params before sending
@@ -781,9 +781,9 @@ func (a *Client) GetWorkflowSpecification(params *GetWorkflowSpecificationParams
 }
 
 /*
-  GetWorkflowStatus gets status of a workflow
+GetWorkflowStatus gets status of a workflow
 
-  This resource reports the status of a workflow. Resource is expecting a workflow UUID.
+This resource reports the status of a workflow. Resource is expecting a workflow UUID.
 */
 func (a *Client) GetWorkflowStatus(params *GetWorkflowStatusParams, opts ...ClientOption) (*GetWorkflowStatusOK, error) {
 	// TODO: Validate the params before sending
@@ -821,9 +821,9 @@ func (a *Client) GetWorkflowStatus(params *GetWorkflowStatusParams, opts ...Clie
 }
 
 /*
-  GetWorkflows returns list of all current workflows in r e a n a
+GetWorkflows returns list of all current workflows in r e a n a
 
-  This resource return all current workflows in JSON format.
+This resource return all current workflows in JSON format.
 */
 func (a *Client) GetWorkflows(params *GetWorkflowsParams, opts ...ClientOption) (*GetWorkflowsOK, error) {
 	// TODO: Validate the params before sending
@@ -861,9 +861,9 @@ func (a *Client) GetWorkflows(params *GetWorkflowsParams, opts ...ClientOption) 
 }
 
 /*
-  GetYou gets information about authenticated user
+GetYou gets information about authenticated user
 
-  This resource provides basic information about an authenticated user based on the session cookie presence.
+This resource provides basic information about an authenticated user based on the session cookie presence.
 */
 func (a *Client) GetYou(params *GetYouParams, opts ...ClientOption) (*GetYouOK, error) {
 	// TODO: Validate the params before sending
@@ -901,9 +901,9 @@ func (a *Client) GetYou(params *GetYouParams, opts ...ClientOption) (*GetYouOK, 
 }
 
 /*
-  GitlabConnect initiates connection to git lab
+GitlabConnect initiates connection to git lab
 
-  Initiate connection to GitLab to authorize accessing the authenticated user's API.
+Initiate connection to GitLab to authorize accessing the authenticated user's API.
 */
 func (a *Client) GitlabConnect(params *GitlabConnectParams, opts ...ClientOption) error {
 	// TODO: Validate the params before sending
@@ -934,9 +934,9 @@ func (a *Client) GitlabConnect(params *GitlabConnectParams, opts ...ClientOption
 }
 
 /*
-  GitlabOauth gets access token from git lab
+GitlabOauth gets access token from git lab
 
-  Authorize REANA on GitLab.
+Authorize REANA on GitLab.
 */
 func (a *Client) GitlabOauth(params *GitlabOauthParams, opts ...ClientOption) (*GitlabOauthOK, *GitlabOauthCreated, error) {
 	// TODO: Validate the params before sending
@@ -975,9 +975,9 @@ func (a *Client) GitlabOauth(params *GitlabOauthParams, opts ...ClientOption) (*
 }
 
 /*
-  GitlabProjects gets user project from git lab
+GitlabProjects gets user project from git lab
 
-  Retrieve projects from GitLab.
+Retrieve projects from GitLab.
 */
 func (a *Client) GitlabProjects(params *GitlabProjectsParams, opts ...ClientOption) (*GitlabProjectsOK, error) {
 	// TODO: Validate the params before sending
@@ -1015,9 +1015,9 @@ func (a *Client) GitlabProjects(params *GitlabProjectsParams, opts ...ClientOpti
 }
 
 /*
-  Info gets information about the cluster capabilities
+Info gets information about the cluster capabilities
 
-  This resource reports information about cluster capabilities.
+This resource reports information about cluster capabilities.
 */
 func (a *Client) Info(params *InfoParams, opts ...ClientOption) (*InfoOK, error) {
 	// TODO: Validate the params before sending
@@ -1055,9 +1055,9 @@ func (a *Client) Info(params *InfoParams, opts ...ClientOption) (*InfoOK, error)
 }
 
 /*
-  Launch launches workflow from a remote r e a n a specification file
+Launch launches workflow from a remote r e a n a specification file
 
-  This resource expects a remote reference to a REANA specification file needed to launch a workflow via URL.
+This resource expects a remote reference to a REANA specification file needed to launch a workflow via URL.
 */
 func (a *Client) Launch(params *LaunchParams, opts ...ClientOption) (*LaunchOK, error) {
 	// TODO: Validate the params before sending
@@ -1095,9 +1095,9 @@ func (a *Client) Launch(params *LaunchParams, opts ...ClientOption) (*LaunchOK, 
 }
 
 /*
-  MoveFiles moves files within workspace
+MoveFiles moves files within workspace
 
-  This resource moves files within the workspace. Resource is expecting a workflow UUID.
+This resource moves files within the workspace. Resource is expecting a workflow UUID.
 */
 func (a *Client) MoveFiles(params *MoveFilesParams, opts ...ClientOption) (*MoveFilesOK, error) {
 	// TODO: Validate the params before sending
@@ -1135,9 +1135,9 @@ func (a *Client) MoveFiles(params *MoveFilesParams, opts ...ClientOption) (*Move
 }
 
 /*
-  OpenInteractiveSession starts an interactive session inside the workflow workspace
+OpenInteractiveSession starts an interactive session inside the workflow workspace
 
-  This resource is expecting a workflow to start an interactive session within its workspace.
+This resource is expecting a workflow to start an interactive session within its workspace.
 */
 func (a *Client) OpenInteractiveSession(params *OpenInteractiveSessionParams, opts ...ClientOption) (*OpenInteractiveSessionOK, error) {
 	// TODO: Validate the params before sending
@@ -1175,9 +1175,9 @@ func (a *Client) OpenInteractiveSession(params *OpenInteractiveSessionParams, op
 }
 
 /*
-  Ping pings the server healthcheck
+Ping pings the server healthcheck
 
-  Ping the server.
+Ping the server.
 */
 func (a *Client) Ping(params *PingParams, opts ...ClientOption) (*PingOK, error) {
 	// TODO: Validate the params before sending
@@ -1215,9 +1215,9 @@ func (a *Client) Ping(params *PingParams, opts ...ClientOption) (*PingOK, error)
 }
 
 /*
-  RequestToken requests a new access token for the authenticated user
+RequestToken requests a new access token for the authenticated user
 
-  This resource allows the user to create an empty REANA access token and mark it as requested.
+This resource allows the user to create an empty REANA access token and mark it as requested.
 */
 func (a *Client) RequestToken(params *RequestTokenParams, opts ...ClientOption) (*RequestTokenOK, error) {
 	// TODO: Validate the params before sending
@@ -1255,9 +1255,9 @@ func (a *Client) RequestToken(params *RequestTokenParams, opts ...ClientOption) 
 }
 
 /*
-  SetWorkflowStatus sets status of a workflow
+SetWorkflowStatus sets status of a workflow
 
-  This resource reports the status of a workflow. Resource is expecting a workflow UUID.
+This resource reports the status of a workflow. Resource is expecting a workflow UUID.
 */
 func (a *Client) SetWorkflowStatus(params *SetWorkflowStatusParams, opts ...ClientOption) (*SetWorkflowStatusOK, error) {
 	// TODO: Validate the params before sending
@@ -1295,9 +1295,9 @@ func (a *Client) SetWorkflowStatus(params *SetWorkflowStatusParams, opts ...Clie
 }
 
 /*
-  StartWorkflow starts workflow
+StartWorkflow starts workflow
 
-  This resource starts the workflow execution process. Resource is expecting a workflow UUID.
+This resource starts the workflow execution process. Resource is expecting a workflow UUID.
 */
 func (a *Client) StartWorkflow(params *StartWorkflowParams, opts ...ClientOption) (*StartWorkflowOK, error) {
 	// TODO: Validate the params before sending
@@ -1335,9 +1335,9 @@ func (a *Client) StartWorkflow(params *StartWorkflowParams, opts ...ClientOption
 }
 
 /*
-  Status retrieves cluster health status
+Status retrieves cluster health status
 
-  Retrieve cluster health status.
+Retrieve cluster health status.
 */
 func (a *Client) Status(params *StatusParams, opts ...ClientOption) (*StatusOK, error) {
 	// TODO: Validate the params before sending
@@ -1375,9 +1375,9 @@ func (a *Client) Status(params *StatusParams, opts ...ClientOption) (*StatusOK, 
 }
 
 /*
-  UploadFile adds a file to the workspace
+UploadFile adds a file to the workspace
 
-  This resource is expecting a file to place in the workspace.
+This resource is expecting a file to place in the workspace.
 */
 func (a *Client) UploadFile(params *UploadFileParams, opts ...ClientOption) (*UploadFileOK, error) {
 	// TODO: Validate the params before sending

@@ -67,7 +67,8 @@ func NewDownloadFileOK(writer io.Writer) *DownloadFileOK {
 	}
 }
 
-/* DownloadFileOK describes a response with status code 200, with default header values.
+/*
+DownloadFileOK describes a response with status code 200, with default header values.
 
 Requests succeeded. The file has been downloaded.
 */
@@ -78,9 +79,39 @@ type DownloadFileOK struct {
 	Payload io.Writer
 }
 
+// IsSuccess returns true when this download file o k response has a 2xx status code
+func (o *DownloadFileOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this download file o k response has a 3xx status code
+func (o *DownloadFileOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download file o k response has a 4xx status code
+func (o *DownloadFileOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this download file o k response has a 5xx status code
+func (o *DownloadFileOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this download file o k response a status code equal to that given
+func (o *DownloadFileOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *DownloadFileOK) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileOK  %+v", 200, o.Payload)
 }
+
+func (o *DownloadFileOK) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileOK  %+v", 200, o.Payload)
+}
+
 func (o *DownloadFileOK) GetPayload() io.Writer {
 	return o.Payload
 }
@@ -114,14 +145,44 @@ func NewDownloadFileBadRequest() *DownloadFileBadRequest {
 	return &DownloadFileBadRequest{}
 }
 
-/* DownloadFileBadRequest describes a response with status code 400, with default header values.
+/*
+DownloadFileBadRequest describes a response with status code 400, with default header values.
 
 Request failed. The incoming payload seems malformed.
 */
 type DownloadFileBadRequest struct {
 }
 
+// IsSuccess returns true when this download file bad request response has a 2xx status code
+func (o *DownloadFileBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this download file bad request response has a 3xx status code
+func (o *DownloadFileBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download file bad request response has a 4xx status code
+func (o *DownloadFileBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this download file bad request response has a 5xx status code
+func (o *DownloadFileBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this download file bad request response a status code equal to that given
+func (o *DownloadFileBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *DownloadFileBadRequest) Error() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileBadRequest ", 400)
+}
+
+func (o *DownloadFileBadRequest) String() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileBadRequest ", 400)
 }
 
@@ -135,7 +196,8 @@ func NewDownloadFileForbidden() *DownloadFileForbidden {
 	return &DownloadFileForbidden{}
 }
 
-/* DownloadFileForbidden describes a response with status code 403, with default header values.
+/*
+DownloadFileForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -143,9 +205,39 @@ type DownloadFileForbidden struct {
 	Payload *DownloadFileForbiddenBody
 }
 
+// IsSuccess returns true when this download file forbidden response has a 2xx status code
+func (o *DownloadFileForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this download file forbidden response has a 3xx status code
+func (o *DownloadFileForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download file forbidden response has a 4xx status code
+func (o *DownloadFileForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this download file forbidden response has a 5xx status code
+func (o *DownloadFileForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this download file forbidden response a status code equal to that given
+func (o *DownloadFileForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *DownloadFileForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileForbidden  %+v", 403, o.Payload)
 }
+
+func (o *DownloadFileForbidden) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileForbidden  %+v", 403, o.Payload)
+}
+
 func (o *DownloadFileForbidden) GetPayload() *DownloadFileForbiddenBody {
 	return o.Payload
 }
@@ -167,7 +259,8 @@ func NewDownloadFileNotFound() *DownloadFileNotFound {
 	return &DownloadFileNotFound{}
 }
 
-/* DownloadFileNotFound describes a response with status code 404, with default header values.
+/*
+DownloadFileNotFound describes a response with status code 404, with default header values.
 
 Request failed. `file_name` does not exist .
 */
@@ -175,9 +268,39 @@ type DownloadFileNotFound struct {
 	Payload *DownloadFileNotFoundBody
 }
 
+// IsSuccess returns true when this download file not found response has a 2xx status code
+func (o *DownloadFileNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this download file not found response has a 3xx status code
+func (o *DownloadFileNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download file not found response has a 4xx status code
+func (o *DownloadFileNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this download file not found response has a 5xx status code
+func (o *DownloadFileNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this download file not found response a status code equal to that given
+func (o *DownloadFileNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *DownloadFileNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileNotFound  %+v", 404, o.Payload)
 }
+
+func (o *DownloadFileNotFound) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileNotFound  %+v", 404, o.Payload)
+}
+
 func (o *DownloadFileNotFound) GetPayload() *DownloadFileNotFoundBody {
 	return o.Payload
 }
@@ -199,7 +322,8 @@ func NewDownloadFileInternalServerError() *DownloadFileInternalServerError {
 	return &DownloadFileInternalServerError{}
 }
 
-/* DownloadFileInternalServerError describes a response with status code 500, with default header values.
+/*
+DownloadFileInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal server error.
 */
@@ -207,9 +331,39 @@ type DownloadFileInternalServerError struct {
 	Payload *DownloadFileInternalServerErrorBody
 }
 
+// IsSuccess returns true when this download file internal server error response has a 2xx status code
+func (o *DownloadFileInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this download file internal server error response has a 3xx status code
+func (o *DownloadFileInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download file internal server error response has a 4xx status code
+func (o *DownloadFileInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this download file internal server error response has a 5xx status code
+func (o *DownloadFileInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this download file internal server error response a status code equal to that given
+func (o *DownloadFileInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *DownloadFileInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *DownloadFileInternalServerError) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *DownloadFileInternalServerError) GetPayload() *DownloadFileInternalServerErrorBody {
 	return o.Payload
 }
@@ -226,7 +380,8 @@ func (o *DownloadFileInternalServerError) readResponse(response runtime.ClientRe
 	return nil
 }
 
-/*DownloadFileForbiddenBody download file forbidden body
+/*
+DownloadFileForbiddenBody download file forbidden body
 swagger:model DownloadFileForbiddenBody
 */
 type DownloadFileForbiddenBody struct {
@@ -263,7 +418,8 @@ func (o *DownloadFileForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*DownloadFileInternalServerErrorBody download file internal server error body
+/*
+DownloadFileInternalServerErrorBody download file internal server error body
 swagger:model DownloadFileInternalServerErrorBody
 */
 type DownloadFileInternalServerErrorBody struct {
@@ -300,7 +456,8 @@ func (o *DownloadFileInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*DownloadFileNotFoundBody download file not found body
+/*
+DownloadFileNotFoundBody download file not found body
 swagger:model DownloadFileNotFoundBody
 */
 type DownloadFileNotFoundBody struct {

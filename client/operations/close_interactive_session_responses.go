@@ -63,7 +63,8 @@ func NewCloseInteractiveSessionOK() *CloseInteractiveSessionOK {
 	return &CloseInteractiveSessionOK{}
 }
 
-/* CloseInteractiveSessionOK describes a response with status code 200, with default header values.
+/*
+CloseInteractiveSessionOK describes a response with status code 200, with default header values.
 
 Request succeeded. The interactive session has been closed.
 */
@@ -71,9 +72,39 @@ type CloseInteractiveSessionOK struct {
 	Payload *CloseInteractiveSessionOKBody
 }
 
+// IsSuccess returns true when this close interactive session o k response has a 2xx status code
+func (o *CloseInteractiveSessionOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this close interactive session o k response has a 3xx status code
+func (o *CloseInteractiveSessionOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this close interactive session o k response has a 4xx status code
+func (o *CloseInteractiveSessionOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this close interactive session o k response has a 5xx status code
+func (o *CloseInteractiveSessionOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this close interactive session o k response a status code equal to that given
+func (o *CloseInteractiveSessionOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *CloseInteractiveSessionOK) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionOK  %+v", 200, o.Payload)
 }
+
+func (o *CloseInteractiveSessionOK) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionOK  %+v", 200, o.Payload)
+}
+
 func (o *CloseInteractiveSessionOK) GetPayload() *CloseInteractiveSessionOKBody {
 	return o.Payload
 }
@@ -95,7 +126,8 @@ func NewCloseInteractiveSessionBadRequest() *CloseInteractiveSessionBadRequest {
 	return &CloseInteractiveSessionBadRequest{}
 }
 
-/* CloseInteractiveSessionBadRequest describes a response with status code 400, with default header values.
+/*
+CloseInteractiveSessionBadRequest describes a response with status code 400, with default header values.
 
 Request failed. The incoming payload seems malformed.
 */
@@ -103,9 +135,39 @@ type CloseInteractiveSessionBadRequest struct {
 	Payload *CloseInteractiveSessionBadRequestBody
 }
 
+// IsSuccess returns true when this close interactive session bad request response has a 2xx status code
+func (o *CloseInteractiveSessionBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this close interactive session bad request response has a 3xx status code
+func (o *CloseInteractiveSessionBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this close interactive session bad request response has a 4xx status code
+func (o *CloseInteractiveSessionBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this close interactive session bad request response has a 5xx status code
+func (o *CloseInteractiveSessionBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this close interactive session bad request response a status code equal to that given
+func (o *CloseInteractiveSessionBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
 func (o *CloseInteractiveSessionBadRequest) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionBadRequest  %+v", 400, o.Payload)
 }
+
+func (o *CloseInteractiveSessionBadRequest) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionBadRequest  %+v", 400, o.Payload)
+}
+
 func (o *CloseInteractiveSessionBadRequest) GetPayload() *CloseInteractiveSessionBadRequestBody {
 	return o.Payload
 }
@@ -127,7 +189,8 @@ func NewCloseInteractiveSessionForbidden() *CloseInteractiveSessionForbidden {
 	return &CloseInteractiveSessionForbidden{}
 }
 
-/* CloseInteractiveSessionForbidden describes a response with status code 403, with default header values.
+/*
+CloseInteractiveSessionForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -135,9 +198,39 @@ type CloseInteractiveSessionForbidden struct {
 	Payload *CloseInteractiveSessionForbiddenBody
 }
 
+// IsSuccess returns true when this close interactive session forbidden response has a 2xx status code
+func (o *CloseInteractiveSessionForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this close interactive session forbidden response has a 3xx status code
+func (o *CloseInteractiveSessionForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this close interactive session forbidden response has a 4xx status code
+func (o *CloseInteractiveSessionForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this close interactive session forbidden response has a 5xx status code
+func (o *CloseInteractiveSessionForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this close interactive session forbidden response a status code equal to that given
+func (o *CloseInteractiveSessionForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *CloseInteractiveSessionForbidden) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionForbidden  %+v", 403, o.Payload)
 }
+
+func (o *CloseInteractiveSessionForbidden) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionForbidden  %+v", 403, o.Payload)
+}
+
 func (o *CloseInteractiveSessionForbidden) GetPayload() *CloseInteractiveSessionForbiddenBody {
 	return o.Payload
 }
@@ -159,7 +252,8 @@ func NewCloseInteractiveSessionNotFound() *CloseInteractiveSessionNotFound {
 	return &CloseInteractiveSessionNotFound{}
 }
 
-/* CloseInteractiveSessionNotFound describes a response with status code 404, with default header values.
+/*
+CloseInteractiveSessionNotFound describes a response with status code 404, with default header values.
 
 Request failed. Either user or workflow does not exist.
 */
@@ -167,9 +261,39 @@ type CloseInteractiveSessionNotFound struct {
 	Payload *CloseInteractiveSessionNotFoundBody
 }
 
+// IsSuccess returns true when this close interactive session not found response has a 2xx status code
+func (o *CloseInteractiveSessionNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this close interactive session not found response has a 3xx status code
+func (o *CloseInteractiveSessionNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this close interactive session not found response has a 4xx status code
+func (o *CloseInteractiveSessionNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this close interactive session not found response has a 5xx status code
+func (o *CloseInteractiveSessionNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this close interactive session not found response a status code equal to that given
+func (o *CloseInteractiveSessionNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *CloseInteractiveSessionNotFound) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionNotFound  %+v", 404, o.Payload)
 }
+
+func (o *CloseInteractiveSessionNotFound) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionNotFound  %+v", 404, o.Payload)
+}
+
 func (o *CloseInteractiveSessionNotFound) GetPayload() *CloseInteractiveSessionNotFoundBody {
 	return o.Payload
 }
@@ -191,7 +315,8 @@ func NewCloseInteractiveSessionInternalServerError() *CloseInteractiveSessionInt
 	return &CloseInteractiveSessionInternalServerError{}
 }
 
-/* CloseInteractiveSessionInternalServerError describes a response with status code 500, with default header values.
+/*
+CloseInteractiveSessionInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal controller error.
 */
@@ -199,9 +324,39 @@ type CloseInteractiveSessionInternalServerError struct {
 	Payload *CloseInteractiveSessionInternalServerErrorBody
 }
 
+// IsSuccess returns true when this close interactive session internal server error response has a 2xx status code
+func (o *CloseInteractiveSessionInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this close interactive session internal server error response has a 3xx status code
+func (o *CloseInteractiveSessionInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this close interactive session internal server error response has a 4xx status code
+func (o *CloseInteractiveSessionInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this close interactive session internal server error response has a 5xx status code
+func (o *CloseInteractiveSessionInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this close interactive session internal server error response a status code equal to that given
+func (o *CloseInteractiveSessionInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *CloseInteractiveSessionInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *CloseInteractiveSessionInternalServerError) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *CloseInteractiveSessionInternalServerError) GetPayload() *CloseInteractiveSessionInternalServerErrorBody {
 	return o.Payload
 }
@@ -218,7 +373,8 @@ func (o *CloseInteractiveSessionInternalServerError) readResponse(response runti
 	return nil
 }
 
-/*CloseInteractiveSessionBadRequestBody close interactive session bad request body
+/*
+CloseInteractiveSessionBadRequestBody close interactive session bad request body
 swagger:model CloseInteractiveSessionBadRequestBody
 */
 type CloseInteractiveSessionBadRequestBody struct {
@@ -255,7 +411,8 @@ func (o *CloseInteractiveSessionBadRequestBody) UnmarshalBinary(b []byte) error 
 	return nil
 }
 
-/*CloseInteractiveSessionForbiddenBody close interactive session forbidden body
+/*
+CloseInteractiveSessionForbiddenBody close interactive session forbidden body
 swagger:model CloseInteractiveSessionForbiddenBody
 */
 type CloseInteractiveSessionForbiddenBody struct {
@@ -292,7 +449,8 @@ func (o *CloseInteractiveSessionForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*CloseInteractiveSessionInternalServerErrorBody close interactive session internal server error body
+/*
+CloseInteractiveSessionInternalServerErrorBody close interactive session internal server error body
 swagger:model CloseInteractiveSessionInternalServerErrorBody
 */
 type CloseInteractiveSessionInternalServerErrorBody struct {
@@ -329,7 +487,8 @@ func (o *CloseInteractiveSessionInternalServerErrorBody) UnmarshalBinary(b []byt
 	return nil
 }
 
-/*CloseInteractiveSessionNotFoundBody close interactive session not found body
+/*
+CloseInteractiveSessionNotFoundBody close interactive session not found body
 swagger:model CloseInteractiveSessionNotFoundBody
 */
 type CloseInteractiveSessionNotFoundBody struct {
@@ -366,7 +525,8 @@ func (o *CloseInteractiveSessionNotFoundBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*CloseInteractiveSessionOKBody close interactive session o k body
+/*
+CloseInteractiveSessionOKBody close interactive session o k body
 swagger:model CloseInteractiveSessionOKBody
 */
 type CloseInteractiveSessionOKBody struct {

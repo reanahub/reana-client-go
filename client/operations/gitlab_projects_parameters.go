@@ -52,10 +52,12 @@ func NewGitlabProjectsParamsWithHTTPClient(client *http.Client) *GitlabProjectsP
 	}
 }
 
-/* GitlabProjectsParams contains all the parameters to send to the API endpoint
-   for the gitlab projects operation.
+/*
+GitlabProjectsParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the gitlab projects operation.
+
+	Typically these are written to a http.Request.
 */
 type GitlabProjectsParams struct {
 	timeout    time.Duration

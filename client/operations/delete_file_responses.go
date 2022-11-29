@@ -58,7 +58,8 @@ func NewDeleteFileOK() *DeleteFileOK {
 	return &DeleteFileOK{}
 }
 
-/* DeleteFileOK describes a response with status code 200, with default header values.
+/*
+DeleteFileOK describes a response with status code 200, with default header values.
 
 Request succeeded. Details about deleted files and failed deletions are returned.
 */
@@ -66,9 +67,39 @@ type DeleteFileOK struct {
 	Payload *DeleteFileOKBody
 }
 
+// IsSuccess returns true when this delete file o k response has a 2xx status code
+func (o *DeleteFileOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this delete file o k response has a 3xx status code
+func (o *DeleteFileOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete file o k response has a 4xx status code
+func (o *DeleteFileOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this delete file o k response has a 5xx status code
+func (o *DeleteFileOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete file o k response a status code equal to that given
+func (o *DeleteFileOK) IsCode(code int) bool {
+	return code == 200
+}
+
 func (o *DeleteFileOK) Error() string {
 	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileOK  %+v", 200, o.Payload)
 }
+
+func (o *DeleteFileOK) String() string {
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileOK  %+v", 200, o.Payload)
+}
+
 func (o *DeleteFileOK) GetPayload() *DeleteFileOKBody {
 	return o.Payload
 }
@@ -90,7 +121,8 @@ func NewDeleteFileForbidden() *DeleteFileForbidden {
 	return &DeleteFileForbidden{}
 }
 
-/* DeleteFileForbidden describes a response with status code 403, with default header values.
+/*
+DeleteFileForbidden describes a response with status code 403, with default header values.
 
 Request failed. User is not allowed to access workflow.
 */
@@ -98,9 +130,39 @@ type DeleteFileForbidden struct {
 	Payload *DeleteFileForbiddenBody
 }
 
+// IsSuccess returns true when this delete file forbidden response has a 2xx status code
+func (o *DeleteFileForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete file forbidden response has a 3xx status code
+func (o *DeleteFileForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete file forbidden response has a 4xx status code
+func (o *DeleteFileForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this delete file forbidden response has a 5xx status code
+func (o *DeleteFileForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete file forbidden response a status code equal to that given
+func (o *DeleteFileForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
 func (o *DeleteFileForbidden) Error() string {
 	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileForbidden  %+v", 403, o.Payload)
 }
+
+func (o *DeleteFileForbidden) String() string {
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileForbidden  %+v", 403, o.Payload)
+}
+
 func (o *DeleteFileForbidden) GetPayload() *DeleteFileForbiddenBody {
 	return o.Payload
 }
@@ -122,7 +184,8 @@ func NewDeleteFileNotFound() *DeleteFileNotFound {
 	return &DeleteFileNotFound{}
 }
 
-/* DeleteFileNotFound describes a response with status code 404, with default header values.
+/*
+DeleteFileNotFound describes a response with status code 404, with default header values.
 
 Request failed. `file_name` does not exist.
 */
@@ -130,9 +193,39 @@ type DeleteFileNotFound struct {
 	Payload *DeleteFileNotFoundBody
 }
 
+// IsSuccess returns true when this delete file not found response has a 2xx status code
+func (o *DeleteFileNotFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete file not found response has a 3xx status code
+func (o *DeleteFileNotFound) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete file not found response has a 4xx status code
+func (o *DeleteFileNotFound) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this delete file not found response has a 5xx status code
+func (o *DeleteFileNotFound) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete file not found response a status code equal to that given
+func (o *DeleteFileNotFound) IsCode(code int) bool {
+	return code == 404
+}
+
 func (o *DeleteFileNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileNotFound  %+v", 404, o.Payload)
 }
+
+func (o *DeleteFileNotFound) String() string {
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileNotFound  %+v", 404, o.Payload)
+}
+
 func (o *DeleteFileNotFound) GetPayload() *DeleteFileNotFoundBody {
 	return o.Payload
 }
@@ -154,7 +247,8 @@ func NewDeleteFileInternalServerError() *DeleteFileInternalServerError {
 	return &DeleteFileInternalServerError{}
 }
 
-/* DeleteFileInternalServerError describes a response with status code 500, with default header values.
+/*
+DeleteFileInternalServerError describes a response with status code 500, with default header values.
 
 Request failed. Internal server error.
 */
@@ -162,9 +256,39 @@ type DeleteFileInternalServerError struct {
 	Payload *DeleteFileInternalServerErrorBody
 }
 
+// IsSuccess returns true when this delete file internal server error response has a 2xx status code
+func (o *DeleteFileInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete file internal server error response has a 3xx status code
+func (o *DeleteFileInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete file internal server error response has a 4xx status code
+func (o *DeleteFileInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this delete file internal server error response has a 5xx status code
+func (o *DeleteFileInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this delete file internal server error response a status code equal to that given
+func (o *DeleteFileInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
 func (o *DeleteFileInternalServerError) Error() string {
 	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileInternalServerError  %+v", 500, o.Payload)
 }
+
+func (o *DeleteFileInternalServerError) String() string {
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileInternalServerError  %+v", 500, o.Payload)
+}
+
 func (o *DeleteFileInternalServerError) GetPayload() *DeleteFileInternalServerErrorBody {
 	return o.Payload
 }
@@ -181,7 +305,8 @@ func (o *DeleteFileInternalServerError) readResponse(response runtime.ClientResp
 	return nil
 }
 
-/*DeleteFileForbiddenBody delete file forbidden body
+/*
+DeleteFileForbiddenBody delete file forbidden body
 swagger:model DeleteFileForbiddenBody
 */
 type DeleteFileForbiddenBody struct {
@@ -218,7 +343,8 @@ func (o *DeleteFileForbiddenBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*DeleteFileInternalServerErrorBody delete file internal server error body
+/*
+DeleteFileInternalServerErrorBody delete file internal server error body
 swagger:model DeleteFileInternalServerErrorBody
 */
 type DeleteFileInternalServerErrorBody struct {
@@ -255,7 +381,8 @@ func (o *DeleteFileInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*DeleteFileNotFoundBody delete file not found body
+/*
+DeleteFileNotFoundBody delete file not found body
 swagger:model DeleteFileNotFoundBody
 */
 type DeleteFileNotFoundBody struct {
@@ -292,7 +419,8 @@ func (o *DeleteFileNotFoundBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*DeleteFileOKBody delete file o k body
+/*
+DeleteFileOKBody delete file o k body
 swagger:model DeleteFileOKBody
 */
 type DeleteFileOKBody struct {
@@ -440,7 +568,8 @@ func (o *DeleteFileOKBody) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*DeleteFileOKBodyDeletedAnon delete file o k body deleted anon
+/*
+DeleteFileOKBodyDeletedAnon delete file o k body deleted anon
 swagger:model DeleteFileOKBodyDeletedAnon
 */
 type DeleteFileOKBodyDeletedAnon struct {
@@ -477,7 +606,8 @@ func (o *DeleteFileOKBodyDeletedAnon) UnmarshalBinary(b []byte) error {
 	return nil
 }
 
-/*DeleteFileOKBodyFailedAnon delete file o k body failed anon
+/*
+DeleteFileOKBodyFailedAnon delete file o k body failed anon
 swagger:model DeleteFileOKBodyFailedAnon
 */
 type DeleteFileOKBodyFailedAnon struct {
