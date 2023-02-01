@@ -20,9 +20,9 @@ const deleteDesc = `
 Delete a workflow.
 
 The ` + "``delete``" + ` command removes workflow run(s) from the database. Note that
-the workspace will always be deleted, even when ` + "``--include-workspace``" + ` is
-not specified. Note also that you can remove all past runs of a workflow by
-specifying ` + "``--include-all-runs``" + ` flag.
+the workspace and any open session attached to it will always be deleted,
+even when ` + "``--include-workspace``" + ` is not specified. Note also that you can
+remove all past runs of a workflow by specifying ` + "``--include-all-runs``" + ` flag.
 
 Example:
 
