@@ -1,6 +1,6 @@
 /*
 This file is part of REANA.
-Copyright (C) 2022 CERN.
+Copyright (C) 2022, 2023 CERN.
 
 REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
@@ -23,7 +23,7 @@ import (
 const duDesc = `
 Get workspace disk usage.
 
-The ` + "``du``" + ` command allows to chech the disk usage of given workspace.
+The ` + "``du``" + ` command allows to check the disk usage of given workspace.
 
 Examples:
 
