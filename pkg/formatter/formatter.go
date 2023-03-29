@@ -1,6 +1,6 @@
 /*
 This file is part of REANA.
-Copyright (C) 2022 CERN.
+Copyright (C) 2022, 2023 CERN.
 
 REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
@@ -12,6 +12,7 @@ package formatter
 import (
 	"fmt"
 	"reanahub/reana-client-go/pkg/validator"
+	"strconv"
 	"strings"
 
 	"github.com/go-gota/gota/dataframe"
@@ -77,13 +78,52 @@ func SortDataFrame(
 	df dataframe.DataFrame,
 	sortColumn string,
 	reverse bool,
+	readableToRaw map[string]int64,
+	humanReadable bool,
 ) (dataframe.DataFrame, error) {
 	sortColumn = strings.ToLower(sortColumn)
 	if !slices.Contains(df.Names(), sortColumn) {
 		return df, fmt.Errorf("column '%s' does not exist", sortColumn)
 	}
 
-	return df.Arrange(dataframe.Order{Colname: sortColumn, Reverse: reverse}), nil
+	if sortColumn == "run_number" {
+		runNumbers := df.Col("run_number").Records()
+
+		//Convert run_number string into integers and put those in a new
+		// temporary dataframe column, which will be used for sorting.
+		var sortableRunNumber []int
+		for _, v := range runNumbers {
+			parts := strings.Split(v, ".")
+			major, _ := strconv.Atoi(parts[0])
+			var minor int
+			if len(parts) > 1 {
+				minor, _ = strconv.Atoi(parts[1])
+			}
+			sortableVersion := major*1000 + minor
+			sortableRunNumber = append(sortableRunNumber, sortableVersion)
+		}
+
+		// Sort dataframe using sortable "sortable_run_number" column
+		df = df.Mutate(series.New(sortableRunNumber, series.Int, "sortable_run_number"))
+		sortColumn = "sortable_run_number"
+	}
+
+	if sortColumn == "size" && humanReadable {
+		var sortableSize []int
+		for _, v := range df.Col("size").Records() {
+			sortableSize = append(sortableSize, int(readableToRaw[v]))
+		}
+		df = df.Mutate(series.New(sortableSize, series.Int, "sortable_size"))
+		sortColumn = "sortable_size"
+	}
+
+	sortedDF := df.Arrange(dataframe.Order{Colname: sortColumn, Reverse: reverse})
+	if sortColumn == "sortable_run_number" || sortColumn == "sortable_size" {
+		// Remove temporary column used for sorting
+		sortedDF = sortedDF.Drop(sortColumn)
+	}
+
+	return sortedDF, nil
 }
 
 // DataFrameToStringData converts a given dataFrame to a 2D slice of strings.

@@ -1,6 +1,6 @@
 /*
 This file is part of REANA.
-Copyright (C) 2022 CERN.
+Copyright (C) 2022, 2023 CERN.
 
 REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
@@ -226,6 +226,7 @@ func displayListPayload(
 	jsonOutput, humanReadable bool,
 ) error {
 	var df dataframe.DataFrame
+	readableToRaw := make(map[string]int64)
 	for _, col := range header {
 		colSeries := buildListSeries(col, humanReadable)
 		for _, workflow := range p.Items {
@@ -240,6 +241,7 @@ func displayListPayload(
 			case "size":
 				if humanReadable {
 					value = workflow.Size.HumanReadable
+					readableToRaw[value.(string)] = workflow.Size.Raw
 				} else {
 					value = int(workflow.Size.Raw)
 				}
@@ -285,7 +287,7 @@ func displayListPayload(
 		df = df.CBind(dataframe.New(colSeries))
 	}
 
-	df, err := formatter.SortDataFrame(df, sortColumn, true)
+	df, err := formatter.SortDataFrame(df, sortColumn, true, readableToRaw, humanReadable)
 	if err != nil {
 		cmd.PrintErrf("Warning: sort operation was aborted, %s\n", err)
 	}

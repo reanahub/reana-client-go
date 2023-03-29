@@ -1,6 +1,6 @@
 /*
 This file is part of REANA.
-Copyright (C) 2022 CERN.
+Copyright (C) 2022, 2023 CERN.
 
 REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
@@ -180,16 +180,21 @@ func TestFormatDataFrame(t *testing.T) {
 func TestSortDataFrame(t *testing.T) {
 	tests := map[string]struct {
 		df         dataframe.DataFrame
+		expected   dataframe.DataFrame
 		sortColumn string
 		reverse    bool
+		readToRaw  map[string]int64
+		humanRead  bool
 		wantError  bool
 	}{
 		"sort ascending": {
 			df:         dataframe.New(series.New([]string{"b", "a", "c"}, series.String, "col1")),
+			expected:   dataframe.New(series.New([]string{"a", "b", "c"}, series.String, "col1")),
 			sortColumn: "col1",
 		},
 		"sort descending": {
 			df:         dataframe.New(series.New([]string{"b", "a", "c"}, series.String, "col1")),
+			expected:   dataframe.New(series.New([]string{"c", "b", "a"}, series.String, "col1")),
 			sortColumn: "col1",
 			reverse:    true,
 		},
@@ -198,15 +203,54 @@ func TestSortDataFrame(t *testing.T) {
 				series.New([]string{"b", "a", "c"}, series.String, "col1"),
 				series.New([]int{2, 1, 3}, series.Int, "col2"),
 			),
+			expected:   dataframe.New(series.New([]int{1, 2, 3}, series.Int, "col2")),
 			sortColumn: "col2",
 		},
 		"sort float": {
 			df:         dataframe.New(series.New([]float64{2.0, 1.0, 3.0}, series.Float, "col1")),
+			expected:   dataframe.New(series.New([]float64{1.0, 2.0, 3.0}, series.Float, "col1")),
 			sortColumn: "col1",
 		},
-		"lowercase sort columns": {
-			df:         dataframe.New(series.New([]string{"b", "a", "c"}, series.String, "col1")),
-			sortColumn: "col1",
+		"sort run_numbers": {
+			df: dataframe.New(
+				series.New(
+					[]string{"1", "2.2", "10", "9.1", "1.15", "2.10"},
+					series.String,
+					"run_number",
+				),
+			),
+			expected: dataframe.New(
+				series.New(
+					[]string{"1", "1.15", "2.2", "2.10", "9.1", "10"},
+					series.String,
+					"run_number",
+				),
+			),
+			sortColumn: "run_number",
+		},
+		"sort size human_readable": {
+			df: dataframe.New(
+				series.New(
+					[]string{"255 KiB", "1.92 MiB", "192 KiB", "1.1 GiB"},
+					series.String,
+					"size",
+				),
+			),
+			expected: dataframe.New(
+				series.New(
+					[]string{"192 KiB", "255 KiB", "1.92 MiB", "1.1 GiB"},
+					series.String,
+					"size",
+				),
+			),
+			sortColumn: "size",
+			readToRaw: map[string]int64{
+				"255 KiB":  261120,
+				"1.92 MiB": 2013265,
+				"192 KiB":  196608,
+				"1.1 GiB":  1181116006,
+			},
+			humanRead: true,
 		},
 		"non-existent column": {
 			df:         dataframe.New(series.New([]string{"b", "a", "c"}, series.String, "col1")),
@@ -216,7 +260,13 @@ func TestSortDataFrame(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			df, err := SortDataFrame(test.df, test.sortColumn, test.reverse)
+			df, err := SortDataFrame(
+				test.df,
+				test.sortColumn,
+				test.reverse,
+				test.readToRaw,
+				test.humanRead,
+			)
 			if test.wantError {
 				if err == nil {
 					t.Errorf("Expected error, got '%s'", err.Error())
@@ -227,18 +277,9 @@ func TestSortDataFrame(t *testing.T) {
 				}
 
 				col := df.Col(test.sortColumn)
-				for i := 0; i < col.Len()-1; i++ {
-					if test.reverse {
-						if col.Elem(i + 1).Greater(col.Elem(i)) {
-							t.Errorf("Expected column '%s' to be sorted in descending order, got %v",
-								test.sortColumn, col.Records())
-						}
-					} else {
-						if col.Elem(i + 1).Less(col.Elem(i)) {
-							t.Errorf("Expected column '%s' to be sorted in ascending order, got %v",
-								test.sortColumn, col.Records())
-						}
-					}
+				expectedCol := test.expected.Col(test.sortColumn)
+				if !reflect.DeepEqual(col, expectedCol) {
+					t.Errorf("The given dataframe and the expected one do not match!")
 				}
 			}
 		})
