@@ -56,7 +56,7 @@ func (o *GetWorkflowDiskUsageReader) ReadResponse(response runtime.ClientRespons
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/workflows/{workflow_id_or_name}/disk_usage] get_workflow_disk_usage", response, response.Code())
 	}
 }
 
@@ -97,6 +97,11 @@ func (o *GetWorkflowDiskUsageOK) IsServerError() bool {
 // IsCode returns true when this get workflow disk usage o k response a status code equal to that given
 func (o *GetWorkflowDiskUsageOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the get workflow disk usage o k response
+func (o *GetWorkflowDiskUsageOK) Code() int {
+	return 200
 }
 
 func (o *GetWorkflowDiskUsageOK) Error() string {
@@ -162,6 +167,11 @@ func (o *GetWorkflowDiskUsageBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the get workflow disk usage bad request response
+func (o *GetWorkflowDiskUsageBadRequest) Code() int {
+	return 400
+}
+
 func (o *GetWorkflowDiskUsageBadRequest) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageBadRequest  %+v", 400, o.Payload)
 }
@@ -223,6 +233,11 @@ func (o *GetWorkflowDiskUsageForbidden) IsServerError() bool {
 // IsCode returns true when this get workflow disk usage forbidden response a status code equal to that given
 func (o *GetWorkflowDiskUsageForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the get workflow disk usage forbidden response
+func (o *GetWorkflowDiskUsageForbidden) Code() int {
+	return 403
 }
 
 func (o *GetWorkflowDiskUsageForbidden) Error() string {
@@ -288,6 +303,11 @@ func (o *GetWorkflowDiskUsageNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the get workflow disk usage not found response
+func (o *GetWorkflowDiskUsageNotFound) Code() int {
+	return 404
+}
+
 func (o *GetWorkflowDiskUsageNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageNotFound  %+v", 404, o.Payload)
 }
@@ -349,6 +369,11 @@ func (o *GetWorkflowDiskUsageInternalServerError) IsServerError() bool {
 // IsCode returns true when this get workflow disk usage internal server error response a status code equal to that given
 func (o *GetWorkflowDiskUsageInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the get workflow disk usage internal server error response
+func (o *GetWorkflowDiskUsageInternalServerError) Code() int {
+	return 500
 }
 
 func (o *GetWorkflowDiskUsageInternalServerError) Error() string {
@@ -646,6 +671,11 @@ func (o *GetWorkflowDiskUsageOKBody) contextValidateDiskUsageInfo(ctx context.Co
 	for i := 0; i < len(o.DiskUsageInfo); i++ {
 
 		if o.DiskUsageInfo[i] != nil {
+
+			if swag.IsZero(o.DiskUsageInfo[i]) { // not required
+				return nil
+			}
+
 			if err := o.DiskUsageInfo[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("getWorkflowDiskUsageOK" + "." + "disk_usage_info" + "." + strconv.Itoa(i))
@@ -742,6 +772,11 @@ func (o *GetWorkflowDiskUsageOKBodyDiskUsageInfoItems0) ContextValidate(ctx cont
 func (o *GetWorkflowDiskUsageOKBodyDiskUsageInfoItems0) contextValidateSize(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Size != nil {
+
+		if swag.IsZero(o.Size) { // not required
+			return nil
+		}
+
 		if err := o.Size.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("size")

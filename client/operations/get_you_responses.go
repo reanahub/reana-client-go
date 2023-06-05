@@ -49,7 +49,7 @@ func (o *GetYouReader) ReadResponse(response runtime.ClientResponse, consumer ru
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/you] get_you", response, response.Code())
 	}
 }
 
@@ -90,6 +90,11 @@ func (o *GetYouOK) IsServerError() bool {
 // IsCode returns true when this get you o k response a status code equal to that given
 func (o *GetYouOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the get you o k response
+func (o *GetYouOK) Code() int {
+	return 200
 }
 
 func (o *GetYouOK) Error() string {
@@ -155,6 +160,11 @@ func (o *GetYouUnauthorized) IsCode(code int) bool {
 	return code == 401
 }
 
+// Code gets the status code for the get you unauthorized response
+func (o *GetYouUnauthorized) Code() int {
+	return 401
+}
+
 func (o *GetYouUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /api/you][%d] getYouUnauthorized  %+v", 401, o.Payload)
 }
@@ -218,6 +228,11 @@ func (o *GetYouForbidden) IsCode(code int) bool {
 	return code == 403
 }
 
+// Code gets the status code for the get you forbidden response
+func (o *GetYouForbidden) Code() int {
+	return 403
+}
+
 func (o *GetYouForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/you][%d] getYouForbidden  %+v", 403, o.Payload)
 }
@@ -279,6 +294,11 @@ func (o *GetYouInternalServerError) IsServerError() bool {
 // IsCode returns true when this get you internal server error response a status code equal to that given
 func (o *GetYouInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the get you internal server error response
+func (o *GetYouInternalServerError) Code() int {
+	return 500
 }
 
 func (o *GetYouInternalServerError) Error() string {
@@ -477,6 +497,11 @@ func (o *GetYouOKBody) ContextValidate(ctx context.Context, formats strfmt.Regis
 func (o *GetYouOKBody) contextValidateQuota(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Quota != nil {
+
+		if swag.IsZero(o.Quota) { // not required
+			return nil
+		}
+
 		if err := o.Quota.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getYouOK" + "." + "quota")
@@ -493,6 +518,11 @@ func (o *GetYouOKBody) contextValidateQuota(ctx context.Context, formats strfmt.
 func (o *GetYouOKBody) contextValidateReanaToken(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.ReanaToken != nil {
+
+		if swag.IsZero(o.ReanaToken) { // not required
+			return nil
+		}
+
 		if err := o.ReanaToken.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getYouOK" + "." + "reana_token")
@@ -614,6 +644,11 @@ func (o *GetYouOKBodyQuota) ContextValidate(ctx context.Context, formats strfmt.
 func (o *GetYouOKBodyQuota) contextValidateCPU(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.CPU != nil {
+
+		if swag.IsZero(o.CPU) { // not required
+			return nil
+		}
+
 		if err := o.CPU.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "cpu")
@@ -630,6 +665,11 @@ func (o *GetYouOKBodyQuota) contextValidateCPU(ctx context.Context, formats strf
 func (o *GetYouOKBodyQuota) contextValidateDisk(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Disk != nil {
+
+		if swag.IsZero(o.Disk) { // not required
+			return nil
+		}
+
 		if err := o.Disk.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "disk")
@@ -754,6 +794,11 @@ func (o *GetYouOKBodyQuotaCPU) ContextValidate(ctx context.Context, formats strf
 func (o *GetYouOKBodyQuotaCPU) contextValidateLimit(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Limit != nil {
+
+		if swag.IsZero(o.Limit) { // not required
+			return nil
+		}
+
 		if err := o.Limit.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "cpu" + "." + "limit")
@@ -770,6 +815,11 @@ func (o *GetYouOKBodyQuotaCPU) contextValidateLimit(ctx context.Context, formats
 func (o *GetYouOKBodyQuotaCPU) contextValidateUsage(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Usage != nil {
+
+		if swag.IsZero(o.Usage) { // not required
+			return nil
+		}
+
 		if err := o.Usage.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "cpu" + "." + "usage")
@@ -976,6 +1026,11 @@ func (o *GetYouOKBodyQuotaDisk) ContextValidate(ctx context.Context, formats str
 func (o *GetYouOKBodyQuotaDisk) contextValidateLimit(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Limit != nil {
+
+		if swag.IsZero(o.Limit) { // not required
+			return nil
+		}
+
 		if err := o.Limit.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "disk" + "." + "limit")
@@ -992,6 +1047,11 @@ func (o *GetYouOKBodyQuotaDisk) contextValidateLimit(ctx context.Context, format
 func (o *GetYouOKBodyQuotaDisk) contextValidateUsage(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Usage != nil {
+
+		if swag.IsZero(o.Usage) { // not required
+			return nil
+		}
+
 		if err := o.Usage.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "disk" + "." + "usage")

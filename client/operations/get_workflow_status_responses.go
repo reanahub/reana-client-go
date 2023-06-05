@@ -55,7 +55,7 @@ func (o *GetWorkflowStatusReader) ReadResponse(response runtime.ClientResponse, 
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/workflows/{workflow_id_or_name}/status] get_workflow_status", response, response.Code())
 	}
 }
 
@@ -96,6 +96,11 @@ func (o *GetWorkflowStatusOK) IsServerError() bool {
 // IsCode returns true when this get workflow status o k response a status code equal to that given
 func (o *GetWorkflowStatusOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the get workflow status o k response
+func (o *GetWorkflowStatusOK) Code() int {
+	return 200
 }
 
 func (o *GetWorkflowStatusOK) Error() string {
@@ -161,6 +166,11 @@ func (o *GetWorkflowStatusBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the get workflow status bad request response
+func (o *GetWorkflowStatusBadRequest) Code() int {
+	return 400
+}
+
 func (o *GetWorkflowStatusBadRequest) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusBadRequest  %+v", 400, o.Payload)
 }
@@ -222,6 +232,11 @@ func (o *GetWorkflowStatusForbidden) IsServerError() bool {
 // IsCode returns true when this get workflow status forbidden response a status code equal to that given
 func (o *GetWorkflowStatusForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the get workflow status forbidden response
+func (o *GetWorkflowStatusForbidden) Code() int {
+	return 403
 }
 
 func (o *GetWorkflowStatusForbidden) Error() string {
@@ -287,6 +302,11 @@ func (o *GetWorkflowStatusNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the get workflow status not found response
+func (o *GetWorkflowStatusNotFound) Code() int {
+	return 404
+}
+
 func (o *GetWorkflowStatusNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusNotFound  %+v", 404, o.Payload)
 }
@@ -348,6 +368,11 @@ func (o *GetWorkflowStatusInternalServerError) IsServerError() bool {
 // IsCode returns true when this get workflow status internal server error response a status code equal to that given
 func (o *GetWorkflowStatusInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the get workflow status internal server error response
+func (o *GetWorkflowStatusInternalServerError) Code() int {
+	return 500
 }
 
 func (o *GetWorkflowStatusInternalServerError) Error() string {
@@ -604,6 +629,11 @@ func (o *GetWorkflowStatusOKBody) ContextValidate(ctx context.Context, formats s
 func (o *GetWorkflowStatusOKBody) contextValidateProgress(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Progress != nil {
+
+		if swag.IsZero(o.Progress) { // not required
+			return nil
+		}
+
 		if err := o.Progress.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress")
@@ -797,6 +827,11 @@ func (o *GetWorkflowStatusOKBodyProgress) ContextValidate(ctx context.Context, f
 func (o *GetWorkflowStatusOKBodyProgress) contextValidateFailed(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Failed != nil {
+
+		if swag.IsZero(o.Failed) { // not required
+			return nil
+		}
+
 		if err := o.Failed.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "failed")
@@ -813,6 +848,11 @@ func (o *GetWorkflowStatusOKBodyProgress) contextValidateFailed(ctx context.Cont
 func (o *GetWorkflowStatusOKBodyProgress) contextValidateFinished(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Finished != nil {
+
+		if swag.IsZero(o.Finished) { // not required
+			return nil
+		}
+
 		if err := o.Finished.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "finished")
@@ -829,6 +869,11 @@ func (o *GetWorkflowStatusOKBodyProgress) contextValidateFinished(ctx context.Co
 func (o *GetWorkflowStatusOKBodyProgress) contextValidateRunning(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Running != nil {
+
+		if swag.IsZero(o.Running) { // not required
+			return nil
+		}
+
 		if err := o.Running.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "running")
@@ -845,6 +890,11 @@ func (o *GetWorkflowStatusOKBodyProgress) contextValidateRunning(ctx context.Con
 func (o *GetWorkflowStatusOKBodyProgress) contextValidateTotal(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Total != nil {
+
+		if swag.IsZero(o.Total) { // not required
+			return nil
+		}
+
 		if err := o.Total.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "total")

@@ -29,12 +29,12 @@ func (o *GitlabOauthReader) ReadResponse(response runtime.ClientResponse, consum
 			return nil, err
 		}
 		return result, nil
-	case 201:
-		result := NewGitlabOauthCreated()
+	case 302:
+		result := NewGitlabOauthFound()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
-		return result, nil
+		return nil, result
 	case 403:
 		result := NewGitlabOauthForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -48,7 +48,7 @@ func (o *GitlabOauthReader) ReadResponse(response runtime.ClientResponse, consum
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/gitlab] gitlab_oauth", response, response.Code())
 	}
 }
 
@@ -91,6 +91,11 @@ func (o *GitlabOauthOK) IsCode(code int) bool {
 	return code == 200
 }
 
+// Code gets the status code for the gitlab oauth o k response
+func (o *GitlabOauthOK) Code() int {
+	return 200
+}
+
 func (o *GitlabOauthOK) Error() string {
 	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthOK  %+v", 200, o.Payload)
 }
@@ -115,65 +120,58 @@ func (o *GitlabOauthOK) readResponse(response runtime.ClientResponse, consumer r
 	return nil
 }
 
-// NewGitlabOauthCreated creates a GitlabOauthCreated with default headers values
-func NewGitlabOauthCreated() *GitlabOauthCreated {
-	return &GitlabOauthCreated{}
+// NewGitlabOauthFound creates a GitlabOauthFound with default headers values
+func NewGitlabOauthFound() *GitlabOauthFound {
+	return &GitlabOauthFound{}
 }
 
 /*
-GitlabOauthCreated describes a response with status code 201, with default header values.
+GitlabOauthFound describes a response with status code 302, with default header values.
 
 Authorization succeeded. GitLab secret created.
 */
-type GitlabOauthCreated struct {
-	Payload *GitlabOauthCreatedBody
+type GitlabOauthFound struct {
 }
 
-// IsSuccess returns true when this gitlab oauth created response has a 2xx status code
-func (o *GitlabOauthCreated) IsSuccess() bool {
+// IsSuccess returns true when this gitlab oauth found response has a 2xx status code
+func (o *GitlabOauthFound) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this gitlab oauth found response has a 3xx status code
+func (o *GitlabOauthFound) IsRedirect() bool {
 	return true
 }
 
-// IsRedirect returns true when this gitlab oauth created response has a 3xx status code
-func (o *GitlabOauthCreated) IsRedirect() bool {
+// IsClientError returns true when this gitlab oauth found response has a 4xx status code
+func (o *GitlabOauthFound) IsClientError() bool {
 	return false
 }
 
-// IsClientError returns true when this gitlab oauth created response has a 4xx status code
-func (o *GitlabOauthCreated) IsClientError() bool {
+// IsServerError returns true when this gitlab oauth found response has a 5xx status code
+func (o *GitlabOauthFound) IsServerError() bool {
 	return false
 }
 
-// IsServerError returns true when this gitlab oauth created response has a 5xx status code
-func (o *GitlabOauthCreated) IsServerError() bool {
-	return false
+// IsCode returns true when this gitlab oauth found response a status code equal to that given
+func (o *GitlabOauthFound) IsCode(code int) bool {
+	return code == 302
 }
 
-// IsCode returns true when this gitlab oauth created response a status code equal to that given
-func (o *GitlabOauthCreated) IsCode(code int) bool {
-	return code == 201
+// Code gets the status code for the gitlab oauth found response
+func (o *GitlabOauthFound) Code() int {
+	return 302
 }
 
-func (o *GitlabOauthCreated) Error() string {
-	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthCreated  %+v", 201, o.Payload)
+func (o *GitlabOauthFound) Error() string {
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthFound ", 302)
 }
 
-func (o *GitlabOauthCreated) String() string {
-	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthCreated  %+v", 201, o.Payload)
+func (o *GitlabOauthFound) String() string {
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthFound ", 302)
 }
 
-func (o *GitlabOauthCreated) GetPayload() *GitlabOauthCreatedBody {
-	return o.Payload
-}
-
-func (o *GitlabOauthCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
-
-	o.Payload = new(GitlabOauthCreatedBody)
-
-	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
-		return err
-	}
+func (o *GitlabOauthFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
@@ -215,6 +213,11 @@ func (o *GitlabOauthForbidden) IsServerError() bool {
 // IsCode returns true when this gitlab oauth forbidden response a status code equal to that given
 func (o *GitlabOauthForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the gitlab oauth forbidden response
+func (o *GitlabOauthForbidden) Code() int {
+	return 403
 }
 
 func (o *GitlabOauthForbidden) Error() string {
@@ -280,6 +283,11 @@ func (o *GitlabOauthInternalServerError) IsCode(code int) bool {
 	return code == 500
 }
 
+// Code gets the status code for the gitlab oauth internal server error response
+func (o *GitlabOauthInternalServerError) Code() int {
+	return 500
+}
+
 func (o *GitlabOauthInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthInternalServerError  %+v", 500, o.Payload)
 }
@@ -301,47 +309,6 @@ func (o *GitlabOauthInternalServerError) readResponse(response runtime.ClientRes
 		return err
 	}
 
-	return nil
-}
-
-/*
-GitlabOauthCreatedBody gitlab oauth created body
-swagger:model GitlabOauthCreatedBody
-*/
-type GitlabOauthCreatedBody struct {
-
-	// message
-	Message string `json:"message,omitempty"`
-
-	// status
-	Status string `json:"status,omitempty"`
-}
-
-// Validate validates this gitlab oauth created body
-func (o *GitlabOauthCreatedBody) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// ContextValidate validates this gitlab oauth created body based on context it is used
-func (o *GitlabOauthCreatedBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (o *GitlabOauthCreatedBody) MarshalBinary() ([]byte, error) {
-	if o == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(o)
-}
-
-// UnmarshalBinary interface implementation
-func (o *GitlabOauthCreatedBody) UnmarshalBinary(b []byte) error {
-	var res GitlabOauthCreatedBody
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*o = res
 	return nil
 }
 
@@ -429,9 +396,6 @@ type GitlabOauthOKBody struct {
 
 	// message
 	Message string `json:"message,omitempty"`
-
-	// status
-	Status string `json:"status,omitempty"`
 }
 
 // Validate validates this gitlab oauth o k body

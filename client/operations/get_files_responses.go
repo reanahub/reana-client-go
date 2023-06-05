@@ -56,7 +56,7 @@ func (o *GetFilesReader) ReadResponse(response runtime.ClientResponse, consumer 
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/workflows/{workflow_id_or_name}/workspace] get_files", response, response.Code())
 	}
 }
 
@@ -97,6 +97,11 @@ func (o *GetFilesOK) IsServerError() bool {
 // IsCode returns true when this get files o k response a status code equal to that given
 func (o *GetFilesOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the get files o k response
+func (o *GetFilesOK) Code() int {
+	return 200
 }
 
 func (o *GetFilesOK) Error() string {
@@ -162,6 +167,11 @@ func (o *GetFilesBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the get files bad request response
+func (o *GetFilesBadRequest) Code() int {
+	return 400
+}
+
 func (o *GetFilesBadRequest) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesBadRequest  %+v", 400, o.Payload)
 }
@@ -223,6 +233,11 @@ func (o *GetFilesForbidden) IsServerError() bool {
 // IsCode returns true when this get files forbidden response a status code equal to that given
 func (o *GetFilesForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the get files forbidden response
+func (o *GetFilesForbidden) Code() int {
+	return 403
 }
 
 func (o *GetFilesForbidden) Error() string {
@@ -288,6 +303,11 @@ func (o *GetFilesNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the get files not found response
+func (o *GetFilesNotFound) Code() int {
+	return 404
+}
+
 func (o *GetFilesNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesNotFound  %+v", 404, o.Payload)
 }
@@ -349,6 +369,11 @@ func (o *GetFilesInternalServerError) IsServerError() bool {
 // IsCode returns true when this get files internal server error response a status code equal to that given
 func (o *GetFilesInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the get files internal server error response
+func (o *GetFilesInternalServerError) Code() int {
+	return 500
 }
 
 func (o *GetFilesInternalServerError) Error() string {
@@ -599,6 +624,11 @@ func (o *GetFilesOKBody) contextValidateItems(ctx context.Context, formats strfm
 	for i := 0; i < len(o.Items); i++ {
 
 		if o.Items[i] != nil {
+
+			if swag.IsZero(o.Items[i]) { // not required
+				return nil
+			}
+
 			if err := o.Items[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("getFilesOK" + "." + "items" + "." + strconv.Itoa(i))
@@ -698,6 +728,11 @@ func (o *GetFilesOKBodyItemsItems0) ContextValidate(ctx context.Context, formats
 func (o *GetFilesOKBodyItemsItems0) contextValidateSize(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Size != nil {
+
+		if swag.IsZero(o.Size) { // not required
+			return nil
+		}
+
 		if err := o.Size.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("size")

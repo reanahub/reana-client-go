@@ -36,7 +36,7 @@ func (o *GetConfigReader) ReadResponse(response runtime.ClientResponse, consumer
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/config] get_config", response, response.Code())
 	}
 }
 
@@ -77,6 +77,11 @@ func (o *GetConfigOK) IsServerError() bool {
 // IsCode returns true when this get config o k response a status code equal to that given
 func (o *GetConfigOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the get config o k response
+func (o *GetConfigOK) Code() int {
+	return 200
 }
 
 func (o *GetConfigOK) Error() string {
@@ -138,6 +143,11 @@ func (o *GetConfigInternalServerError) IsServerError() bool {
 // IsCode returns true when this get config internal server error response a status code equal to that given
 func (o *GetConfigInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the get config internal server error response
+func (o *GetConfigInternalServerError) Code() int {
+	return 500
 }
 
 func (o *GetConfigInternalServerError) Error() string {

@@ -37,7 +37,7 @@ func (o *InfoReader) ReadResponse(response runtime.ClientResponse, consumer runt
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/info] info", response, response.Code())
 	}
 }
 
@@ -78,6 +78,11 @@ func (o *InfoOK) IsServerError() bool {
 // IsCode returns true when this info o k response a status code equal to that given
 func (o *InfoOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the info o k response
+func (o *InfoOK) Code() int {
+	return 200
 }
 
 func (o *InfoOK) Error() string {
@@ -141,6 +146,11 @@ func (o *InfoInternalServerError) IsServerError() bool {
 // IsCode returns true when this info internal server error response a status code equal to that given
 func (o *InfoInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the info internal server error response
+func (o *InfoInternalServerError) Code() int {
+	return 500
 }
 
 func (o *InfoInternalServerError) Error() string {
@@ -226,6 +236,9 @@ type InfoOKBody struct {
 	// kubernetes max memory limit
 	KubernetesMaxMemoryLimit *InfoOKBodyKubernetesMaxMemoryLimit `json:"kubernetes_max_memory_limit,omitempty"`
 
+	// maximum interactive session inactivity period
+	MaximumInteractiveSessionInactivityPeriod *InfoOKBodyMaximumInteractiveSessionInactivityPeriod `json:"maximum_interactive_session_inactivity_period,omitempty"`
+
 	// maximum kubernetes jobs timeout
 	MaximumKubernetesJobsTimeout *InfoOKBodyMaximumKubernetesJobsTimeout `json:"maximum_kubernetes_jobs_timeout,omitempty"`
 
@@ -257,6 +270,10 @@ func (o *InfoOKBody) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := o.validateKubernetesMaxMemoryLimit(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateMaximumInteractiveSessionInactivityPeriod(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -373,6 +390,25 @@ func (o *InfoOKBody) validateKubernetesMaxMemoryLimit(formats strfmt.Registry) e
 	return nil
 }
 
+func (o *InfoOKBody) validateMaximumInteractiveSessionInactivityPeriod(formats strfmt.Registry) error {
+	if swag.IsZero(o.MaximumInteractiveSessionInactivityPeriod) { // not required
+		return nil
+	}
+
+	if o.MaximumInteractiveSessionInactivityPeriod != nil {
+		if err := o.MaximumInteractiveSessionInactivityPeriod.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "maximum_interactive_session_inactivity_period")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "maximum_interactive_session_inactivity_period")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (o *InfoOKBody) validateMaximumKubernetesJobsTimeout(formats strfmt.Registry) error {
 	if swag.IsZero(o.MaximumKubernetesJobsTimeout) { // not required
 		return nil
@@ -454,6 +490,10 @@ func (o *InfoOKBody) ContextValidate(ctx context.Context, formats strfmt.Registr
 		res = append(res, err)
 	}
 
+	if err := o.contextValidateMaximumInteractiveSessionInactivityPeriod(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := o.contextValidateMaximumKubernetesJobsTimeout(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -475,6 +515,11 @@ func (o *InfoOKBody) ContextValidate(ctx context.Context, formats strfmt.Registr
 func (o *InfoOKBody) contextValidateComputeBackends(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.ComputeBackends != nil {
+
+		if swag.IsZero(o.ComputeBackends) { // not required
+			return nil
+		}
+
 		if err := o.ComputeBackends.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("infoOK" + "." + "compute_backends")
@@ -491,6 +536,11 @@ func (o *InfoOKBody) contextValidateComputeBackends(ctx context.Context, formats
 func (o *InfoOKBody) contextValidateDefaultKubernetesJobsTimeout(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.DefaultKubernetesJobsTimeout != nil {
+
+		if swag.IsZero(o.DefaultKubernetesJobsTimeout) { // not required
+			return nil
+		}
+
 		if err := o.DefaultKubernetesJobsTimeout.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("infoOK" + "." + "default_kubernetes_jobs_timeout")
@@ -507,6 +557,11 @@ func (o *InfoOKBody) contextValidateDefaultKubernetesJobsTimeout(ctx context.Con
 func (o *InfoOKBody) contextValidateDefaultKubernetesMemoryLimit(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.DefaultKubernetesMemoryLimit != nil {
+
+		if swag.IsZero(o.DefaultKubernetesMemoryLimit) { // not required
+			return nil
+		}
+
 		if err := o.DefaultKubernetesMemoryLimit.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("infoOK" + "." + "default_kubernetes_memory_limit")
@@ -523,6 +578,11 @@ func (o *InfoOKBody) contextValidateDefaultKubernetesMemoryLimit(ctx context.Con
 func (o *InfoOKBody) contextValidateDefaultWorkspace(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.DefaultWorkspace != nil {
+
+		if swag.IsZero(o.DefaultWorkspace) { // not required
+			return nil
+		}
+
 		if err := o.DefaultWorkspace.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("infoOK" + "." + "default_workspace")
@@ -539,6 +599,11 @@ func (o *InfoOKBody) contextValidateDefaultWorkspace(ctx context.Context, format
 func (o *InfoOKBody) contextValidateKubernetesMaxMemoryLimit(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.KubernetesMaxMemoryLimit != nil {
+
+		if swag.IsZero(o.KubernetesMaxMemoryLimit) { // not required
+			return nil
+		}
+
 		if err := o.KubernetesMaxMemoryLimit.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("infoOK" + "." + "kubernetes_max_memory_limit")
@@ -552,9 +617,35 @@ func (o *InfoOKBody) contextValidateKubernetesMaxMemoryLimit(ctx context.Context
 	return nil
 }
 
+func (o *InfoOKBody) contextValidateMaximumInteractiveSessionInactivityPeriod(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.MaximumInteractiveSessionInactivityPeriod != nil {
+
+		if swag.IsZero(o.MaximumInteractiveSessionInactivityPeriod) { // not required
+			return nil
+		}
+
+		if err := o.MaximumInteractiveSessionInactivityPeriod.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "maximum_interactive_session_inactivity_period")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "maximum_interactive_session_inactivity_period")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (o *InfoOKBody) contextValidateMaximumKubernetesJobsTimeout(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.MaximumKubernetesJobsTimeout != nil {
+
+		if swag.IsZero(o.MaximumKubernetesJobsTimeout) { // not required
+			return nil
+		}
+
 		if err := o.MaximumKubernetesJobsTimeout.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("infoOK" + "." + "maximum_kubernetes_jobs_timeout")
@@ -571,6 +662,11 @@ func (o *InfoOKBody) contextValidateMaximumKubernetesJobsTimeout(ctx context.Con
 func (o *InfoOKBody) contextValidateMaximumWorkspaceRetentionPeriod(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.MaximumWorkspaceRetentionPeriod != nil {
+
+		if swag.IsZero(o.MaximumWorkspaceRetentionPeriod) { // not required
+			return nil
+		}
+
 		if err := o.MaximumWorkspaceRetentionPeriod.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("infoOK" + "." + "maximum_workspace_retention_period")
@@ -587,6 +683,11 @@ func (o *InfoOKBody) contextValidateMaximumWorkspaceRetentionPeriod(ctx context.
 func (o *InfoOKBody) contextValidateWorkspacesAvailable(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.WorkspacesAvailable != nil {
+
+		if swag.IsZero(o.WorkspacesAvailable) { // not required
+			return nil
+		}
+
 		if err := o.WorkspacesAvailable.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("infoOK" + "." + "workspaces_available")
@@ -816,6 +917,47 @@ func (o *InfoOKBodyKubernetesMaxMemoryLimit) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *InfoOKBodyKubernetesMaxMemoryLimit) UnmarshalBinary(b []byte) error {
 	var res InfoOKBodyKubernetesMaxMemoryLimit
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyMaximumInteractiveSessionInactivityPeriod info o k body maximum interactive session inactivity period
+swagger:model InfoOKBodyMaximumInteractiveSessionInactivityPeriod
+*/
+type InfoOKBodyMaximumInteractiveSessionInactivityPeriod struct {
+
+	// title
+	Title string `json:"title,omitempty"`
+
+	// value
+	Value *string `json:"value,omitempty"`
+}
+
+// Validate validates this info o k body maximum interactive session inactivity period
+func (o *InfoOKBodyMaximumInteractiveSessionInactivityPeriod) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body maximum interactive session inactivity period based on context it is used
+func (o *InfoOKBodyMaximumInteractiveSessionInactivityPeriod) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyMaximumInteractiveSessionInactivityPeriod) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyMaximumInteractiveSessionInactivityPeriod) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyMaximumInteractiveSessionInactivityPeriod
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

@@ -48,7 +48,7 @@ func (o *DeleteSecretsReader) ReadResponse(response runtime.ClientResponse, cons
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[DELETE /api/secrets/] delete_secrets", response, response.Code())
 	}
 }
 
@@ -89,6 +89,11 @@ func (o *DeleteSecretsOK) IsServerError() bool {
 // IsCode returns true when this delete secrets o k response a status code equal to that given
 func (o *DeleteSecretsOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the delete secrets o k response
+func (o *DeleteSecretsOK) Code() int {
+	return 200
 }
 
 func (o *DeleteSecretsOK) Error() string {
@@ -150,6 +155,11 @@ func (o *DeleteSecretsForbidden) IsServerError() bool {
 // IsCode returns true when this delete secrets forbidden response a status code equal to that given
 func (o *DeleteSecretsForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the delete secrets forbidden response
+func (o *DeleteSecretsForbidden) Code() int {
+	return 403
 }
 
 func (o *DeleteSecretsForbidden) Error() string {
@@ -215,6 +225,11 @@ func (o *DeleteSecretsNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the delete secrets not found response
+func (o *DeleteSecretsNotFound) Code() int {
+	return 404
+}
+
 func (o *DeleteSecretsNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsNotFound  %+v", 404, o.Payload)
 }
@@ -274,6 +289,11 @@ func (o *DeleteSecretsInternalServerError) IsServerError() bool {
 // IsCode returns true when this delete secrets internal server error response a status code equal to that given
 func (o *DeleteSecretsInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the delete secrets internal server error response
+func (o *DeleteSecretsInternalServerError) Code() int {
+	return 500
 }
 
 func (o *DeleteSecretsInternalServerError) Error() string {

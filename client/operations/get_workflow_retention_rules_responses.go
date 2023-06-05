@@ -56,7 +56,7 @@ func (o *GetWorkflowRetentionRulesReader) ReadResponse(response runtime.ClientRe
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/workflows/{workflow_id_or_name}/retention_rules] get_workflow_retention_rules", response, response.Code())
 	}
 }
 
@@ -97,6 +97,11 @@ func (o *GetWorkflowRetentionRulesOK) IsServerError() bool {
 // IsCode returns true when this get workflow retention rules o k response a status code equal to that given
 func (o *GetWorkflowRetentionRulesOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the get workflow retention rules o k response
+func (o *GetWorkflowRetentionRulesOK) Code() int {
+	return 200
 }
 
 func (o *GetWorkflowRetentionRulesOK) Error() string {
@@ -162,6 +167,11 @@ func (o *GetWorkflowRetentionRulesUnauthorized) IsCode(code int) bool {
 	return code == 401
 }
 
+// Code gets the status code for the get workflow retention rules unauthorized response
+func (o *GetWorkflowRetentionRulesUnauthorized) Code() int {
+	return 401
+}
+
 func (o *GetWorkflowRetentionRulesUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesUnauthorized  %+v", 401, o.Payload)
 }
@@ -223,6 +233,11 @@ func (o *GetWorkflowRetentionRulesForbidden) IsServerError() bool {
 // IsCode returns true when this get workflow retention rules forbidden response a status code equal to that given
 func (o *GetWorkflowRetentionRulesForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the get workflow retention rules forbidden response
+func (o *GetWorkflowRetentionRulesForbidden) Code() int {
+	return 403
 }
 
 func (o *GetWorkflowRetentionRulesForbidden) Error() string {
@@ -288,6 +303,11 @@ func (o *GetWorkflowRetentionRulesNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the get workflow retention rules not found response
+func (o *GetWorkflowRetentionRulesNotFound) Code() int {
+	return 404
+}
+
 func (o *GetWorkflowRetentionRulesNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesNotFound  %+v", 404, o.Payload)
 }
@@ -349,6 +369,11 @@ func (o *GetWorkflowRetentionRulesInternalServerError) IsServerError() bool {
 // IsCode returns true when this get workflow retention rules internal server error response a status code equal to that given
 func (o *GetWorkflowRetentionRulesInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the get workflow retention rules internal server error response
+func (o *GetWorkflowRetentionRulesInternalServerError) Code() int {
+	return 500
 }
 
 func (o *GetWorkflowRetentionRulesInternalServerError) Error() string {
@@ -564,6 +589,11 @@ func (o *GetWorkflowRetentionRulesOKBody) contextValidateRetentionRules(ctx cont
 	for i := 0; i < len(o.RetentionRules); i++ {
 
 		if o.RetentionRules[i] != nil {
+
+			if swag.IsZero(o.RetentionRules[i]) { // not required
+				return nil
+			}
+
 			if err := o.RetentionRules[i].ContextValidate(ctx, formats); err != nil {
 				if ve, ok := err.(*errors.Validation); ok {
 					return ve.ValidateName("getWorkflowRetentionRulesOK" + "." + "retention_rules" + "." + strconv.Itoa(i))

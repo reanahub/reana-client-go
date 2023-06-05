@@ -44,7 +44,7 @@ func (o *CreateGitlabWebhookReader) ReadResponse(response runtime.ClientResponse
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[POST /api/gitlab/webhook] create_gitlab_webhook", response, response.Code())
 	}
 }
 
@@ -84,6 +84,11 @@ func (o *CreateGitlabWebhookCreated) IsServerError() bool {
 // IsCode returns true when this create gitlab webhook created response a status code equal to that given
 func (o *CreateGitlabWebhookCreated) IsCode(code int) bool {
 	return code == 201
+}
+
+// Code gets the status code for the create gitlab webhook created response
+func (o *CreateGitlabWebhookCreated) Code() int {
+	return 201
 }
 
 func (o *CreateGitlabWebhookCreated) Error() string {
@@ -136,6 +141,11 @@ func (o *CreateGitlabWebhookForbidden) IsServerError() bool {
 // IsCode returns true when this create gitlab webhook forbidden response a status code equal to that given
 func (o *CreateGitlabWebhookForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the create gitlab webhook forbidden response
+func (o *CreateGitlabWebhookForbidden) Code() int {
+	return 403
 }
 
 func (o *CreateGitlabWebhookForbidden) Error() string {
@@ -199,6 +209,11 @@ func (o *CreateGitlabWebhookInternalServerError) IsServerError() bool {
 // IsCode returns true when this create gitlab webhook internal server error response a status code equal to that given
 func (o *CreateGitlabWebhookInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the create gitlab webhook internal server error response
+func (o *CreateGitlabWebhookInternalServerError) Code() int {
+	return 500
 }
 
 func (o *CreateGitlabWebhookInternalServerError) Error() string {

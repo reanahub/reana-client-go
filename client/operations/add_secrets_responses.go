@@ -51,7 +51,7 @@ func (o *AddSecretsReader) ReadResponse(response runtime.ClientResponse, consume
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[POST /api/secrets/] add_secrets", response, response.Code())
 	}
 }
 
@@ -92,6 +92,11 @@ func (o *AddSecretsCreated) IsServerError() bool {
 // IsCode returns true when this add secrets created response a status code equal to that given
 func (o *AddSecretsCreated) IsCode(code int) bool {
 	return code == 201
+}
+
+// Code gets the status code for the add secrets created response
+func (o *AddSecretsCreated) Code() int {
+	return 201
 }
 
 func (o *AddSecretsCreated) Error() string {
@@ -157,6 +162,11 @@ func (o *AddSecretsForbidden) IsCode(code int) bool {
 	return code == 403
 }
 
+// Code gets the status code for the add secrets forbidden response
+func (o *AddSecretsForbidden) Code() int {
+	return 403
+}
+
 func (o *AddSecretsForbidden) Error() string {
 	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsForbidden  %+v", 403, o.Payload)
 }
@@ -220,6 +230,11 @@ func (o *AddSecretsConflict) IsCode(code int) bool {
 	return code == 409
 }
 
+// Code gets the status code for the add secrets conflict response
+func (o *AddSecretsConflict) Code() int {
+	return 409
+}
+
 func (o *AddSecretsConflict) Error() string {
 	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsConflict  %+v", 409, o.Payload)
 }
@@ -281,6 +296,11 @@ func (o *AddSecretsInternalServerError) IsServerError() bool {
 // IsCode returns true when this add secrets internal server error response a status code equal to that given
 func (o *AddSecretsInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the add secrets internal server error response
+func (o *AddSecretsInternalServerError) Code() int {
+	return 500
 }
 
 func (o *AddSecretsInternalServerError) Error() string {

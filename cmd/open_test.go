@@ -17,6 +17,7 @@ import (
 )
 
 var openPathTemplate = "/api/workflows/%s/open/%s"
+var infoURL = "/api/info"
 
 func TestOpen(t *testing.T) {
 	workflowName := "my_workflow"
@@ -26,6 +27,47 @@ func TestOpen(t *testing.T) {
 				fmt.Sprintf(openPathTemplate, workflowName, config.InteractiveSessionTypes[0]): {
 					statusCode:   http.StatusOK,
 					responseFile: "open_jupyter.json",
+				},
+				infoURL: {
+					statusCode:   http.StatusOK,
+					responseFile: "info_big.json",
+				},
+			},
+			args: []string{"-w", workflowName},
+			expected: []string{
+				"Interactive session opened successfully",
+				"/test/jupyter?token=1234",
+				"It could take several minutes to start the interactive session.",
+				"Please note that it will be automatically closed after 7 days of inactivity.",
+			},
+		},
+		"success no autoclosure": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(openPathTemplate, workflowName, config.InteractiveSessionTypes[0]): {
+					statusCode:   http.StatusOK,
+					responseFile: "open_jupyter.json",
+				},
+				infoURL: {
+					statusCode:   http.StatusOK,
+					responseFile: "info_small.json",
+				},
+			},
+			args: []string{"-w", workflowName},
+			expected: []string{
+				"Interactive session opened successfully",
+				"/test/jupyter?token=1234",
+				"It could take several minutes to start the interactive session.",
+			},
+		},
+		"success empty max_inactivity_time": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(openPathTemplate, workflowName, config.InteractiveSessionTypes[0]): {
+					statusCode:   http.StatusOK,
+					responseFile: "open_jupyter.json",
+				},
+				infoURL: {
+					statusCode:   http.StatusOK,
+					responseFile: "info_empty_inactivity_period.json",
 				},
 			},
 			args: []string{"-w", workflowName},
@@ -41,12 +83,17 @@ func TestOpen(t *testing.T) {
 					statusCode:   http.StatusOK,
 					responseFile: "open_jupyter.json",
 				},
+				infoURL: {
+					statusCode:   http.StatusOK,
+					responseFile: "info_big.json",
+				},
 			},
 			args: []string{"-w", workflowName, "-i", "image", "jupyter"},
 			expected: []string{
 				"Interactive session opened successfully",
 				"/test/jupyter?token=1234",
 				"It could take several minutes to start the interactive session.",
+				"Please note that it will be automatically closed after 7 days of inactivity.",
 			},
 		},
 		"invalid session type": {

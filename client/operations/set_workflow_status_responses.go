@@ -66,7 +66,7 @@ func (o *SetWorkflowStatusReader) ReadResponse(response runtime.ClientResponse, 
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[PUT /api/workflows/{workflow_id_or_name}/status] set_workflow_status", response, response.Code())
 	}
 }
 
@@ -107,6 +107,11 @@ func (o *SetWorkflowStatusOK) IsServerError() bool {
 // IsCode returns true when this set workflow status o k response a status code equal to that given
 func (o *SetWorkflowStatusOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the set workflow status o k response
+func (o *SetWorkflowStatusOK) Code() int {
+	return 200
 }
 
 func (o *SetWorkflowStatusOK) Error() string {
@@ -172,6 +177,11 @@ func (o *SetWorkflowStatusBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the set workflow status bad request response
+func (o *SetWorkflowStatusBadRequest) Code() int {
+	return 400
+}
+
 func (o *SetWorkflowStatusBadRequest) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusBadRequest  %+v", 400, o.Payload)
 }
@@ -233,6 +243,11 @@ func (o *SetWorkflowStatusForbidden) IsServerError() bool {
 // IsCode returns true when this set workflow status forbidden response a status code equal to that given
 func (o *SetWorkflowStatusForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the set workflow status forbidden response
+func (o *SetWorkflowStatusForbidden) Code() int {
+	return 403
 }
 
 func (o *SetWorkflowStatusForbidden) Error() string {
@@ -298,6 +313,11 @@ func (o *SetWorkflowStatusNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the set workflow status not found response
+func (o *SetWorkflowStatusNotFound) Code() int {
+	return 404
+}
+
 func (o *SetWorkflowStatusNotFound) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusNotFound  %+v", 404, o.Payload)
 }
@@ -359,6 +379,11 @@ func (o *SetWorkflowStatusConflict) IsServerError() bool {
 // IsCode returns true when this set workflow status conflict response a status code equal to that given
 func (o *SetWorkflowStatusConflict) IsCode(code int) bool {
 	return code == 409
+}
+
+// Code gets the status code for the set workflow status conflict response
+func (o *SetWorkflowStatusConflict) Code() int {
+	return 409
 }
 
 func (o *SetWorkflowStatusConflict) Error() string {
@@ -424,6 +449,11 @@ func (o *SetWorkflowStatusInternalServerError) IsCode(code int) bool {
 	return code == 500
 }
 
+// Code gets the status code for the set workflow status internal server error response
+func (o *SetWorkflowStatusInternalServerError) Code() int {
+	return 500
+}
+
 func (o *SetWorkflowStatusInternalServerError) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusInternalServerError  %+v", 500, o.Payload)
 }
@@ -485,6 +515,11 @@ func (o *SetWorkflowStatusNotImplemented) IsServerError() bool {
 // IsCode returns true when this set workflow status not implemented response a status code equal to that given
 func (o *SetWorkflowStatusNotImplemented) IsCode(code int) bool {
 	return code == 501
+}
+
+// Code gets the status code for the set workflow status not implemented response
+func (o *SetWorkflowStatusNotImplemented) Code() int {
+	return 501
 }
 
 func (o *SetWorkflowStatusNotImplemented) Error() string {

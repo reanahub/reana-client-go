@@ -42,7 +42,7 @@ func (o *GitlabProjectsReader) ReadResponse(response runtime.ClientResponse, con
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/gitlab/projects] gitlab_projects", response, response.Code())
 	}
 }
 
@@ -82,6 +82,11 @@ func (o *GitlabProjectsOK) IsServerError() bool {
 // IsCode returns true when this gitlab projects o k response a status code equal to that given
 func (o *GitlabProjectsOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the gitlab projects o k response
+func (o *GitlabProjectsOK) Code() int {
+	return 200
 }
 
 func (o *GitlabProjectsOK) Error() string {
@@ -134,6 +139,11 @@ func (o *GitlabProjectsForbidden) IsServerError() bool {
 // IsCode returns true when this gitlab projects forbidden response a status code equal to that given
 func (o *GitlabProjectsForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the gitlab projects forbidden response
+func (o *GitlabProjectsForbidden) Code() int {
+	return 403
 }
 
 func (o *GitlabProjectsForbidden) Error() string {
@@ -197,6 +207,11 @@ func (o *GitlabProjectsInternalServerError) IsServerError() bool {
 // IsCode returns true when this gitlab projects internal server error response a status code equal to that given
 func (o *GitlabProjectsInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the gitlab projects internal server error response
+func (o *GitlabProjectsInternalServerError) Code() int {
+	return 500
 }
 
 func (o *GitlabProjectsInternalServerError) Error() string {

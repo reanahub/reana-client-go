@@ -50,7 +50,7 @@ func (o *DeleteGitlabWebhookReader) ReadResponse(response runtime.ClientResponse
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[DELETE /api/gitlab/webhook] delete_gitlab_webhook", response, response.Code())
 	}
 }
 
@@ -90,6 +90,11 @@ func (o *DeleteGitlabWebhookNoContent) IsServerError() bool {
 // IsCode returns true when this delete gitlab webhook no content response a status code equal to that given
 func (o *DeleteGitlabWebhookNoContent) IsCode(code int) bool {
 	return code == 204
+}
+
+// Code gets the status code for the delete gitlab webhook no content response
+func (o *DeleteGitlabWebhookNoContent) Code() int {
+	return 204
 }
 
 func (o *DeleteGitlabWebhookNoContent) Error() string {
@@ -142,6 +147,11 @@ func (o *DeleteGitlabWebhookForbidden) IsServerError() bool {
 // IsCode returns true when this delete gitlab webhook forbidden response a status code equal to that given
 func (o *DeleteGitlabWebhookForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the delete gitlab webhook forbidden response
+func (o *DeleteGitlabWebhookForbidden) Code() int {
+	return 403
 }
 
 func (o *DeleteGitlabWebhookForbidden) Error() string {
@@ -206,6 +216,11 @@ func (o *DeleteGitlabWebhookNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the delete gitlab webhook not found response
+func (o *DeleteGitlabWebhookNotFound) Code() int {
+	return 404
+}
+
 func (o *DeleteGitlabWebhookNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookNotFound ", 404)
 }
@@ -256,6 +271,11 @@ func (o *DeleteGitlabWebhookInternalServerError) IsServerError() bool {
 // IsCode returns true when this delete gitlab webhook internal server error response a status code equal to that given
 func (o *DeleteGitlabWebhookInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the delete gitlab webhook internal server error response
+func (o *DeleteGitlabWebhookInternalServerError) Code() int {
+	return 500
 }
 
 func (o *DeleteGitlabWebhookInternalServerError) Error() string {

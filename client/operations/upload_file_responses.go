@@ -54,7 +54,7 @@ func (o *UploadFileReader) ReadResponse(response runtime.ClientResponse, consume
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[POST /api/workflows/{workflow_id_or_name}/workspace] upload_file", response, response.Code())
 	}
 }
 
@@ -95,6 +95,11 @@ func (o *UploadFileOK) IsServerError() bool {
 // IsCode returns true when this upload file o k response a status code equal to that given
 func (o *UploadFileOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the upload file o k response
+func (o *UploadFileOK) Code() int {
+	return 200
 }
 
 func (o *UploadFileOK) Error() string {
@@ -160,6 +165,11 @@ func (o *UploadFileBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the upload file bad request response
+func (o *UploadFileBadRequest) Code() int {
+	return 400
+}
+
 func (o *UploadFileBadRequest) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileBadRequest  %+v", 400, o.Payload)
 }
@@ -221,6 +231,11 @@ func (o *UploadFileForbidden) IsServerError() bool {
 // IsCode returns true when this upload file forbidden response a status code equal to that given
 func (o *UploadFileForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the upload file forbidden response
+func (o *UploadFileForbidden) Code() int {
+	return 403
 }
 
 func (o *UploadFileForbidden) Error() string {
@@ -286,6 +301,11 @@ func (o *UploadFileNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the upload file not found response
+func (o *UploadFileNotFound) Code() int {
+	return 404
+}
+
 func (o *UploadFileNotFound) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileNotFound  %+v", 404, o.Payload)
 }
@@ -347,6 +367,11 @@ func (o *UploadFileInternalServerError) IsServerError() bool {
 // IsCode returns true when this upload file internal server error response a status code equal to that given
 func (o *UploadFileInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the upload file internal server error response
+func (o *UploadFileInternalServerError) Code() int {
+	return 500
 }
 
 func (o *UploadFileInternalServerError) Error() string {

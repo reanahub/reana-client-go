@@ -55,7 +55,7 @@ func (o *DownloadFileReader) ReadResponse(response runtime.ClientResponse, consu
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}] download_file", response, response.Code())
 	}
 }
 
@@ -102,6 +102,11 @@ func (o *DownloadFileOK) IsServerError() bool {
 // IsCode returns true when this download file o k response a status code equal to that given
 func (o *DownloadFileOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the download file o k response
+func (o *DownloadFileOK) Code() int {
+	return 200
 }
 
 func (o *DownloadFileOK) Error() string {
@@ -178,6 +183,11 @@ func (o *DownloadFileBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the download file bad request response
+func (o *DownloadFileBadRequest) Code() int {
+	return 400
+}
+
 func (o *DownloadFileBadRequest) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileBadRequest ", 400)
 }
@@ -228,6 +238,11 @@ func (o *DownloadFileForbidden) IsServerError() bool {
 // IsCode returns true when this download file forbidden response a status code equal to that given
 func (o *DownloadFileForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the download file forbidden response
+func (o *DownloadFileForbidden) Code() int {
+	return 403
 }
 
 func (o *DownloadFileForbidden) Error() string {
@@ -293,6 +308,11 @@ func (o *DownloadFileNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the download file not found response
+func (o *DownloadFileNotFound) Code() int {
+	return 404
+}
+
 func (o *DownloadFileNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileNotFound  %+v", 404, o.Payload)
 }
@@ -354,6 +374,11 @@ func (o *DownloadFileInternalServerError) IsServerError() bool {
 // IsCode returns true when this download file internal server error response a status code equal to that given
 func (o *DownloadFileInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the download file internal server error response
+func (o *DownloadFileInternalServerError) Code() int {
+	return 500
 }
 
 func (o *DownloadFileInternalServerError) Error() string {

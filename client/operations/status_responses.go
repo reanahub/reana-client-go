@@ -37,7 +37,7 @@ func (o *StatusReader) ReadResponse(response runtime.ClientResponse, consumer ru
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/status] status", response, response.Code())
 	}
 }
 
@@ -78,6 +78,11 @@ func (o *StatusOK) IsServerError() bool {
 // IsCode returns true when this status o k response a status code equal to that given
 func (o *StatusOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the status o k response
+func (o *StatusOK) Code() int {
+	return 200
 }
 
 func (o *StatusOK) Error() string {
@@ -141,6 +146,11 @@ func (o *StatusInternalServerError) IsServerError() bool {
 // IsCode returns true when this status internal server error response a status code equal to that given
 func (o *StatusInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the status internal server error response
+func (o *StatusInternalServerError) Code() int {
+	return 500
 }
 
 func (o *StatusInternalServerError) Error() string {
@@ -355,6 +365,11 @@ func (o *StatusOKBody) ContextValidate(ctx context.Context, formats strfmt.Regis
 func (o *StatusOKBody) contextValidateJob(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Job != nil {
+
+		if swag.IsZero(o.Job) { // not required
+			return nil
+		}
+
 		if err := o.Job.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("statusOK" + "." + "job")
@@ -371,6 +386,11 @@ func (o *StatusOKBody) contextValidateJob(ctx context.Context, formats strfmt.Re
 func (o *StatusOKBody) contextValidateNode(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Node != nil {
+
+		if swag.IsZero(o.Node) { // not required
+			return nil
+		}
+
 		if err := o.Node.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("statusOK" + "." + "node")
@@ -387,6 +407,11 @@ func (o *StatusOKBody) contextValidateNode(ctx context.Context, formats strfmt.R
 func (o *StatusOKBody) contextValidateSession(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Session != nil {
+
+		if swag.IsZero(o.Session) { // not required
+			return nil
+		}
+
 		if err := o.Session.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("statusOK" + "." + "session")
@@ -403,6 +428,11 @@ func (o *StatusOKBody) contextValidateSession(ctx context.Context, formats strfm
 func (o *StatusOKBody) contextValidateWorkflow(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Workflow != nil {
+
+		if swag.IsZero(o.Workflow) { // not required
+			return nil
+		}
+
 		if err := o.Workflow.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("statusOK" + "." + "workflow")

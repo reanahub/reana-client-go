@@ -60,7 +60,7 @@ func (o *MoveFilesReader) ReadResponse(response runtime.ClientResponse, consumer
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[PUT /api/workflows/move_files/{workflow_id_or_name}] move_files", response, response.Code())
 	}
 }
 
@@ -101,6 +101,11 @@ func (o *MoveFilesOK) IsServerError() bool {
 // IsCode returns true when this move files o k response a status code equal to that given
 func (o *MoveFilesOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the move files o k response
+func (o *MoveFilesOK) Code() int {
+	return 200
 }
 
 func (o *MoveFilesOK) Error() string {
@@ -166,6 +171,11 @@ func (o *MoveFilesBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the move files bad request response
+func (o *MoveFilesBadRequest) Code() int {
+	return 400
+}
+
 func (o *MoveFilesBadRequest) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesBadRequest  %+v", 400, o.Payload)
 }
@@ -227,6 +237,11 @@ func (o *MoveFilesForbidden) IsServerError() bool {
 // IsCode returns true when this move files forbidden response a status code equal to that given
 func (o *MoveFilesForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the move files forbidden response
+func (o *MoveFilesForbidden) Code() int {
+	return 403
 }
 
 func (o *MoveFilesForbidden) Error() string {
@@ -292,6 +307,11 @@ func (o *MoveFilesNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the move files not found response
+func (o *MoveFilesNotFound) Code() int {
+	return 404
+}
+
 func (o *MoveFilesNotFound) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesNotFound  %+v", 404, o.Payload)
 }
@@ -355,6 +375,11 @@ func (o *MoveFilesConflict) IsCode(code int) bool {
 	return code == 409
 }
 
+// Code gets the status code for the move files conflict response
+func (o *MoveFilesConflict) Code() int {
+	return 409
+}
+
 func (o *MoveFilesConflict) Error() string {
 	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesConflict  %+v", 409, o.Payload)
 }
@@ -416,6 +441,11 @@ func (o *MoveFilesInternalServerError) IsServerError() bool {
 // IsCode returns true when this move files internal server error response a status code equal to that given
 func (o *MoveFilesInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the move files internal server error response
+func (o *MoveFilesInternalServerError) Code() int {
+	return 500
 }
 
 func (o *MoveFilesInternalServerError) Error() string {

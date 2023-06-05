@@ -54,7 +54,7 @@ func (o *CloseInteractiveSessionReader) ReadResponse(response runtime.ClientResp
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[POST /api/workflows/{workflow_id_or_name}/close/] close_interactive_session", response, response.Code())
 	}
 }
 
@@ -95,6 +95,11 @@ func (o *CloseInteractiveSessionOK) IsServerError() bool {
 // IsCode returns true when this close interactive session o k response a status code equal to that given
 func (o *CloseInteractiveSessionOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the close interactive session o k response
+func (o *CloseInteractiveSessionOK) Code() int {
+	return 200
 }
 
 func (o *CloseInteractiveSessionOK) Error() string {
@@ -160,6 +165,11 @@ func (o *CloseInteractiveSessionBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the close interactive session bad request response
+func (o *CloseInteractiveSessionBadRequest) Code() int {
+	return 400
+}
+
 func (o *CloseInteractiveSessionBadRequest) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionBadRequest  %+v", 400, o.Payload)
 }
@@ -221,6 +231,11 @@ func (o *CloseInteractiveSessionForbidden) IsServerError() bool {
 // IsCode returns true when this close interactive session forbidden response a status code equal to that given
 func (o *CloseInteractiveSessionForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the close interactive session forbidden response
+func (o *CloseInteractiveSessionForbidden) Code() int {
+	return 403
 }
 
 func (o *CloseInteractiveSessionForbidden) Error() string {
@@ -286,6 +301,11 @@ func (o *CloseInteractiveSessionNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the close interactive session not found response
+func (o *CloseInteractiveSessionNotFound) Code() int {
+	return 404
+}
+
 func (o *CloseInteractiveSessionNotFound) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionNotFound  %+v", 404, o.Payload)
 }
@@ -347,6 +367,11 @@ func (o *CloseInteractiveSessionInternalServerError) IsServerError() bool {
 // IsCode returns true when this close interactive session internal server error response a status code equal to that given
 func (o *CloseInteractiveSessionInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the close interactive session internal server error response
+func (o *CloseInteractiveSessionInternalServerError) Code() int {
+	return 500
 }
 
 func (o *CloseInteractiveSessionInternalServerError) Error() string {

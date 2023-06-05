@@ -49,7 +49,7 @@ func (o *GetWorkflowSpecificationReader) ReadResponse(response runtime.ClientRes
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/workflows/{workflow_id_or_name}/specification] get_workflow_specification", response, response.Code())
 	}
 }
 
@@ -90,6 +90,11 @@ func (o *GetWorkflowSpecificationOK) IsServerError() bool {
 // IsCode returns true when this get workflow specification o k response a status code equal to that given
 func (o *GetWorkflowSpecificationOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the get workflow specification o k response
+func (o *GetWorkflowSpecificationOK) Code() int {
+	return 200
 }
 
 func (o *GetWorkflowSpecificationOK) Error() string {
@@ -155,6 +160,11 @@ func (o *GetWorkflowSpecificationForbidden) IsCode(code int) bool {
 	return code == 403
 }
 
+// Code gets the status code for the get workflow specification forbidden response
+func (o *GetWorkflowSpecificationForbidden) Code() int {
+	return 403
+}
+
 func (o *GetWorkflowSpecificationForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationForbidden  %+v", 403, o.Payload)
 }
@@ -218,6 +228,11 @@ func (o *GetWorkflowSpecificationNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the get workflow specification not found response
+func (o *GetWorkflowSpecificationNotFound) Code() int {
+	return 404
+}
+
 func (o *GetWorkflowSpecificationNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationNotFound  %+v", 404, o.Payload)
 }
@@ -279,6 +294,11 @@ func (o *GetWorkflowSpecificationInternalServerError) IsServerError() bool {
 // IsCode returns true when this get workflow specification internal server error response a status code equal to that given
 func (o *GetWorkflowSpecificationInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the get workflow specification internal server error response
+func (o *GetWorkflowSpecificationInternalServerError) Code() int {
+	return 500
 }
 
 func (o *GetWorkflowSpecificationInternalServerError) Error() string {
@@ -482,6 +502,11 @@ func (o *GetWorkflowSpecificationOKBody) ContextValidate(ctx context.Context, fo
 func (o *GetWorkflowSpecificationOKBody) contextValidateSpecification(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Specification != nil {
+
+		if swag.IsZero(o.Specification) { // not required
+			return nil
+		}
+
 		if err := o.Specification.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getWorkflowSpecificationOK" + "." + "specification")
@@ -636,6 +661,11 @@ func (o *GetWorkflowSpecificationOKBodySpecification) ContextValidate(ctx contex
 func (o *GetWorkflowSpecificationOKBodySpecification) contextValidateInputs(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Inputs != nil {
+
+		if swag.IsZero(o.Inputs) { // not required
+			return nil
+		}
+
 		if err := o.Inputs.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "inputs")
@@ -652,6 +682,11 @@ func (o *GetWorkflowSpecificationOKBodySpecification) contextValidateInputs(ctx 
 func (o *GetWorkflowSpecificationOKBodySpecification) contextValidateOutputs(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Outputs != nil {
+
+		if swag.IsZero(o.Outputs) { // not required
+			return nil
+		}
+
 		if err := o.Outputs.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "outputs")
@@ -668,6 +703,11 @@ func (o *GetWorkflowSpecificationOKBodySpecification) contextValidateOutputs(ctx
 func (o *GetWorkflowSpecificationOKBodySpecification) contextValidateWorkflow(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Workflow != nil {
+
+		if swag.IsZero(o.Workflow) { // not required
+			return nil
+		}
+
 		if err := o.Workflow.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "workflow")
@@ -853,6 +893,11 @@ func (o *GetWorkflowSpecificationOKBodySpecificationWorkflow) ContextValidate(ct
 func (o *GetWorkflowSpecificationOKBodySpecificationWorkflow) contextValidateSpecification(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.Specification != nil {
+
+		if swag.IsZero(o.Specification) { // not required
+			return nil
+		}
+
 		if err := o.Specification.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "workflow" + "." + "specification")

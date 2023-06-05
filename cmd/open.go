@@ -9,6 +9,7 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
+	"fmt"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/pkg/config"
@@ -114,5 +115,22 @@ func (o *openOptions) run(cmd *cobra.Command) error {
 	sessionURI := formatter.FormatSessionURI(o.serverURL, openResp.Payload.Path, o.token)
 	displayer.PrintColorable(sessionURI+"\n", cmd.OutOrStdout(), text.FgGreen)
 	cmd.Println("It could take several minutes to start the interactive session.")
+
+	infoParams := operations.NewInfoParams()
+	infoParams.SetAccessToken(o.token)
+	infoResp, err := api.Operations.Info(infoParams)
+	if err != nil {
+		return nil
+	}
+	maxInactivityDays := infoResp.Payload.MaximumInteractiveSessionInactivityPeriod
+	if maxInactivityDays != nil && maxInactivityDays.Value != nil {
+		cmd.Println(
+			fmt.Sprintf(
+				"Please note that it will be automatically closed after %s days of inactivity.",
+				*maxInactivityDays.Value,
+			),
+		)
+	}
+
 	return nil
 }

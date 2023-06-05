@@ -44,7 +44,7 @@ func (o *LaunchReader) ReadResponse(response runtime.ClientResponse, consumer ru
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[POST /api/launch] launch", response, response.Code())
 	}
 }
 
@@ -85,6 +85,11 @@ func (o *LaunchOK) IsServerError() bool {
 // IsCode returns true when this launch o k response a status code equal to that given
 func (o *LaunchOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the launch o k response
+func (o *LaunchOK) Code() int {
+	return 200
 }
 
 func (o *LaunchOK) Error() string {
@@ -150,6 +155,11 @@ func (o *LaunchBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the launch bad request response
+func (o *LaunchBadRequest) Code() int {
+	return 400
+}
+
 func (o *LaunchBadRequest) Error() string {
 	return fmt.Sprintf("[POST /api/launch][%d] launchBadRequest  %+v", 400, o.Payload)
 }
@@ -211,6 +221,11 @@ func (o *LaunchInternalServerError) IsServerError() bool {
 // IsCode returns true when this launch internal server error response a status code equal to that given
 func (o *LaunchInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the launch internal server error response
+func (o *LaunchInternalServerError) Code() int {
+	return 500
 }
 
 func (o *LaunchInternalServerError) Error() string {

@@ -66,7 +66,7 @@ func (o *StartWorkflowReader) ReadResponse(response runtime.ClientResponse, cons
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[POST /api/workflows/{workflow_id_or_name}/start] start_workflow", response, response.Code())
 	}
 }
 
@@ -107,6 +107,11 @@ func (o *StartWorkflowOK) IsServerError() bool {
 // IsCode returns true when this start workflow o k response a status code equal to that given
 func (o *StartWorkflowOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the start workflow o k response
+func (o *StartWorkflowOK) Code() int {
+	return 200
 }
 
 func (o *StartWorkflowOK) Error() string {
@@ -172,6 +177,11 @@ func (o *StartWorkflowBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the start workflow bad request response
+func (o *StartWorkflowBadRequest) Code() int {
+	return 400
+}
+
 func (o *StartWorkflowBadRequest) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowBadRequest  %+v", 400, o.Payload)
 }
@@ -233,6 +243,11 @@ func (o *StartWorkflowForbidden) IsServerError() bool {
 // IsCode returns true when this start workflow forbidden response a status code equal to that given
 func (o *StartWorkflowForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the start workflow forbidden response
+func (o *StartWorkflowForbidden) Code() int {
+	return 403
 }
 
 func (o *StartWorkflowForbidden) Error() string {
@@ -298,6 +313,11 @@ func (o *StartWorkflowNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the start workflow not found response
+func (o *StartWorkflowNotFound) Code() int {
+	return 404
+}
+
 func (o *StartWorkflowNotFound) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotFound  %+v", 404, o.Payload)
 }
@@ -359,6 +379,11 @@ func (o *StartWorkflowConflict) IsServerError() bool {
 // IsCode returns true when this start workflow conflict response a status code equal to that given
 func (o *StartWorkflowConflict) IsCode(code int) bool {
 	return code == 409
+}
+
+// Code gets the status code for the start workflow conflict response
+func (o *StartWorkflowConflict) Code() int {
+	return 409
 }
 
 func (o *StartWorkflowConflict) Error() string {
@@ -424,6 +449,11 @@ func (o *StartWorkflowInternalServerError) IsCode(code int) bool {
 	return code == 500
 }
 
+// Code gets the status code for the start workflow internal server error response
+func (o *StartWorkflowInternalServerError) Code() int {
+	return 500
+}
+
 func (o *StartWorkflowInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowInternalServerError  %+v", 500, o.Payload)
 }
@@ -485,6 +515,11 @@ func (o *StartWorkflowNotImplemented) IsServerError() bool {
 // IsCode returns true when this start workflow not implemented response a status code equal to that given
 func (o *StartWorkflowNotImplemented) IsCode(code int) bool {
 	return code == 501
+}
+
+// Code gets the status code for the start workflow not implemented response
+func (o *StartWorkflowNotImplemented) Code() int {
+	return 501
 }
 
 func (o *StartWorkflowNotImplemented) Error() string {

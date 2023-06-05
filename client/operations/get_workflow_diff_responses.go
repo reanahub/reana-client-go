@@ -54,7 +54,7 @@ func (o *GetWorkflowDiffReader) ReadResponse(response runtime.ClientResponse, co
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}] get_workflow_diff", response, response.Code())
 	}
 }
 
@@ -95,6 +95,11 @@ func (o *GetWorkflowDiffOK) IsServerError() bool {
 // IsCode returns true when this get workflow diff o k response a status code equal to that given
 func (o *GetWorkflowDiffOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the get workflow diff o k response
+func (o *GetWorkflowDiffOK) Code() int {
+	return 200
 }
 
 func (o *GetWorkflowDiffOK) Error() string {
@@ -160,6 +165,11 @@ func (o *GetWorkflowDiffBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the get workflow diff bad request response
+func (o *GetWorkflowDiffBadRequest) Code() int {
+	return 400
+}
+
 func (o *GetWorkflowDiffBadRequest) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffBadRequest  %+v", 400, o.Payload)
 }
@@ -221,6 +231,11 @@ func (o *GetWorkflowDiffForbidden) IsServerError() bool {
 // IsCode returns true when this get workflow diff forbidden response a status code equal to that given
 func (o *GetWorkflowDiffForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the get workflow diff forbidden response
+func (o *GetWorkflowDiffForbidden) Code() int {
+	return 403
 }
 
 func (o *GetWorkflowDiffForbidden) Error() string {
@@ -286,6 +301,11 @@ func (o *GetWorkflowDiffNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the get workflow diff not found response
+func (o *GetWorkflowDiffNotFound) Code() int {
+	return 404
+}
+
 func (o *GetWorkflowDiffNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffNotFound  %+v", 404, o.Payload)
 }
@@ -347,6 +367,11 @@ func (o *GetWorkflowDiffInternalServerError) IsServerError() bool {
 // IsCode returns true when this get workflow diff internal server error response a status code equal to that given
 func (o *GetWorkflowDiffInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the get workflow diff internal server error response
+func (o *GetWorkflowDiffInternalServerError) Code() int {
+	return 500
 }
 
 func (o *GetWorkflowDiffInternalServerError) Error() string {

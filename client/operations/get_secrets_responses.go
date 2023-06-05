@@ -45,7 +45,7 @@ func (o *GetSecretsReader) ReadResponse(response runtime.ClientResponse, consume
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/secrets] get_secrets", response, response.Code())
 	}
 }
 
@@ -86,6 +86,11 @@ func (o *GetSecretsOK) IsServerError() bool {
 // IsCode returns true when this get secrets o k response a status code equal to that given
 func (o *GetSecretsOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the get secrets o k response
+func (o *GetSecretsOK) Code() int {
+	return 200
 }
 
 func (o *GetSecretsOK) Error() string {
@@ -149,6 +154,11 @@ func (o *GetSecretsForbidden) IsCode(code int) bool {
 	return code == 403
 }
 
+// Code gets the status code for the get secrets forbidden response
+func (o *GetSecretsForbidden) Code() int {
+	return 403
+}
+
 func (o *GetSecretsForbidden) Error() string {
 	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsForbidden  %+v", 403, o.Payload)
 }
@@ -210,6 +220,11 @@ func (o *GetSecretsInternalServerError) IsServerError() bool {
 // IsCode returns true when this get secrets internal server error response a status code equal to that given
 func (o *GetSecretsInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the get secrets internal server error response
+func (o *GetSecretsInternalServerError) Code() int {
+	return 500
 }
 
 func (o *GetSecretsInternalServerError) Error() string {

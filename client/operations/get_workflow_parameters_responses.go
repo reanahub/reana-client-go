@@ -55,7 +55,7 @@ func (o *GetWorkflowParametersReader) ReadResponse(response runtime.ClientRespon
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/workflows/{workflow_id_or_name}/parameters] get_workflow_parameters", response, response.Code())
 	}
 }
 
@@ -96,6 +96,11 @@ func (o *GetWorkflowParametersOK) IsServerError() bool {
 // IsCode returns true when this get workflow parameters o k response a status code equal to that given
 func (o *GetWorkflowParametersOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the get workflow parameters o k response
+func (o *GetWorkflowParametersOK) Code() int {
+	return 200
 }
 
 func (o *GetWorkflowParametersOK) Error() string {
@@ -161,6 +166,11 @@ func (o *GetWorkflowParametersBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the get workflow parameters bad request response
+func (o *GetWorkflowParametersBadRequest) Code() int {
+	return 400
+}
+
 func (o *GetWorkflowParametersBadRequest) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersBadRequest  %+v", 400, o.Payload)
 }
@@ -222,6 +232,11 @@ func (o *GetWorkflowParametersForbidden) IsServerError() bool {
 // IsCode returns true when this get workflow parameters forbidden response a status code equal to that given
 func (o *GetWorkflowParametersForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the get workflow parameters forbidden response
+func (o *GetWorkflowParametersForbidden) Code() int {
+	return 403
 }
 
 func (o *GetWorkflowParametersForbidden) Error() string {
@@ -287,6 +302,11 @@ func (o *GetWorkflowParametersNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the get workflow parameters not found response
+func (o *GetWorkflowParametersNotFound) Code() int {
+	return 404
+}
+
 func (o *GetWorkflowParametersNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/parameters][%d] getWorkflowParametersNotFound  %+v", 404, o.Payload)
 }
@@ -348,6 +368,11 @@ func (o *GetWorkflowParametersInternalServerError) IsServerError() bool {
 // IsCode returns true when this get workflow parameters internal server error response a status code equal to that given
 func (o *GetWorkflowParametersInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the get workflow parameters internal server error response
+func (o *GetWorkflowParametersInternalServerError) Code() int {
+	return 500
 }
 
 func (o *GetWorkflowParametersInternalServerError) Error() string {

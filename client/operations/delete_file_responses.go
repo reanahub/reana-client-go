@@ -49,7 +49,7 @@ func (o *DeleteFileReader) ReadResponse(response runtime.ClientResponse, consume
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}] delete_file", response, response.Code())
 	}
 }
 
@@ -90,6 +90,11 @@ func (o *DeleteFileOK) IsServerError() bool {
 // IsCode returns true when this delete file o k response a status code equal to that given
 func (o *DeleteFileOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the delete file o k response
+func (o *DeleteFileOK) Code() int {
+	return 200
 }
 
 func (o *DeleteFileOK) Error() string {
@@ -155,6 +160,11 @@ func (o *DeleteFileForbidden) IsCode(code int) bool {
 	return code == 403
 }
 
+// Code gets the status code for the delete file forbidden response
+func (o *DeleteFileForbidden) Code() int {
+	return 403
+}
+
 func (o *DeleteFileForbidden) Error() string {
 	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileForbidden  %+v", 403, o.Payload)
 }
@@ -218,6 +228,11 @@ func (o *DeleteFileNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the delete file not found response
+func (o *DeleteFileNotFound) Code() int {
+	return 404
+}
+
 func (o *DeleteFileNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileNotFound  %+v", 404, o.Payload)
 }
@@ -279,6 +294,11 @@ func (o *DeleteFileInternalServerError) IsServerError() bool {
 // IsCode returns true when this delete file internal server error response a status code equal to that given
 func (o *DeleteFileInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the delete file internal server error response
+func (o *DeleteFileInternalServerError) Code() int {
+	return 500
 }
 
 func (o *DeleteFileInternalServerError) Error() string {

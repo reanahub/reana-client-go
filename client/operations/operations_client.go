@@ -73,7 +73,7 @@ type ClientService interface {
 
 	GitlabConnect(params *GitlabConnectParams, opts ...ClientOption) error
 
-	GitlabOauth(params *GitlabOauthParams, opts ...ClientOption) (*GitlabOauthOK, *GitlabOauthCreated, error)
+	GitlabOauth(params *GitlabOauthParams, opts ...ClientOption) (*GitlabOauthOK, error)
 
 	GitlabProjects(params *GitlabProjectsParams, opts ...ClientOption) (*GitlabProjectsOK, error)
 
@@ -86,6 +86,8 @@ type ClientService interface {
 	OpenInteractiveSession(params *OpenInteractiveSessionParams, opts ...ClientOption) (*OpenInteractiveSessionOK, error)
 
 	Ping(params *PingParams, opts ...ClientOption) (*PingOK, error)
+
+	PruneWorkspace(params *PruneWorkspaceParams, opts ...ClientOption) (*PruneWorkspaceOK, error)
 
 	RequestToken(params *RequestTokenParams, opts ...ClientOption) (*RequestTokenOK, error)
 
@@ -938,7 +940,7 @@ GitlabOauth gets access token from git lab
 
 Authorize REANA on GitLab.
 */
-func (a *Client) GitlabOauth(params *GitlabOauthParams, opts ...ClientOption) (*GitlabOauthOK, *GitlabOauthCreated, error) {
+func (a *Client) GitlabOauth(params *GitlabOauthParams, opts ...ClientOption) (*GitlabOauthOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewGitlabOauthParams()
@@ -947,7 +949,7 @@ func (a *Client) GitlabOauth(params *GitlabOauthParams, opts ...ClientOption) (*
 		ID:                 "gitlab_oauth",
 		Method:             "GET",
 		PathPattern:        "/api/gitlab",
-		ProducesMediaTypes: []string{"application/json"},
+		ProducesMediaTypes: []string{"application/json", "text/html"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
 		Params:             params,
@@ -961,16 +963,15 @@ func (a *Client) GitlabOauth(params *GitlabOauthParams, opts ...ClientOption) (*
 
 	result, err := a.transport.Submit(op)
 	if err != nil {
-		return nil, nil, err
+		return nil, err
 	}
-	switch value := result.(type) {
-	case *GitlabOauthOK:
-		return value, nil, nil
-	case *GitlabOauthCreated:
-		return nil, value, nil
+	success, ok := result.(*GitlabOauthOK)
+	if ok {
+		return success, nil
 	}
+	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for operations: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for gitlab_oauth: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -1211,6 +1212,46 @@ func (a *Client) Ping(params *PingParams, opts ...ClientOption) (*PingOK, error)
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for ping: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+PruneWorkspace prunes the workspace s files
+
+This resource deletes the workspace's files that are neither in the input nor in the output of the workflow definition. This resource is expecting a workflow UUID and some parameters.
+*/
+func (a *Client) PruneWorkspace(params *PruneWorkspaceParams, opts ...ClientOption) (*PruneWorkspaceOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPruneWorkspaceParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "prune_workspace",
+		Method:             "POST",
+		PathPattern:        "/api/workflows/{workflow_id_or_name}/prune",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &PruneWorkspaceReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PruneWorkspaceOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for prune_workspace: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

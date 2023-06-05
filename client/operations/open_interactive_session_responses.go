@@ -54,7 +54,7 @@ func (o *OpenInteractiveSessionReader) ReadResponse(response runtime.ClientRespo
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}] open_interactive_session", response, response.Code())
 	}
 }
 
@@ -95,6 +95,11 @@ func (o *OpenInteractiveSessionOK) IsServerError() bool {
 // IsCode returns true when this open interactive session o k response a status code equal to that given
 func (o *OpenInteractiveSessionOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the open interactive session o k response
+func (o *OpenInteractiveSessionOK) Code() int {
+	return 200
 }
 
 func (o *OpenInteractiveSessionOK) Error() string {
@@ -160,6 +165,11 @@ func (o *OpenInteractiveSessionBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the open interactive session bad request response
+func (o *OpenInteractiveSessionBadRequest) Code() int {
+	return 400
+}
+
 func (o *OpenInteractiveSessionBadRequest) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionBadRequest  %+v", 400, o.Payload)
 }
@@ -221,6 +231,11 @@ func (o *OpenInteractiveSessionForbidden) IsServerError() bool {
 // IsCode returns true when this open interactive session forbidden response a status code equal to that given
 func (o *OpenInteractiveSessionForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the open interactive session forbidden response
+func (o *OpenInteractiveSessionForbidden) Code() int {
+	return 403
 }
 
 func (o *OpenInteractiveSessionForbidden) Error() string {
@@ -286,6 +301,11 @@ func (o *OpenInteractiveSessionNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the open interactive session not found response
+func (o *OpenInteractiveSessionNotFound) Code() int {
+	return 404
+}
+
 func (o *OpenInteractiveSessionNotFound) Error() string {
 	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionNotFound  %+v", 404, o.Payload)
 }
@@ -347,6 +367,11 @@ func (o *OpenInteractiveSessionInternalServerError) IsServerError() bool {
 // IsCode returns true when this open interactive session internal server error response a status code equal to that given
 func (o *OpenInteractiveSessionInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the open interactive session internal server error response
+func (o *OpenInteractiveSessionInternalServerError) Code() int {
+	return 500
 }
 
 func (o *OpenInteractiveSessionInternalServerError) Error() string {

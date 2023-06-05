@@ -22,6 +22,10 @@
     "title": "Maximum allowed memory limit for Kubernetes jobs",
     "value": "1000"
   },
+  "maximum_interactive_session_inactivity_period": {
+    "title": "Maximum inactivity period in days before automatic closure of interactive sessions",
+    "value": "7"
+  },
   "maximum_kubernetes_jobs_timeout": {
     "title": "Maximum timeout for Kubernetes jobs",
     "value": "500"

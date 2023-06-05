@@ -54,7 +54,7 @@ func (o *GetWorkflowLogsReader) ReadResponse(response runtime.ClientResponse, co
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/workflows/{workflow_id_or_name}/logs] get_workflow_logs", response, response.Code())
 	}
 }
 
@@ -95,6 +95,11 @@ func (o *GetWorkflowLogsOK) IsServerError() bool {
 // IsCode returns true when this get workflow logs o k response a status code equal to that given
 func (o *GetWorkflowLogsOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the get workflow logs o k response
+func (o *GetWorkflowLogsOK) Code() int {
+	return 200
 }
 
 func (o *GetWorkflowLogsOK) Error() string {
@@ -160,6 +165,11 @@ func (o *GetWorkflowLogsBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the get workflow logs bad request response
+func (o *GetWorkflowLogsBadRequest) Code() int {
+	return 400
+}
+
 func (o *GetWorkflowLogsBadRequest) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsBadRequest  %+v", 400, o.Payload)
 }
@@ -221,6 +231,11 @@ func (o *GetWorkflowLogsForbidden) IsServerError() bool {
 // IsCode returns true when this get workflow logs forbidden response a status code equal to that given
 func (o *GetWorkflowLogsForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the get workflow logs forbidden response
+func (o *GetWorkflowLogsForbidden) Code() int {
+	return 403
 }
 
 func (o *GetWorkflowLogsForbidden) Error() string {
@@ -286,6 +301,11 @@ func (o *GetWorkflowLogsNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the get workflow logs not found response
+func (o *GetWorkflowLogsNotFound) Code() int {
+	return 404
+}
+
 func (o *GetWorkflowLogsNotFound) Error() string {
 	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsNotFound  %+v", 404, o.Payload)
 }
@@ -347,6 +367,11 @@ func (o *GetWorkflowLogsInternalServerError) IsServerError() bool {
 // IsCode returns true when this get workflow logs internal server error response a status code equal to that given
 func (o *GetWorkflowLogsInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the get workflow logs internal server error response
+func (o *GetWorkflowLogsInternalServerError) Code() int {
+	return 500
 }
 
 func (o *GetWorkflowLogsInternalServerError) Error() string {

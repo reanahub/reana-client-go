@@ -60,7 +60,7 @@ func (o *CreateWorkflowReader) ReadResponse(response runtime.ClientResponse, con
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[POST /api/workflows] create_workflow", response, response.Code())
 	}
 }
 
@@ -101,6 +101,11 @@ func (o *CreateWorkflowCreated) IsServerError() bool {
 // IsCode returns true when this create workflow created response a status code equal to that given
 func (o *CreateWorkflowCreated) IsCode(code int) bool {
 	return code == 201
+}
+
+// Code gets the status code for the create workflow created response
+func (o *CreateWorkflowCreated) Code() int {
+	return 201
 }
 
 func (o *CreateWorkflowCreated) Error() string {
@@ -166,6 +171,11 @@ func (o *CreateWorkflowBadRequest) IsCode(code int) bool {
 	return code == 400
 }
 
+// Code gets the status code for the create workflow bad request response
+func (o *CreateWorkflowBadRequest) Code() int {
+	return 400
+}
+
 func (o *CreateWorkflowBadRequest) Error() string {
 	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowBadRequest  %+v", 400, o.Payload)
 }
@@ -227,6 +237,11 @@ func (o *CreateWorkflowForbidden) IsServerError() bool {
 // IsCode returns true when this create workflow forbidden response a status code equal to that given
 func (o *CreateWorkflowForbidden) IsCode(code int) bool {
 	return code == 403
+}
+
+// Code gets the status code for the create workflow forbidden response
+func (o *CreateWorkflowForbidden) Code() int {
+	return 403
 }
 
 func (o *CreateWorkflowForbidden) Error() string {
@@ -292,6 +307,11 @@ func (o *CreateWorkflowNotFound) IsCode(code int) bool {
 	return code == 404
 }
 
+// Code gets the status code for the create workflow not found response
+func (o *CreateWorkflowNotFound) Code() int {
+	return 404
+}
+
 func (o *CreateWorkflowNotFound) Error() string {
 	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowNotFound  %+v", 404, o.Payload)
 }
@@ -355,6 +375,11 @@ func (o *CreateWorkflowInternalServerError) IsCode(code int) bool {
 	return code == 500
 }
 
+// Code gets the status code for the create workflow internal server error response
+func (o *CreateWorkflowInternalServerError) Code() int {
+	return 500
+}
+
 func (o *CreateWorkflowInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowInternalServerError  %+v", 500, o.Payload)
 }
@@ -415,6 +440,11 @@ func (o *CreateWorkflowNotImplemented) IsServerError() bool {
 // IsCode returns true when this create workflow not implemented response a status code equal to that given
 func (o *CreateWorkflowNotImplemented) IsCode(code int) bool {
 	return code == 501
+}
+
+// Code gets the status code for the create workflow not implemented response
+func (o *CreateWorkflowNotImplemented) Code() int {
+	return 501
 }
 
 func (o *CreateWorkflowNotImplemented) Error() string {

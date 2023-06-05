@@ -49,7 +49,7 @@ func (o *RequestTokenReader) ReadResponse(response runtime.ClientResponse, consu
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[PUT /api/token] request_token", response, response.Code())
 	}
 }
 
@@ -90,6 +90,11 @@ func (o *RequestTokenOK) IsServerError() bool {
 // IsCode returns true when this request token o k response a status code equal to that given
 func (o *RequestTokenOK) IsCode(code int) bool {
 	return code == 200
+}
+
+// Code gets the status code for the request token o k response
+func (o *RequestTokenOK) Code() int {
+	return 200
 }
 
 func (o *RequestTokenOK) Error() string {
@@ -155,6 +160,11 @@ func (o *RequestTokenUnauthorized) IsCode(code int) bool {
 	return code == 401
 }
 
+// Code gets the status code for the request token unauthorized response
+func (o *RequestTokenUnauthorized) Code() int {
+	return 401
+}
+
 func (o *RequestTokenUnauthorized) Error() string {
 	return fmt.Sprintf("[PUT /api/token][%d] requestTokenUnauthorized  %+v", 401, o.Payload)
 }
@@ -218,6 +228,11 @@ func (o *RequestTokenForbidden) IsCode(code int) bool {
 	return code == 403
 }
 
+// Code gets the status code for the request token forbidden response
+func (o *RequestTokenForbidden) Code() int {
+	return 403
+}
+
 func (o *RequestTokenForbidden) Error() string {
 	return fmt.Sprintf("[PUT /api/token][%d] requestTokenForbidden  %+v", 403, o.Payload)
 }
@@ -279,6 +294,11 @@ func (o *RequestTokenInternalServerError) IsServerError() bool {
 // IsCode returns true when this request token internal server error response a status code equal to that given
 func (o *RequestTokenInternalServerError) IsCode(code int) bool {
 	return code == 500
+}
+
+// Code gets the status code for the request token internal server error response
+func (o *RequestTokenInternalServerError) Code() int {
+	return 500
 }
 
 func (o *RequestTokenInternalServerError) Error() string {
@@ -441,6 +461,11 @@ func (o *RequestTokenOKBody) ContextValidate(ctx context.Context, formats strfmt
 func (o *RequestTokenOKBody) contextValidateReanaToken(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.ReanaToken != nil {
+
+		if swag.IsZero(o.ReanaToken) { // not required
+			return nil
+		}
+
 		if err := o.ReanaToken.ContextValidate(ctx, formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("requestTokenOK" + "." + "reana_token")

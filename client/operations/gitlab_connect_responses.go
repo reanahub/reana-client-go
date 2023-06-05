@@ -27,7 +27,7 @@ func (o *GitlabConnectReader) ReadResponse(response runtime.ClientResponse, cons
 		}
 		return nil, result
 	default:
-		return nil, runtime.NewAPIError("response status code does not match any response statuses defined for this endpoint in the swagger spec", response, response.Code())
+		return nil, runtime.NewAPIError("[GET /api/gitlab/connect] gitlab_connect", response, response.Code())
 	}
 }
 
@@ -67,6 +67,11 @@ func (o *GitlabConnectFound) IsServerError() bool {
 // IsCode returns true when this gitlab connect found response a status code equal to that given
 func (o *GitlabConnectFound) IsCode(code int) bool {
 	return code == 302
+}
+
+// Code gets the status code for the gitlab connect found response
+func (o *GitlabConnectFound) Code() int {
+	return 302
 }
 
 func (o *GitlabConnectFound) Error() string {
