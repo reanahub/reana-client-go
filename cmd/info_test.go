@@ -30,6 +30,7 @@ func TestInfo(t *testing.T) {
 				"Default memory limit for Kubernetes jobs: 248",
 				"Default workspace: /var/reana",
 				"Maximum allowed memory limit for Kubernetes jobs: 1000",
+				"Maximum inactivity period in days before automatic closure of interactive sessions: 7",
 				"Maximum timeout for Kubernetes jobs: 500",
 				"Maximum retention period in days for workspace files: 250",
 				"List of available workspaces: /var/reana, /var/cern",

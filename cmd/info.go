@@ -87,6 +87,9 @@ func (o *infoOptions) run(cmd *cobra.Command) error {
 		if p.KubernetesMaxMemoryLimit != nil {
 			displayInfoStringItem(cmd, p.KubernetesMaxMemoryLimit.Title, p.KubernetesMaxMemoryLimit.Value)
 		}
+		if p.MaximumInteractiveSessionInactivityPeriod != nil {
+			displayInfoStringItem(cmd, p.MaximumInteractiveSessionInactivityPeriod.Title, p.MaximumInteractiveSessionInactivityPeriod.Value)
+		}
 		if p.MaximumKubernetesJobsTimeout != nil {
 			displayInfoStringItem(cmd, p.MaximumKubernetesJobsTimeout.Title, &p.MaximumKubernetesJobsTimeout.Value)
 		}
