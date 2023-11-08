@@ -94,6 +94,7 @@ func NewRootCmd() *cobra.Command {
 			Message: "Workflow sharing commands:",
 			Commands: []*cobra.Command{
 				newShareAddCmd(),
+				newShareRemoveCmd(),
 			},
 		},
 		{
