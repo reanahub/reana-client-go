@@ -1,6 +1,6 @@
 /*
 This file is part of REANA.
-Copyright (C) 2022 CERN.
+Copyright (C) 2022, 2023 CERN.
 
 REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
@@ -95,9 +95,10 @@ func (o *downloadOptions) run(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
-		downloadFiles := spec.Specification.Outputs.Files
-		downloadDirs := spec.Specification.Outputs.Directories
-		downloadPaths = append(downloadFiles, downloadDirs...)
+		if outputs := spec.Specification.Outputs; outputs != nil {
+			downloadPaths = append(downloadPaths, outputs.Files...)
+			downloadPaths = append(downloadPaths, outputs.Directories...)
+		}
 	}
 	log.Debugf("Download paths: %s", strings.Join(downloadPaths, ", "))
 

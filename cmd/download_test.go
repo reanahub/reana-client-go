@@ -1,6 +1,6 @@
 /*
 This file is part of REANA.
-Copyright (C) 2022 CERN.
+Copyright (C) 2022, 2023 CERN.
 
 REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
@@ -44,6 +44,15 @@ func TestFileDownload(t *testing.T) {
 			expected: []string{
 				fmt.Sprintf("%s was successfully downloaded.", fileName),
 			},
+		},
+		"download from workflow without outputs": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(downloadWorkflowSpecServerPath, "my_workflow"): {
+					statusCode:   http.StatusOK,
+					responseFile: "workflow_specification_without_outputs.json",
+				},
+			},
+			args: []string{"-w", "my_workflow"},
 		},
 		"download file specified as argument": {
 			serverResponses: map[string]ServerResponse{
