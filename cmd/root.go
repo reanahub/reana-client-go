@@ -95,6 +95,7 @@ func NewRootCmd() *cobra.Command {
 			Commands: []*cobra.Command{
 				newShareAddCmd(),
 				newShareRemoveCmd(),
+				newShareStatusCmd(),
 			},
 		},
 		{
