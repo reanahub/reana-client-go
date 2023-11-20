@@ -12,6 +12,7 @@ package workflows
 import (
 	"fmt"
 	"reanahub/reana-client-go/pkg/datautils"
+	"regexp"
 	"strings"
 	"time"
 )
@@ -47,6 +48,27 @@ func GetDuration(runStartedAt, runFinishedAt *string) (any, error) {
 		endTime = time.Now()
 	}
 	return endTime.Sub(startTime).Round(time.Second).Seconds(), nil
+}
+
+// GetLastCommand returns the prettified version of the last command if possible.
+// Otherwise, try to return the step name, or "-"
+func GetLastCommand(lastCommand *string, stepName *string) string {
+	var tmpValue string
+	if lastCommand == nil || *lastCommand == "" {
+		if stepName == nil || *stepName == "" {
+			return "-"
+		}
+		tmpValue = *stepName
+	} else {
+		tmpValue = *lastCommand
+		if strings.HasPrefix(tmpValue, "bash -c \"cd ") {
+			commaIdx := strings.Index(tmpValue, ";")
+			tmpValue = tmpValue[commaIdx+2 : len(tmpValue)-2]
+		}
+	}
+	// Replace all sequences of newlines with semicolons
+	re := regexp.MustCompile(`\n+`)
+	return re.ReplaceAllString(tmpValue, "; ")
 }
 
 // StatusChangeMessage constructs the message to be displayed when a workflow changes its status.

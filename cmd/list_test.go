@@ -147,13 +147,13 @@ func TestList(t *testing.T) {
 			args: []string{"-v"},
 			expected: []string{
 				"NAME", "RUN_NUMBER", "CREATED", "STARTED", "ENDED", "STATUS",
-				"ID", "USER", "SIZE", "PROGRESS", "DURATION",
+				"ID", "USER", "SIZE", "PROGRESS", "DURATION", "LAST_COMMAND",
 				"my_workflow", "23", "2022-07-28T12:04:37", "2022-07-28T12:04:52",
 				"2022-07-28T12:13:10", "finished", "my_workflow_id", "user",
-				"1024", "2/2", "498",
+				"1024", "2/2", "498", "command; with; multilines",
 				"my_workflow2", "12", "2022-08-10T17:14:12",
 				"2022-08-10T18:04:52", "-", "running", "my_workflow2_id",
-				" -1 ", "1/2",
+				" -1 ", "1/2", "-",
 			},
 		},
 		"raw size": {
@@ -201,6 +201,20 @@ func TestList(t *testing.T) {
 			},
 			args:     []string{"--include-progress"},
 			expected: []string{"PROGRESS", "2/2", "1/2"},
+			unwanted: []string{
+				"ID", "USER", "SIZE", "DURATION", "SESSION_TYPE",
+				"SESSION_URI", "SESSION_STATUS",
+			},
+		},
+		"include last command": {
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
+				},
+			},
+			args:     []string{"--include-last-command"},
+			expected: []string{"LAST_COMMAND", "command; with; multilines", "-"},
 			unwanted: []string{
 				"ID", "USER", "SIZE", "DURATION", "SESSION_TYPE",
 				"SESSION_URI", "SESSION_STATUS",
@@ -277,6 +291,7 @@ func TestBuildListHeader(t *testing.T) {
 		includeWorkspaceSize bool
 		includeProgress      bool
 		includeDuration      bool
+		includeLastCommand   bool
 		expected             []string
 	}{
 		"batch run": {
@@ -295,7 +310,7 @@ func TestBuildListHeader(t *testing.T) {
 			verbose: true,
 			expected: []string{
 				"name", "run_number", "created", "started", "ended",
-				"status", "id", "user", "size", "progress", "duration",
+				"status", "id", "user", "size", "progress", "duration", "last_command",
 			},
 		},
 		"include workspace size": {
@@ -322,6 +337,14 @@ func TestBuildListHeader(t *testing.T) {
 				"ended", "status", "duration",
 			},
 		},
+		"include command": {
+			runType:            "batch",
+			includeLastCommand: true,
+			expected: []string{
+				"name", "run_number", "created", "started",
+				"ended", "status", "last_command",
+			},
+		},
 	}
 
 	for name, test := range tests {
@@ -332,6 +355,7 @@ func TestBuildListHeader(t *testing.T) {
 				test.includeWorkspaceSize,
 				test.includeProgress,
 				test.includeDuration,
+				test.includeLastCommand,
 			)
 			if !slices.Equal(header, test.expected) {
 				t.Errorf("expected %v, got %v", test.expected, header)

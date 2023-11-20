@@ -68,6 +68,12 @@ type GetWorkflowsParams struct {
 	*/
 	AccessToken *string
 
+	/* IncludeLastCommand.
+
+	   Include information about the current command.
+	*/
+	IncludeLastCommand *bool
+
 	/* IncludeProgress.
 
 	   Include progress information of the workflows.
@@ -190,6 +196,17 @@ func (o *GetWorkflowsParams) WithAccessToken(accessToken *string) *GetWorkflowsP
 // SetAccessToken adds the accessToken to the get workflows params
 func (o *GetWorkflowsParams) SetAccessToken(accessToken *string) {
 	o.AccessToken = accessToken
+}
+
+// WithIncludeLastCommand adds the includeLastCommand to the get workflows params
+func (o *GetWorkflowsParams) WithIncludeLastCommand(includeLastCommand *bool) *GetWorkflowsParams {
+	o.SetIncludeLastCommand(includeLastCommand)
+	return o
+}
+
+// SetIncludeLastCommand adds the includeLastCommand to the get workflows params
+func (o *GetWorkflowsParams) SetIncludeLastCommand(includeLastCommand *bool) {
+	o.IncludeLastCommand = includeLastCommand
 }
 
 // WithIncludeProgress adds the includeProgress to the get workflows params
@@ -322,6 +339,23 @@ func (o *GetWorkflowsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		if qAccessToken != "" {
 
 			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.IncludeLastCommand != nil {
+
+		// query param include_last_command
+		var qrIncludeLastCommand bool
+
+		if o.IncludeLastCommand != nil {
+			qrIncludeLastCommand = *o.IncludeLastCommand
+		}
+		qIncludeLastCommand := swag.FormatBool(qrIncludeLastCommand)
+		if qIncludeLastCommand != "" {
+
+			if err := r.SetQueryParam("include_last_command", qIncludeLastCommand); err != nil {
 				return err
 			}
 		}

@@ -14,14 +14,11 @@ import (
 	"reanahub/reana-client-go/pkg/displayer"
 	"reanahub/reana-client-go/pkg/formatter"
 	"reanahub/reana-client-go/pkg/workflows"
-	"strings"
-
-	"golang.org/x/exp/slices"
 
 	"github.com/go-gota/gota/dataframe"
 	"github.com/go-gota/gota/series"
-
 	"github.com/spf13/cobra"
+	"golang.org/x/exp/slices"
 )
 
 const statusDesc = `
@@ -42,12 +39,13 @@ const statusFormatFlagDesc = `Format output by displaying only certain columns.
 E.g. --format name,status.`
 
 type statusOptions struct {
-	token           string
-	workflow        string
-	formatFilters   []string
-	jsonOutput      bool
-	verbose         bool
-	includeDuration bool
+	token              string
+	workflow           string
+	formatFilters      []string
+	jsonOutput         bool
+	verbose            bool
+	includeDuration    bool
+	includeLastCommand bool
 }
 
 // newStatusCmd creates a command to get status of a workflow.
@@ -82,12 +80,19 @@ func newStatusCmd() *cobra.Command {
 		`Include the duration of the workflows in seconds.
 In case a workflow is in progress, its duration as of now will be shown.`,
 	)
+	f.BoolVar(
+		&o.includeLastCommand,
+		"include-last-command",
+		false,
+		"Include the information about the last command executed (or currently in execution) by the workflow.",
+	)
 
 	return cmd
 }
 
 func (o *statusOptions) run(cmd *cobra.Command) error {
-	payload, err := workflows.GetStatus(o.token, o.workflow)
+	includeLastCommand := o.includeLastCommand || o.verbose
+	payload, err := workflows.GetStatus(o.token, o.workflow, includeLastCommand)
 	if err != nil {
 		return err
 	}
@@ -95,6 +100,7 @@ func (o *statusOptions) run(cmd *cobra.Command) error {
 	header := buildStatusHeader(
 		o.verbose,
 		o.includeDuration,
+		o.includeLastCommand,
 		payload.Progress,
 		payload.Status,
 	)
@@ -146,8 +152,11 @@ func displayStatusPayload(
 			value = p.ID
 		case "user":
 			value = p.User
-		case "command":
-			value = getStatusCommand(p.Progress)
+		case "last_command":
+			value = workflows.GetLastCommand(
+				p.Progress.CurrentCommand,
+				p.Progress.CurrentStepName,
+			)
 		case "duration":
 			var err error
 			value, err = workflows.GetDuration(
@@ -186,6 +195,7 @@ func displayStatusPayload(
 func buildStatusHeader(
 	verbose bool,
 	includeDuration bool,
+	includeLastCommand bool,
 	progress *operations.GetWorkflowStatusOKBodyProgress,
 	status string,
 ) []string {
@@ -195,7 +205,6 @@ func buildStatusHeader(
 	hasRunStarted := slices.Contains([]string{"running", "finished", "failed", "stopped"}, status)
 	includeStarted := progress.RunStartedAt != nil
 	includeEnded := progress.RunFinishedAt != nil
-	includeCommand := progress.CurrentCommand != nil || progress.CurrentStepName != nil
 
 	if hasRunStarted && includeStarted {
 		headers = append(headers, "started")
@@ -209,12 +218,12 @@ func buildStatusHeader(
 	}
 	if verbose {
 		headers = append(headers, "id", "user")
-		if includeCommand {
-			headers = append(headers, "command")
-		}
 	}
 	if verbose || includeDuration {
 		headers = append(headers, "duration")
+	}
+	if verbose || includeLastCommand {
+		headers = append(headers, "last_command")
 	}
 	return headers
 }
@@ -232,20 +241,6 @@ func getStatusProgress(progress *operations.GetWorkflowStatusOKBodyProgress) any
 		return fmt.Sprintf("%d/%d", finishedJobs, totalJobs)
 	}
 	return "-/-"
-}
-
-// getStatusCommand gets the current command of the workflow.
-// If the command isn't available, it returns the current step name.
-func getStatusCommand(progress *operations.GetWorkflowStatusOKBodyProgress) string {
-	if progress.CurrentCommand == nil {
-		return *progress.CurrentStepName
-	}
-	currentCmd := *progress.CurrentCommand
-	if strings.HasPrefix(currentCmd, "bash -c \"cd ") {
-		commaIdx := strings.Index(currentCmd, ";")
-		currentCmd = currentCmd[commaIdx+2 : len(currentCmd)-2]
-	}
-	return currentCmd
 }
 
 // buildStatusSeries returns a Series of the right type, according to the column name.

@@ -14,6 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // NewGetWorkflowStatusParams creates a new GetWorkflowStatusParams object,
@@ -66,6 +67,12 @@ type GetWorkflowStatusParams struct {
 	   The API access_token of workflow owner.
 	*/
 	AccessToken *string
+
+	/* IncludeLastCommand.
+
+	   Include additional information about the current command.
+	*/
+	IncludeLastCommand *bool
 
 	/* WorkflowIDOrName.
 
@@ -137,6 +144,17 @@ func (o *GetWorkflowStatusParams) SetAccessToken(accessToken *string) {
 	o.AccessToken = accessToken
 }
 
+// WithIncludeLastCommand adds the includeLastCommand to the get workflow status params
+func (o *GetWorkflowStatusParams) WithIncludeLastCommand(includeLastCommand *bool) *GetWorkflowStatusParams {
+	o.SetIncludeLastCommand(includeLastCommand)
+	return o
+}
+
+// SetIncludeLastCommand adds the includeLastCommand to the get workflow status params
+func (o *GetWorkflowStatusParams) SetIncludeLastCommand(includeLastCommand *bool) {
+	o.IncludeLastCommand = includeLastCommand
+}
+
 // WithWorkflowIDOrName adds the workflowIDOrName to the get workflow status params
 func (o *GetWorkflowStatusParams) WithWorkflowIDOrName(workflowIDOrName string) *GetWorkflowStatusParams {
 	o.SetWorkflowIDOrName(workflowIDOrName)
@@ -168,6 +186,23 @@ func (o *GetWorkflowStatusParams) WriteToRequest(r runtime.ClientRequest, reg st
 		if qAccessToken != "" {
 
 			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.IncludeLastCommand != nil {
+
+		// query param include_last_command
+		var qrIncludeLastCommand bool
+
+		if o.IncludeLastCommand != nil {
+			qrIncludeLastCommand = *o.IncludeLastCommand
+		}
+		qIncludeLastCommand := swag.FormatBool(qrIncludeLastCommand)
+		if qIncludeLastCommand != "" {
+
+			if err := r.SetQueryParam("include_last_command", qIncludeLastCommand); err != nil {
 				return err
 			}
 		}

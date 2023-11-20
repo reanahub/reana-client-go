@@ -85,6 +85,70 @@ func TestGetDuration(t *testing.T) {
 	}
 }
 
+func TestGetLastCommand(t *testing.T) {
+	emptyString := ""
+	echoHello := "echo 'hello'"
+	echoWorld := "echo 'hello'\n\n echo 'world'"
+	step1 := "step1"
+	bashCmd := "bash -c \"cd folder; ls \""
+
+	tests := map[string]struct {
+		lastCommand *string
+		stepName    *string
+		expected    string
+	}{
+		"both nil": {
+			lastCommand: nil,
+			stepName:    nil,
+			expected:    "-",
+		},
+		"lastCommand empty": {
+			lastCommand: &emptyString,
+			stepName:    nil,
+			expected:    "-",
+		},
+		"stepName empty": {
+			lastCommand: nil,
+			stepName:    &emptyString,
+			expected:    "-",
+		},
+		"both empty": {
+			lastCommand: &emptyString,
+			stepName:    &emptyString,
+			expected:    "-",
+		},
+		"valid lastCommand": {
+			lastCommand: &echoHello,
+			stepName:    nil,
+			expected:    "echo 'hello'",
+		},
+		"valid stepName": {
+			lastCommand: nil,
+			stepName:    &step1,
+			expected:    "step1",
+		},
+		"newlines in lastCommand": {
+			lastCommand: &echoWorld,
+			stepName:    nil,
+			expected:    "echo 'hello';  echo 'world'",
+		},
+		"command with prefix": {
+			lastCommand: &bashCmd,
+			stepName:    &emptyString,
+			expected:    "ls",
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			got := GetLastCommand(test.lastCommand, test.stepName)
+			if got != test.expected {
+				t.Errorf("Test %s: Expected %q, got %q", name, test.expected, got)
+			}
+		})
+	}
+}
+
 func TestStatusChangeMessage(t *testing.T) {
 	tests := map[string]struct {
 		workflow  string

@@ -68,6 +68,7 @@ type listOptions struct {
 	includeDuration      bool
 	includeProgress      bool
 	includeWorkspaceSize bool
+	includeLastCommand   bool
 	showDeletedRuns      bool
 	page                 int64
 	size                 int64
@@ -132,6 +133,12 @@ In case a workflow is in progress, its duration as of now will be shown.`,
 		"Include size information of the workspace.",
 	)
 	f.BoolVar(
+		&o.includeLastCommand,
+		"include-last-command",
+		false,
+		"Include the information about the last command executed (or currently in execution) by the workflow.",
+	)
+	f.BoolVar(
 		&o.showDeletedRuns,
 		"show-deleted-runs",
 		false,
@@ -180,6 +187,9 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 	if cmd.Flags().Changed("include-workspace-size") {
 		listParams.SetIncludeWorkspaceSize(&o.includeWorkspaceSize)
 	}
+	if cmd.Flags().Changed("include-last-command") {
+		listParams.SetIncludeLastCommand(&o.includeLastCommand)
+	}
 
 	api, err := client.ApiClient()
 	if err != nil {
@@ -196,6 +206,7 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 		o.includeWorkspaceSize,
 		o.includeProgress,
 		o.includeDuration,
+		o.includeLastCommand,
 	)
 	parsedFormatFilters := formatter.ParseFormatParameters(o.formatFilters, true)
 	err = displayListPayload(
@@ -279,6 +290,11 @@ func displayListPayload(
 				}
 			case "session_status":
 				value = getOptionalStringField(&workflow.SessionStatus)
+			case "last_command":
+				value = workflows.GetLastCommand(
+					workflow.Progress.CurrentCommand,
+					workflow.Progress.CurrentStepName,
+				)
 			}
 
 			colSeries.Append(value)
@@ -313,7 +329,7 @@ func displayListPayload(
 // verbose information, workspace size, progress and duration.
 func buildListHeader(
 	runType string,
-	verbose, includeWorkspaceSize, includeProgress, includeDuration bool,
+	verbose, includeWorkspaceSize, includeProgress, includeDuration, includeLastCommand bool,
 ) []string {
 	headers := map[string][]string{
 		"batch": {"name", "run_number", "created", "started", "ended", "status"},
@@ -339,6 +355,9 @@ func buildListHeader(
 	}
 	if verbose || includeDuration {
 		header = append(header, "duration")
+	}
+	if verbose || includeLastCommand {
+		header = append(header, "last_command")
 	}
 
 	return header

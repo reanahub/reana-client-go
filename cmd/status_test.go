@@ -154,11 +154,12 @@ func TestBuildStatusHeader(t *testing.T) {
 	dummyStr := "dummy"
 
 	tests := map[string]struct {
-		verbose         bool
-		includeDuration bool
-		progress        operations.GetWorkflowStatusOKBodyProgress
-		status          string
-		expected        []string
+		verbose            bool
+		includeDuration    bool
+		includeLastCommand bool
+		progress           operations.GetWorkflowStatusOKBodyProgress
+		status             string
+		expected           []string
 	}{
 		"created status": {
 			status:   "created",
@@ -188,9 +189,18 @@ func TestBuildStatusHeader(t *testing.T) {
 			expected: []string{"name", "run_number", "created", "status", "progress"},
 		},
 		"verbose": {
-			status:   "running",
-			verbose:  true,
-			expected: []string{"name", "run_number", "created", "status", "id", "user", "duration"},
+			status:  "running",
+			verbose: true,
+			expected: []string{
+				"name",
+				"run_number",
+				"created",
+				"status",
+				"id",
+				"user",
+				"duration",
+				"last_command",
+			},
 		},
 		"verbose with command": {
 			status:   "running",
@@ -203,8 +213,8 @@ func TestBuildStatusHeader(t *testing.T) {
 				"status",
 				"id",
 				"user",
-				"command",
 				"duration",
+				"last_command",
 			},
 		},
 		"verbose with step": {
@@ -218,8 +228,8 @@ func TestBuildStatusHeader(t *testing.T) {
 				"status",
 				"id",
 				"user",
-				"command",
 				"duration",
+				"last_command",
 			},
 		},
 		"include duration": {
@@ -234,6 +244,7 @@ func TestBuildStatusHeader(t *testing.T) {
 			header := buildStatusHeader(
 				test.verbose,
 				test.includeDuration,
+				test.includeLastCommand,
 				&test.progress,
 				test.status,
 			)
@@ -277,45 +288,6 @@ func TestGetStatusProgress(t *testing.T) {
 			progress := getStatusProgress(&test.progress)
 			if progress != test.expected {
 				t.Errorf("expected %s, got %s", test.expected, progress)
-			}
-		})
-	}
-}
-
-func TestGetStatusCommand(t *testing.T) {
-	cmdStr := "cmd"
-	stepStr := "step"
-	bashCmd := "bash -c \"cd folder; ls \""
-
-	tests := map[string]struct {
-		progress operations.GetWorkflowStatusOKBodyProgress
-		expected string
-	}{
-		"no command": {
-			progress: operations.GetWorkflowStatusOKBodyProgress{CurrentStepName: &stepStr},
-			expected: stepStr,
-		},
-		"with command": {
-			progress: operations.GetWorkflowStatusOKBodyProgress{
-				CurrentCommand:  &cmdStr,
-				CurrentStepName: &stepStr,
-			},
-			expected: cmdStr,
-		},
-		"command with prefix": {
-			progress: operations.GetWorkflowStatusOKBodyProgress{
-				CurrentCommand:  &bashCmd,
-				CurrentStepName: &stepStr,
-			},
-			expected: "ls",
-		},
-	}
-
-	for name, test := range tests {
-		t.Run(name, func(t *testing.T) {
-			command := getStatusCommand(&test.progress)
-			if command != test.expected {
-				t.Errorf("expected %s, got %s", test.expected, command)
 			}
 		})
 	}

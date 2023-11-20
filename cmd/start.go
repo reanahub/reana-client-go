@@ -199,7 +199,7 @@ func followWorkflowExecution(
 ) error {
 	for slices.Contains([]string{"pending", "queued", "running"}, currentStatus) {
 		time.Sleep(time.Duration(config.CheckInterval) * time.Second)
-		status, err := workflows.GetStatus(token, workflow)
+		status, err := workflows.GetStatus(token, workflow, false)
 		if err != nil {
 			return err
 		}

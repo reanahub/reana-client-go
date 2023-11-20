@@ -50,9 +50,12 @@ func UpdateStatus(
 }
 
 // GetStatus returns the status information of the specified workflow.
-func GetStatus(token, workflow string) (*operations.GetWorkflowStatusOKBody, error) {
+func GetStatus(
+	token, workflow string, includeLastCommand bool,
+) (*operations.GetWorkflowStatusOKBody, error) {
 	getParams := operations.NewGetWorkflowStatusParams()
 	getParams.SetAccessToken(&token)
+	getParams.SetIncludeLastCommand(&includeLastCommand)
 	getParams.SetWorkflowIDOrName(workflow)
 
 	api, err := client.ApiClient()
