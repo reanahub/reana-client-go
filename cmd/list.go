@@ -36,13 +36,25 @@ criteria. Use --filter
 <columm_name>=<column_value> pairs. Available
 filters are 'name' and 'status'.`
 
-const listDesc = `
-List all workflows and sessions.
+const listDesc = `List all workflows and sessions.
 
-The ` + "``list``" + ` command lists workflows and sessions. By default, the list of
-workflows is returned. If you would like to see the list of your open
+The ` + "``list``" + ` command lists workflows and sessions. By default, a list of
+owned workflows is returned. If you would like to see the list of your open
 interactive sessions, you need to pass the ` + "``--sessions``" + ` command-line
-option.
+option. If you would like to see the list of all workflows, including those
+shared with you, you need to pass the ` + "``--shared``" + ` command-line option.
+
+Along with specific user emails, you can pass the following special 
+values to the ` + "``--shared-by``" + ` and ` + "``--shared-with``" + ` command-line options:
+
+  - ` + "``--shared-by anybody``" + `: list workflows shared with you by anybody.
+
+  - ` + "``--shared-with anybody``" + `: list your shared workflows exclusively.
+
+  - ` + "``--shared-with nobody``" + `: list your unshared workflows exclusively.
+
+  - ` + "``--shared-with bob@cern.ch,cecile@cern.ch``" + `: list workflows 
+  shared with either bob@cern.ch or cecile@cern.ch
 
 Examples:
 
@@ -51,6 +63,12 @@ Examples:
   $ reana-client list --sessions
 
   $ reana-client list --verbose --bytes
+
+  $ reana-client list --shared
+
+  $ reana-client list --shared-by bob@cern.ch
+
+  $ reana-client list --shared-with anybody
 `
 
 type listOptions struct {
@@ -71,6 +89,9 @@ type listOptions struct {
 	showDeletedRuns      bool
 	page                 int64
 	size                 int64
+	shared               bool
+	shared_by            string
+	shared_with          string
 }
 
 // newListCmd creates a new command for listing workflows and sessions.
@@ -139,8 +160,16 @@ In case a workflow is in progress, its duration as of now will be shown.`,
 	)
 	f.Int64Var(&o.page, "page", 1, "Results page number (to be used with --size).")
 	f.Int64Var(&o.size, "size", 0, "Number of results per page (to be used with --page).")
+	f.BoolVar(&o.shared, "shared", false, "List all shared (owned and unowned) workflows.")
+	f.StringVar(&o.shared_by, "shared-by", "", "List workflows shared by the specified user(s).")
+	f.StringVar(
+		&o.shared_with,
+		"shared-with",
+		"",
+		"List workflows shared with the specified user(s).",
+	)
 	// Remove -h shorthand
-	cmd.PersistentFlags().BoolP("help", "", false, "Help for du")
+	cmd.PersistentFlags().BoolP("help", "", false, "Help for list")
 
 	err := f.SetAnnotation("workflow", "properties", []string{"optional"})
 	if err != nil {
@@ -150,6 +179,17 @@ In case a workflow is in progress, its duration as of now will be shown.`,
 }
 
 func (o *listOptions) run(cmd *cobra.Command) error {
+	if o.shared_by != "" && o.shared_with != "" {
+		displayer.DisplayMessage(
+			"Please provide either --shared-by or --shared-with, not both.",
+			displayer.Error,
+			false,
+			cmd.OutOrStdout(),
+		)
+
+		return nil
+	}
+
 	var runType string
 	if o.listSessions {
 		runType = "interactive"
@@ -180,6 +220,15 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 	if cmd.Flags().Changed("include-workspace-size") {
 		listParams.SetIncludeWorkspaceSize(&o.includeWorkspaceSize)
 	}
+	if cmd.Flags().Changed("shared") {
+		listParams.SetShared(&o.shared)
+	}
+	if cmd.Flags().Changed("shared-by") {
+		listParams.SetSharedBy(&o.shared_by)
+	}
+	if cmd.Flags().Changed("shared-with") {
+		listParams.SetSharedWith(&o.shared_with)
+	}
 
 	api, err := client.ApiClient()
 	if err != nil {
@@ -196,6 +245,9 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 		o.includeWorkspaceSize,
 		o.includeProgress,
 		o.includeDuration,
+		o.shared,
+		o.shared_by,
+		o.shared_with,
 	)
 	parsedFormatFilters := formatter.ParseFormatParameters(o.formatFilters, true)
 	err = displayListPayload(
@@ -280,6 +332,10 @@ func displayListPayload(
 				}
 			case "session_status":
 				value = getOptionalStringField(&workflow.SessionStatus)
+			case "shared_by":
+				value = workflow.OwnerEmail
+			case "shared_with":
+				value = workflow.SharedWith
 			}
 
 			colSeries.Append(value)
@@ -315,6 +371,8 @@ func displayListPayload(
 func buildListHeader(
 	runType string,
 	verbose, includeWorkspaceSize, includeProgress, includeDuration bool,
+	shared bool,
+	shared_by, shared_with string,
 ) []string {
 	headers := map[string][]string{
 		"batch": {"name", "run_number", "created", "started", "ended", "status"},
@@ -340,6 +398,16 @@ func buildListHeader(
 	}
 	if verbose || includeDuration {
 		header = append(header, "duration")
+	}
+	if shared {
+		header = append(header, "shared_with", "shared_by")
+	} else {
+		if shared_with != "" {
+			header = append(header, "shared_with")
+		}
+		if shared_by != "" {
+			header = append(header, "shared_by")
+		}
 	}
 
 	return header
