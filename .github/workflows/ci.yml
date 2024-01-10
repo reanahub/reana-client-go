@@ -1,5 +1,5 @@
 # This file is part of REANA.
-# Copyright (C) 2022 CERN.
+# Copyright (C) 2022, 2024 CERN.
 #
 # REANA is free software; you can redistribute it and/or modify it
 # under the terms of the MIT License; see LICENSE file for more details
@@ -9,54 +9,91 @@ name: CI
 on: [push, pull_request]
 
 jobs:
-    go-tests:
-        runs-on: ubuntu-20.04
-        steps:
-            - uses: actions/checkout@v3
+  lint-commitlint:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
-            - name: Setup Go
-              uses: actions/setup-go@v4
-              with:
-                  go-version: '>=1.18.X'
+      - name: Setup Node
+        uses: actions/setup-node@v4
 
-            - name: Run test suite
-              run: make test
+      - name: Install commitlint
+        run: |
+          npm install conventional-changelog-conventionalcommits
+          npm install commitlint@latest
 
-            - name: Codecov Coverage
-              uses: codecov/codecov-action@v3
+      - name: Check commit message compliance of the recently pushed commit
+        if: github.event_name == 'push'
+        run: |
+          npx commitlint --from HEAD~1 --to HEAD --verbose
 
-    go-lint:
-        runs-on: ubuntu-20.04
-        steps:
-            - uses: actions/checkout@v3
+      - name: Check commit message compliance of the pull request
+        if: github.event_name == 'pull_request'
+        run: |
+          npx commitlint --from ${{ github.event.pull_request.head.sha }}~${{ github.event.pull_request.commits }} --to ${{ github.event.pull_request.head.sha }} --verbose
 
-            - name: Setup Go
-              uses: actions/setup-go@v4
-              with:
-                  go-version: '>=1.18.X'
+  lint-shellcheck:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-            - name: Run lint action
-              uses: golangci/golangci-lint-action@v3
-              with:
-                  version: latest
-                  args: --enable=gofmt --enable=goimports
+      - name: Runs shell script static analysis
+        run: |
+          sudo apt-get install shellcheck
+          ./run-tests.sh --check-shellcheck
 
-    go-lines:
-        runs-on: ubuntu-20.04
-        steps:
-            - uses: actions/checkout@v3
+  go-tests:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
 
-            - name: Setup Go
-              uses: actions/setup-go@v4
-              with:
-                  go-version: '>=1.18.X'
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+            go-version: '>=1.18.X'
 
-            - name: Run golines
-              run: |
-                  if [[ $(make golines | wc -l) -gt 2 ]]; then
-                      echo "Golines would make the following changes:"
-                      make golines
-                      exit 1
-                  else
-                      echo "No file exceeds the line size limit"
-                  fi
+      - name: Run test suite
+        run: make test
+
+      - name: Codecov Coverage
+        uses: codecov/codecov-action@v3
+
+  go-lint:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+            go-version: '>=1.18.X'
+
+      - name: Run lint action
+        uses: golangci/golangci-lint-action@v3
+        with:
+            version: latest
+            args: --enable=gofmt --enable=goimports
+
+  go-lines:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+            go-version: '>=1.18.X'
+
+      - name: Run golines
+        run: |
+            if [[ $(make golines | wc -l) -gt 2 ]]; then
+                echo "Golines would make the following changes:"
+                make golines
+                exit 1
+            else
+                echo "No file exceeds the line size limit"
+            fi
