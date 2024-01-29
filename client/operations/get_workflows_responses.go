@@ -860,6 +860,9 @@ type GetWorkflowsOKBodyItemsItems0Progress struct {
 	// run started at
 	RunStartedAt *string `json:"run_started_at,omitempty"`
 
+	// run stopped at
+	RunStoppedAt *string `json:"run_stopped_at,omitempty"`
+
 	// running
 	Running *GetWorkflowsOKBodyItemsItems0ProgressRunning `json:"running,omitempty"`
 

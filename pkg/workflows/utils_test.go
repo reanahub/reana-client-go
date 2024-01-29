@@ -45,16 +45,33 @@ func TestGetDuration(t *testing.T) {
 	tests := map[string]struct {
 		runStartedAt  *string
 		runFinishedAt *string
+		runStoppedAt  *string
 		want          any
 		wantError     bool
 	}{
 		"finished instantly":    {runStartedAt: &curTime, runFinishedAt: &curTime, want: 0.0},
 		"finished in 1 second":  {runStartedAt: &curTime, runFinishedAt: &future, want: 1.0},
 		"finished before start": {runStartedAt: &curTime, runFinishedAt: &past, want: -1.0},
-		"nil arguments":         {runStartedAt: nil, runFinishedAt: nil, want: nil},
-		"nil start":             {runStartedAt: nil, runFinishedAt: &curTime, want: nil},
-		"nil finish":            {runStartedAt: &curTime, runFinishedAt: nil},
-		"bad start format":      {runStartedAt: &badFormat, wantError: true},
+		"stopped in 1 second": {
+			runStartedAt:  &curTime,
+			runFinishedAt: nil,
+			runStoppedAt:  &future,
+			want:          1.0,
+		},
+		"nil arguments": {
+			runStartedAt:  nil,
+			runFinishedAt: nil,
+			runStoppedAt:  nil,
+			want:          nil,
+		},
+		"nil start":        {runStartedAt: nil, runFinishedAt: &curTime, want: nil},
+		"nil finish":       {runStartedAt: &curTime, runFinishedAt: nil},
+		"bad start format": {runStartedAt: &badFormat, wantError: true},
+		"bad stop format": {
+			runStartedAt: &curTime,
+			runStoppedAt: &badFormat,
+			wantError:    true,
+		},
 		"bad finish format": {
 			runStartedAt:  &curTime,
 			runFinishedAt: &badFormat,
@@ -63,7 +80,7 @@ func TestGetDuration(t *testing.T) {
 	}
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			got, err := GetDuration(test.runStartedAt, test.runFinishedAt)
+			got, err := GetDuration(test.runStartedAt, test.runFinishedAt, test.runStoppedAt)
 			if test.wantError {
 				if err == nil {
 					t.Errorf("Expected error, got nil")

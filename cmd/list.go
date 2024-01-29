@@ -255,6 +255,7 @@ func displayListPayload(
 				value, err = workflows.GetDuration(
 					workflow.Progress.RunStartedAt,
 					workflow.Progress.RunFinishedAt,
+					workflow.Progress.RunStoppedAt,
 				)
 				if err != nil {
 					return err

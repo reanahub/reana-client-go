@@ -153,6 +153,7 @@ func displayStatusPayload(
 			value, err = workflows.GetDuration(
 				p.Progress.RunStartedAt,
 				p.Progress.RunFinishedAt,
+				p.Progress.RunStoppedAt,
 			)
 			if err != nil {
 				return err

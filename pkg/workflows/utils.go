@@ -27,7 +27,7 @@ func GetNameAndRunNumber(workflowName string) (string, string) {
 }
 
 // GetDuration calculates and returns the duration the workflow, based on the given timestamps.
-func GetDuration(runStartedAt, runFinishedAt *string) (any, error) {
+func GetDuration(runStartedAt, runFinishedAt, runStoppedAt *string) (any, error) {
 	if runStartedAt == nil {
 		return nil, nil
 	}
@@ -40,6 +40,11 @@ func GetDuration(runStartedAt, runFinishedAt *string) (any, error) {
 	var endTime time.Time
 	if runFinishedAt != nil {
 		endTime, err = datautils.FromIsoToTimestamp(*runFinishedAt)
+		if err != nil {
+			return nil, err
+		}
+	} else if runStoppedAt != nil {
+		endTime, err = datautils.FromIsoToTimestamp(*runStoppedAt)
 		if err != nil {
 			return nil, err
 		}
