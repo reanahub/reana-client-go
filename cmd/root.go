@@ -91,6 +91,14 @@ func NewRootCmd() *cobra.Command {
 			},
 		},
 		{
+			Message: "Workflow sharing commands:",
+			Commands: []*cobra.Command{
+				newShareAddCmd(),
+				newShareRemoveCmd(),
+				newShareStatusCmd(),
+			},
+		},
+		{
 			Message: "Workspace interactive commands:",
 			Commands: []*cobra.Command{
 				newOpenCmd(),

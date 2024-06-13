@@ -260,6 +260,54 @@ func TestList(t *testing.T) {
 				"NAME", "RUN_NUMBER", "CREATED", "STARTED", "ENDED", "STATUS",
 			},
 		},
+		"include shared by others": {
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
+				},
+			},
+			args: []string{"--shared"},
+			expected: []string{
+				"SHARED_BY", "SHARED_WITH",
+			},
+		},
+		"list shared with user": {
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
+				},
+			},
+			args: []string{"--shared-with", "anybody"},
+			expected: []string{
+				"SHARED_WITH",
+			},
+			unwanted: []string{
+				"SHARED_BY",
+			},
+		},
+		"list shared by user": {
+			serverResponses: map[string]ServerResponse{
+				listServerPath: {
+					statusCode:   http.StatusOK,
+					responseFile: "list.json",
+				},
+			},
+			args: []string{"--shared-by", "anybody"},
+			expected: []string{
+				"SHARED_BY",
+			},
+			unwanted: []string{
+				"SHARED_WITH",
+			},
+		},
+		"invalid: shared with and shared by in the same command": {
+			args: []string{"--shared-by", "anybody", "--shared-with", "anybody"},
+			expected: []string{
+				"Please provide either --shared-by or --shared-with, not both",
+			},
+		},
 	}
 
 	for name, params := range tests {
@@ -277,6 +325,9 @@ func TestBuildListHeader(t *testing.T) {
 		includeWorkspaceSize bool
 		includeProgress      bool
 		includeDuration      bool
+		shared               bool
+		shared_by            string
+		shared_with          string
 		expected             []string
 	}{
 		"batch run": {
@@ -322,6 +373,30 @@ func TestBuildListHeader(t *testing.T) {
 				"ended", "status", "duration",
 			},
 		},
+		"shared": {
+			runType: "batch",
+			shared:  true,
+			expected: []string{
+				"name", "run_number", "created", "started",
+				"ended", "status", "shared_with", "shared_by",
+			},
+		},
+		"shared by": {
+			runType:   "batch",
+			shared_by: "user@example.org",
+			expected: []string{
+				"name", "run_number", "created", "started",
+				"ended", "status", "shared_by",
+			},
+		},
+		"shared with": {
+			runType:     "batch",
+			shared_with: "user@example.org",
+			expected: []string{
+				"name", "run_number", "created", "started",
+				"ended", "status", "shared_with",
+			},
+		},
 	}
 
 	for name, test := range tests {
@@ -332,6 +407,9 @@ func TestBuildListHeader(t *testing.T) {
 				test.includeWorkspaceSize,
 				test.includeProgress,
 				test.includeDuration,
+				test.shared,
+				test.shared_by,
+				test.shared_with,
 			)
 			if !slices.Equal(header, test.expected) {
 				t.Errorf("expected %v, got %v", test.expected, header)
