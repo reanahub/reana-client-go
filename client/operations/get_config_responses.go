@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -85,11 +86,13 @@ func (o *GetConfigOK) Code() int {
 }
 
 func (o *GetConfigOK) Error() string {
-	return fmt.Sprintf("[GET /api/config][%d] getConfigOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/config][%d] getConfigOK %s", 200, payload)
 }
 
 func (o *GetConfigOK) String() string {
-	return fmt.Sprintf("[GET /api/config][%d] getConfigOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/config][%d] getConfigOK %s", 200, payload)
 }
 
 func (o *GetConfigOK) GetPayload() interface{} {
@@ -151,11 +154,13 @@ func (o *GetConfigInternalServerError) Code() int {
 }
 
 func (o *GetConfigInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/config][%d] getConfigInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/config][%d] getConfigInternalServerError %s", 500, payload)
 }
 
 func (o *GetConfigInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/config][%d] getConfigInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/config][%d] getConfigInternalServerError %s", 500, payload)
 }
 
 func (o *GetConfigInternalServerError) GetPayload() *GetConfigInternalServerErrorBody {

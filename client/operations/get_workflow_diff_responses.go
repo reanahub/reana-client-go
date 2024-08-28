@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -103,11 +104,13 @@ func (o *GetWorkflowDiffOK) Code() int {
 }
 
 func (o *GetWorkflowDiffOK) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffOK %s", 200, payload)
 }
 
 func (o *GetWorkflowDiffOK) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffOK %s", 200, payload)
 }
 
 func (o *GetWorkflowDiffOK) GetPayload() *GetWorkflowDiffOKBody {
@@ -171,11 +174,13 @@ func (o *GetWorkflowDiffBadRequest) Code() int {
 }
 
 func (o *GetWorkflowDiffBadRequest) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffBadRequest %s", 400, payload)
 }
 
 func (o *GetWorkflowDiffBadRequest) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffBadRequest %s", 400, payload)
 }
 
 func (o *GetWorkflowDiffBadRequest) GetPayload() *GetWorkflowDiffBadRequestBody {
@@ -239,11 +244,13 @@ func (o *GetWorkflowDiffForbidden) Code() int {
 }
 
 func (o *GetWorkflowDiffForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffForbidden %s", 403, payload)
 }
 
 func (o *GetWorkflowDiffForbidden) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffForbidden %s", 403, payload)
 }
 
 func (o *GetWorkflowDiffForbidden) GetPayload() *GetWorkflowDiffForbiddenBody {
@@ -307,11 +314,13 @@ func (o *GetWorkflowDiffNotFound) Code() int {
 }
 
 func (o *GetWorkflowDiffNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffNotFound %s", 404, payload)
 }
 
 func (o *GetWorkflowDiffNotFound) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffNotFound %s", 404, payload)
 }
 
 func (o *GetWorkflowDiffNotFound) GetPayload() *GetWorkflowDiffNotFoundBody {
@@ -375,11 +384,13 @@ func (o *GetWorkflowDiffInternalServerError) Code() int {
 }
 
 func (o *GetWorkflowDiffInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffInternalServerError %s", 500, payload)
 }
 
 func (o *GetWorkflowDiffInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffInternalServerError %s", 500, payload)
 }
 
 func (o *GetWorkflowDiffInternalServerError) GetPayload() *GetWorkflowDiffInternalServerErrorBody {

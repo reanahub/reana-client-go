@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -103,11 +104,13 @@ func (o *PruneWorkspaceOK) Code() int {
 }
 
 func (o *PruneWorkspaceOK) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceOK %s", 200, payload)
 }
 
 func (o *PruneWorkspaceOK) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceOK %s", 200, payload)
 }
 
 func (o *PruneWorkspaceOK) GetPayload() *PruneWorkspaceOKBody {
@@ -171,11 +174,13 @@ func (o *PruneWorkspaceBadRequest) Code() int {
 }
 
 func (o *PruneWorkspaceBadRequest) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceBadRequest %s", 400, payload)
 }
 
 func (o *PruneWorkspaceBadRequest) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceBadRequest %s", 400, payload)
 }
 
 func (o *PruneWorkspaceBadRequest) GetPayload() *PruneWorkspaceBadRequestBody {
@@ -239,11 +244,13 @@ func (o *PruneWorkspaceForbidden) Code() int {
 }
 
 func (o *PruneWorkspaceForbidden) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceForbidden %s", 403, payload)
 }
 
 func (o *PruneWorkspaceForbidden) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceForbidden %s", 403, payload)
 }
 
 func (o *PruneWorkspaceForbidden) GetPayload() *PruneWorkspaceForbiddenBody {
@@ -307,11 +314,13 @@ func (o *PruneWorkspaceNotFound) Code() int {
 }
 
 func (o *PruneWorkspaceNotFound) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceNotFound %s", 404, payload)
 }
 
 func (o *PruneWorkspaceNotFound) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceNotFound %s", 404, payload)
 }
 
 func (o *PruneWorkspaceNotFound) GetPayload() *PruneWorkspaceNotFoundBody {
@@ -375,11 +384,13 @@ func (o *PruneWorkspaceInternalServerError) Code() int {
 }
 
 func (o *PruneWorkspaceInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceInternalServerError %s", 500, payload)
 }
 
 func (o *PruneWorkspaceInternalServerError) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceInternalServerError %s", 500, payload)
 }
 
 func (o *PruneWorkspaceInternalServerError) GetPayload() *PruneWorkspaceInternalServerErrorBody {

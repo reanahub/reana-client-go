@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"strconv"
@@ -105,11 +106,13 @@ func (o *GetWorkflowsOK) Code() int {
 }
 
 func (o *GetWorkflowsOK) Error() string {
-	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsOK %s", 200, payload)
 }
 
 func (o *GetWorkflowsOK) String() string {
-	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsOK %s", 200, payload)
 }
 
 func (o *GetWorkflowsOK) GetPayload() *GetWorkflowsOKBody {
@@ -173,11 +176,13 @@ func (o *GetWorkflowsBadRequest) Code() int {
 }
 
 func (o *GetWorkflowsBadRequest) Error() string {
-	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsBadRequest %s", 400, payload)
 }
 
 func (o *GetWorkflowsBadRequest) String() string {
-	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsBadRequest %s", 400, payload)
 }
 
 func (o *GetWorkflowsBadRequest) GetPayload() *GetWorkflowsBadRequestBody {
@@ -241,11 +246,13 @@ func (o *GetWorkflowsForbidden) Code() int {
 }
 
 func (o *GetWorkflowsForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsForbidden %s", 403, payload)
 }
 
 func (o *GetWorkflowsForbidden) String() string {
-	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsForbidden %s", 403, payload)
 }
 
 func (o *GetWorkflowsForbidden) GetPayload() *GetWorkflowsForbiddenBody {
@@ -309,11 +316,13 @@ func (o *GetWorkflowsNotFound) Code() int {
 }
 
 func (o *GetWorkflowsNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsNotFound %s", 404, payload)
 }
 
 func (o *GetWorkflowsNotFound) String() string {
-	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsNotFound %s", 404, payload)
 }
 
 func (o *GetWorkflowsNotFound) GetPayload() *GetWorkflowsNotFoundBody {
@@ -377,11 +386,13 @@ func (o *GetWorkflowsInternalServerError) Code() int {
 }
 
 func (o *GetWorkflowsInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsInternalServerError %s", 500, payload)
 }
 
 func (o *GetWorkflowsInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows][%d] getWorkflowsInternalServerError %s", 500, payload)
 }
 
 func (o *GetWorkflowsInternalServerError) GetPayload() *GetWorkflowsInternalServerErrorBody {
@@ -680,6 +691,9 @@ type GetWorkflowsOKBodyItemsItems0 struct {
 	// name
 	Name string `json:"name,omitempty"`
 
+	// owner email
+	OwnerEmail string `json:"owner_email,omitempty"`
+
 	// progress
 	Progress *GetWorkflowsOKBodyItemsItems0Progress `json:"progress,omitempty"`
 
@@ -691,6 +705,9 @@ type GetWorkflowsOKBodyItemsItems0 struct {
 
 	// session uri
 	SessionURI string `json:"session_uri,omitempty"`
+
+	// shared with
+	SharedWith []string `json:"shared_with"`
 
 	// size
 	Size *GetWorkflowsOKBodyItemsItems0Size `json:"size,omitempty"`

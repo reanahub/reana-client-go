@@ -94,11 +94,13 @@ func (o *GetSecretsOK) Code() int {
 }
 
 func (o *GetSecretsOK) Error() string {
-	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsOK %s", 200, payload)
 }
 
 func (o *GetSecretsOK) String() string {
-	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsOK %s", 200, payload)
 }
 
 func (o *GetSecretsOK) GetPayload() []*GetSecretsOKBodyItems0 {
@@ -160,11 +162,13 @@ func (o *GetSecretsForbidden) Code() int {
 }
 
 func (o *GetSecretsForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsForbidden %s", 403, payload)
 }
 
 func (o *GetSecretsForbidden) String() string {
-	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsForbidden %s", 403, payload)
 }
 
 func (o *GetSecretsForbidden) GetPayload() *GetSecretsForbiddenBody {
@@ -228,11 +232,13 @@ func (o *GetSecretsInternalServerError) Code() int {
 }
 
 func (o *GetSecretsInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsInternalServerError %s", 500, payload)
 }
 
 func (o *GetSecretsInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsInternalServerError %s", 500, payload)
 }
 
 func (o *GetSecretsInternalServerError) GetPayload() *GetSecretsInternalServerErrorBody {
@@ -337,7 +343,7 @@ type GetSecretsOKBodyItems0 struct {
 	Name string `json:"name,omitempty"`
 
 	// How will be the secret assigned to the jobs, either exported as an environment variable or mounted as a file.
-	// Enum: [env file]
+	// Enum: ["env","file"]
 	Type string `json:"type,omitempty"`
 }
 

@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -103,11 +104,13 @@ func (o *UploadFileOK) Code() int {
 }
 
 func (o *UploadFileOK) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileOK %s", 200, payload)
 }
 
 func (o *UploadFileOK) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileOK %s", 200, payload)
 }
 
 func (o *UploadFileOK) GetPayload() *UploadFileOKBody {
@@ -171,11 +174,13 @@ func (o *UploadFileBadRequest) Code() int {
 }
 
 func (o *UploadFileBadRequest) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileBadRequest %s", 400, payload)
 }
 
 func (o *UploadFileBadRequest) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileBadRequest %s", 400, payload)
 }
 
 func (o *UploadFileBadRequest) GetPayload() *UploadFileBadRequestBody {
@@ -239,11 +244,13 @@ func (o *UploadFileForbidden) Code() int {
 }
 
 func (o *UploadFileForbidden) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileForbidden %s", 403, payload)
 }
 
 func (o *UploadFileForbidden) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileForbidden %s", 403, payload)
 }
 
 func (o *UploadFileForbidden) GetPayload() *UploadFileForbiddenBody {
@@ -307,11 +314,13 @@ func (o *UploadFileNotFound) Code() int {
 }
 
 func (o *UploadFileNotFound) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileNotFound %s", 404, payload)
 }
 
 func (o *UploadFileNotFound) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileNotFound %s", 404, payload)
 }
 
 func (o *UploadFileNotFound) GetPayload() *UploadFileNotFoundBody {
@@ -375,11 +384,13 @@ func (o *UploadFileInternalServerError) Code() int {
 }
 
 func (o *UploadFileInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileInternalServerError %s", 500, payload)
 }
 
 func (o *UploadFileInternalServerError) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileInternalServerError %s", 500, payload)
 }
 
 func (o *UploadFileInternalServerError) GetPayload() *UploadFileInternalServerErrorBody {

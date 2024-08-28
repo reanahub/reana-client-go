@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -115,11 +116,13 @@ func (o *SetWorkflowStatusOK) Code() int {
 }
 
 func (o *SetWorkflowStatusOK) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusOK %s", 200, payload)
 }
 
 func (o *SetWorkflowStatusOK) String() string {
-	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusOK %s", 200, payload)
 }
 
 func (o *SetWorkflowStatusOK) GetPayload() *SetWorkflowStatusOKBody {
@@ -183,11 +186,13 @@ func (o *SetWorkflowStatusBadRequest) Code() int {
 }
 
 func (o *SetWorkflowStatusBadRequest) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusBadRequest %s", 400, payload)
 }
 
 func (o *SetWorkflowStatusBadRequest) String() string {
-	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusBadRequest %s", 400, payload)
 }
 
 func (o *SetWorkflowStatusBadRequest) GetPayload() *SetWorkflowStatusBadRequestBody {
@@ -251,11 +256,13 @@ func (o *SetWorkflowStatusForbidden) Code() int {
 }
 
 func (o *SetWorkflowStatusForbidden) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusForbidden %s", 403, payload)
 }
 
 func (o *SetWorkflowStatusForbidden) String() string {
-	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusForbidden %s", 403, payload)
 }
 
 func (o *SetWorkflowStatusForbidden) GetPayload() *SetWorkflowStatusForbiddenBody {
@@ -319,11 +326,13 @@ func (o *SetWorkflowStatusNotFound) Code() int {
 }
 
 func (o *SetWorkflowStatusNotFound) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusNotFound %s", 404, payload)
 }
 
 func (o *SetWorkflowStatusNotFound) String() string {
-	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusNotFound %s", 404, payload)
 }
 
 func (o *SetWorkflowStatusNotFound) GetPayload() *SetWorkflowStatusNotFoundBody {
@@ -387,11 +396,13 @@ func (o *SetWorkflowStatusConflict) Code() int {
 }
 
 func (o *SetWorkflowStatusConflict) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusConflict  %+v", 409, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusConflict %s", 409, payload)
 }
 
 func (o *SetWorkflowStatusConflict) String() string {
-	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusConflict  %+v", 409, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusConflict %s", 409, payload)
 }
 
 func (o *SetWorkflowStatusConflict) GetPayload() *SetWorkflowStatusConflictBody {
@@ -455,11 +466,13 @@ func (o *SetWorkflowStatusInternalServerError) Code() int {
 }
 
 func (o *SetWorkflowStatusInternalServerError) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusInternalServerError %s", 500, payload)
 }
 
 func (o *SetWorkflowStatusInternalServerError) String() string {
-	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusInternalServerError %s", 500, payload)
 }
 
 func (o *SetWorkflowStatusInternalServerError) GetPayload() *SetWorkflowStatusInternalServerErrorBody {
@@ -523,11 +536,13 @@ func (o *SetWorkflowStatusNotImplemented) Code() int {
 }
 
 func (o *SetWorkflowStatusNotImplemented) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusNotImplemented  %+v", 501, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusNotImplemented %s", 501, payload)
 }
 
 func (o *SetWorkflowStatusNotImplemented) String() string {
-	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusNotImplemented  %+v", 501, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusNotImplemented %s", 501, payload)
 }
 
 func (o *SetWorkflowStatusNotImplemented) GetPayload() *SetWorkflowStatusNotImplementedBody {

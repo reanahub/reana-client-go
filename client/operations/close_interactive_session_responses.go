@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -103,11 +104,13 @@ func (o *CloseInteractiveSessionOK) Code() int {
 }
 
 func (o *CloseInteractiveSessionOK) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionOK %s", 200, payload)
 }
 
 func (o *CloseInteractiveSessionOK) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionOK %s", 200, payload)
 }
 
 func (o *CloseInteractiveSessionOK) GetPayload() *CloseInteractiveSessionOKBody {
@@ -171,11 +174,13 @@ func (o *CloseInteractiveSessionBadRequest) Code() int {
 }
 
 func (o *CloseInteractiveSessionBadRequest) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionBadRequest %s", 400, payload)
 }
 
 func (o *CloseInteractiveSessionBadRequest) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionBadRequest %s", 400, payload)
 }
 
 func (o *CloseInteractiveSessionBadRequest) GetPayload() *CloseInteractiveSessionBadRequestBody {
@@ -239,11 +244,13 @@ func (o *CloseInteractiveSessionForbidden) Code() int {
 }
 
 func (o *CloseInteractiveSessionForbidden) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionForbidden %s", 403, payload)
 }
 
 func (o *CloseInteractiveSessionForbidden) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionForbidden %s", 403, payload)
 }
 
 func (o *CloseInteractiveSessionForbidden) GetPayload() *CloseInteractiveSessionForbiddenBody {
@@ -307,11 +314,13 @@ func (o *CloseInteractiveSessionNotFound) Code() int {
 }
 
 func (o *CloseInteractiveSessionNotFound) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionNotFound %s", 404, payload)
 }
 
 func (o *CloseInteractiveSessionNotFound) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionNotFound %s", 404, payload)
 }
 
 func (o *CloseInteractiveSessionNotFound) GetPayload() *CloseInteractiveSessionNotFoundBody {
@@ -375,11 +384,13 @@ func (o *CloseInteractiveSessionInternalServerError) Code() int {
 }
 
 func (o *CloseInteractiveSessionInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionInternalServerError %s", 500, payload)
 }
 
 func (o *CloseInteractiveSessionInternalServerError) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionInternalServerError %s", 500, payload)
 }
 
 func (o *CloseInteractiveSessionInternalServerError) GetPayload() *CloseInteractiveSessionInternalServerErrorBody {

@@ -75,11 +75,11 @@ func (o *GitlabConnectFound) Code() int {
 }
 
 func (o *GitlabConnectFound) Error() string {
-	return fmt.Sprintf("[GET /api/gitlab/connect][%d] gitlabConnectFound ", 302)
+	return fmt.Sprintf("[GET /api/gitlab/connect][%d] gitlabConnectFound", 302)
 }
 
 func (o *GitlabConnectFound) String() string {
-	return fmt.Sprintf("[GET /api/gitlab/connect][%d] gitlabConnectFound ", 302)
+	return fmt.Sprintf("[GET /api/gitlab/connect][%d] gitlabConnectFound", 302)
 }
 
 func (o *GitlabConnectFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

@@ -14,6 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // NewGitlabProjectsParams creates a new GitlabProjectsParams object,
@@ -60,6 +61,31 @@ GitlabProjectsParams contains all the parameters to send to the API endpoint
 	Typically these are written to a http.Request.
 */
 type GitlabProjectsParams struct {
+
+	/* AccessToken.
+
+	   The API access_token of the current user.
+	*/
+	AccessToken *string
+
+	/* Page.
+
+	   Results page number (pagination).
+	*/
+	Page *int64
+
+	/* Search.
+
+	   The search string to filter the project list.
+	*/
+	Search *string
+
+	/* Size.
+
+	   Number of results per page (pagination).
+	*/
+	Size *int64
+
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -113,6 +139,50 @@ func (o *GitlabProjectsParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithAccessToken adds the accessToken to the gitlab projects params
+func (o *GitlabProjectsParams) WithAccessToken(accessToken *string) *GitlabProjectsParams {
+	o.SetAccessToken(accessToken)
+	return o
+}
+
+// SetAccessToken adds the accessToken to the gitlab projects params
+func (o *GitlabProjectsParams) SetAccessToken(accessToken *string) {
+	o.AccessToken = accessToken
+}
+
+// WithPage adds the page to the gitlab projects params
+func (o *GitlabProjectsParams) WithPage(page *int64) *GitlabProjectsParams {
+	o.SetPage(page)
+	return o
+}
+
+// SetPage adds the page to the gitlab projects params
+func (o *GitlabProjectsParams) SetPage(page *int64) {
+	o.Page = page
+}
+
+// WithSearch adds the search to the gitlab projects params
+func (o *GitlabProjectsParams) WithSearch(search *string) *GitlabProjectsParams {
+	o.SetSearch(search)
+	return o
+}
+
+// SetSearch adds the search to the gitlab projects params
+func (o *GitlabProjectsParams) SetSearch(search *string) {
+	o.Search = search
+}
+
+// WithSize adds the size to the gitlab projects params
+func (o *GitlabProjectsParams) WithSize(size *int64) *GitlabProjectsParams {
+	o.SetSize(size)
+	return o
+}
+
+// SetSize adds the size to the gitlab projects params
+func (o *GitlabProjectsParams) SetSize(size *int64) {
+	o.Size = size
+}
+
 // WriteToRequest writes these params to a swagger request
 func (o *GitlabProjectsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -120,6 +190,74 @@ func (o *GitlabProjectsParams) WriteToRequest(r runtime.ClientRequest, reg strfm
 		return err
 	}
 	var res []error
+
+	if o.AccessToken != nil {
+
+		// query param access_token
+		var qrAccessToken string
+
+		if o.AccessToken != nil {
+			qrAccessToken = *o.AccessToken
+		}
+		qAccessToken := qrAccessToken
+		if qAccessToken != "" {
+
+			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.Page != nil {
+
+		// query param page
+		var qrPage int64
+
+		if o.Page != nil {
+			qrPage = *o.Page
+		}
+		qPage := swag.FormatInt64(qrPage)
+		if qPage != "" {
+
+			if err := r.SetQueryParam("page", qPage); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.Search != nil {
+
+		// query param search
+		var qrSearch string
+
+		if o.Search != nil {
+			qrSearch = *o.Search
+		}
+		qSearch := qrSearch
+		if qSearch != "" {
+
+			if err := r.SetQueryParam("search", qSearch); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.Size != nil {
+
+		// query param size
+		var qrSize int64
+
+		if o.Size != nil {
+			qrSize = *o.Size
+		}
+		qSize := swag.FormatInt64(qrSize)
+		if qSize != "" {
+
+			if err := r.SetQueryParam("size", qSize); err != nil {
+				return err
+			}
+		}
+	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

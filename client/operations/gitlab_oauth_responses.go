@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *GitlabOauthOK) Code() int {
 }
 
 func (o *GitlabOauthOK) Error() string {
-	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthOK %s", 200, payload)
 }
 
 func (o *GitlabOauthOK) String() string {
-	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthOK %s", 200, payload)
 }
 
 func (o *GitlabOauthOK) GetPayload() *GitlabOauthOKBody {
@@ -164,11 +167,11 @@ func (o *GitlabOauthFound) Code() int {
 }
 
 func (o *GitlabOauthFound) Error() string {
-	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthFound ", 302)
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthFound", 302)
 }
 
 func (o *GitlabOauthFound) String() string {
-	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthFound ", 302)
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthFound", 302)
 }
 
 func (o *GitlabOauthFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -221,11 +224,13 @@ func (o *GitlabOauthForbidden) Code() int {
 }
 
 func (o *GitlabOauthForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthForbidden %s", 403, payload)
 }
 
 func (o *GitlabOauthForbidden) String() string {
-	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthForbidden %s", 403, payload)
 }
 
 func (o *GitlabOauthForbidden) GetPayload() *GitlabOauthForbiddenBody {
@@ -289,11 +294,13 @@ func (o *GitlabOauthInternalServerError) Code() int {
 }
 
 func (o *GitlabOauthInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthInternalServerError %s", 500, payload)
 }
 
 func (o *GitlabOauthInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthInternalServerError %s", 500, payload)
 }
 
 func (o *GitlabOauthInternalServerError) GetPayload() *GitlabOauthInternalServerErrorBody {

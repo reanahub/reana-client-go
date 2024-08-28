@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,11 +99,11 @@ func (o *DeleteGitlabWebhookNoContent) Code() int {
 }
 
 func (o *DeleteGitlabWebhookNoContent) Error() string {
-	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookNoContent ", 204)
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookNoContent", 204)
 }
 
 func (o *DeleteGitlabWebhookNoContent) String() string {
-	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookNoContent ", 204)
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookNoContent", 204)
 }
 
 func (o *DeleteGitlabWebhookNoContent) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -155,11 +156,13 @@ func (o *DeleteGitlabWebhookForbidden) Code() int {
 }
 
 func (o *DeleteGitlabWebhookForbidden) Error() string {
-	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookForbidden %s", 403, payload)
 }
 
 func (o *DeleteGitlabWebhookForbidden) String() string {
-	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookForbidden %s", 403, payload)
 }
 
 func (o *DeleteGitlabWebhookForbidden) GetPayload() *DeleteGitlabWebhookForbiddenBody {
@@ -222,11 +225,11 @@ func (o *DeleteGitlabWebhookNotFound) Code() int {
 }
 
 func (o *DeleteGitlabWebhookNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookNotFound ", 404)
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookNotFound", 404)
 }
 
 func (o *DeleteGitlabWebhookNotFound) String() string {
-	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookNotFound ", 404)
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookNotFound", 404)
 }
 
 func (o *DeleteGitlabWebhookNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -279,11 +282,13 @@ func (o *DeleteGitlabWebhookInternalServerError) Code() int {
 }
 
 func (o *DeleteGitlabWebhookInternalServerError) Error() string {
-	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookInternalServerError %s", 500, payload)
 }
 
 func (o *DeleteGitlabWebhookInternalServerError) String() string {
-	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookInternalServerError %s", 500, payload)
 }
 
 func (o *DeleteGitlabWebhookInternalServerError) GetPayload() *DeleteGitlabWebhookInternalServerErrorBody {

@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,11 +99,13 @@ func (o *GetYouOK) Code() int {
 }
 
 func (o *GetYouOK) Error() string {
-	return fmt.Sprintf("[GET /api/you][%d] getYouOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/you][%d] getYouOK %s", 200, payload)
 }
 
 func (o *GetYouOK) String() string {
-	return fmt.Sprintf("[GET /api/you][%d] getYouOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/you][%d] getYouOK %s", 200, payload)
 }
 
 func (o *GetYouOK) GetPayload() *GetYouOKBody {
@@ -166,11 +169,13 @@ func (o *GetYouUnauthorized) Code() int {
 }
 
 func (o *GetYouUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /api/you][%d] getYouUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/you][%d] getYouUnauthorized %s", 401, payload)
 }
 
 func (o *GetYouUnauthorized) String() string {
-	return fmt.Sprintf("[GET /api/you][%d] getYouUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/you][%d] getYouUnauthorized %s", 401, payload)
 }
 
 func (o *GetYouUnauthorized) GetPayload() *GetYouUnauthorizedBody {
@@ -234,11 +239,13 @@ func (o *GetYouForbidden) Code() int {
 }
 
 func (o *GetYouForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/you][%d] getYouForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/you][%d] getYouForbidden %s", 403, payload)
 }
 
 func (o *GetYouForbidden) String() string {
-	return fmt.Sprintf("[GET /api/you][%d] getYouForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/you][%d] getYouForbidden %s", 403, payload)
 }
 
 func (o *GetYouForbidden) GetPayload() *GetYouForbiddenBody {
@@ -302,11 +309,13 @@ func (o *GetYouInternalServerError) Code() int {
 }
 
 func (o *GetYouInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/you][%d] getYouInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/you][%d] getYouInternalServerError %s", 500, payload)
 }
 
 func (o *GetYouInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/you][%d] getYouInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/you][%d] getYouInternalServerError %s", 500, payload)
 }
 
 func (o *GetYouInternalServerError) GetPayload() *GetYouInternalServerErrorBody {

@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -97,11 +98,13 @@ func (o *DeleteSecretsOK) Code() int {
 }
 
 func (o *DeleteSecretsOK) Error() string {
-	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsOK %s", 200, payload)
 }
 
 func (o *DeleteSecretsOK) String() string {
-	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsOK %s", 200, payload)
 }
 
 func (o *DeleteSecretsOK) GetPayload() []string {
@@ -163,11 +166,13 @@ func (o *DeleteSecretsForbidden) Code() int {
 }
 
 func (o *DeleteSecretsForbidden) Error() string {
-	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsForbidden %s", 403, payload)
 }
 
 func (o *DeleteSecretsForbidden) String() string {
-	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsForbidden %s", 403, payload)
 }
 
 func (o *DeleteSecretsForbidden) GetPayload() *DeleteSecretsForbiddenBody {
@@ -231,11 +236,13 @@ func (o *DeleteSecretsNotFound) Code() int {
 }
 
 func (o *DeleteSecretsNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsNotFound %s", 404, payload)
 }
 
 func (o *DeleteSecretsNotFound) String() string {
-	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsNotFound %s", 404, payload)
 }
 
 func (o *DeleteSecretsNotFound) GetPayload() []string {
@@ -297,11 +304,13 @@ func (o *DeleteSecretsInternalServerError) Code() int {
 }
 
 func (o *DeleteSecretsInternalServerError) Error() string {
-	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsInternalServerError %s", 500, payload)
 }
 
 func (o *DeleteSecretsInternalServerError) String() string {
-	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsInternalServerError %s", 500, payload)
 }
 
 func (o *DeleteSecretsInternalServerError) GetPayload() *DeleteSecretsInternalServerErrorBody {

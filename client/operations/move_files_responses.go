@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -109,11 +110,13 @@ func (o *MoveFilesOK) Code() int {
 }
 
 func (o *MoveFilesOK) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesOK %s", 200, payload)
 }
 
 func (o *MoveFilesOK) String() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesOK %s", 200, payload)
 }
 
 func (o *MoveFilesOK) GetPayload() *MoveFilesOKBody {
@@ -177,11 +180,13 @@ func (o *MoveFilesBadRequest) Code() int {
 }
 
 func (o *MoveFilesBadRequest) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesBadRequest %s", 400, payload)
 }
 
 func (o *MoveFilesBadRequest) String() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesBadRequest %s", 400, payload)
 }
 
 func (o *MoveFilesBadRequest) GetPayload() *MoveFilesBadRequestBody {
@@ -245,11 +250,13 @@ func (o *MoveFilesForbidden) Code() int {
 }
 
 func (o *MoveFilesForbidden) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesForbidden %s", 403, payload)
 }
 
 func (o *MoveFilesForbidden) String() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesForbidden %s", 403, payload)
 }
 
 func (o *MoveFilesForbidden) GetPayload() *MoveFilesForbiddenBody {
@@ -313,11 +320,13 @@ func (o *MoveFilesNotFound) Code() int {
 }
 
 func (o *MoveFilesNotFound) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesNotFound %s", 404, payload)
 }
 
 func (o *MoveFilesNotFound) String() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesNotFound %s", 404, payload)
 }
 
 func (o *MoveFilesNotFound) GetPayload() *MoveFilesNotFoundBody {
@@ -381,11 +390,13 @@ func (o *MoveFilesConflict) Code() int {
 }
 
 func (o *MoveFilesConflict) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesConflict  %+v", 409, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesConflict %s", 409, payload)
 }
 
 func (o *MoveFilesConflict) String() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesConflict  %+v", 409, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesConflict %s", 409, payload)
 }
 
 func (o *MoveFilesConflict) GetPayload() *MoveFilesConflictBody {
@@ -449,11 +460,13 @@ func (o *MoveFilesInternalServerError) Code() int {
 }
 
 func (o *MoveFilesInternalServerError) Error() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesInternalServerError %s", 500, payload)
 }
 
 func (o *MoveFilesInternalServerError) String() string {
-	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/workflows/move_files/{workflow_id_or_name}][%d] moveFilesInternalServerError %s", 500, payload)
 }
 
 func (o *MoveFilesInternalServerError) GetPayload() *MoveFilesInternalServerErrorBody {

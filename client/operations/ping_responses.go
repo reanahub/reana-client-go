@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -79,11 +80,13 @@ func (o *PingOK) Code() int {
 }
 
 func (o *PingOK) Error() string {
-	return fmt.Sprintf("[GET /api/ping][%d] pingOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/ping][%d] pingOK %s", 200, payload)
 }
 
 func (o *PingOK) String() string {
-	return fmt.Sprintf("[GET /api/ping][%d] pingOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/ping][%d] pingOK %s", 200, payload)
 }
 
 func (o *PingOK) GetPayload() *PingOKBody {

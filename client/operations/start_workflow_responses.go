@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -115,11 +116,13 @@ func (o *StartWorkflowOK) Code() int {
 }
 
 func (o *StartWorkflowOK) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowOK %s", 200, payload)
 }
 
 func (o *StartWorkflowOK) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowOK %s", 200, payload)
 }
 
 func (o *StartWorkflowOK) GetPayload() *StartWorkflowOKBody {
@@ -183,11 +186,13 @@ func (o *StartWorkflowBadRequest) Code() int {
 }
 
 func (o *StartWorkflowBadRequest) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowBadRequest %s", 400, payload)
 }
 
 func (o *StartWorkflowBadRequest) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowBadRequest %s", 400, payload)
 }
 
 func (o *StartWorkflowBadRequest) GetPayload() *StartWorkflowBadRequestBody {
@@ -251,11 +256,13 @@ func (o *StartWorkflowForbidden) Code() int {
 }
 
 func (o *StartWorkflowForbidden) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowForbidden %s", 403, payload)
 }
 
 func (o *StartWorkflowForbidden) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowForbidden %s", 403, payload)
 }
 
 func (o *StartWorkflowForbidden) GetPayload() *StartWorkflowForbiddenBody {
@@ -319,11 +326,13 @@ func (o *StartWorkflowNotFound) Code() int {
 }
 
 func (o *StartWorkflowNotFound) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotFound %s", 404, payload)
 }
 
 func (o *StartWorkflowNotFound) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotFound %s", 404, payload)
 }
 
 func (o *StartWorkflowNotFound) GetPayload() *StartWorkflowNotFoundBody {
@@ -387,11 +396,13 @@ func (o *StartWorkflowConflict) Code() int {
 }
 
 func (o *StartWorkflowConflict) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowConflict  %+v", 409, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowConflict %s", 409, payload)
 }
 
 func (o *StartWorkflowConflict) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowConflict  %+v", 409, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowConflict %s", 409, payload)
 }
 
 func (o *StartWorkflowConflict) GetPayload() *StartWorkflowConflictBody {
@@ -455,11 +466,13 @@ func (o *StartWorkflowInternalServerError) Code() int {
 }
 
 func (o *StartWorkflowInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowInternalServerError %s", 500, payload)
 }
 
 func (o *StartWorkflowInternalServerError) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowInternalServerError %s", 500, payload)
 }
 
 func (o *StartWorkflowInternalServerError) GetPayload() *StartWorkflowInternalServerErrorBody {
@@ -523,11 +536,13 @@ func (o *StartWorkflowNotImplemented) Code() int {
 }
 
 func (o *StartWorkflowNotImplemented) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotImplemented  %+v", 501, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotImplemented %s", 501, payload)
 }
 
 func (o *StartWorkflowNotImplemented) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotImplemented  %+v", 501, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowNotImplemented %s", 501, payload)
 }
 
 func (o *StartWorkflowNotImplemented) GetPayload() *StartWorkflowNotImplementedBody {

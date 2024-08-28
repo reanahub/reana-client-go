@@ -10,12 +10,38 @@ import (
 	"io"
 
 	"github.com/go-openapi/runtime"
+	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 )
 
 // New creates a new operations API client.
 func New(transport runtime.ClientTransport, formats strfmt.Registry) ClientService {
 	return &Client{transport: transport, formats: formats}
+}
+
+// New creates a new operations API client with basic auth credentials.
+// It takes the following parameters:
+// - host: http host (github.com).
+// - basePath: any base path for the API client ("/v1", "/v3").
+// - scheme: http scheme ("http", "https").
+// - user: user for basic authentication header.
+// - password: password for basic authentication header.
+func NewClientWithBasicAuth(host, basePath, scheme, user, password string) ClientService {
+	transport := httptransport.New(host, basePath, []string{scheme})
+	transport.DefaultAuthentication = httptransport.BasicAuth(user, password)
+	return &Client{transport: transport, formats: strfmt.Default}
+}
+
+// New creates a new operations API client with a bearer token for authentication.
+// It takes the following parameters:
+// - host: http host (github.com).
+// - basePath: any base path for the API client ("/v1", "/v3").
+// - scheme: http scheme ("http", "https").
+// - bearerToken: bearer token for Bearer authentication header.
+func NewClientWithBearerToken(host, basePath, scheme, bearerToken string) ClientService {
+	transport := httptransport.New(host, basePath, []string{scheme})
+	transport.DefaultAuthentication = httptransport.BearerToken(bearerToken)
+	return &Client{transport: transport, formats: strfmt.Default}
 }
 
 /*
@@ -26,8 +52,67 @@ type Client struct {
 	formats   strfmt.Registry
 }
 
-// ClientOption is the option for Client methods
+// ClientOption may be used to customize the behavior of Client methods.
 type ClientOption func(*runtime.ClientOperation)
+
+// This client is generated with a few options you might find useful for your swagger spec.
+//
+// Feel free to add you own set of options.
+
+// WithContentType allows the client to force the Content-Type header
+// to negotiate a specific Consumer from the server.
+//
+// You may use this option to set arbitrary extensions to your MIME media type.
+func WithContentType(mime string) ClientOption {
+	return func(r *runtime.ClientOperation) {
+		r.ConsumesMediaTypes = []string{mime}
+	}
+}
+
+// WithContentTypeApplicationJSON sets the Content-Type header to "application/json".
+func WithContentTypeApplicationJSON(r *runtime.ClientOperation) {
+	r.ConsumesMediaTypes = []string{"application/json"}
+}
+
+// WithContentTypeApplicationOctetStream sets the Content-Type header to "application/octet-stream".
+func WithContentTypeApplicationOctetStream(r *runtime.ClientOperation) {
+	r.ConsumesMediaTypes = []string{"application/octet-stream"}
+}
+
+// WithAccept allows the client to force the Accept header
+// to negotiate a specific Producer from the server.
+//
+// You may use this option to set arbitrary extensions to your MIME media type.
+func WithAccept(mime string) ClientOption {
+	return func(r *runtime.ClientOperation) {
+		r.ProducesMediaTypes = []string{mime}
+	}
+}
+
+// WithAcceptApplicationJSON sets the Accept header to "application/json".
+func WithAcceptApplicationJSON(r *runtime.ClientOperation) {
+	r.ProducesMediaTypes = []string{"application/json"}
+}
+
+// WithAcceptApplicationOctetStream sets the Accept header to "application/octet-stream".
+func WithAcceptApplicationOctetStream(r *runtime.ClientOperation) {
+	r.ProducesMediaTypes = []string{"application/octet-stream"}
+}
+
+// WithAcceptApplicationZip sets the Accept header to "application/zip".
+func WithAcceptApplicationZip(r *runtime.ClientOperation) {
+	r.ProducesMediaTypes = []string{"application/zip"}
+}
+
+// WithAcceptImageStar sets the Accept header to "image/*".
+func WithAcceptImageStar(r *runtime.ClientOperation) {
+	r.ProducesMediaTypes = []string{"image/*"}
+}
+
+// WithAcceptTextHTML sets the Accept header to "text/html".
+func WithAcceptTextHTML(r *runtime.ClientOperation) {
+	r.ProducesMediaTypes = []string{"text/html"}
+}
 
 // ClientService is the interface for Client methods
 type ClientService interface {
@@ -53,6 +138,10 @@ type ClientService interface {
 
 	GetSecrets(params *GetSecretsParams, opts ...ClientOption) (*GetSecretsOK, error)
 
+	GetUsersSharedWithYou(params *GetUsersSharedWithYouParams, opts ...ClientOption) (*GetUsersSharedWithYouOK, error)
+
+	GetUsersYouSharedWith(params *GetUsersYouSharedWithParams, opts ...ClientOption) (*GetUsersYouSharedWithOK, error)
+
 	GetWorkflowDiff(params *GetWorkflowDiffParams, opts ...ClientOption) (*GetWorkflowDiffOK, error)
 
 	GetWorkflowDiskUsage(params *GetWorkflowDiskUsageParams, opts ...ClientOption) (*GetWorkflowDiskUsageOK, error)
@@ -62,6 +151,8 @@ type ClientService interface {
 	GetWorkflowParameters(params *GetWorkflowParametersParams, opts ...ClientOption) (*GetWorkflowParametersOK, error)
 
 	GetWorkflowRetentionRules(params *GetWorkflowRetentionRulesParams, opts ...ClientOption) (*GetWorkflowRetentionRulesOK, error)
+
+	GetWorkflowShareStatus(params *GetWorkflowShareStatusParams, opts ...ClientOption) (*GetWorkflowShareStatusOK, error)
 
 	GetWorkflowSpecification(params *GetWorkflowSpecificationParams, opts ...ClientOption) (*GetWorkflowSpecificationOK, error)
 
@@ -93,9 +184,13 @@ type ClientService interface {
 
 	SetWorkflowStatus(params *SetWorkflowStatusParams, opts ...ClientOption) (*SetWorkflowStatusOK, error)
 
+	ShareWorkflow(params *ShareWorkflowParams, opts ...ClientOption) (*ShareWorkflowOK, error)
+
 	StartWorkflow(params *StartWorkflowParams, opts ...ClientOption) (*StartWorkflowOK, error)
 
 	Status(params *StatusParams, opts ...ClientOption) (*StatusOK, error)
+
+	UnshareWorkflow(params *UnshareWorkflowParams, opts ...ClientOption) (*UnshareWorkflowOK, error)
 
 	UploadFile(params *UploadFileParams, opts ...ClientOption) (*UploadFileOK, error)
 
@@ -396,7 +491,7 @@ func (a *Client) DownloadFile(params *DownloadFileParams, writer io.Writer, opts
 		ID:                 "download_file",
 		Method:             "GET",
 		PathPattern:        "/api/workflows/{workflow_id_or_name}/workspace/{file_name}",
-		ProducesMediaTypes: []string{"application/json", "application/octet-stream", "application/zip", "image/*", "text/html"},
+		ProducesMediaTypes: []string{"application/octet-stream", "application/json", "application/zip", "image/*", "text/html"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
 		Params:             params,
@@ -539,6 +634,86 @@ func (a *Client) GetSecrets(params *GetSecretsParams, opts ...ClientOption) (*Ge
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_secrets: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+GetUsersSharedWithYou gets users that shared workflow s with the authenticated user
+
+This resource provides information about users that shared workflow(s) with the authenticated user.
+*/
+func (a *Client) GetUsersSharedWithYou(params *GetUsersSharedWithYouParams, opts ...ClientOption) (*GetUsersSharedWithYouOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetUsersSharedWithYouParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "get_users_shared_with_you",
+		Method:             "GET",
+		PathPattern:        "/api/users/shared-with-you",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &GetUsersSharedWithYouReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetUsersSharedWithYouOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for get_users_shared_with_you: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+GetUsersYouSharedWith gets users that the authenticated user shared workflow s with
+
+This resource provides information about users that the authenticated user shared workflow(s) with.
+*/
+func (a *Client) GetUsersYouSharedWith(params *GetUsersYouSharedWithParams, opts ...ClientOption) (*GetUsersYouSharedWithOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetUsersYouSharedWithParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "get_users_you_shared_with",
+		Method:             "GET",
+		PathPattern:        "/api/users/you-shared-with",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &GetUsersYouSharedWithReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetUsersYouSharedWithOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for get_users_you_shared_with: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -739,6 +914,46 @@ func (a *Client) GetWorkflowRetentionRules(params *GetWorkflowRetentionRulesPara
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_workflow_retention_rules: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+GetWorkflowShareStatus gets the share status of a workflow
+
+This resource returns the share status of a given workflow.
+*/
+func (a *Client) GetWorkflowShareStatus(params *GetWorkflowShareStatusParams, opts ...ClientOption) (*GetWorkflowShareStatusOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewGetWorkflowShareStatusParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "get_workflow_share_status",
+		Method:             "GET",
+		PathPattern:        "/api/workflows/{workflow_id_or_name}/share-status",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &GetWorkflowShareStatusReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*GetWorkflowShareStatusOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for get_workflow_share_status: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -1336,6 +1551,46 @@ func (a *Client) SetWorkflowStatus(params *SetWorkflowStatusParams, opts ...Clie
 }
 
 /*
+ShareWorkflow shares a workflow with another user
+
+This resource shares a workflow with another user. This resource is expecting a workflow UUID and some parameters.
+*/
+func (a *Client) ShareWorkflow(params *ShareWorkflowParams, opts ...ClientOption) (*ShareWorkflowOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewShareWorkflowParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "share_workflow",
+		Method:             "POST",
+		PathPattern:        "/api/workflows/{workflow_id_or_name}/share",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &ShareWorkflowReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*ShareWorkflowOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for share_workflow: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
 StartWorkflow starts workflow
 
 This resource starts the workflow execution process. Resource is expecting a workflow UUID.
@@ -1412,6 +1667,46 @@ func (a *Client) Status(params *StatusParams, opts ...ClientOption) (*StatusOK, 
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for status: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+UnshareWorkflow unshares a workflow with another user
+
+This resource unshares a workflow with another user. This resource is expecting a workflow UUID and some parameters.
+*/
+func (a *Client) UnshareWorkflow(params *UnshareWorkflowParams, opts ...ClientOption) (*UnshareWorkflowOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewUnshareWorkflowParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "unshare_workflow",
+		Method:             "POST",
+		PathPattern:        "/api/workflows/{workflow_id_or_name}/unshare",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &UnshareWorkflowReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*UnshareWorkflowOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for unshare_workflow: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

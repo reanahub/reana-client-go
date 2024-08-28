@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"strconv"
@@ -105,11 +106,13 @@ func (o *GetWorkflowRetentionRulesOK) Code() int {
 }
 
 func (o *GetWorkflowRetentionRulesOK) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesOK %s", 200, payload)
 }
 
 func (o *GetWorkflowRetentionRulesOK) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesOK %s", 200, payload)
 }
 
 func (o *GetWorkflowRetentionRulesOK) GetPayload() *GetWorkflowRetentionRulesOKBody {
@@ -173,11 +176,13 @@ func (o *GetWorkflowRetentionRulesUnauthorized) Code() int {
 }
 
 func (o *GetWorkflowRetentionRulesUnauthorized) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesUnauthorized %s", 401, payload)
 }
 
 func (o *GetWorkflowRetentionRulesUnauthorized) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesUnauthorized %s", 401, payload)
 }
 
 func (o *GetWorkflowRetentionRulesUnauthorized) GetPayload() *GetWorkflowRetentionRulesUnauthorizedBody {
@@ -241,11 +246,13 @@ func (o *GetWorkflowRetentionRulesForbidden) Code() int {
 }
 
 func (o *GetWorkflowRetentionRulesForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesForbidden %s", 403, payload)
 }
 
 func (o *GetWorkflowRetentionRulesForbidden) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesForbidden %s", 403, payload)
 }
 
 func (o *GetWorkflowRetentionRulesForbidden) GetPayload() *GetWorkflowRetentionRulesForbiddenBody {
@@ -309,11 +316,13 @@ func (o *GetWorkflowRetentionRulesNotFound) Code() int {
 }
 
 func (o *GetWorkflowRetentionRulesNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesNotFound %s", 404, payload)
 }
 
 func (o *GetWorkflowRetentionRulesNotFound) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesNotFound %s", 404, payload)
 }
 
 func (o *GetWorkflowRetentionRulesNotFound) GetPayload() *GetWorkflowRetentionRulesNotFoundBody {
@@ -377,11 +386,13 @@ func (o *GetWorkflowRetentionRulesInternalServerError) Code() int {
 }
 
 func (o *GetWorkflowRetentionRulesInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesInternalServerError %s", 500, payload)
 }
 
 func (o *GetWorkflowRetentionRulesInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/retention_rules][%d] getWorkflowRetentionRulesInternalServerError %s", 500, payload)
 }
 
 func (o *GetWorkflowRetentionRulesInternalServerError) GetPayload() *GetWorkflowRetentionRulesInternalServerErrorBody {

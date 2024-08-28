@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -86,11 +87,13 @@ func (o *StatusOK) Code() int {
 }
 
 func (o *StatusOK) Error() string {
-	return fmt.Sprintf("[GET /api/status][%d] statusOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/status][%d] statusOK %s", 200, payload)
 }
 
 func (o *StatusOK) String() string {
-	return fmt.Sprintf("[GET /api/status][%d] statusOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/status][%d] statusOK %s", 200, payload)
 }
 
 func (o *StatusOK) GetPayload() *StatusOKBody {
@@ -154,11 +157,13 @@ func (o *StatusInternalServerError) Code() int {
 }
 
 func (o *StatusInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/status][%d] statusInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/status][%d] statusInternalServerError %s", 500, payload)
 }
 
 func (o *StatusInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/status][%d] statusInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/status][%d] statusInternalServerError %s", 500, payload)
 }
 
 func (o *StatusInternalServerError) GetPayload() *StatusInternalServerErrorBody {

@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -103,11 +104,13 @@ func (o *GetWorkflowLogsOK) Code() int {
 }
 
 func (o *GetWorkflowLogsOK) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsOK %s", 200, payload)
 }
 
 func (o *GetWorkflowLogsOK) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsOK %s", 200, payload)
 }
 
 func (o *GetWorkflowLogsOK) GetPayload() *GetWorkflowLogsOKBody {
@@ -171,11 +174,13 @@ func (o *GetWorkflowLogsBadRequest) Code() int {
 }
 
 func (o *GetWorkflowLogsBadRequest) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsBadRequest %s", 400, payload)
 }
 
 func (o *GetWorkflowLogsBadRequest) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsBadRequest %s", 400, payload)
 }
 
 func (o *GetWorkflowLogsBadRequest) GetPayload() *GetWorkflowLogsBadRequestBody {
@@ -239,11 +244,13 @@ func (o *GetWorkflowLogsForbidden) Code() int {
 }
 
 func (o *GetWorkflowLogsForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsForbidden %s", 403, payload)
 }
 
 func (o *GetWorkflowLogsForbidden) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsForbidden %s", 403, payload)
 }
 
 func (o *GetWorkflowLogsForbidden) GetPayload() *GetWorkflowLogsForbiddenBody {
@@ -307,11 +314,13 @@ func (o *GetWorkflowLogsNotFound) Code() int {
 }
 
 func (o *GetWorkflowLogsNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsNotFound %s", 404, payload)
 }
 
 func (o *GetWorkflowLogsNotFound) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsNotFound %s", 404, payload)
 }
 
 func (o *GetWorkflowLogsNotFound) GetPayload() *GetWorkflowLogsNotFoundBody {
@@ -375,11 +384,13 @@ func (o *GetWorkflowLogsInternalServerError) Code() int {
 }
 
 func (o *GetWorkflowLogsInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsInternalServerError %s", 500, payload)
 }
 
 func (o *GetWorkflowLogsInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsInternalServerError %s", 500, payload)
 }
 
 func (o *GetWorkflowLogsInternalServerError) GetPayload() *GetWorkflowLogsInternalServerErrorBody {

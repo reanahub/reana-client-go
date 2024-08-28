@@ -7,9 +7,12 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
+	"strconv"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
@@ -57,6 +60,7 @@ GitlabProjectsOK describes a response with status code 200, with default header 
 This resource return all projects owned by the user on GitLab in JSON format.
 */
 type GitlabProjectsOK struct {
+	Payload *GitlabProjectsOKBody
 }
 
 // IsSuccess returns true when this gitlab projects o k response has a 2xx status code
@@ -90,14 +94,27 @@ func (o *GitlabProjectsOK) Code() int {
 }
 
 func (o *GitlabProjectsOK) Error() string {
-	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsOK ", 200)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsOK %s", 200, payload)
 }
 
 func (o *GitlabProjectsOK) String() string {
-	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsOK ", 200)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsOK %s", 200, payload)
+}
+
+func (o *GitlabProjectsOK) GetPayload() *GitlabProjectsOKBody {
+	return o.Payload
 }
 
 func (o *GitlabProjectsOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GitlabProjectsOKBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
 
 	return nil
 }
@@ -147,11 +164,13 @@ func (o *GitlabProjectsForbidden) Code() int {
 }
 
 func (o *GitlabProjectsForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsForbidden %s", 403, payload)
 }
 
 func (o *GitlabProjectsForbidden) String() string {
-	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsForbidden %s", 403, payload)
 }
 
 func (o *GitlabProjectsForbidden) GetPayload() *GitlabProjectsForbiddenBody {
@@ -215,11 +234,13 @@ func (o *GitlabProjectsInternalServerError) Code() int {
 }
 
 func (o *GitlabProjectsInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsInternalServerError %s", 500, payload)
 }
 
 func (o *GitlabProjectsInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsInternalServerError %s", 500, payload)
 }
 
 func (o *GitlabProjectsInternalServerError) GetPayload() *GitlabProjectsInternalServerErrorBody {
@@ -307,6 +328,178 @@ func (o *GitlabProjectsInternalServerErrorBody) MarshalBinary() ([]byte, error) 
 // UnmarshalBinary interface implementation
 func (o *GitlabProjectsInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	var res GitlabProjectsInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+GitlabProjectsOKBody gitlab projects o k body
+swagger:model GitlabProjectsOKBody
+*/
+type GitlabProjectsOKBody struct {
+
+	// has next
+	HasNext bool `json:"has_next,omitempty"`
+
+	// has prev
+	HasPrev bool `json:"has_prev,omitempty"`
+
+	// items
+	Items []*GitlabProjectsOKBodyItemsItems0 `json:"items"`
+
+	// page
+	Page int64 `json:"page,omitempty"`
+
+	// size
+	Size int64 `json:"size,omitempty"`
+
+	// total
+	Total *int64 `json:"total,omitempty"`
+}
+
+// Validate validates this gitlab projects o k body
+func (o *GitlabProjectsOKBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateItems(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *GitlabProjectsOKBody) validateItems(formats strfmt.Registry) error {
+	if swag.IsZero(o.Items) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(o.Items); i++ {
+		if swag.IsZero(o.Items[i]) { // not required
+			continue
+		}
+
+		if o.Items[i] != nil {
+			if err := o.Items[i].Validate(formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("gitlabProjectsOK" + "." + "items" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("gitlabProjectsOK" + "." + "items" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// ContextValidate validate this gitlab projects o k body based on the context it is used
+func (o *GitlabProjectsOKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateItems(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *GitlabProjectsOKBody) contextValidateItems(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(o.Items); i++ {
+
+		if o.Items[i] != nil {
+
+			if swag.IsZero(o.Items[i]) { // not required
+				return nil
+			}
+
+			if err := o.Items[i].ContextValidate(ctx, formats); err != nil {
+				if ve, ok := err.(*errors.Validation); ok {
+					return ve.ValidateName("gitlabProjectsOK" + "." + "items" + "." + strconv.Itoa(i))
+				} else if ce, ok := err.(*errors.CompositeError); ok {
+					return ce.ValidateName("gitlabProjectsOK" + "." + "items" + "." + strconv.Itoa(i))
+				}
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GitlabProjectsOKBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GitlabProjectsOKBody) UnmarshalBinary(b []byte) error {
+	var res GitlabProjectsOKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+GitlabProjectsOKBodyItemsItems0 gitlab projects o k body items items0
+swagger:model GitlabProjectsOKBodyItemsItems0
+*/
+type GitlabProjectsOKBodyItemsItems0 struct {
+
+	// hook id
+	HookID *int64 `json:"hook_id,omitempty"`
+
+	// id
+	ID int64 `json:"id,omitempty"`
+
+	// name
+	Name string `json:"name,omitempty"`
+
+	// path
+	Path string `json:"path,omitempty"`
+
+	// url
+	URL string `json:"url,omitempty"`
+}
+
+// Validate validates this gitlab projects o k body items items0
+func (o *GitlabProjectsOKBodyItemsItems0) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this gitlab projects o k body items items0 based on context it is used
+func (o *GitlabProjectsOKBodyItemsItems0) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GitlabProjectsOKBodyItemsItems0) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GitlabProjectsOKBodyItemsItems0) UnmarshalBinary(b []byte) error {
+	var res GitlabProjectsOKBodyItemsItems0
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

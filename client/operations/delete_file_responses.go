@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,11 +99,13 @@ func (o *DeleteFileOK) Code() int {
 }
 
 func (o *DeleteFileOK) Error() string {
-	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileOK %s", 200, payload)
 }
 
 func (o *DeleteFileOK) String() string {
-	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileOK %s", 200, payload)
 }
 
 func (o *DeleteFileOK) GetPayload() *DeleteFileOKBody {
@@ -166,11 +169,13 @@ func (o *DeleteFileForbidden) Code() int {
 }
 
 func (o *DeleteFileForbidden) Error() string {
-	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileForbidden %s", 403, payload)
 }
 
 func (o *DeleteFileForbidden) String() string {
-	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileForbidden %s", 403, payload)
 }
 
 func (o *DeleteFileForbidden) GetPayload() *DeleteFileForbiddenBody {
@@ -234,11 +239,13 @@ func (o *DeleteFileNotFound) Code() int {
 }
 
 func (o *DeleteFileNotFound) Error() string {
-	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileNotFound %s", 404, payload)
 }
 
 func (o *DeleteFileNotFound) String() string {
-	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileNotFound %s", 404, payload)
 }
 
 func (o *DeleteFileNotFound) GetPayload() *DeleteFileNotFoundBody {
@@ -302,11 +309,13 @@ func (o *DeleteFileInternalServerError) Code() int {
 }
 
 func (o *DeleteFileInternalServerError) Error() string {
-	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileInternalServerError %s", 500, payload)
 }
 
 func (o *DeleteFileInternalServerError) String() string {
-	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileInternalServerError %s", 500, payload)
 }
 
 func (o *DeleteFileInternalServerError) GetPayload() *DeleteFileInternalServerErrorBody {

@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -93,11 +94,13 @@ func (o *LaunchOK) Code() int {
 }
 
 func (o *LaunchOK) Error() string {
-	return fmt.Sprintf("[POST /api/launch][%d] launchOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/launch][%d] launchOK %s", 200, payload)
 }
 
 func (o *LaunchOK) String() string {
-	return fmt.Sprintf("[POST /api/launch][%d] launchOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/launch][%d] launchOK %s", 200, payload)
 }
 
 func (o *LaunchOK) GetPayload() *LaunchOKBody {
@@ -161,11 +164,13 @@ func (o *LaunchBadRequest) Code() int {
 }
 
 func (o *LaunchBadRequest) Error() string {
-	return fmt.Sprintf("[POST /api/launch][%d] launchBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/launch][%d] launchBadRequest %s", 400, payload)
 }
 
 func (o *LaunchBadRequest) String() string {
-	return fmt.Sprintf("[POST /api/launch][%d] launchBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/launch][%d] launchBadRequest %s", 400, payload)
 }
 
 func (o *LaunchBadRequest) GetPayload() *LaunchBadRequestBody {
@@ -229,11 +234,13 @@ func (o *LaunchInternalServerError) Code() int {
 }
 
 func (o *LaunchInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/launch][%d] launchInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/launch][%d] launchInternalServerError %s", 500, payload)
 }
 
 func (o *LaunchInternalServerError) String() string {
-	return fmt.Sprintf("[POST /api/launch][%d] launchInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/launch][%d] launchInternalServerError %s", 500, payload)
 }
 
 func (o *LaunchInternalServerError) GetPayload() *LaunchInternalServerErrorBody {
@@ -401,22 +408,125 @@ swagger:model LaunchOKBody
 type LaunchOKBody struct {
 
 	// message
-	Message string `json:"message,omitempty"`
+	// Required: true
+	Message *string `json:"message"`
+
+	// validation warnings
+	ValidationWarnings *LaunchOKBodyValidationWarnings `json:"validation_warnings,omitempty"`
 
 	// workflow id
-	WorkflowID string `json:"workflow_id,omitempty"`
+	// Required: true
+	WorkflowID *string `json:"workflow_id"`
 
 	// workflow name
-	WorkflowName string `json:"workflow_name,omitempty"`
+	// Required: true
+	WorkflowName *string `json:"workflow_name"`
 }
 
 // Validate validates this launch o k body
 func (o *LaunchOKBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateMessage(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateValidationWarnings(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateWorkflowID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateWorkflowName(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
 	return nil
 }
 
-// ContextValidate validates this launch o k body based on context it is used
+func (o *LaunchOKBody) validateMessage(formats strfmt.Registry) error {
+
+	if err := validate.Required("launchOK"+"."+"message", "body", o.Message); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (o *LaunchOKBody) validateValidationWarnings(formats strfmt.Registry) error {
+	if swag.IsZero(o.ValidationWarnings) { // not required
+		return nil
+	}
+
+	if o.ValidationWarnings != nil {
+		if err := o.ValidationWarnings.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("launchOK" + "." + "validation_warnings")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("launchOK" + "." + "validation_warnings")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *LaunchOKBody) validateWorkflowID(formats strfmt.Registry) error {
+
+	if err := validate.Required("launchOK"+"."+"workflow_id", "body", o.WorkflowID); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (o *LaunchOKBody) validateWorkflowName(formats strfmt.Registry) error {
+
+	if err := validate.Required("launchOK"+"."+"workflow_name", "body", o.WorkflowName); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validate this launch o k body based on the context it is used
 func (o *LaunchOKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateValidationWarnings(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *LaunchOKBody) contextValidateValidationWarnings(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.ValidationWarnings != nil {
+
+		if swag.IsZero(o.ValidationWarnings) { // not required
+			return nil
+		}
+
+		if err := o.ValidationWarnings.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("launchOK" + "." + "validation_warnings")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("launchOK" + "." + "validation_warnings")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -431,6 +541,44 @@ func (o *LaunchOKBody) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *LaunchOKBody) UnmarshalBinary(b []byte) error {
 	var res LaunchOKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+LaunchOKBodyValidationWarnings Dictionary of validation warnings, if any. Each key is a property that was not correctly validated.
+swagger:model LaunchOKBodyValidationWarnings
+*/
+type LaunchOKBodyValidationWarnings struct {
+
+	// additional properties
+	AdditionalProperties []string `json:"additional_properties"`
+}
+
+// Validate validates this launch o k body validation warnings
+func (o *LaunchOKBodyValidationWarnings) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this launch o k body validation warnings based on context it is used
+func (o *LaunchOKBodyValidationWarnings) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *LaunchOKBodyValidationWarnings) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *LaunchOKBodyValidationWarnings) UnmarshalBinary(b []byte) error {
+	var res LaunchOKBodyValidationWarnings
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

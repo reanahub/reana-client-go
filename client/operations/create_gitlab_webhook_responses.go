@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -92,11 +93,11 @@ func (o *CreateGitlabWebhookCreated) Code() int {
 }
 
 func (o *CreateGitlabWebhookCreated) Error() string {
-	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookCreated ", 201)
+	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookCreated", 201)
 }
 
 func (o *CreateGitlabWebhookCreated) String() string {
-	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookCreated ", 201)
+	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookCreated", 201)
 }
 
 func (o *CreateGitlabWebhookCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -149,11 +150,13 @@ func (o *CreateGitlabWebhookForbidden) Code() int {
 }
 
 func (o *CreateGitlabWebhookForbidden) Error() string {
-	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookForbidden %s", 403, payload)
 }
 
 func (o *CreateGitlabWebhookForbidden) String() string {
-	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookForbidden %s", 403, payload)
 }
 
 func (o *CreateGitlabWebhookForbidden) GetPayload() *CreateGitlabWebhookForbiddenBody {
@@ -217,11 +220,13 @@ func (o *CreateGitlabWebhookInternalServerError) Code() int {
 }
 
 func (o *CreateGitlabWebhookInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookInternalServerError %s", 500, payload)
 }
 
 func (o *CreateGitlabWebhookInternalServerError) String() string {
-	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookInternalServerError %s", 500, payload)
 }
 
 func (o *CreateGitlabWebhookInternalServerError) GetPayload() *CreateGitlabWebhookInternalServerErrorBody {

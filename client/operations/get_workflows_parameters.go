@@ -92,6 +92,24 @@ type GetWorkflowsParams struct {
 	*/
 	Search *string
 
+	/* Shared.
+
+	   Optional flag to list all shared (owned and unowned) workflows.
+	*/
+	Shared *bool
+
+	/* SharedBy.
+
+	   Optional argument to list workflows shared by the specified user.
+	*/
+	SharedBy *string
+
+	/* SharedWith.
+
+	   Optional argument to list workflows shared with the specified user.
+	*/
+	SharedWith *string
+
 	/* Size.
 
 	   Number of results per page (pagination).
@@ -234,6 +252,39 @@ func (o *GetWorkflowsParams) WithSearch(search *string) *GetWorkflowsParams {
 // SetSearch adds the search to the get workflows params
 func (o *GetWorkflowsParams) SetSearch(search *string) {
 	o.Search = search
+}
+
+// WithShared adds the shared to the get workflows params
+func (o *GetWorkflowsParams) WithShared(shared *bool) *GetWorkflowsParams {
+	o.SetShared(shared)
+	return o
+}
+
+// SetShared adds the shared to the get workflows params
+func (o *GetWorkflowsParams) SetShared(shared *bool) {
+	o.Shared = shared
+}
+
+// WithSharedBy adds the sharedBy to the get workflows params
+func (o *GetWorkflowsParams) WithSharedBy(sharedBy *string) *GetWorkflowsParams {
+	o.SetSharedBy(sharedBy)
+	return o
+}
+
+// SetSharedBy adds the sharedBy to the get workflows params
+func (o *GetWorkflowsParams) SetSharedBy(sharedBy *string) {
+	o.SharedBy = sharedBy
+}
+
+// WithSharedWith adds the sharedWith to the get workflows params
+func (o *GetWorkflowsParams) WithSharedWith(sharedWith *string) *GetWorkflowsParams {
+	o.SetSharedWith(sharedWith)
+	return o
+}
+
+// SetSharedWith adds the sharedWith to the get workflows params
+func (o *GetWorkflowsParams) SetSharedWith(sharedWith *string) {
+	o.SharedWith = sharedWith
 }
 
 // WithSize adds the size to the get workflows params
@@ -390,6 +441,57 @@ func (o *GetWorkflowsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		if qSearch != "" {
 
 			if err := r.SetQueryParam("search", qSearch); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.Shared != nil {
+
+		// query param shared
+		var qrShared bool
+
+		if o.Shared != nil {
+			qrShared = *o.Shared
+		}
+		qShared := swag.FormatBool(qrShared)
+		if qShared != "" {
+
+			if err := r.SetQueryParam("shared", qShared); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.SharedBy != nil {
+
+		// query param shared_by
+		var qrSharedBy string
+
+		if o.SharedBy != nil {
+			qrSharedBy = *o.SharedBy
+		}
+		qSharedBy := qrSharedBy
+		if qSharedBy != "" {
+
+			if err := r.SetQueryParam("shared_by", qSharedBy); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.SharedWith != nil {
+
+		// query param shared_with
+		var qrSharedWith string
+
+		if o.SharedWith != nil {
+			qrSharedWith = *o.SharedWith
+		}
+		qSharedWith := qrSharedWith
+		if qSharedWith != "" {
+
+			if err := r.SetQueryParam("shared_with", qSharedWith); err != nil {
 				return err
 			}
 		}

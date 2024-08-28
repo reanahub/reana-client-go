@@ -100,11 +100,13 @@ func (o *AddSecretsCreated) Code() int {
 }
 
 func (o *AddSecretsCreated) Error() string {
-	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsCreated  %+v", 201, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsCreated %s", 201, payload)
 }
 
 func (o *AddSecretsCreated) String() string {
-	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsCreated  %+v", 201, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsCreated %s", 201, payload)
 }
 
 func (o *AddSecretsCreated) GetPayload() *AddSecretsCreatedBody {
@@ -168,11 +170,13 @@ func (o *AddSecretsForbidden) Code() int {
 }
 
 func (o *AddSecretsForbidden) Error() string {
-	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsForbidden %s", 403, payload)
 }
 
 func (o *AddSecretsForbidden) String() string {
-	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsForbidden %s", 403, payload)
 }
 
 func (o *AddSecretsForbidden) GetPayload() *AddSecretsForbiddenBody {
@@ -236,11 +240,13 @@ func (o *AddSecretsConflict) Code() int {
 }
 
 func (o *AddSecretsConflict) Error() string {
-	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsConflict  %+v", 409, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsConflict %s", 409, payload)
 }
 
 func (o *AddSecretsConflict) String() string {
-	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsConflict  %+v", 409, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsConflict %s", 409, payload)
 }
 
 func (o *AddSecretsConflict) GetPayload() *AddSecretsConflictBody {
@@ -304,11 +310,13 @@ func (o *AddSecretsInternalServerError) Code() int {
 }
 
 func (o *AddSecretsInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsInternalServerError %s", 500, payload)
 }
 
 func (o *AddSecretsInternalServerError) String() string {
-	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsInternalServerError %s", 500, payload)
 }
 
 func (o *AddSecretsInternalServerError) GetPayload() *AddSecretsInternalServerErrorBody {
@@ -485,11 +493,8 @@ swagger:model AddSecretsParamsBodyAnon
 */
 type AddSecretsParamsBodyAnon struct {
 
-	// Secret name
-	Name string `json:"name,omitempty"`
-
 	// How will be the secret assigned to the jobs, either exported as an environment variable or mounted as a file.
-	// Enum: [env file]
+	// Enum: ["env","file"]
 	Type string `json:"type,omitempty"`
 
 	// Secret value

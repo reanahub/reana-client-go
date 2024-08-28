@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,11 +99,13 @@ func (o *RequestTokenOK) Code() int {
 }
 
 func (o *RequestTokenOK) Error() string {
-	return fmt.Sprintf("[PUT /api/token][%d] requestTokenOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/token][%d] requestTokenOK %s", 200, payload)
 }
 
 func (o *RequestTokenOK) String() string {
-	return fmt.Sprintf("[PUT /api/token][%d] requestTokenOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/token][%d] requestTokenOK %s", 200, payload)
 }
 
 func (o *RequestTokenOK) GetPayload() *RequestTokenOKBody {
@@ -166,11 +169,13 @@ func (o *RequestTokenUnauthorized) Code() int {
 }
 
 func (o *RequestTokenUnauthorized) Error() string {
-	return fmt.Sprintf("[PUT /api/token][%d] requestTokenUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/token][%d] requestTokenUnauthorized %s", 401, payload)
 }
 
 func (o *RequestTokenUnauthorized) String() string {
-	return fmt.Sprintf("[PUT /api/token][%d] requestTokenUnauthorized  %+v", 401, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/token][%d] requestTokenUnauthorized %s", 401, payload)
 }
 
 func (o *RequestTokenUnauthorized) GetPayload() *RequestTokenUnauthorizedBody {
@@ -234,11 +239,13 @@ func (o *RequestTokenForbidden) Code() int {
 }
 
 func (o *RequestTokenForbidden) Error() string {
-	return fmt.Sprintf("[PUT /api/token][%d] requestTokenForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/token][%d] requestTokenForbidden %s", 403, payload)
 }
 
 func (o *RequestTokenForbidden) String() string {
-	return fmt.Sprintf("[PUT /api/token][%d] requestTokenForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/token][%d] requestTokenForbidden %s", 403, payload)
 }
 
 func (o *RequestTokenForbidden) GetPayload() *RequestTokenForbiddenBody {
@@ -302,11 +309,13 @@ func (o *RequestTokenInternalServerError) Code() int {
 }
 
 func (o *RequestTokenInternalServerError) Error() string {
-	return fmt.Sprintf("[PUT /api/token][%d] requestTokenInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/token][%d] requestTokenInternalServerError %s", 500, payload)
 }
 
 func (o *RequestTokenInternalServerError) String() string {
-	return fmt.Sprintf("[PUT /api/token][%d] requestTokenInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[PUT /api/token][%d] requestTokenInternalServerError %s", 500, payload)
 }
 
 func (o *RequestTokenInternalServerError) GetPayload() *RequestTokenInternalServerErrorBody {

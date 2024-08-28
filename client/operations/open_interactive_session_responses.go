@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -103,11 +104,13 @@ func (o *OpenInteractiveSessionOK) Code() int {
 }
 
 func (o *OpenInteractiveSessionOK) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionOK %s", 200, payload)
 }
 
 func (o *OpenInteractiveSessionOK) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionOK %s", 200, payload)
 }
 
 func (o *OpenInteractiveSessionOK) GetPayload() *OpenInteractiveSessionOKBody {
@@ -171,11 +174,13 @@ func (o *OpenInteractiveSessionBadRequest) Code() int {
 }
 
 func (o *OpenInteractiveSessionBadRequest) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionBadRequest %s", 400, payload)
 }
 
 func (o *OpenInteractiveSessionBadRequest) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionBadRequest %s", 400, payload)
 }
 
 func (o *OpenInteractiveSessionBadRequest) GetPayload() *OpenInteractiveSessionBadRequestBody {
@@ -239,11 +244,13 @@ func (o *OpenInteractiveSessionForbidden) Code() int {
 }
 
 func (o *OpenInteractiveSessionForbidden) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionForbidden %s", 403, payload)
 }
 
 func (o *OpenInteractiveSessionForbidden) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionForbidden %s", 403, payload)
 }
 
 func (o *OpenInteractiveSessionForbidden) GetPayload() *OpenInteractiveSessionForbiddenBody {
@@ -307,11 +314,13 @@ func (o *OpenInteractiveSessionNotFound) Code() int {
 }
 
 func (o *OpenInteractiveSessionNotFound) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionNotFound %s", 404, payload)
 }
 
 func (o *OpenInteractiveSessionNotFound) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionNotFound %s", 404, payload)
 }
 
 func (o *OpenInteractiveSessionNotFound) GetPayload() *OpenInteractiveSessionNotFoundBody {
@@ -375,11 +384,13 @@ func (o *OpenInteractiveSessionInternalServerError) Code() int {
 }
 
 func (o *OpenInteractiveSessionInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionInternalServerError %s", 500, payload)
 }
 
 func (o *OpenInteractiveSessionInternalServerError) String() string {
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionInternalServerError %s", 500, payload)
 }
 
 func (o *OpenInteractiveSessionInternalServerError) GetPayload() *OpenInteractiveSessionInternalServerErrorBody {

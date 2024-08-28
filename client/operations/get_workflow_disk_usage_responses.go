@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"strconv"
@@ -105,11 +106,13 @@ func (o *GetWorkflowDiskUsageOK) Code() int {
 }
 
 func (o *GetWorkflowDiskUsageOK) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageOK %s", 200, payload)
 }
 
 func (o *GetWorkflowDiskUsageOK) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageOK %s", 200, payload)
 }
 
 func (o *GetWorkflowDiskUsageOK) GetPayload() *GetWorkflowDiskUsageOKBody {
@@ -173,11 +176,13 @@ func (o *GetWorkflowDiskUsageBadRequest) Code() int {
 }
 
 func (o *GetWorkflowDiskUsageBadRequest) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageBadRequest %s", 400, payload)
 }
 
 func (o *GetWorkflowDiskUsageBadRequest) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageBadRequest %s", 400, payload)
 }
 
 func (o *GetWorkflowDiskUsageBadRequest) GetPayload() *GetWorkflowDiskUsageBadRequestBody {
@@ -241,11 +246,13 @@ func (o *GetWorkflowDiskUsageForbidden) Code() int {
 }
 
 func (o *GetWorkflowDiskUsageForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageForbidden %s", 403, payload)
 }
 
 func (o *GetWorkflowDiskUsageForbidden) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageForbidden %s", 403, payload)
 }
 
 func (o *GetWorkflowDiskUsageForbidden) GetPayload() *GetWorkflowDiskUsageForbiddenBody {
@@ -309,11 +316,13 @@ func (o *GetWorkflowDiskUsageNotFound) Code() int {
 }
 
 func (o *GetWorkflowDiskUsageNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageNotFound %s", 404, payload)
 }
 
 func (o *GetWorkflowDiskUsageNotFound) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageNotFound %s", 404, payload)
 }
 
 func (o *GetWorkflowDiskUsageNotFound) GetPayload() *GetWorkflowDiskUsageNotFoundBody {
@@ -377,11 +386,13 @@ func (o *GetWorkflowDiskUsageInternalServerError) Code() int {
 }
 
 func (o *GetWorkflowDiskUsageInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageInternalServerError %s", 500, payload)
 }
 
 func (o *GetWorkflowDiskUsageInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageInternalServerError %s", 500, payload)
 }
 
 func (o *GetWorkflowDiskUsageInternalServerError) GetPayload() *GetWorkflowDiskUsageInternalServerErrorBody {

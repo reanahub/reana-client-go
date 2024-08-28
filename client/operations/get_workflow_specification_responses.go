@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -98,11 +99,13 @@ func (o *GetWorkflowSpecificationOK) Code() int {
 }
 
 func (o *GetWorkflowSpecificationOK) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationOK %s", 200, payload)
 }
 
 func (o *GetWorkflowSpecificationOK) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationOK %s", 200, payload)
 }
 
 func (o *GetWorkflowSpecificationOK) GetPayload() *GetWorkflowSpecificationOKBody {
@@ -166,11 +169,13 @@ func (o *GetWorkflowSpecificationForbidden) Code() int {
 }
 
 func (o *GetWorkflowSpecificationForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationForbidden %s", 403, payload)
 }
 
 func (o *GetWorkflowSpecificationForbidden) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationForbidden %s", 403, payload)
 }
 
 func (o *GetWorkflowSpecificationForbidden) GetPayload() *GetWorkflowSpecificationForbiddenBody {
@@ -234,11 +239,13 @@ func (o *GetWorkflowSpecificationNotFound) Code() int {
 }
 
 func (o *GetWorkflowSpecificationNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationNotFound %s", 404, payload)
 }
 
 func (o *GetWorkflowSpecificationNotFound) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationNotFound %s", 404, payload)
 }
 
 func (o *GetWorkflowSpecificationNotFound) GetPayload() *GetWorkflowSpecificationNotFoundBody {
@@ -302,11 +309,13 @@ func (o *GetWorkflowSpecificationInternalServerError) Code() int {
 }
 
 func (o *GetWorkflowSpecificationInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationInternalServerError %s", 500, payload)
 }
 
 func (o *GetWorkflowSpecificationInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/specification][%d] getWorkflowSpecificationInternalServerError %s", 500, payload)
 }
 
 func (o *GetWorkflowSpecificationInternalServerError) GetPayload() *GetWorkflowSpecificationInternalServerErrorBody {

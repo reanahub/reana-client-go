@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -109,11 +110,13 @@ func (o *CreateWorkflowCreated) Code() int {
 }
 
 func (o *CreateWorkflowCreated) Error() string {
-	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowCreated  %+v", 201, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowCreated %s", 201, payload)
 }
 
 func (o *CreateWorkflowCreated) String() string {
-	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowCreated  %+v", 201, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowCreated %s", 201, payload)
 }
 
 func (o *CreateWorkflowCreated) GetPayload() *CreateWorkflowCreatedBody {
@@ -177,11 +180,13 @@ func (o *CreateWorkflowBadRequest) Code() int {
 }
 
 func (o *CreateWorkflowBadRequest) Error() string {
-	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowBadRequest %s", 400, payload)
 }
 
 func (o *CreateWorkflowBadRequest) String() string {
-	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowBadRequest %s", 400, payload)
 }
 
 func (o *CreateWorkflowBadRequest) GetPayload() *CreateWorkflowBadRequestBody {
@@ -245,11 +250,13 @@ func (o *CreateWorkflowForbidden) Code() int {
 }
 
 func (o *CreateWorkflowForbidden) Error() string {
-	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowForbidden %s", 403, payload)
 }
 
 func (o *CreateWorkflowForbidden) String() string {
-	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowForbidden %s", 403, payload)
 }
 
 func (o *CreateWorkflowForbidden) GetPayload() *CreateWorkflowForbiddenBody {
@@ -313,11 +320,13 @@ func (o *CreateWorkflowNotFound) Code() int {
 }
 
 func (o *CreateWorkflowNotFound) Error() string {
-	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowNotFound %s", 404, payload)
 }
 
 func (o *CreateWorkflowNotFound) String() string {
-	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowNotFound %s", 404, payload)
 }
 
 func (o *CreateWorkflowNotFound) GetPayload() *CreateWorkflowNotFoundBody {
@@ -381,11 +390,13 @@ func (o *CreateWorkflowInternalServerError) Code() int {
 }
 
 func (o *CreateWorkflowInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowInternalServerError %s", 500, payload)
 }
 
 func (o *CreateWorkflowInternalServerError) String() string {
-	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowInternalServerError %s", 500, payload)
 }
 
 func (o *CreateWorkflowInternalServerError) GetPayload() *CreateWorkflowInternalServerErrorBody {
@@ -448,11 +459,11 @@ func (o *CreateWorkflowNotImplemented) Code() int {
 }
 
 func (o *CreateWorkflowNotImplemented) Error() string {
-	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowNotImplemented ", 501)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowNotImplemented", 501)
 }
 
 func (o *CreateWorkflowNotImplemented) String() string {
-	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowNotImplemented ", 501)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowNotImplemented", 501)
 }
 
 func (o *CreateWorkflowNotImplemented) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {

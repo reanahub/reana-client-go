@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	"strconv"
@@ -105,11 +106,13 @@ func (o *GetFilesOK) Code() int {
 }
 
 func (o *GetFilesOK) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesOK %s", 200, payload)
 }
 
 func (o *GetFilesOK) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesOK %s", 200, payload)
 }
 
 func (o *GetFilesOK) GetPayload() *GetFilesOKBody {
@@ -173,11 +176,13 @@ func (o *GetFilesBadRequest) Code() int {
 }
 
 func (o *GetFilesBadRequest) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesBadRequest %s", 400, payload)
 }
 
 func (o *GetFilesBadRequest) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesBadRequest %s", 400, payload)
 }
 
 func (o *GetFilesBadRequest) GetPayload() *GetFilesBadRequestBody {
@@ -241,11 +246,13 @@ func (o *GetFilesForbidden) Code() int {
 }
 
 func (o *GetFilesForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesForbidden %s", 403, payload)
 }
 
 func (o *GetFilesForbidden) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesForbidden %s", 403, payload)
 }
 
 func (o *GetFilesForbidden) GetPayload() *GetFilesForbiddenBody {
@@ -309,11 +316,13 @@ func (o *GetFilesNotFound) Code() int {
 }
 
 func (o *GetFilesNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesNotFound %s", 404, payload)
 }
 
 func (o *GetFilesNotFound) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesNotFound %s", 404, payload)
 }
 
 func (o *GetFilesNotFound) GetPayload() *GetFilesNotFoundBody {
@@ -377,11 +386,13 @@ func (o *GetFilesInternalServerError) Code() int {
 }
 
 func (o *GetFilesInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesInternalServerError %s", 500, payload)
 }
 
 func (o *GetFilesInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesInternalServerError %s", 500, payload)
 }
 
 func (o *GetFilesInternalServerError) GetPayload() *GetFilesInternalServerErrorBody {

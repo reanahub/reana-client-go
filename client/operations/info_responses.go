@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -86,11 +87,13 @@ func (o *InfoOK) Code() int {
 }
 
 func (o *InfoOK) Error() string {
-	return fmt.Sprintf("[GET /api/info][%d] infoOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/info][%d] infoOK %s", 200, payload)
 }
 
 func (o *InfoOK) String() string {
-	return fmt.Sprintf("[GET /api/info][%d] infoOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/info][%d] infoOK %s", 200, payload)
 }
 
 func (o *InfoOK) GetPayload() *InfoOKBody {
@@ -154,11 +157,13 @@ func (o *InfoInternalServerError) Code() int {
 }
 
 func (o *InfoInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/info][%d] infoInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/info][%d] infoInternalServerError %s", 500, payload)
 }
 
 func (o *InfoInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/info][%d] infoInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/info][%d] infoInternalServerError %s", 500, payload)
 }
 
 func (o *InfoInternalServerError) GetPayload() *InfoInternalServerErrorBody {

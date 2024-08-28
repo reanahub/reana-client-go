@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -110,11 +111,11 @@ func (o *DownloadFileOK) Code() int {
 }
 
 func (o *DownloadFileOK) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileOK", 200)
 }
 
 func (o *DownloadFileOK) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileOK  %+v", 200, o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileOK", 200)
 }
 
 func (o *DownloadFileOK) GetPayload() io.Writer {
@@ -189,11 +190,11 @@ func (o *DownloadFileBadRequest) Code() int {
 }
 
 func (o *DownloadFileBadRequest) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileBadRequest ", 400)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileBadRequest", 400)
 }
 
 func (o *DownloadFileBadRequest) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileBadRequest ", 400)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileBadRequest", 400)
 }
 
 func (o *DownloadFileBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
@@ -246,11 +247,13 @@ func (o *DownloadFileForbidden) Code() int {
 }
 
 func (o *DownloadFileForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileForbidden %s", 403, payload)
 }
 
 func (o *DownloadFileForbidden) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileForbidden %s", 403, payload)
 }
 
 func (o *DownloadFileForbidden) GetPayload() *DownloadFileForbiddenBody {
@@ -314,11 +317,13 @@ func (o *DownloadFileNotFound) Code() int {
 }
 
 func (o *DownloadFileNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileNotFound %s", 404, payload)
 }
 
 func (o *DownloadFileNotFound) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileNotFound %s", 404, payload)
 }
 
 func (o *DownloadFileNotFound) GetPayload() *DownloadFileNotFoundBody {
@@ -382,11 +387,13 @@ func (o *DownloadFileInternalServerError) Code() int {
 }
 
 func (o *DownloadFileInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileInternalServerError %s", 500, payload)
 }
 
 func (o *DownloadFileInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileInternalServerError %s", 500, payload)
 }
 
 func (o *DownloadFileInternalServerError) GetPayload() *DownloadFileInternalServerErrorBody {

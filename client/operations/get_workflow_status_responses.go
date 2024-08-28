@@ -7,6 +7,7 @@ package operations
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 
@@ -104,11 +105,13 @@ func (o *GetWorkflowStatusOK) Code() int {
 }
 
 func (o *GetWorkflowStatusOK) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusOK %s", 200, payload)
 }
 
 func (o *GetWorkflowStatusOK) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusOK  %+v", 200, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusOK %s", 200, payload)
 }
 
 func (o *GetWorkflowStatusOK) GetPayload() *GetWorkflowStatusOKBody {
@@ -172,11 +175,13 @@ func (o *GetWorkflowStatusBadRequest) Code() int {
 }
 
 func (o *GetWorkflowStatusBadRequest) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusBadRequest %s", 400, payload)
 }
 
 func (o *GetWorkflowStatusBadRequest) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusBadRequest  %+v", 400, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusBadRequest %s", 400, payload)
 }
 
 func (o *GetWorkflowStatusBadRequest) GetPayload() *GetWorkflowStatusBadRequestBody {
@@ -240,11 +245,13 @@ func (o *GetWorkflowStatusForbidden) Code() int {
 }
 
 func (o *GetWorkflowStatusForbidden) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusForbidden %s", 403, payload)
 }
 
 func (o *GetWorkflowStatusForbidden) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusForbidden  %+v", 403, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusForbidden %s", 403, payload)
 }
 
 func (o *GetWorkflowStatusForbidden) GetPayload() *GetWorkflowStatusForbiddenBody {
@@ -308,11 +315,13 @@ func (o *GetWorkflowStatusNotFound) Code() int {
 }
 
 func (o *GetWorkflowStatusNotFound) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusNotFound %s", 404, payload)
 }
 
 func (o *GetWorkflowStatusNotFound) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusNotFound  %+v", 404, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusNotFound %s", 404, payload)
 }
 
 func (o *GetWorkflowStatusNotFound) GetPayload() *GetWorkflowStatusNotFoundBody {
@@ -376,11 +385,13 @@ func (o *GetWorkflowStatusInternalServerError) Code() int {
 }
 
 func (o *GetWorkflowStatusInternalServerError) Error() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusInternalServerError %s", 500, payload)
 }
 
 func (o *GetWorkflowStatusInternalServerError) String() string {
-	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusInternalServerError  %+v", 500, o.Payload)
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusInternalServerError %s", 500, payload)
 }
 
 func (o *GetWorkflowStatusInternalServerError) GetPayload() *GetWorkflowStatusInternalServerErrorBody {
