@@ -114,7 +114,6 @@ func TestParseSecrets(t *testing.T) {
 			envSecrets: []string{"PASSWORD=password"},
 			secrets: map[string]operations.AddSecretsParamsBodyAnon{
 				"PASSWORD": {
-					Name:  "PASSWORD",
 					Type:  "env",
 					Value: base64.StdEncoding.EncodeToString([]byte("password")),
 				},
@@ -125,7 +124,6 @@ func TestParseSecrets(t *testing.T) {
 			fileSecrets: []string{piFile},
 			secrets: map[string]operations.AddSecretsParamsBodyAnon{
 				"pi.txt": {
-					Name:  "pi.txt",
 					Type:  "file",
 					Value: base64.StdEncoding.EncodeToString([]byte("3.14")),
 				},
@@ -137,22 +135,18 @@ func TestParseSecrets(t *testing.T) {
 			fileSecrets: []string{emptyFile, piFile},
 			secrets: map[string]operations.AddSecretsParamsBodyAnon{
 				"PASSWORD": {
-					Name:  "PASSWORD",
 					Type:  "env",
 					Value: base64.StdEncoding.EncodeToString([]byte("password")),
 				},
 				"USER": {
-					Name:  "USER",
 					Type:  "env",
 					Value: base64.StdEncoding.EncodeToString([]byte("reanauser")),
 				},
 				"empty.txt": {
-					Name:  "empty.txt",
 					Type:  "file",
 					Value: "",
 				},
 				"pi.txt": {
-					Name:  "pi.txt",
 					Type:  "file",
 					Value: base64.StdEncoding.EncodeToString([]byte("3.14")),
 				},

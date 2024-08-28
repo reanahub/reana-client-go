@@ -44,6 +44,7 @@ func TestShareRemove(t *testing.T) {
 			expected: []string{
 				"REANA_WORKON is set to invalid, but that workflow does not exist.",
 			},
+			wantError: true,
 		},
 	}
 

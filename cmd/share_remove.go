@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
+	"reanahub/reana-client-go/pkg/config"
 	"reanahub/reana-client-go/pkg/displayer"
 	"reanahub/reana-client-go/pkg/errorhandler"
 	"strings"
@@ -113,6 +114,7 @@ func (o *shareRemoveOptions) run(cmd *cobra.Command) error {
 		for _, err := range shareErrors {
 			displayer.DisplayMessage(err, displayer.Error, false, cmd.OutOrStdout())
 		}
+		return config.EmptyError
 	}
 
 	return nil

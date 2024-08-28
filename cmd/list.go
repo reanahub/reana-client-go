@@ -9,6 +9,7 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
@@ -18,6 +19,7 @@ import (
 	"reanahub/reana-client-go/pkg/filterer"
 	"reanahub/reana-client-go/pkg/formatter"
 	"reanahub/reana-client-go/pkg/workflows"
+	"strings"
 
 	"github.com/go-gota/gota/dataframe"
 	"github.com/go-gota/gota/series"
@@ -53,8 +55,7 @@ values to the ` + "``--shared-by``" + ` and ` + "``--shared-with``" + ` command-
 
   - ` + "``--shared-with nobody``" + `: list your unshared workflows exclusively.
 
-  - ` + "``--shared-with bob@cern.ch,cecile@cern.ch``" + `: list workflows 
-  shared with either bob@cern.ch or cecile@cern.ch
+  - ` + "``--shared-with bob@cern.ch``" + `: list workflows shared with bob@cern.ch
 
 Examples:
 
@@ -161,12 +162,12 @@ In case a workflow is in progress, its duration as of now will be shown.`,
 	f.Int64Var(&o.page, "page", 1, "Results page number (to be used with --size).")
 	f.Int64Var(&o.size, "size", 0, "Number of results per page (to be used with --page).")
 	f.BoolVar(&o.shared, "shared", false, "List all shared (owned and unowned) workflows.")
-	f.StringVar(&o.shared_by, "shared-by", "", "List workflows shared by the specified user(s).")
+	f.StringVar(&o.shared_by, "shared-by", "", "List workflows shared by the specified user.")
 	f.StringVar(
 		&o.shared_with,
 		"shared-with",
 		"",
-		"List workflows shared with the specified user(s).",
+		"List workflows shared with the specified user.",
 	)
 	// Remove -h shorthand
 	cmd.PersistentFlags().BoolP("help", "", false, "Help for list")
@@ -180,14 +181,7 @@ In case a workflow is in progress, its duration as of now will be shown.`,
 
 func (o *listOptions) run(cmd *cobra.Command) error {
 	if o.shared_by != "" && o.shared_with != "" {
-		displayer.DisplayMessage(
-			"Please provide either --shared-by or --shared-with, not both.",
-			displayer.Error,
-			false,
-			cmd.OutOrStdout(),
-		)
-
-		return nil
+		return errors.New("please provide either --shared-by or --shared-with, not both")
 	}
 
 	var runType string
@@ -335,7 +329,9 @@ func displayListPayload(
 			case "shared_by":
 				value = workflow.OwnerEmail
 			case "shared_with":
-				value = workflow.SharedWith
+				if len(workflow.SharedWith) > 0 {
+					value = strings.Join(workflow.SharedWith, ", ")
+				}
 			}
 
 			colSeries.Append(value)

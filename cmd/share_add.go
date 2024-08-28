@@ -88,13 +88,10 @@ func (o *shareAddOptions) run(cmd *cobra.Command) error {
 	shareAddParams := operations.NewShareWorkflowParams()
 	shareAddParams.SetAccessToken(&o.token)
 	shareAddParams.SetWorkflowIDOrName(o.workflow)
-	if o.message != "" {
-		shareAddParams.SetMessage(&o.message)
-	}
-
-	if o.validUntil != "" {
-		shareAddParams.SetValidUntil(&o.validUntil)
-	}
+	shareAddParams.SetShareDetails(operations.ShareWorkflowBody{
+		Message:    o.message,
+		ValidUntil: o.validUntil,
+	})
 
 	api, err := client.ApiClient()
 	if err != nil {
@@ -107,7 +104,7 @@ func (o *shareAddOptions) run(cmd *cobra.Command) error {
 	for _, user := range o.users {
 		log.Infof("Sharing workflow %s with user %s", o.workflow, user)
 
-		shareAddParams.SetUserEmailToShareWith(user)
+		shareAddParams.ShareDetails.UserEmailToShareWith = &user
 		_, err := api.Operations.ShareWorkflow(shareAddParams)
 
 		if err != nil {

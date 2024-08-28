@@ -108,11 +108,7 @@ func (o *shareStatusOptions) run(cmd *cobra.Command) error {
 		parsedFormatFilters,
 		o.jsonOutput,
 	)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 func displayShareStatusPayload(
@@ -134,8 +130,6 @@ func displayShareStatusPayload(
 			case "valid_until":
 				if share.ValidUntil != nil {
 					value = *share.ValidUntil
-				} else {
-					value = "-"
 				}
 			}
 

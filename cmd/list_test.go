@@ -305,8 +305,9 @@ func TestList(t *testing.T) {
 		"invalid: shared with and shared by in the same command": {
 			args: []string{"--shared-by", "anybody", "--shared-with", "anybody"},
 			expected: []string{
-				"Please provide either --shared-by or --shared-with, not both",
+				"please provide either --shared-by or --shared-with, not both",
 			},
+			wantError: true,
 		},
 	}
 

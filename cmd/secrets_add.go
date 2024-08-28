@@ -128,7 +128,6 @@ For literal strings use "SECRET_NAME=VALUE" format`,
 		encodedValue := base64.StdEncoding.EncodeToString([]byte(value))
 		secretNames = append(secretNames, key)
 		secrets[key] = operations.AddSecretsParamsBodyAnon{
-			Name:  key,
 			Type:  "env",
 			Value: encodedValue,
 		}
@@ -146,7 +145,6 @@ For literal strings use "SECRET_NAME=VALUE" format`,
 		fileName := filepath.Base(filePath)
 		secretNames = append(secretNames, fileName)
 		secrets[fileName] = operations.AddSecretsParamsBodyAnon{
-			Name:  fileName,
 			Type:  "file",
 			Value: encodedData,
 		}

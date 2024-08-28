@@ -26,7 +26,8 @@
       "user": "user",
       "session_status": "created",
       "session_type": "jupyter",
-      "session_uri": "/session1uri"
+      "session_uri": "/session1uri",
+      "shared_with": []
     },
     {
       "created": "2022-08-10T17:14:12",
@@ -53,7 +54,8 @@
       "user": "user",
       "session_status": "created",
       "session_type": "jupyter",
-      "session_uri": "/session2uri"
+      "session_uri": "/session2uri",
+      "shared_with": ["shared_with_email"]
     }
   ]
 }
