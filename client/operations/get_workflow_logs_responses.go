@@ -567,6 +567,9 @@ swagger:model GetWorkflowLogsOKBody
 */
 type GetWorkflowLogsOKBody struct {
 
+	// live logs enabled
+	LiveLogsEnabled bool `json:"live_logs_enabled,omitempty"`
+
 	// logs
 	Logs string `json:"logs,omitempty"`
 

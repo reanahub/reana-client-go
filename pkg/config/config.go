@@ -1,6 +1,6 @@
 /*
 This file is part of REANA.
-Copyright (C) 2022 CERN.
+Copyright (C) 2022, 2024 CERN.
 
 REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
@@ -31,18 +31,15 @@ var ReanaComputeBackendKeys = []string{"kubernetes", "htcondor", "slurm"}
 // LeadingMark prefix used when displaying headers or important messages.
 var LeadingMark = "==>"
 
+var WorkflowCompletedStatuses = []string{"finished", "failed", "stopped"}
+
+var WorkflowProgressingStatuses = []string{"created", "running", "queued", "pending"}
+
 // GetRunStatuses provides a list of currently supported run statuses.
 // Includes the deleted status if includeDeleted is set to true.
 func GetRunStatuses(includeDeleted bool) []string {
-	runStatuses := []string{
-		"created",
-		"running",
-		"finished",
-		"failed",
-		"stopped",
-		"queued",
-		"pending",
-	}
+	runStatuses := append(WorkflowCompletedStatuses, WorkflowProgressingStatuses...)
+
 	if includeDeleted {
 		runStatuses = append(runStatuses, "deleted")
 	}
