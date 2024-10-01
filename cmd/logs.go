@@ -11,12 +11,14 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/pkg/config"
 	"reanahub/reana-client-go/pkg/displayer"
 	"reanahub/reana-client-go/pkg/filterer"
 	"strings"
+	"time"
 
 	"github.com/jedib0t/go-pretty/v6/text"
 
@@ -27,15 +29,18 @@ import (
 const logsDesc = `
 Get workflow logs.
 
-The ` + "``logs``" + ` command allows to retrieve logs of running workflow. Note that
-only finished steps of the workflow are returned, the logs of the currently
-processed step is not returned until it is finished.
+The ` + "``logs``" + ` command allows to retrieve logs of a running workflow.
+Either retrive logs and print the result or follow the logs of a running workflow/job.
 
 Examples:
 
 $ reana-client logs -w myanalysis.42
 
-$ reana-client logs -w myanalysis.42 -s 1st_ste
+$ reana-client logs -w myanalysis.42 --json
+
+$ reana-client logs -w myanalysis.42 --filter status=running
+
+$ reana-client logs -w myanalysis.42 --filter step=1st_step --follow
 `
 
 const logsFilterFlagDesc = `Filter job logs to include only those steps that
@@ -65,6 +70,7 @@ type jobLogItem struct {
 	FinishedAt     *string `json:"finished_at"`
 }
 
+// logsOptions struct that contains the options of the logs command.
 type logsOptions struct {
 	token      string
 	workflow   string
@@ -72,6 +78,14 @@ type logsOptions struct {
 	filters    []string
 	page       int64
 	size       int64
+	follow     bool
+	interval   int64
+}
+
+// logsCommandRunner struct that executes logs command.
+type logsCommandRunner struct {
+	api     *client.API
+	options *logsOptions
 }
 
 // newLogsCmd creates a command to get workflow logs.
@@ -84,7 +98,12 @@ func newLogsCmd() *cobra.Command {
 		Long:  logsDesc,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			return o.run(cmd)
+			api, err := client.ApiClient()
+			if err != nil {
+				return err
+			}
+			runner := newLogsCommandRunner(api, o)
+			return runner.run(cmd)
 		},
 	}
 
@@ -101,12 +120,33 @@ func newLogsCmd() *cobra.Command {
 	f.StringSliceVar(&o.filters, "filter", []string{}, logsFilterFlagDesc)
 	f.Int64Var(&o.page, "page", 1, "Results page number (to be used with --size).")
 	f.Int64Var(&o.size, "size", 0, "Size of results per page (to be used with --page).")
+	f.BoolVar(
+		&o.follow,
+		"follow",
+		false,
+		"Follow the logs of the of running workflow or job (similar to `tail -f`).",
+	)
+	f.Int64VarP(
+		&o.interval,
+		"interval",
+		"i",
+		10,
+		"Sleep time in seconds between log polling if log following is enabled. [default=10]",
+	)
 
 	return cmd
 }
 
-func (o *logsOptions) run(cmd *cobra.Command) error {
-	filters, err := parseLogsFilters(o.filters)
+// newLogsCommandRunner creates a new logs command runner.
+func newLogsCommandRunner(api *client.API, options *logsOptions) *logsCommandRunner {
+	return &logsCommandRunner{api: api, options: options}
+}
+
+// run executes the logs command.
+func (r *logsCommandRunner) run(cmd *cobra.Command) error {
+	r.validateOptions(cmd.OutOrStdout())
+
+	filters, err := parseLogsFilters(r.options.filters)
 	if err != nil {
 		return err
 	}
@@ -116,25 +156,136 @@ func (o *logsOptions) run(cmd *cobra.Command) error {
 	}
 
 	logsParams := operations.NewGetWorkflowLogsParams()
-	logsParams.SetAccessToken(&o.token)
-	logsParams.SetWorkflowIDOrName(o.workflow)
-	logsParams.SetPage(&o.page)
+	logsParams.SetAccessToken(&r.options.token)
+	logsParams.SetWorkflowIDOrName(r.options.workflow)
+	logsParams.SetPage(&r.options.page)
 	logsParams.SetSteps(steps)
 	if cmd.Flags().Changed("size") {
-		logsParams.SetSize(&o.size)
+		logsParams.SetSize(&r.options.size)
 	}
 
-	api, err := client.ApiClient()
-	if err != nil {
-		return err
-	}
-	logsResp, err := api.Operations.GetWorkflowLogs(logsParams)
-	if err != nil {
-		return err
+	if r.options.follow {
+		return r.followLogs(logsParams, cmd, steps)
 	}
 
+	return r.retrieveLogs(filters, logsParams, cmd, steps)
+}
+
+// followLogs follows the logs of a running workflow or job.
+func (r *logsCommandRunner) followLogs(
+	logsParams *operations.GetWorkflowLogsParams,
+	cmd *cobra.Command,
+	steps []string,
+) error {
+	stepLength := len(steps)
+	var step, previousLogs string
+	stdout := cmd.OutOrStdout()
+
+	if stepLength > 0 {
+		step = steps[0]
+	}
+
+	if stepLength > 1 {
+		displayer.DisplayMessage(
+			"Only one step can be followed at a time, ignoring additional steps.",
+			displayer.Warning,
+			false,
+			stdout,
+		)
+		logsParams.SetSteps([]string{step})
+	}
+
+	msg := "Following logs for workflow: " + r.options.workflow
+	if step != "" {
+		msg += ",  step: " + step
+	}
+	displayer.DisplayMessage(msg, displayer.Info, false, stdout)
+
+	workflowStatusParams := operations.NewGetWorkflowStatusParams()
+	workflowStatusParams.SetAccessToken(&r.options.token)
+	workflowStatusParams.SetWorkflowIDOrName(r.options.workflow)
+
+	for {
+		newLogs, status, err := r.getLogsWithStatus(step, logsParams, workflowStatusParams)
+		if err != nil {
+			return err
+		}
+
+		fmt.Fprint(stdout, strings.TrimPrefix(newLogs, previousLogs))
+
+		if slices.Contains(config.WorkflowCompletedStatuses, status) {
+			fmt.Fprintln(stdout)
+			displayer.DisplayMessage("Finished, status: "+status, displayer.Info, false, stdout)
+			return nil
+		}
+
+		time.Sleep(time.Duration(r.options.interval) * time.Second)
+		previousLogs = newLogs
+	}
+}
+
+// getData retrieves logs and status of a workflow or a job.
+func (r *logsCommandRunner) getLogsWithStatus(
+	step string,
+	logsParams *operations.GetWorkflowLogsParams,
+	workflowStatusParams *operations.GetWorkflowStatusParams,
+) (string, string, error) {
+	workflowLogs, err := r.getLogs(logsParams)
+	if err != nil {
+		return "", "", err
+	}
+
+	if step != "" {
+		job := getFirstJob(workflowLogs.JobLogs)
+		if job == nil {
+			return "", "", fmt.Errorf("step %s not found", step)
+		}
+		return job.Logs, job.Status, nil
+	}
+
+	statusResponse, err := r.api.Operations.GetWorkflowStatus(workflowStatusParams)
+	if err != nil {
+		return "", "", err
+	}
+
+	return *workflowLogs.WorkflowLogs, statusResponse.GetPayload().Status, nil
+}
+
+// getLogs retrieves logs of a workflow and unmarshals data into logs structure.
+func (r *logsCommandRunner) getLogs(logsParams *operations.GetWorkflowLogsParams) (logs, error) {
 	var workflowLogs logs
+	logsResp, err := r.api.Operations.GetWorkflowLogs(logsParams)
+	if err != nil {
+		return workflowLogs, err
+	}
+
 	err = json.Unmarshal([]byte(logsResp.GetPayload().Logs), &workflowLogs)
+	if err != nil {
+		return workflowLogs, err
+	}
+	return workflowLogs, nil
+}
+
+// validateOptions validates the options of the logs command.
+func (r *logsCommandRunner) validateOptions(writer io.Writer) {
+	if r.options.jsonOutput && r.options.follow {
+		displayer.DisplayMessage(
+			"Ignoring --json as it cannot be used together with --follow.",
+			displayer.Warning,
+			false,
+			writer,
+		)
+	}
+}
+
+// retrieveLogs retrieves and prints logs of a workflow.
+func (r *logsCommandRunner) retrieveLogs(
+	filters filterer.Filters,
+	logsParams *operations.GetWorkflowLogsParams,
+	cmd *cobra.Command,
+	steps []string,
+) error {
+	workflowLogs, err := r.getLogs(logsParams)
 	if err != nil {
 		return err
 	}
@@ -144,7 +295,7 @@ func (o *logsOptions) run(cmd *cobra.Command) error {
 		return err
 	}
 
-	if o.jsonOutput {
+	if r.options.jsonOutput {
 		err := displayer.DisplayJsonOutput(workflowLogs, cmd.OutOrStdout())
 		if err != nil {
 			return err
@@ -152,7 +303,15 @@ func (o *logsOptions) run(cmd *cobra.Command) error {
 	} else {
 		displayHumanFriendlyLogs(cmd, workflowLogs, steps)
 	}
+	return nil
+}
 
+// getFirstJob returns the first job in the given map,
+// or nil if the map is empty.
+func getFirstJob(items map[string]jobLogItem) *jobLogItem {
+	for _, item := range items {
+		return &item
+	}
 	return nil
 }
 

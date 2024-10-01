@@ -31,18 +31,15 @@ var ReanaComputeBackendKeys = []string{"kubernetes", "htcondor", "slurm"}
 // LeadingMark prefix used when displaying headers or important messages.
 var LeadingMark = "==>"
 
+var WorkflowCompletedStatuses = []string{"finished", "failed", "stopped"}
+
+var WorkflowProgressingStatuses = []string{"created", "running", "queued", "pending"}
+
 // GetRunStatuses provides a list of currently supported run statuses.
 // Includes the deleted status if includeDeleted is set to true.
 func GetRunStatuses(includeDeleted bool) []string {
-	runStatuses := []string{
-		"created",
-		"running",
-		"finished",
-		"failed",
-		"stopped",
-		"queued",
-		"pending",
-	}
+	runStatuses := append(WorkflowCompletedStatuses, WorkflowProgressingStatuses...)
+
 	if includeDeleted {
 		runStatuses = append(runStatuses, "deleted")
 	}

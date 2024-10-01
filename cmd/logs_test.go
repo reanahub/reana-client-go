@@ -140,6 +140,121 @@ func TestLogs(t *testing.T) {
 			expected:  []string{"Field 'page': Must be at least 1."},
 			wantError: true,
 		},
+		"invalid server url": {
+			serverURL: "^^*invalid",
+			args:      []string{"-w", workflowName},
+			expected:  []string{"environment variable REANA_SERVER_URL is not set"},
+			wantError: true,
+		},
+		"follow workflow": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode:   http.StatusOK,
+					responseFile: "logs_complete.json",
+				},
+				fmt.Sprintf(statusPathTemplate, workflowName): {
+					statusCode:   http.StatusOK,
+					responseFile: "status_finished.json",
+				},
+			},
+			args: []string{"-w", workflowName, "--follow", "-i", "0"},
+			expected: []string{
+				"==> Following logs for workflow: my_workflow",
+				"workflow logs",
+				"==> Finished, status: finished",
+			},
+			unwanted: []string{
+				"job1",
+				"step",
+			},
+		},
+		"follow job with multiple steps, size, interval and json flags": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode:              http.StatusOK,
+					responseFile:            "logs_running.json",
+					additionalResponseFiles: []string{"logs_complete.json"},
+				},
+			},
+			args: []string{
+				"-w",
+				workflowName,
+				"--follow",
+				"--json",
+				"--filter",
+				"step=job1",
+				"--filter",
+				"step=job2",
+				"--size",
+				"1",
+				"-i",
+				"0",
+			},
+			expected: []string{
+				"Ignoring --json as it cannot be used together with --follow.",
+				"Only one step can be followed at a time, ignoring additional steps.",
+				"==> Following logs for workflow: my_workflow,  step: job1",
+				"workflow 1 logs",
+				"==> Finished, status: finished",
+			},
+		},
+		"follow job that does not exist": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode:   http.StatusOK,
+					responseFile: "logs_empty.json",
+				},
+			},
+			args: []string{"-w", workflowName, "--follow", "--filter", "step=job1"},
+			expected: []string{
+				"step job1 not found",
+			},
+			wantError: true,
+		},
+		"follow logs when server returns logs error": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode: http.StatusInternalServerError,
+				},
+			},
+			args:      []string{"-w", workflowName, "--follow"},
+			wantError: true,
+		},
+		"follow logs when server returns status error": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode:   http.StatusOK,
+					responseFile: "logs_complete.json",
+				},
+				fmt.Sprintf(statusPathTemplate, workflowName): {
+					statusCode: http.StatusInternalServerError,
+				},
+			},
+			args:      []string{"-w", workflowName, "--follow"},
+			wantError: true,
+		},
+		"follow logs when server returns html response": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode:   http.StatusOK,
+					responseFile: "page.html",
+				},
+			},
+			args:      []string{"-w", workflowName, "--follow"},
+			expected:  []string{"invalid character '<' looking for beginning of value"},
+			wantError: true,
+		},
+		"follow logs when server returns malformed logs": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode:   http.StatusOK,
+					responseFile: "logs_malformed.json",
+				},
+			},
+			args:      []string{"-w", workflowName, "--follow"},
+			expected:  []string{"invalid character 'm' looking for beginning of value"},
+			wantError: true,
+		},
 	}
 
 	for name, params := range tests {
