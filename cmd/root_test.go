@@ -45,15 +45,37 @@ type TestCmdParams struct {
 	expected        []string
 	unwanted        []string
 	wantError       bool
+	serverURL       string
 }
 
 type ServerResponse struct {
-	statusCode      int
-	responseFile    string
-	responseHeaders map[string]string
+	statusCode              int
+	responseFile            string
+	responseHeaders         map[string]string
+	additionalResponseFiles []string
+}
+
+// getResponseFile returns the response file for the given call number,
+// allowing for additional response files to be used for the same endpoint,
+// i. e. when the endpoint is called multiple times.
+func getResponseFile(callSeqNum int, serverResponse ServerResponse) string {
+	if len(serverResponse.additionalResponseFiles) == 0 {
+		return serverResponse.responseFile
+	}
+
+	if callSeqNum == 0 {
+		return serverResponse.responseFile
+	}
+
+	if callSeqNum < len(serverResponse.additionalResponseFiles)+1 {
+		return serverResponse.additionalResponseFiles[callSeqNum-1]
+	}
+
+	return serverResponse.responseFile
 }
 
 func testCmdRun(t *testing.T, p TestCmdParams) {
+	callSeqNum := 0
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if accessToken := r.URL.Query().Get("access_token"); accessToken != "1234" {
 			t.Errorf("Expected access token '1234', got '%v'", accessToken)
@@ -67,9 +89,11 @@ func testCmdRun(t *testing.T, p TestCmdParams) {
 			w.WriteHeader(res.statusCode)
 
 			var body []byte
-			if res.responseFile != "" {
+			responseFile := getResponseFile(callSeqNum, res)
+			callSeqNum++
+			if responseFile != "" {
 				var err error
-				body, err = os.ReadFile("../testdata/inputs/" + res.responseFile)
+				body, err = os.ReadFile("../testdata/inputs/" + responseFile)
 				if err != nil {
 					t.Fatalf("Error while reading response file: %v", err)
 				}
@@ -84,6 +108,9 @@ func testCmdRun(t *testing.T, p TestCmdParams) {
 	}))
 
 	viper.Set("server-url", server.URL)
+	if p.serverURL != "" {
+		viper.Set("server-url", p.serverURL)
+	}
 	t.Cleanup(func() {
 		server.Close()
 		viper.Reset()
