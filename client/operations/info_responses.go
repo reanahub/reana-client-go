@@ -189,7 +189,7 @@ swagger:model InfoInternalServerErrorBody
 type InfoInternalServerErrorBody struct {
 
 	// message
-	Message string `json:"message,omitempty"`
+	Message string `json:"message"`
 }
 
 // Validate validates this info internal server error body
@@ -227,31 +227,79 @@ swagger:model InfoOKBody
 type InfoOKBody struct {
 
 	// compute backends
-	ComputeBackends *InfoOKBodyComputeBackends `json:"compute_backends,omitempty"`
+	ComputeBackends *InfoOKBodyComputeBackends `json:"compute_backends"`
+
+	// cwl engine tool
+	CwlEngineTool *InfoOKBodyCwlEngineTool `json:"cwl_engine_tool"`
+
+	// cwl engine version
+	CwlEngineVersion *InfoOKBodyCwlEngineVersion `json:"cwl_engine_version"`
+
+	// dask autoscaler enabled
+	DaskAutoscalerEnabled *InfoOKBodyDaskAutoscalerEnabled `json:"dask_autoscaler_enabled"`
+
+	// dask cluster default number of workers
+	DaskClusterDefaultNumberOfWorkers *InfoOKBodyDaskClusterDefaultNumberOfWorkers `json:"dask_cluster_default_number_of_workers"`
+
+	// dask cluster default single worker memory
+	DaskClusterDefaultSingleWorkerMemory *InfoOKBodyDaskClusterDefaultSingleWorkerMemory `json:"dask_cluster_default_single_worker_memory"`
+
+	// dask cluster max memory limit
+	DaskClusterMaxMemoryLimit *InfoOKBodyDaskClusterMaxMemoryLimit `json:"dask_cluster_max_memory_limit"`
+
+	// dask cluster max number of workers
+	DaskClusterMaxNumberOfWorkers *InfoOKBodyDaskClusterMaxNumberOfWorkers `json:"dask_cluster_max_number_of_workers"`
+
+	// dask cluster max single worker memory
+	DaskClusterMaxSingleWorkerMemory *InfoOKBodyDaskClusterMaxSingleWorkerMemory `json:"dask_cluster_max_single_worker_memory"`
+
+	// dask enabled
+	DaskEnabled *InfoOKBodyDaskEnabled `json:"dask_enabled"`
 
 	// default kubernetes jobs timeout
-	DefaultKubernetesJobsTimeout *InfoOKBodyDefaultKubernetesJobsTimeout `json:"default_kubernetes_jobs_timeout,omitempty"`
+	DefaultKubernetesJobsTimeout *InfoOKBodyDefaultKubernetesJobsTimeout `json:"default_kubernetes_jobs_timeout"`
 
 	// default kubernetes memory limit
-	DefaultKubernetesMemoryLimit *InfoOKBodyDefaultKubernetesMemoryLimit `json:"default_kubernetes_memory_limit,omitempty"`
+	DefaultKubernetesMemoryLimit *InfoOKBodyDefaultKubernetesMemoryLimit `json:"default_kubernetes_memory_limit"`
 
 	// default workspace
-	DefaultWorkspace *InfoOKBodyDefaultWorkspace `json:"default_workspace,omitempty"`
+	DefaultWorkspace *InfoOKBodyDefaultWorkspace `json:"default_workspace"`
+
+	// interactive session recommended jupyter images
+	InteractiveSessionRecommendedJupyterImages *InfoOKBodyInteractiveSessionRecommendedJupyterImages `json:"interactive_session_recommended_jupyter_images"`
+
+	// interactive sessions custom image allowed
+	InteractiveSessionsCustomImageAllowed *InfoOKBodyInteractiveSessionsCustomImageAllowed `json:"interactive_sessions_custom_image_allowed"`
 
 	// kubernetes max memory limit
-	KubernetesMaxMemoryLimit *InfoOKBodyKubernetesMaxMemoryLimit `json:"kubernetes_max_memory_limit,omitempty"`
+	KubernetesMaxMemoryLimit *InfoOKBodyKubernetesMaxMemoryLimit `json:"kubernetes_max_memory_limit"`
 
 	// maximum interactive session inactivity period
-	MaximumInteractiveSessionInactivityPeriod *InfoOKBodyMaximumInteractiveSessionInactivityPeriod `json:"maximum_interactive_session_inactivity_period,omitempty"`
+	MaximumInteractiveSessionInactivityPeriod *InfoOKBodyMaximumInteractiveSessionInactivityPeriod `json:"maximum_interactive_session_inactivity_period"`
 
 	// maximum kubernetes jobs timeout
-	MaximumKubernetesJobsTimeout *InfoOKBodyMaximumKubernetesJobsTimeout `json:"maximum_kubernetes_jobs_timeout,omitempty"`
+	MaximumKubernetesJobsTimeout *InfoOKBodyMaximumKubernetesJobsTimeout `json:"maximum_kubernetes_jobs_timeout"`
 
 	// maximum workspace retention period
-	MaximumWorkspaceRetentionPeriod *InfoOKBodyMaximumWorkspaceRetentionPeriod `json:"maximum_workspace_retention_period,omitempty"`
+	MaximumWorkspaceRetentionPeriod *InfoOKBodyMaximumWorkspaceRetentionPeriod `json:"maximum_workspace_retention_period"`
+
+	// snakemake engine version
+	SnakemakeEngineVersion *InfoOKBodySnakemakeEngineVersion `json:"snakemake_engine_version"`
+
+	// supported workflow engines
+	SupportedWorkflowEngines *InfoOKBodySupportedWorkflowEngines `json:"supported_workflow_engines"`
 
 	// workspaces available
-	WorkspacesAvailable *InfoOKBodyWorkspacesAvailable `json:"workspaces_available,omitempty"`
+	WorkspacesAvailable *InfoOKBodyWorkspacesAvailable `json:"workspaces_available"`
+
+	// yadage engine adage version
+	YadageEngineAdageVersion *InfoOKBodyYadageEngineAdageVersion `json:"yadage_engine_adage_version"`
+
+	// yadage engine packtivity version
+	YadageEnginePacktivityVersion *InfoOKBodyYadageEnginePacktivityVersion `json:"yadage_engine_packtivity_version"`
+
+	// yadage engine version
+	YadageEngineVersion *InfoOKBodyYadageEngineVersion `json:"yadage_engine_version"`
 }
 
 // Validate validates this info o k body
@@ -259,6 +307,42 @@ func (o *InfoOKBody) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := o.validateComputeBackends(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateCwlEngineTool(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateCwlEngineVersion(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateDaskAutoscalerEnabled(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateDaskClusterDefaultNumberOfWorkers(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateDaskClusterDefaultSingleWorkerMemory(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateDaskClusterMaxMemoryLimit(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateDaskClusterMaxNumberOfWorkers(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateDaskClusterMaxSingleWorkerMemory(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateDaskEnabled(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -271,6 +355,14 @@ func (o *InfoOKBody) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := o.validateDefaultWorkspace(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateInteractiveSessionRecommendedJupyterImages(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateInteractiveSessionsCustomImageAllowed(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -290,7 +382,27 @@ func (o *InfoOKBody) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := o.validateSnakemakeEngineVersion(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateSupportedWorkflowEngines(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := o.validateWorkspacesAvailable(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateYadageEngineAdageVersion(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateYadageEnginePacktivityVersion(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateYadageEngineVersion(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -311,6 +423,177 @@ func (o *InfoOKBody) validateComputeBackends(formats strfmt.Registry) error {
 				return ve.ValidateName("infoOK" + "." + "compute_backends")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("infoOK" + "." + "compute_backends")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateCwlEngineTool(formats strfmt.Registry) error {
+	if swag.IsZero(o.CwlEngineTool) { // not required
+		return nil
+	}
+
+	if o.CwlEngineTool != nil {
+		if err := o.CwlEngineTool.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "cwl_engine_tool")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "cwl_engine_tool")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateCwlEngineVersion(formats strfmt.Registry) error {
+	if swag.IsZero(o.CwlEngineVersion) { // not required
+		return nil
+	}
+
+	if o.CwlEngineVersion != nil {
+		if err := o.CwlEngineVersion.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "cwl_engine_version")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "cwl_engine_version")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateDaskAutoscalerEnabled(formats strfmt.Registry) error {
+	if swag.IsZero(o.DaskAutoscalerEnabled) { // not required
+		return nil
+	}
+
+	if o.DaskAutoscalerEnabled != nil {
+		if err := o.DaskAutoscalerEnabled.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_autoscaler_enabled")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_autoscaler_enabled")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateDaskClusterDefaultNumberOfWorkers(formats strfmt.Registry) error {
+	if swag.IsZero(o.DaskClusterDefaultNumberOfWorkers) { // not required
+		return nil
+	}
+
+	if o.DaskClusterDefaultNumberOfWorkers != nil {
+		if err := o.DaskClusterDefaultNumberOfWorkers.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_cluster_default_number_of_workers")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_cluster_default_number_of_workers")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateDaskClusterDefaultSingleWorkerMemory(formats strfmt.Registry) error {
+	if swag.IsZero(o.DaskClusterDefaultSingleWorkerMemory) { // not required
+		return nil
+	}
+
+	if o.DaskClusterDefaultSingleWorkerMemory != nil {
+		if err := o.DaskClusterDefaultSingleWorkerMemory.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_memory")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_memory")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateDaskClusterMaxMemoryLimit(formats strfmt.Registry) error {
+	if swag.IsZero(o.DaskClusterMaxMemoryLimit) { // not required
+		return nil
+	}
+
+	if o.DaskClusterMaxMemoryLimit != nil {
+		if err := o.DaskClusterMaxMemoryLimit.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_memory_limit")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_memory_limit")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateDaskClusterMaxNumberOfWorkers(formats strfmt.Registry) error {
+	if swag.IsZero(o.DaskClusterMaxNumberOfWorkers) { // not required
+		return nil
+	}
+
+	if o.DaskClusterMaxNumberOfWorkers != nil {
+		if err := o.DaskClusterMaxNumberOfWorkers.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_number_of_workers")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_number_of_workers")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateDaskClusterMaxSingleWorkerMemory(formats strfmt.Registry) error {
+	if swag.IsZero(o.DaskClusterMaxSingleWorkerMemory) { // not required
+		return nil
+	}
+
+	if o.DaskClusterMaxSingleWorkerMemory != nil {
+		if err := o.DaskClusterMaxSingleWorkerMemory.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_memory")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_memory")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateDaskEnabled(formats strfmt.Registry) error {
+	if swag.IsZero(o.DaskEnabled) { // not required
+		return nil
+	}
+
+	if o.DaskEnabled != nil {
+		if err := o.DaskEnabled.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_enabled")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_enabled")
 			}
 			return err
 		}
@@ -368,6 +651,44 @@ func (o *InfoOKBody) validateDefaultWorkspace(formats strfmt.Registry) error {
 				return ve.ValidateName("infoOK" + "." + "default_workspace")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("infoOK" + "." + "default_workspace")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateInteractiveSessionRecommendedJupyterImages(formats strfmt.Registry) error {
+	if swag.IsZero(o.InteractiveSessionRecommendedJupyterImages) { // not required
+		return nil
+	}
+
+	if o.InteractiveSessionRecommendedJupyterImages != nil {
+		if err := o.InteractiveSessionRecommendedJupyterImages.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "interactive_session_recommended_jupyter_images")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "interactive_session_recommended_jupyter_images")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateInteractiveSessionsCustomImageAllowed(formats strfmt.Registry) error {
+	if swag.IsZero(o.InteractiveSessionsCustomImageAllowed) { // not required
+		return nil
+	}
+
+	if o.InteractiveSessionsCustomImageAllowed != nil {
+		if err := o.InteractiveSessionsCustomImageAllowed.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "interactive_sessions_custom_image_allowed")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "interactive_sessions_custom_image_allowed")
 			}
 			return err
 		}
@@ -452,6 +773,44 @@ func (o *InfoOKBody) validateMaximumWorkspaceRetentionPeriod(formats strfmt.Regi
 	return nil
 }
 
+func (o *InfoOKBody) validateSnakemakeEngineVersion(formats strfmt.Registry) error {
+	if swag.IsZero(o.SnakemakeEngineVersion) { // not required
+		return nil
+	}
+
+	if o.SnakemakeEngineVersion != nil {
+		if err := o.SnakemakeEngineVersion.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "snakemake_engine_version")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "snakemake_engine_version")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateSupportedWorkflowEngines(formats strfmt.Registry) error {
+	if swag.IsZero(o.SupportedWorkflowEngines) { // not required
+		return nil
+	}
+
+	if o.SupportedWorkflowEngines != nil {
+		if err := o.SupportedWorkflowEngines.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "supported_workflow_engines")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "supported_workflow_engines")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (o *InfoOKBody) validateWorkspacesAvailable(formats strfmt.Registry) error {
 	if swag.IsZero(o.WorkspacesAvailable) { // not required
 		return nil
@@ -471,11 +830,104 @@ func (o *InfoOKBody) validateWorkspacesAvailable(formats strfmt.Registry) error 
 	return nil
 }
 
+func (o *InfoOKBody) validateYadageEngineAdageVersion(formats strfmt.Registry) error {
+	if swag.IsZero(o.YadageEngineAdageVersion) { // not required
+		return nil
+	}
+
+	if o.YadageEngineAdageVersion != nil {
+		if err := o.YadageEngineAdageVersion.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "yadage_engine_adage_version")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "yadage_engine_adage_version")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateYadageEnginePacktivityVersion(formats strfmt.Registry) error {
+	if swag.IsZero(o.YadageEnginePacktivityVersion) { // not required
+		return nil
+	}
+
+	if o.YadageEnginePacktivityVersion != nil {
+		if err := o.YadageEnginePacktivityVersion.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "yadage_engine_packtivity_version")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "yadage_engine_packtivity_version")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateYadageEngineVersion(formats strfmt.Registry) error {
+	if swag.IsZero(o.YadageEngineVersion) { // not required
+		return nil
+	}
+
+	if o.YadageEngineVersion != nil {
+		if err := o.YadageEngineVersion.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "yadage_engine_version")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "yadage_engine_version")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 // ContextValidate validate this info o k body based on the context it is used
 func (o *InfoOKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := o.contextValidateComputeBackends(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateCwlEngineTool(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateCwlEngineVersion(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateDaskAutoscalerEnabled(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateDaskClusterDefaultNumberOfWorkers(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateDaskClusterDefaultSingleWorkerMemory(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateDaskClusterMaxMemoryLimit(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateDaskClusterMaxNumberOfWorkers(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateDaskClusterMaxSingleWorkerMemory(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateDaskEnabled(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -488,6 +940,14 @@ func (o *InfoOKBody) ContextValidate(ctx context.Context, formats strfmt.Registr
 	}
 
 	if err := o.contextValidateDefaultWorkspace(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateInteractiveSessionRecommendedJupyterImages(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateInteractiveSessionsCustomImageAllowed(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -507,7 +967,27 @@ func (o *InfoOKBody) ContextValidate(ctx context.Context, formats strfmt.Registr
 		res = append(res, err)
 	}
 
+	if err := o.contextValidateSnakemakeEngineVersion(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateSupportedWorkflowEngines(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := o.contextValidateWorkspacesAvailable(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateYadageEngineAdageVersion(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateYadageEnginePacktivityVersion(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateYadageEngineVersion(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -530,6 +1010,195 @@ func (o *InfoOKBody) contextValidateComputeBackends(ctx context.Context, formats
 				return ve.ValidateName("infoOK" + "." + "compute_backends")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("infoOK" + "." + "compute_backends")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateCwlEngineTool(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.CwlEngineTool != nil {
+
+		if swag.IsZero(o.CwlEngineTool) { // not required
+			return nil
+		}
+
+		if err := o.CwlEngineTool.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "cwl_engine_tool")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "cwl_engine_tool")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateCwlEngineVersion(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.CwlEngineVersion != nil {
+
+		if swag.IsZero(o.CwlEngineVersion) { // not required
+			return nil
+		}
+
+		if err := o.CwlEngineVersion.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "cwl_engine_version")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "cwl_engine_version")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateDaskAutoscalerEnabled(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.DaskAutoscalerEnabled != nil {
+
+		if swag.IsZero(o.DaskAutoscalerEnabled) { // not required
+			return nil
+		}
+
+		if err := o.DaskAutoscalerEnabled.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_autoscaler_enabled")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_autoscaler_enabled")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateDaskClusterDefaultNumberOfWorkers(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.DaskClusterDefaultNumberOfWorkers != nil {
+
+		if swag.IsZero(o.DaskClusterDefaultNumberOfWorkers) { // not required
+			return nil
+		}
+
+		if err := o.DaskClusterDefaultNumberOfWorkers.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_cluster_default_number_of_workers")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_cluster_default_number_of_workers")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateDaskClusterDefaultSingleWorkerMemory(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.DaskClusterDefaultSingleWorkerMemory != nil {
+
+		if swag.IsZero(o.DaskClusterDefaultSingleWorkerMemory) { // not required
+			return nil
+		}
+
+		if err := o.DaskClusterDefaultSingleWorkerMemory.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_memory")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_memory")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateDaskClusterMaxMemoryLimit(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.DaskClusterMaxMemoryLimit != nil {
+
+		if swag.IsZero(o.DaskClusterMaxMemoryLimit) { // not required
+			return nil
+		}
+
+		if err := o.DaskClusterMaxMemoryLimit.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_memory_limit")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_memory_limit")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateDaskClusterMaxNumberOfWorkers(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.DaskClusterMaxNumberOfWorkers != nil {
+
+		if swag.IsZero(o.DaskClusterMaxNumberOfWorkers) { // not required
+			return nil
+		}
+
+		if err := o.DaskClusterMaxNumberOfWorkers.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_number_of_workers")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_number_of_workers")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateDaskClusterMaxSingleWorkerMemory(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.DaskClusterMaxSingleWorkerMemory != nil {
+
+		if swag.IsZero(o.DaskClusterMaxSingleWorkerMemory) { // not required
+			return nil
+		}
+
+		if err := o.DaskClusterMaxSingleWorkerMemory.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_memory")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_memory")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateDaskEnabled(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.DaskEnabled != nil {
+
+		if swag.IsZero(o.DaskEnabled) { // not required
+			return nil
+		}
+
+		if err := o.DaskEnabled.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_enabled")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_enabled")
 			}
 			return err
 		}
@@ -593,6 +1262,48 @@ func (o *InfoOKBody) contextValidateDefaultWorkspace(ctx context.Context, format
 				return ve.ValidateName("infoOK" + "." + "default_workspace")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("infoOK" + "." + "default_workspace")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateInteractiveSessionRecommendedJupyterImages(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.InteractiveSessionRecommendedJupyterImages != nil {
+
+		if swag.IsZero(o.InteractiveSessionRecommendedJupyterImages) { // not required
+			return nil
+		}
+
+		if err := o.InteractiveSessionRecommendedJupyterImages.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "interactive_session_recommended_jupyter_images")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "interactive_session_recommended_jupyter_images")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateInteractiveSessionsCustomImageAllowed(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.InteractiveSessionsCustomImageAllowed != nil {
+
+		if swag.IsZero(o.InteractiveSessionsCustomImageAllowed) { // not required
+			return nil
+		}
+
+		if err := o.InteractiveSessionsCustomImageAllowed.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "interactive_sessions_custom_image_allowed")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "interactive_sessions_custom_image_allowed")
 			}
 			return err
 		}
@@ -685,6 +1396,48 @@ func (o *InfoOKBody) contextValidateMaximumWorkspaceRetentionPeriod(ctx context.
 	return nil
 }
 
+func (o *InfoOKBody) contextValidateSnakemakeEngineVersion(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.SnakemakeEngineVersion != nil {
+
+		if swag.IsZero(o.SnakemakeEngineVersion) { // not required
+			return nil
+		}
+
+		if err := o.SnakemakeEngineVersion.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "snakemake_engine_version")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "snakemake_engine_version")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateSupportedWorkflowEngines(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.SupportedWorkflowEngines != nil {
+
+		if swag.IsZero(o.SupportedWorkflowEngines) { // not required
+			return nil
+		}
+
+		if err := o.SupportedWorkflowEngines.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "supported_workflow_engines")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "supported_workflow_engines")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (o *InfoOKBody) contextValidateWorkspacesAvailable(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.WorkspacesAvailable != nil {
@@ -698,6 +1451,69 @@ func (o *InfoOKBody) contextValidateWorkspacesAvailable(ctx context.Context, for
 				return ve.ValidateName("infoOK" + "." + "workspaces_available")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("infoOK" + "." + "workspaces_available")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateYadageEngineAdageVersion(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.YadageEngineAdageVersion != nil {
+
+		if swag.IsZero(o.YadageEngineAdageVersion) { // not required
+			return nil
+		}
+
+		if err := o.YadageEngineAdageVersion.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "yadage_engine_adage_version")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "yadage_engine_adage_version")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateYadageEnginePacktivityVersion(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.YadageEnginePacktivityVersion != nil {
+
+		if swag.IsZero(o.YadageEnginePacktivityVersion) { // not required
+			return nil
+		}
+
+		if err := o.YadageEnginePacktivityVersion.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "yadage_engine_packtivity_version")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "yadage_engine_packtivity_version")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateYadageEngineVersion(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.YadageEngineVersion != nil {
+
+		if swag.IsZero(o.YadageEngineVersion) { // not required
+			return nil
+		}
+
+		if err := o.YadageEngineVersion.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "yadage_engine_version")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "yadage_engine_version")
 			}
 			return err
 		}
@@ -731,7 +1547,7 @@ swagger:model InfoOKBodyComputeBackends
 type InfoOKBodyComputeBackends struct {
 
 	// title
-	Title string `json:"title,omitempty"`
+	Title string `json:"title"`
 
 	// value
 	Value []string `json:"value"`
@@ -766,16 +1582,385 @@ func (o *InfoOKBodyComputeBackends) UnmarshalBinary(b []byte) error {
 }
 
 /*
+InfoOKBodyCwlEngineTool info o k body cwl engine tool
+swagger:model InfoOKBodyCwlEngineTool
+*/
+type InfoOKBodyCwlEngineTool struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value string `json:"value"`
+}
+
+// Validate validates this info o k body cwl engine tool
+func (o *InfoOKBodyCwlEngineTool) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body cwl engine tool based on context it is used
+func (o *InfoOKBodyCwlEngineTool) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyCwlEngineTool) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyCwlEngineTool) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyCwlEngineTool
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyCwlEngineVersion info o k body cwl engine version
+swagger:model InfoOKBodyCwlEngineVersion
+*/
+type InfoOKBodyCwlEngineVersion struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value string `json:"value"`
+}
+
+// Validate validates this info o k body cwl engine version
+func (o *InfoOKBodyCwlEngineVersion) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body cwl engine version based on context it is used
+func (o *InfoOKBodyCwlEngineVersion) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyCwlEngineVersion) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyCwlEngineVersion) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyCwlEngineVersion
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyDaskAutoscalerEnabled info o k body dask autoscaler enabled
+swagger:model InfoOKBodyDaskAutoscalerEnabled
+*/
+type InfoOKBodyDaskAutoscalerEnabled struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value string `json:"value"`
+}
+
+// Validate validates this info o k body dask autoscaler enabled
+func (o *InfoOKBodyDaskAutoscalerEnabled) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body dask autoscaler enabled based on context it is used
+func (o *InfoOKBodyDaskAutoscalerEnabled) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyDaskAutoscalerEnabled) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyDaskAutoscalerEnabled) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyDaskAutoscalerEnabled
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyDaskClusterDefaultNumberOfWorkers info o k body dask cluster default number of workers
+swagger:model InfoOKBodyDaskClusterDefaultNumberOfWorkers
+*/
+type InfoOKBodyDaskClusterDefaultNumberOfWorkers struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value string `json:"value"`
+}
+
+// Validate validates this info o k body dask cluster default number of workers
+func (o *InfoOKBodyDaskClusterDefaultNumberOfWorkers) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body dask cluster default number of workers based on context it is used
+func (o *InfoOKBodyDaskClusterDefaultNumberOfWorkers) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyDaskClusterDefaultNumberOfWorkers) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyDaskClusterDefaultNumberOfWorkers) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyDaskClusterDefaultNumberOfWorkers
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyDaskClusterDefaultSingleWorkerMemory info o k body dask cluster default single worker memory
+swagger:model InfoOKBodyDaskClusterDefaultSingleWorkerMemory
+*/
+type InfoOKBodyDaskClusterDefaultSingleWorkerMemory struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value string `json:"value"`
+}
+
+// Validate validates this info o k body dask cluster default single worker memory
+func (o *InfoOKBodyDaskClusterDefaultSingleWorkerMemory) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body dask cluster default single worker memory based on context it is used
+func (o *InfoOKBodyDaskClusterDefaultSingleWorkerMemory) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyDaskClusterDefaultSingleWorkerMemory) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyDaskClusterDefaultSingleWorkerMemory) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyDaskClusterDefaultSingleWorkerMemory
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyDaskClusterMaxMemoryLimit info o k body dask cluster max memory limit
+swagger:model InfoOKBodyDaskClusterMaxMemoryLimit
+*/
+type InfoOKBodyDaskClusterMaxMemoryLimit struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value string `json:"value"`
+}
+
+// Validate validates this info o k body dask cluster max memory limit
+func (o *InfoOKBodyDaskClusterMaxMemoryLimit) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body dask cluster max memory limit based on context it is used
+func (o *InfoOKBodyDaskClusterMaxMemoryLimit) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyDaskClusterMaxMemoryLimit) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyDaskClusterMaxMemoryLimit) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyDaskClusterMaxMemoryLimit
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyDaskClusterMaxNumberOfWorkers info o k body dask cluster max number of workers
+swagger:model InfoOKBodyDaskClusterMaxNumberOfWorkers
+*/
+type InfoOKBodyDaskClusterMaxNumberOfWorkers struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value string `json:"value"`
+}
+
+// Validate validates this info o k body dask cluster max number of workers
+func (o *InfoOKBodyDaskClusterMaxNumberOfWorkers) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body dask cluster max number of workers based on context it is used
+func (o *InfoOKBodyDaskClusterMaxNumberOfWorkers) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyDaskClusterMaxNumberOfWorkers) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyDaskClusterMaxNumberOfWorkers) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyDaskClusterMaxNumberOfWorkers
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyDaskClusterMaxSingleWorkerMemory info o k body dask cluster max single worker memory
+swagger:model InfoOKBodyDaskClusterMaxSingleWorkerMemory
+*/
+type InfoOKBodyDaskClusterMaxSingleWorkerMemory struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value string `json:"value"`
+}
+
+// Validate validates this info o k body dask cluster max single worker memory
+func (o *InfoOKBodyDaskClusterMaxSingleWorkerMemory) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body dask cluster max single worker memory based on context it is used
+func (o *InfoOKBodyDaskClusterMaxSingleWorkerMemory) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyDaskClusterMaxSingleWorkerMemory) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyDaskClusterMaxSingleWorkerMemory) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyDaskClusterMaxSingleWorkerMemory
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyDaskEnabled info o k body dask enabled
+swagger:model InfoOKBodyDaskEnabled
+*/
+type InfoOKBodyDaskEnabled struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value string `json:"value"`
+}
+
+// Validate validates this info o k body dask enabled
+func (o *InfoOKBodyDaskEnabled) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body dask enabled based on context it is used
+func (o *InfoOKBodyDaskEnabled) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyDaskEnabled) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyDaskEnabled) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyDaskEnabled
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
 InfoOKBodyDefaultKubernetesJobsTimeout info o k body default kubernetes jobs timeout
 swagger:model InfoOKBodyDefaultKubernetesJobsTimeout
 */
 type InfoOKBodyDefaultKubernetesJobsTimeout struct {
 
 	// title
-	Title string `json:"title,omitempty"`
+	Title string `json:"title"`
 
 	// value
-	Value string `json:"value,omitempty"`
+	Value string `json:"value"`
 }
 
 // Validate validates this info o k body default kubernetes jobs timeout
@@ -813,10 +1998,10 @@ swagger:model InfoOKBodyDefaultKubernetesMemoryLimit
 type InfoOKBodyDefaultKubernetesMemoryLimit struct {
 
 	// title
-	Title string `json:"title,omitempty"`
+	Title string `json:"title"`
 
 	// value
-	Value string `json:"value,omitempty"`
+	Value string `json:"value"`
 }
 
 // Validate validates this info o k body default kubernetes memory limit
@@ -854,10 +2039,10 @@ swagger:model InfoOKBodyDefaultWorkspace
 type InfoOKBodyDefaultWorkspace struct {
 
 	// title
-	Title string `json:"title,omitempty"`
+	Title string `json:"title"`
 
 	// value
-	Value string `json:"value,omitempty"`
+	Value string `json:"value"`
 }
 
 // Validate validates this info o k body default workspace
@@ -889,16 +2074,98 @@ func (o *InfoOKBodyDefaultWorkspace) UnmarshalBinary(b []byte) error {
 }
 
 /*
+InfoOKBodyInteractiveSessionRecommendedJupyterImages info o k body interactive session recommended jupyter images
+swagger:model InfoOKBodyInteractiveSessionRecommendedJupyterImages
+*/
+type InfoOKBodyInteractiveSessionRecommendedJupyterImages struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value []string `json:"value"`
+}
+
+// Validate validates this info o k body interactive session recommended jupyter images
+func (o *InfoOKBodyInteractiveSessionRecommendedJupyterImages) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body interactive session recommended jupyter images based on context it is used
+func (o *InfoOKBodyInteractiveSessionRecommendedJupyterImages) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyInteractiveSessionRecommendedJupyterImages) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyInteractiveSessionRecommendedJupyterImages) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyInteractiveSessionRecommendedJupyterImages
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyInteractiveSessionsCustomImageAllowed info o k body interactive sessions custom image allowed
+swagger:model InfoOKBodyInteractiveSessionsCustomImageAllowed
+*/
+type InfoOKBodyInteractiveSessionsCustomImageAllowed struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value string `json:"value"`
+}
+
+// Validate validates this info o k body interactive sessions custom image allowed
+func (o *InfoOKBodyInteractiveSessionsCustomImageAllowed) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body interactive sessions custom image allowed based on context it is used
+func (o *InfoOKBodyInteractiveSessionsCustomImageAllowed) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyInteractiveSessionsCustomImageAllowed) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyInteractiveSessionsCustomImageAllowed) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyInteractiveSessionsCustomImageAllowed
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
 InfoOKBodyKubernetesMaxMemoryLimit info o k body kubernetes max memory limit
 swagger:model InfoOKBodyKubernetesMaxMemoryLimit
 */
 type InfoOKBodyKubernetesMaxMemoryLimit struct {
 
 	// title
-	Title string `json:"title,omitempty"`
+	Title string `json:"title"`
 
 	// value
-	Value *string `json:"value,omitempty"`
+	Value *string `json:"value"`
 }
 
 // Validate validates this info o k body kubernetes max memory limit
@@ -936,10 +2203,10 @@ swagger:model InfoOKBodyMaximumInteractiveSessionInactivityPeriod
 type InfoOKBodyMaximumInteractiveSessionInactivityPeriod struct {
 
 	// title
-	Title string `json:"title,omitempty"`
+	Title string `json:"title"`
 
 	// value
-	Value *string `json:"value,omitempty"`
+	Value *string `json:"value"`
 }
 
 // Validate validates this info o k body maximum interactive session inactivity period
@@ -977,10 +2244,10 @@ swagger:model InfoOKBodyMaximumKubernetesJobsTimeout
 type InfoOKBodyMaximumKubernetesJobsTimeout struct {
 
 	// title
-	Title string `json:"title,omitempty"`
+	Title string `json:"title"`
 
 	// value
-	Value string `json:"value,omitempty"`
+	Value string `json:"value"`
 }
 
 // Validate validates this info o k body maximum kubernetes jobs timeout
@@ -1018,10 +2285,10 @@ swagger:model InfoOKBodyMaximumWorkspaceRetentionPeriod
 type InfoOKBodyMaximumWorkspaceRetentionPeriod struct {
 
 	// title
-	Title string `json:"title,omitempty"`
+	Title string `json:"title"`
 
 	// value
-	Value *string `json:"value,omitempty"`
+	Value *string `json:"value"`
 }
 
 // Validate validates this info o k body maximum workspace retention period
@@ -1053,13 +2320,95 @@ func (o *InfoOKBodyMaximumWorkspaceRetentionPeriod) UnmarshalBinary(b []byte) er
 }
 
 /*
+InfoOKBodySnakemakeEngineVersion info o k body snakemake engine version
+swagger:model InfoOKBodySnakemakeEngineVersion
+*/
+type InfoOKBodySnakemakeEngineVersion struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value string `json:"value"`
+}
+
+// Validate validates this info o k body snakemake engine version
+func (o *InfoOKBodySnakemakeEngineVersion) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body snakemake engine version based on context it is used
+func (o *InfoOKBodySnakemakeEngineVersion) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodySnakemakeEngineVersion) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodySnakemakeEngineVersion) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodySnakemakeEngineVersion
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodySupportedWorkflowEngines info o k body supported workflow engines
+swagger:model InfoOKBodySupportedWorkflowEngines
+*/
+type InfoOKBodySupportedWorkflowEngines struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value []string `json:"value"`
+}
+
+// Validate validates this info o k body supported workflow engines
+func (o *InfoOKBodySupportedWorkflowEngines) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body supported workflow engines based on context it is used
+func (o *InfoOKBodySupportedWorkflowEngines) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodySupportedWorkflowEngines) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodySupportedWorkflowEngines) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodySupportedWorkflowEngines
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
 InfoOKBodyWorkspacesAvailable info o k body workspaces available
 swagger:model InfoOKBodyWorkspacesAvailable
 */
 type InfoOKBodyWorkspacesAvailable struct {
 
 	// title
-	Title string `json:"title,omitempty"`
+	Title string `json:"title"`
 
 	// value
 	Value []string `json:"value"`
@@ -1086,6 +2435,129 @@ func (o *InfoOKBodyWorkspacesAvailable) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *InfoOKBodyWorkspacesAvailable) UnmarshalBinary(b []byte) error {
 	var res InfoOKBodyWorkspacesAvailable
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyYadageEngineAdageVersion info o k body yadage engine adage version
+swagger:model InfoOKBodyYadageEngineAdageVersion
+*/
+type InfoOKBodyYadageEngineAdageVersion struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value string `json:"value"`
+}
+
+// Validate validates this info o k body yadage engine adage version
+func (o *InfoOKBodyYadageEngineAdageVersion) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body yadage engine adage version based on context it is used
+func (o *InfoOKBodyYadageEngineAdageVersion) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyYadageEngineAdageVersion) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyYadageEngineAdageVersion) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyYadageEngineAdageVersion
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyYadageEnginePacktivityVersion info o k body yadage engine packtivity version
+swagger:model InfoOKBodyYadageEnginePacktivityVersion
+*/
+type InfoOKBodyYadageEnginePacktivityVersion struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value string `json:"value"`
+}
+
+// Validate validates this info o k body yadage engine packtivity version
+func (o *InfoOKBodyYadageEnginePacktivityVersion) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body yadage engine packtivity version based on context it is used
+func (o *InfoOKBodyYadageEnginePacktivityVersion) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyYadageEnginePacktivityVersion) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyYadageEnginePacktivityVersion) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyYadageEnginePacktivityVersion
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyYadageEngineVersion info o k body yadage engine version
+swagger:model InfoOKBodyYadageEngineVersion
+*/
+type InfoOKBodyYadageEngineVersion struct {
+
+	// title
+	Title string `json:"title"`
+
+	// value
+	Value string `json:"value"`
+}
+
+// Validate validates this info o k body yadage engine version
+func (o *InfoOKBodyYadageEngineVersion) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body yadage engine version based on context it is used
+func (o *InfoOKBodyYadageEngineVersion) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyYadageEngineVersion) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyYadageEngineVersion) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyYadageEngineVersion
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

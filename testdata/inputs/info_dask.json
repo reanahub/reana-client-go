@@ -1,0 +1,30 @@
+{
+  "dask_enabled": {
+    "title": "Dask workflows allowed in the cluster",
+    "value": "True"
+  },
+  "dask_autoscaler_enabled": {
+    "title": "Dask autoscaler enabled in the cluster",
+    "value": "True"
+  },
+  "dask_cluster_default_number_of_workers": {
+    "title": "The number of Dask workers created by default",
+    "value": "2"
+  },
+  "dask_cluster_max_memory_limit": {
+    "title": "The maximum memory limit for Dask clusters created by users",
+    "value": "16Gi"
+  },
+  "dask_cluster_default_single_worker_memory": {
+    "title": "The amount of memory used by default by a single Dask worker",
+    "value": "2Gi"
+  },
+  "dask_cluster_max_single_worker_memory": {
+    "title": "The maximum amount of memory that users can ask for the single Dask worker",
+    "value": "8Gi"
+  },
+  "dask_cluster_max_number_of_workers": {
+    "title": "The maximum number of workers that users can ask for the single Dask cluster",
+    "value": "20"
+  }
+}

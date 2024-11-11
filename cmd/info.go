@@ -1,6 +1,6 @@
 /*
 This file is part of REANA.
-Copyright (C) 2022 CERN.
+Copyright (C) 2022, 2024 CERN.
 
 REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
@@ -98,6 +98,56 @@ func (o *infoOptions) run(cmd *cobra.Command) error {
 		}
 		if p.WorkspacesAvailable != nil {
 			displayInfoSliceItem(cmd, p.WorkspacesAvailable.Title, p.WorkspacesAvailable.Value)
+		}
+		if p.InteractiveSessionsCustomImageAllowed != nil {
+			displayInfoStringItem(cmd, p.InteractiveSessionsCustomImageAllowed.Title, &p.InteractiveSessionsCustomImageAllowed.Value)
+		}
+		if p.InteractiveSessionRecommendedJupyterImages != nil {
+			displayInfoSliceItem(cmd, p.InteractiveSessionRecommendedJupyterImages.Title, p.InteractiveSessionRecommendedJupyterImages.Value)
+		}
+		if p.SupportedWorkflowEngines != nil {
+			displayInfoSliceItem(cmd, p.SupportedWorkflowEngines.Title, p.SupportedWorkflowEngines.Value)
+		}
+		if p.CwlEngineTool != nil {
+			displayInfoStringItem(cmd, p.CwlEngineTool.Title, &p.CwlEngineTool.Value)
+		}
+		if p.CwlEngineVersion != nil {
+			displayInfoStringItem(cmd, p.CwlEngineVersion.Title, &p.CwlEngineVersion.Value)
+		}
+		if p.YadageEngineVersion != nil {
+			displayInfoStringItem(cmd, p.YadageEngineVersion.Title, &p.YadageEngineVersion.Value)
+		}
+		if p.YadageEngineAdageVersion != nil {
+			displayInfoStringItem(cmd, p.YadageEngineAdageVersion.Title, &p.YadageEngineAdageVersion.Value)
+		}
+		if p.YadageEnginePacktivityVersion != nil {
+			displayInfoStringItem(cmd, p.YadageEnginePacktivityVersion.Title, &p.YadageEnginePacktivityVersion.Value)
+		}
+		if p.SnakemakeEngineVersion != nil {
+			displayInfoStringItem(cmd, p.SnakemakeEngineVersion.Title, &p.SnakemakeEngineVersion.Value)
+		}
+		if p.DaskEnabled != nil {
+			displayInfoStringItem(cmd, p.DaskEnabled.Title, &p.DaskEnabled.Value)
+		}
+		if p.DaskEnabled != nil && strings.ToLower(p.DaskEnabled.Value) == "true" {
+			if p.DaskAutoscalerEnabled != nil {
+				displayInfoStringItem(cmd, p.DaskAutoscalerEnabled.Title, &p.DaskAutoscalerEnabled.Value)
+			}
+			if p.DaskClusterDefaultNumberOfWorkers != nil {
+				displayInfoStringItem(cmd, p.DaskClusterDefaultNumberOfWorkers.Title, &p.DaskClusterDefaultNumberOfWorkers.Value)
+			}
+			if p.DaskClusterMaxMemoryLimit != nil {
+				displayInfoStringItem(cmd, p.DaskClusterMaxMemoryLimit.Title, &p.DaskClusterMaxMemoryLimit.Value)
+			}
+			if p.DaskClusterDefaultSingleWorkerMemory != nil {
+				displayInfoStringItem(cmd, p.DaskClusterDefaultSingleWorkerMemory.Title, &p.DaskClusterDefaultSingleWorkerMemory.Value)
+			}
+			if p.DaskClusterMaxSingleWorkerMemory != nil {
+				displayInfoStringItem(cmd, p.DaskClusterMaxSingleWorkerMemory.Title, &p.DaskClusterMaxSingleWorkerMemory.Value)
+			}
+			if p.DaskClusterMaxNumberOfWorkers != nil {
+				displayInfoStringItem(cmd, p.DaskClusterMaxNumberOfWorkers.Title, &p.DaskClusterMaxNumberOfWorkers.Value)
+			}
 		}
 	}
 	return nil
