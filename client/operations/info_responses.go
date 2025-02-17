@@ -189,7 +189,7 @@ swagger:model InfoInternalServerErrorBody
 type InfoInternalServerErrorBody struct {
 
 	// message
-	Message string `json:"message"`
+	Message string `json:"message,omitempty"`
 }
 
 // Validate validates this info internal server error body
@@ -227,79 +227,85 @@ swagger:model InfoOKBody
 type InfoOKBody struct {
 
 	// compute backends
-	ComputeBackends *InfoOKBodyComputeBackends `json:"compute_backends"`
+	ComputeBackends *InfoOKBodyComputeBackends `json:"compute_backends,omitempty"`
 
 	// cwl engine tool
-	CwlEngineTool *InfoOKBodyCwlEngineTool `json:"cwl_engine_tool"`
+	CwlEngineTool *InfoOKBodyCwlEngineTool `json:"cwl_engine_tool,omitempty"`
 
 	// cwl engine version
-	CwlEngineVersion *InfoOKBodyCwlEngineVersion `json:"cwl_engine_version"`
+	CwlEngineVersion *InfoOKBodyCwlEngineVersion `json:"cwl_engine_version,omitempty"`
 
 	// dask autoscaler enabled
-	DaskAutoscalerEnabled *InfoOKBodyDaskAutoscalerEnabled `json:"dask_autoscaler_enabled"`
+	DaskAutoscalerEnabled *InfoOKBodyDaskAutoscalerEnabled `json:"dask_autoscaler_enabled,omitempty"`
 
 	// dask cluster default number of workers
-	DaskClusterDefaultNumberOfWorkers *InfoOKBodyDaskClusterDefaultNumberOfWorkers `json:"dask_cluster_default_number_of_workers"`
+	DaskClusterDefaultNumberOfWorkers *InfoOKBodyDaskClusterDefaultNumberOfWorkers `json:"dask_cluster_default_number_of_workers,omitempty"`
 
 	// dask cluster default single worker memory
-	DaskClusterDefaultSingleWorkerMemory *InfoOKBodyDaskClusterDefaultSingleWorkerMemory `json:"dask_cluster_default_single_worker_memory"`
+	DaskClusterDefaultSingleWorkerMemory *InfoOKBodyDaskClusterDefaultSingleWorkerMemory `json:"dask_cluster_default_single_worker_memory,omitempty"`
+
+	// dask cluster default single worker threads
+	DaskClusterDefaultSingleWorkerThreads *InfoOKBodyDaskClusterDefaultSingleWorkerThreads `json:"dask_cluster_default_single_worker_threads,omitempty"`
 
 	// dask cluster max memory limit
-	DaskClusterMaxMemoryLimit *InfoOKBodyDaskClusterMaxMemoryLimit `json:"dask_cluster_max_memory_limit"`
+	DaskClusterMaxMemoryLimit *InfoOKBodyDaskClusterMaxMemoryLimit `json:"dask_cluster_max_memory_limit,omitempty"`
 
 	// dask cluster max number of workers
-	DaskClusterMaxNumberOfWorkers *InfoOKBodyDaskClusterMaxNumberOfWorkers `json:"dask_cluster_max_number_of_workers"`
+	DaskClusterMaxNumberOfWorkers *InfoOKBodyDaskClusterMaxNumberOfWorkers `json:"dask_cluster_max_number_of_workers,omitempty"`
 
 	// dask cluster max single worker memory
-	DaskClusterMaxSingleWorkerMemory *InfoOKBodyDaskClusterMaxSingleWorkerMemory `json:"dask_cluster_max_single_worker_memory"`
+	DaskClusterMaxSingleWorkerMemory *InfoOKBodyDaskClusterMaxSingleWorkerMemory `json:"dask_cluster_max_single_worker_memory,omitempty"`
+
+	// dask cluster max single worker threads
+	DaskClusterMaxSingleWorkerThreads *InfoOKBodyDaskClusterMaxSingleWorkerThreads `json:"dask_cluster_max_single_worker_threads,omitempty"`
 
 	// dask enabled
-	DaskEnabled *InfoOKBodyDaskEnabled `json:"dask_enabled"`
+	DaskEnabled *InfoOKBodyDaskEnabled `json:"dask_enabled,omitempty"`
 
 	// default kubernetes jobs timeout
-	DefaultKubernetesJobsTimeout *InfoOKBodyDefaultKubernetesJobsTimeout `json:"default_kubernetes_jobs_timeout"`
+	DefaultKubernetesJobsTimeout *InfoOKBodyDefaultKubernetesJobsTimeout `json:"default_kubernetes_jobs_timeout,omitempty"`
 
 	// default kubernetes memory limit
-	DefaultKubernetesMemoryLimit *InfoOKBodyDefaultKubernetesMemoryLimit `json:"default_kubernetes_memory_limit"`
+	DefaultKubernetesMemoryLimit *InfoOKBodyDefaultKubernetesMemoryLimit `json:"default_kubernetes_memory_limit,omitempty"`
 
 	// default workspace
-	DefaultWorkspace *InfoOKBodyDefaultWorkspace `json:"default_workspace"`
+	DefaultWorkspace *InfoOKBodyDefaultWorkspace `json:"default_workspace,omitempty"`
 
 	// interactive session recommended jupyter images
-	InteractiveSessionRecommendedJupyterImages *InfoOKBodyInteractiveSessionRecommendedJupyterImages `json:"interactive_session_recommended_jupyter_images"`
+	InteractiveSessionRecommendedJupyterImages *InfoOKBodyInteractiveSessionRecommendedJupyterImages `json:"interactive_session_recommended_jupyter_images,omitempty"`
 
 	// interactive sessions custom image allowed
-	InteractiveSessionsCustomImageAllowed *InfoOKBodyInteractiveSessionsCustomImageAllowed `json:"interactive_sessions_custom_image_allowed"`
+	InteractiveSessionsCustomImageAllowed *InfoOKBodyInteractiveSessionsCustomImageAllowed `json:"interactive_sessions_custom_image_allowed,omitempty"`
 
 	// kubernetes max memory limit
-	KubernetesMaxMemoryLimit *InfoOKBodyKubernetesMaxMemoryLimit `json:"kubernetes_max_memory_limit"`
+	KubernetesMaxMemoryLimit *InfoOKBodyKubernetesMaxMemoryLimit `json:"kubernetes_max_memory_limit,omitempty"`
 
 	// maximum interactive session inactivity period
-	MaximumInteractiveSessionInactivityPeriod *InfoOKBodyMaximumInteractiveSessionInactivityPeriod `json:"maximum_interactive_session_inactivity_period"`
+	MaximumInteractiveSessionInactivityPeriod *InfoOKBodyMaximumInteractiveSessionInactivityPeriod `json:"maximum_interactive_session_inactivity_period,omitempty"`
 
 	// maximum kubernetes jobs timeout
-	MaximumKubernetesJobsTimeout *InfoOKBodyMaximumKubernetesJobsTimeout `json:"maximum_kubernetes_jobs_timeout"`
+	MaximumKubernetesJobsTimeout *InfoOKBodyMaximumKubernetesJobsTimeout `json:"maximum_kubernetes_jobs_timeout,omitempty"`
 
 	// maximum workspace retention period
-	MaximumWorkspaceRetentionPeriod *InfoOKBodyMaximumWorkspaceRetentionPeriod `json:"maximum_workspace_retention_period"`
+	MaximumWorkspaceRetentionPeriod *InfoOKBodyMaximumWorkspaceRetentionPeriod `json:"maximum_workspace_retention_period,omitempty"`
 
 	// snakemake engine version
-	SnakemakeEngineVersion *InfoOKBodySnakemakeEngineVersion `json:"snakemake_engine_version"`
+	SnakemakeEngineVersion *InfoOKBodySnakemakeEngineVersion `json:"snakemake_engine_version,omitempty"`
 
 	// supported workflow engines
-	SupportedWorkflowEngines *InfoOKBodySupportedWorkflowEngines `json:"supported_workflow_engines"`
+	SupportedWorkflowEngines *InfoOKBodySupportedWorkflowEngines `json:"supported_workflow_engines,omitempty"`
 
 	// workspaces available
-	WorkspacesAvailable *InfoOKBodyWorkspacesAvailable `json:"workspaces_available"`
+	WorkspacesAvailable *InfoOKBodyWorkspacesAvailable `json:"workspaces_available,omitempty"`
 
 	// yadage engine adage version
-	YadageEngineAdageVersion *InfoOKBodyYadageEngineAdageVersion `json:"yadage_engine_adage_version"`
+	YadageEngineAdageVersion *InfoOKBodyYadageEngineAdageVersion `json:"yadage_engine_adage_version,omitempty"`
 
 	// yadage engine packtivity version
-	YadageEnginePacktivityVersion *InfoOKBodyYadageEnginePacktivityVersion `json:"yadage_engine_packtivity_version"`
+	YadageEnginePacktivityVersion *InfoOKBodyYadageEnginePacktivityVersion `json:"yadage_engine_packtivity_version,omitempty"`
 
 	// yadage engine version
-	YadageEngineVersion *InfoOKBodyYadageEngineVersion `json:"yadage_engine_version"`
+	YadageEngineVersion *InfoOKBodyYadageEngineVersion `json:"yadage_engine_version,omitempty"`
 }
 
 // Validate validates this info o k body
@@ -330,6 +336,10 @@ func (o *InfoOKBody) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := o.validateDaskClusterDefaultSingleWorkerThreads(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := o.validateDaskClusterMaxMemoryLimit(formats); err != nil {
 		res = append(res, err)
 	}
@@ -339,6 +349,10 @@ func (o *InfoOKBody) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := o.validateDaskClusterMaxSingleWorkerMemory(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateDaskClusterMaxSingleWorkerThreads(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -526,6 +540,25 @@ func (o *InfoOKBody) validateDaskClusterDefaultSingleWorkerMemory(formats strfmt
 	return nil
 }
 
+func (o *InfoOKBody) validateDaskClusterDefaultSingleWorkerThreads(formats strfmt.Registry) error {
+	if swag.IsZero(o.DaskClusterDefaultSingleWorkerThreads) { // not required
+		return nil
+	}
+
+	if o.DaskClusterDefaultSingleWorkerThreads != nil {
+		if err := o.DaskClusterDefaultSingleWorkerThreads.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_threads")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_threads")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (o *InfoOKBody) validateDaskClusterMaxMemoryLimit(formats strfmt.Registry) error {
 	if swag.IsZero(o.DaskClusterMaxMemoryLimit) { // not required
 		return nil
@@ -575,6 +608,25 @@ func (o *InfoOKBody) validateDaskClusterMaxSingleWorkerMemory(formats strfmt.Reg
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_memory")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_memory")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateDaskClusterMaxSingleWorkerThreads(formats strfmt.Registry) error {
+	if swag.IsZero(o.DaskClusterMaxSingleWorkerThreads) { // not required
+		return nil
+	}
+
+	if o.DaskClusterMaxSingleWorkerThreads != nil {
+		if err := o.DaskClusterMaxSingleWorkerThreads.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_threads")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_threads")
 			}
 			return err
 		}
@@ -915,6 +967,10 @@ func (o *InfoOKBody) ContextValidate(ctx context.Context, formats strfmt.Registr
 		res = append(res, err)
 	}
 
+	if err := o.contextValidateDaskClusterDefaultSingleWorkerThreads(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := o.contextValidateDaskClusterMaxMemoryLimit(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -924,6 +980,10 @@ func (o *InfoOKBody) ContextValidate(ctx context.Context, formats strfmt.Registr
 	}
 
 	if err := o.contextValidateDaskClusterMaxSingleWorkerMemory(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateDaskClusterMaxSingleWorkerThreads(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1123,6 +1183,27 @@ func (o *InfoOKBody) contextValidateDaskClusterDefaultSingleWorkerMemory(ctx con
 	return nil
 }
 
+func (o *InfoOKBody) contextValidateDaskClusterDefaultSingleWorkerThreads(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.DaskClusterDefaultSingleWorkerThreads != nil {
+
+		if swag.IsZero(o.DaskClusterDefaultSingleWorkerThreads) { // not required
+			return nil
+		}
+
+		if err := o.DaskClusterDefaultSingleWorkerThreads.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_threads")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_threads")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (o *InfoOKBody) contextValidateDaskClusterMaxMemoryLimit(ctx context.Context, formats strfmt.Registry) error {
 
 	if o.DaskClusterMaxMemoryLimit != nil {
@@ -1178,6 +1259,27 @@ func (o *InfoOKBody) contextValidateDaskClusterMaxSingleWorkerMemory(ctx context
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_memory")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_memory")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateDaskClusterMaxSingleWorkerThreads(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.DaskClusterMaxSingleWorkerThreads != nil {
+
+		if swag.IsZero(o.DaskClusterMaxSingleWorkerThreads) { // not required
+			return nil
+		}
+
+		if err := o.DaskClusterMaxSingleWorkerThreads.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_threads")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_threads")
 			}
 			return err
 		}
@@ -1547,7 +1649,7 @@ swagger:model InfoOKBodyComputeBackends
 type InfoOKBodyComputeBackends struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
 	Value []string `json:"value"`
@@ -1588,10 +1690,10 @@ swagger:model InfoOKBodyCwlEngineTool
 type InfoOKBodyCwlEngineTool struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body cwl engine tool
@@ -1629,10 +1731,10 @@ swagger:model InfoOKBodyCwlEngineVersion
 type InfoOKBodyCwlEngineVersion struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body cwl engine version
@@ -1670,10 +1772,10 @@ swagger:model InfoOKBodyDaskAutoscalerEnabled
 type InfoOKBodyDaskAutoscalerEnabled struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body dask autoscaler enabled
@@ -1711,10 +1813,10 @@ swagger:model InfoOKBodyDaskClusterDefaultNumberOfWorkers
 type InfoOKBodyDaskClusterDefaultNumberOfWorkers struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body dask cluster default number of workers
@@ -1752,10 +1854,10 @@ swagger:model InfoOKBodyDaskClusterDefaultSingleWorkerMemory
 type InfoOKBodyDaskClusterDefaultSingleWorkerMemory struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body dask cluster default single worker memory
@@ -1787,16 +1889,57 @@ func (o *InfoOKBodyDaskClusterDefaultSingleWorkerMemory) UnmarshalBinary(b []byt
 }
 
 /*
+InfoOKBodyDaskClusterDefaultSingleWorkerThreads info o k body dask cluster default single worker threads
+swagger:model InfoOKBodyDaskClusterDefaultSingleWorkerThreads
+*/
+type InfoOKBodyDaskClusterDefaultSingleWorkerThreads struct {
+
+	// title
+	Title string `json:"title,omitempty"`
+
+	// value
+	Value string `json:"value,omitempty"`
+}
+
+// Validate validates this info o k body dask cluster default single worker threads
+func (o *InfoOKBodyDaskClusterDefaultSingleWorkerThreads) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body dask cluster default single worker threads based on context it is used
+func (o *InfoOKBodyDaskClusterDefaultSingleWorkerThreads) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyDaskClusterDefaultSingleWorkerThreads) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyDaskClusterDefaultSingleWorkerThreads) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyDaskClusterDefaultSingleWorkerThreads
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
 InfoOKBodyDaskClusterMaxMemoryLimit info o k body dask cluster max memory limit
 swagger:model InfoOKBodyDaskClusterMaxMemoryLimit
 */
 type InfoOKBodyDaskClusterMaxMemoryLimit struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body dask cluster max memory limit
@@ -1834,10 +1977,10 @@ swagger:model InfoOKBodyDaskClusterMaxNumberOfWorkers
 type InfoOKBodyDaskClusterMaxNumberOfWorkers struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body dask cluster max number of workers
@@ -1875,10 +2018,10 @@ swagger:model InfoOKBodyDaskClusterMaxSingleWorkerMemory
 type InfoOKBodyDaskClusterMaxSingleWorkerMemory struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body dask cluster max single worker memory
@@ -1910,16 +2053,57 @@ func (o *InfoOKBodyDaskClusterMaxSingleWorkerMemory) UnmarshalBinary(b []byte) e
 }
 
 /*
+InfoOKBodyDaskClusterMaxSingleWorkerThreads info o k body dask cluster max single worker threads
+swagger:model InfoOKBodyDaskClusterMaxSingleWorkerThreads
+*/
+type InfoOKBodyDaskClusterMaxSingleWorkerThreads struct {
+
+	// title
+	Title string `json:"title,omitempty"`
+
+	// value
+	Value string `json:"value,omitempty"`
+}
+
+// Validate validates this info o k body dask cluster max single worker threads
+func (o *InfoOKBodyDaskClusterMaxSingleWorkerThreads) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body dask cluster max single worker threads based on context it is used
+func (o *InfoOKBodyDaskClusterMaxSingleWorkerThreads) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyDaskClusterMaxSingleWorkerThreads) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyDaskClusterMaxSingleWorkerThreads) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyDaskClusterMaxSingleWorkerThreads
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
 InfoOKBodyDaskEnabled info o k body dask enabled
 swagger:model InfoOKBodyDaskEnabled
 */
 type InfoOKBodyDaskEnabled struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body dask enabled
@@ -1957,10 +2141,10 @@ swagger:model InfoOKBodyDefaultKubernetesJobsTimeout
 type InfoOKBodyDefaultKubernetesJobsTimeout struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body default kubernetes jobs timeout
@@ -1998,10 +2182,10 @@ swagger:model InfoOKBodyDefaultKubernetesMemoryLimit
 type InfoOKBodyDefaultKubernetesMemoryLimit struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body default kubernetes memory limit
@@ -2039,10 +2223,10 @@ swagger:model InfoOKBodyDefaultWorkspace
 type InfoOKBodyDefaultWorkspace struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body default workspace
@@ -2080,7 +2264,7 @@ swagger:model InfoOKBodyInteractiveSessionRecommendedJupyterImages
 type InfoOKBodyInteractiveSessionRecommendedJupyterImages struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
 	Value []string `json:"value"`
@@ -2121,10 +2305,10 @@ swagger:model InfoOKBodyInteractiveSessionsCustomImageAllowed
 type InfoOKBodyInteractiveSessionsCustomImageAllowed struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body interactive sessions custom image allowed
@@ -2162,10 +2346,10 @@ swagger:model InfoOKBodyKubernetesMaxMemoryLimit
 type InfoOKBodyKubernetesMaxMemoryLimit struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value *string `json:"value"`
+	Value *string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body kubernetes max memory limit
@@ -2203,10 +2387,10 @@ swagger:model InfoOKBodyMaximumInteractiveSessionInactivityPeriod
 type InfoOKBodyMaximumInteractiveSessionInactivityPeriod struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value *string `json:"value"`
+	Value *string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body maximum interactive session inactivity period
@@ -2244,10 +2428,10 @@ swagger:model InfoOKBodyMaximumKubernetesJobsTimeout
 type InfoOKBodyMaximumKubernetesJobsTimeout struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body maximum kubernetes jobs timeout
@@ -2285,10 +2469,10 @@ swagger:model InfoOKBodyMaximumWorkspaceRetentionPeriod
 type InfoOKBodyMaximumWorkspaceRetentionPeriod struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value *string `json:"value"`
+	Value *string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body maximum workspace retention period
@@ -2326,10 +2510,10 @@ swagger:model InfoOKBodySnakemakeEngineVersion
 type InfoOKBodySnakemakeEngineVersion struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body snakemake engine version
@@ -2367,7 +2551,7 @@ swagger:model InfoOKBodySupportedWorkflowEngines
 type InfoOKBodySupportedWorkflowEngines struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
 	Value []string `json:"value"`
@@ -2408,7 +2592,7 @@ swagger:model InfoOKBodyWorkspacesAvailable
 type InfoOKBodyWorkspacesAvailable struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
 	Value []string `json:"value"`
@@ -2449,10 +2633,10 @@ swagger:model InfoOKBodyYadageEngineAdageVersion
 type InfoOKBodyYadageEngineAdageVersion struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body yadage engine adage version
@@ -2490,10 +2674,10 @@ swagger:model InfoOKBodyYadageEnginePacktivityVersion
 type InfoOKBodyYadageEnginePacktivityVersion struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body yadage engine packtivity version
@@ -2531,10 +2715,10 @@ swagger:model InfoOKBodyYadageEngineVersion
 type InfoOKBodyYadageEngineVersion struct {
 
 	// title
-	Title string `json:"title"`
+	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value"`
+	Value string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body yadage engine version

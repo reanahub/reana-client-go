@@ -605,16 +605,16 @@ swagger:model StartWorkflowBody
 */
 type StartWorkflowBody struct {
 
-	// input parameters
+	// Optional. Additional input parameters that override the ones from the workflow specification.
 	InputParameters interface{} `json:"input_parameters,omitempty"`
 
-	// operational options
+	// Optional. Additional operational options for workflow execution.
 	OperationalOptions interface{} `json:"operational_options,omitempty"`
 
-	// reana specification
+	// Optional. Replace the original workflow specification with the given one. Only considered when restarting a workflow.
 	ReanaSpecification interface{} `json:"reana_specification,omitempty"`
 
-	// restart
+	// Optional. If true, restart the given workflow.
 	Restart bool `json:"restart,omitempty"`
 }
 

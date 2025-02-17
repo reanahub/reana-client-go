@@ -69,7 +69,7 @@ type SetWorkflowStatusParams struct {
 
 	/* Parameters.
 
-	   Optional. Additional input parameters and operational options.
+	   Optional. Additional parameters to customise the workflow status change.
 	*/
 	Parameters SetWorkflowStatusBody
 

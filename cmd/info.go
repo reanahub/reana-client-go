@@ -1,6 +1,6 @@
 /*
 This file is part of REANA.
-Copyright (C) 2022, 2024 CERN.
+Copyright (C) 2022, 2024, 2025 CERN.
 
 REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
@@ -147,6 +147,12 @@ func (o *infoOptions) run(cmd *cobra.Command) error {
 			}
 			if p.DaskClusterMaxNumberOfWorkers != nil {
 				displayInfoStringItem(cmd, p.DaskClusterMaxNumberOfWorkers.Title, &p.DaskClusterMaxNumberOfWorkers.Value)
+			}
+			if p.DaskClusterDefaultSingleWorkerThreads != nil {
+				displayInfoStringItem(cmd, p.DaskClusterDefaultSingleWorkerThreads.Title, &p.DaskClusterDefaultSingleWorkerThreads.Value)
+			}
+			if p.DaskClusterMaxSingleWorkerThreads != nil {
+				displayInfoStringItem(cmd, p.DaskClusterMaxSingleWorkerThreads.Title, &p.DaskClusterMaxSingleWorkerThreads.Value)
 			}
 		}
 	}

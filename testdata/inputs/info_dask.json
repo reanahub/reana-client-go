@@ -26,5 +26,13 @@
   "dask_cluster_max_number_of_workers": {
     "title": "The maximum number of workers that users can ask for the single Dask cluster",
     "value": "20"
+  },
+  "dask_cluster_default_single_worker_threads": {
+    "title": "The number of threads used by default by a single Dask worker",
+    "value": "4"
+  },
+  "dask_cluster_max_single_worker_threads": {
+    "title": "The maximum number of threads that users can ask for the single Dask worker",
+    "value": "8"
   }
 }

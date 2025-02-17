@@ -605,13 +605,19 @@ swagger:model SetWorkflowStatusBody
 */
 type SetWorkflowStatusBody struct {
 
-	// c a c h e
-	CACHE string `json:"CACHE,omitempty"`
-
-	// all runs
+	// Optional. If true, delete all runs of the workflow. Only allowed when status is `deleted`.
 	AllRuns bool `json:"all_runs,omitempty"`
 
-	// workspace
+	// Optional. Additional input parameters that override the ones from the workflow specification. Only allowed when status is `start`.
+	InputParameters interface{} `json:"input_parameters,omitempty"`
+
+	// Optional. Additional operational options for workflow execution. Only allowed when status is `start`.
+	OperationalOptions interface{} `json:"operational_options,omitempty"`
+
+	// Optional. If true, the workflow is a restart of an earlier workflow execution. Only allowed when status is `start`.
+	Restart bool `json:"restart,omitempty"`
+
+	// Optional, but must be set to true if provided. If true, delete also the workspace of the workflow. Only allowed when status is `deleted`.
 	Workspace bool `json:"workspace,omitempty"`
 }
 
