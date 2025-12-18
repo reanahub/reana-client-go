@@ -46,6 +46,21 @@ jobs:
           sudo apt-get install shellcheck
           ./run-tests.sh --check-shellcheck
 
+  check-shell-completions:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '>=1.18.X'
+
+      - name: Check shell completions are up-to-date
+        run: |
+          ./run-tests.sh --check-shell-completions
+
   go-tests:
     runs-on: ubuntu-24.04
     steps:
