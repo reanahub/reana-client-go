@@ -55,7 +55,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-          go-version: '>=1.18.X'
+          go-version: '1.25.5'
 
       - name: Check shell completions are up-to-date
         run: |
@@ -69,7 +69,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-            go-version: '>=1.18.X'
+            go-version: '1.25.5'
 
       - name: Run test suite
         run: make test
@@ -87,7 +87,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-            go-version: '>=1.18.X'
+            go-version: '1.25.5'
 
       - name: Check code formatting
         run: |
@@ -106,7 +106,7 @@ jobs:
       - name: Setup Go
         uses: actions/setup-go@v5
         with:
-            go-version: '>=1.18.X'
+            go-version: '1.25.5'
 
       - name: Run audit checks
         run: make audit

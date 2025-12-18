@@ -68,7 +68,7 @@ __reana-client-go_handle_go_custom_completion()
     local out requestComp lastParam lastChar comp directive args
 
     # Prepare the command to request completions for the program.
-    # Calling ${words[0]} instead of directly reana-client-go allows to handle aliases
+    # Calling ${words[0]} instead of directly reana-client-go allows handling aliases
     args=("${words[@]:1}")
     # Disable ActiveHelp which is not supported for bash completion v1
     requestComp="REANA_CLIENT_GO_ACTIVE_HELP=0 ${words[0]} __completeNoDesc ${args[*]}"
