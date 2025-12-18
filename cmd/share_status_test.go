@@ -27,7 +27,10 @@ func TestShareStatus(t *testing.T) {
 			},
 			args: []string{"-w", workflowName},
 			expected: []string{
-				fmt.Sprintf("Workflow %s is not shared with anyone.", workflowName),
+				fmt.Sprintf(
+					"Workflow %s is not shared with anyone.",
+					workflowName,
+				),
 			},
 		},
 	}

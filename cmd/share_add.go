@@ -71,13 +71,36 @@ func newShareAddCmd() *cobra.Command {
 		"",
 		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
 	)
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
-	f.StringSliceVarP(&o.users, "user", "u", []string{}, `Users to share the workflow with.`)
-	f.StringVarP(&o.message, "message", "m", "", `Optional message that is sent to the
-	user(s) with the sharing invitation.`)
-	f.StringVar(&o.validUntil, "valid-until", "", `Optional date when access to the
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
+	f.StringSliceVarP(
+		&o.users,
+		"user",
+		"u",
+		[]string{},
+		`Users to share the workflow with.`,
+	)
+	f.StringVarP(
+		&o.message,
+		"message",
+		"m",
+		"",
+		`Optional message that is sent to the
+	user(s) with the sharing invitation.`,
+	)
+	f.StringVar(
+		&o.validUntil,
+		"valid-until",
+		"",
+		`Optional date when access to the
 	workflow will expire for the given
-	user(s) (format: YYYY-MM-DD).`)
+	user(s) (format: YYYY-MM-DD).`,
+	)
 	// Remove -h shorthand
 	cmd.PersistentFlags().BoolP("help", "h", false, "Help for share-add")
 
@@ -111,7 +134,12 @@ func (o *shareAddOptions) run(cmd *cobra.Command) error {
 			err := errorhandler.HandleApiError(err)
 			shareErrors = append(
 				shareErrors,
-				fmt.Sprintf("Failed to share %s with %s: %s", o.workflow, user, err.Error()),
+				fmt.Sprintf(
+					"Failed to share %s with %s: %s",
+					o.workflow,
+					user,
+					err.Error(),
+				),
 			)
 		} else {
 			sharedUsers = append(sharedUsers, user)
@@ -132,7 +160,12 @@ func (o *shareAddOptions) run(cmd *cobra.Command) error {
 	}
 	if len(shareErrors) > 0 {
 		for _, err := range shareErrors {
-			displayer.DisplayMessage(err, displayer.Error, false, cmd.OutOrStdout())
+			displayer.DisplayMessage(
+				err,
+				displayer.Error,
+				false,
+				cmd.OutOrStdout(),
+			)
 		}
 
 		return config.ErrEmpty

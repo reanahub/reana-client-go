@@ -68,11 +68,18 @@ func newStartCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
 	f.StringVarP(
 		&o.workflow,
 		"workflow",
-		"w", "",
+		"w",
+		"",
 		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
 	)
 	f.StringToStringVarP(
@@ -136,7 +143,10 @@ func (o *startOptions) run(cmd *cobra.Command) error {
 	if err != nil {
 		return err
 	}
-	if slices.Contains([]string{"pending", "queued", "running"}, currentStatus) {
+	if slices.Contains(
+		[]string{"pending", "queued", "running"},
+		currentStatus,
+	) {
 		displayer.DisplayMessage(
 			statusMsg,
 			displayer.Success,
@@ -148,7 +158,13 @@ func (o *startOptions) run(cmd *cobra.Command) error {
 	}
 
 	if o.follow {
-		err = followWorkflowExecution(cmd, currentStatus, o.token, o.serverURL, o.workflow)
+		err = followWorkflowExecution(
+			cmd,
+			currentStatus,
+			o.token,
+			o.serverURL,
+			o.workflow,
+		)
 		if err != nil {
 			return err
 		}
@@ -174,7 +190,10 @@ func validateStartOptionsAndParams(
 		return nil, nil, err
 	}
 
-	validatedOptions, err = validator.ValidateOperationalOptions(paramsResp.Payload.Type, options)
+	validatedOptions, err = validator.ValidateOperationalOptions(
+		paramsResp.Payload.Type,
+		options,
+	)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -210,7 +229,10 @@ func followWorkflowExecution(
 			return err
 		}
 
-		if slices.Contains([]string{"deleted", "failed", "stopped"}, currentStatus) {
+		if slices.Contains(
+			[]string{"deleted", "failed", "stopped"},
+			currentStatus,
+		) {
 			return errors.New(statusMsg)
 		}
 		displayer.DisplayMessage(

@@ -75,11 +75,18 @@ func newOpenCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
 	f.StringVarP(
 		&o.workflow,
 		"workflow",
-		"w", "",
+		"w",
+		"",
 		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
 	)
 	f.StringVarP(&o.image, "image", "i", "", openImageFlagDesc)
@@ -112,9 +119,15 @@ func (o *openOptions) run(cmd *cobra.Command) error {
 		false,
 		cmd.OutOrStdout(),
 	)
-	sessionURI := formatter.FormatSessionURI(o.serverURL, openResp.Payload.Path, o.token)
+	sessionURI := formatter.FormatSessionURI(
+		o.serverURL,
+		openResp.Payload.Path,
+		o.token,
+	)
 	displayer.PrintColorable(sessionURI+"\n", cmd.OutOrStdout(), text.FgGreen)
-	cmd.Println("It could take several minutes to start the interactive session.")
+	cmd.Println(
+		"It could take several minutes to start the interactive session.",
+	)
 
 	infoParams := operations.NewInfoParams()
 	infoParams.SetAccessToken(o.token)

@@ -45,7 +45,10 @@ func cmdGroupsString(g CommandGroups) string {
 		cmds := []string{cmdGroup.Message}
 		for _, cmd := range cmdGroup.Commands {
 			if cmd.IsAvailableCommand() {
-				cmds = append(cmds, "  "+rpad(cmd.Name(), cmd.NamePadding())+"   "+cmd.Short)
+				cmds = append(
+					cmds,
+					"  "+rpad(cmd.Name(), cmd.NamePadding())+"   "+cmd.Short,
+				)
 			}
 		}
 		groups = append(groups, strings.Join(cmds, "\n"))

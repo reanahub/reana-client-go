@@ -72,7 +72,12 @@ func TestLs(t *testing.T) {
 					responseFile: "ls_complete.json",
 				},
 			},
-			args: []string{"-w", workflowName, "--format", "name,last-modified"},
+			args: []string{
+				"-w",
+				workflowName,
+				"--format",
+				"name,last-modified",
+			},
 			expected: []string{
 				"NAME", "LAST-MODIFIED",
 				"code/gendata.C", "2022-07-11T12:50:33",
@@ -89,7 +94,12 @@ func TestLs(t *testing.T) {
 					responseFile: "ls_complete.json",
 				},
 			},
-			args: []string{"-w", workflowName, "--format", "name=code/gendata.C"},
+			args: []string{
+				"-w",
+				workflowName,
+				"--format",
+				"name=code/gendata.C",
+			},
 			expected: []string{
 				"NAME", "code/gendata.C",
 			},
@@ -142,8 +152,14 @@ func TestLs(t *testing.T) {
 			},
 			args: []string{"-w", workflowName, "--url"},
 			expected: []string{
-				fmt.Sprintf("/api/workflows/%s/workspace/code/gendata.C", workflowName),
-				fmt.Sprintf("/api/workflows/%s/workspace/results/data.root", workflowName),
+				fmt.Sprintf(
+					"/api/workflows/%s/workspace/code/gendata.C",
+					workflowName,
+				),
+				fmt.Sprintf(
+					"/api/workflows/%s/workspace/results/data.root",
+					workflowName,
+				),
 			},
 		},
 		"with filters": {
@@ -153,7 +169,12 @@ func TestLs(t *testing.T) {
 					responseFile: "ls_filters.json",
 				},
 			},
-			args: []string{"-w", workflowName, "--filter", "name=code/gendata.C"},
+			args: []string{
+				"-w",
+				workflowName,
+				"--filter",
+				"name=code/gendata.C",
+			},
 			expected: []string{
 				"NAME", "SIZE", "LAST-MODIFIED",
 				"code/gendata.C", "1937", "2022-07-11T12:50:33",
@@ -237,10 +258,18 @@ func TestBuildLsSeries(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			got := buildLsSeries(test.col, test.humanReadable)
 			if got.Name != test.want.Name {
-				t.Errorf("series has name '%s', wanted '%s'", got.Name, test.want.Name)
+				t.Errorf(
+					"series has name '%s', wanted '%s'",
+					got.Name,
+					test.want.Name,
+				)
 			}
 			if got.Type() != test.want.Type() {
-				t.Errorf("series has type '%s', wanted '%s'", got.Type(), test.want.Type())
+				t.Errorf(
+					"series has type '%s', wanted '%s'",
+					got.Type(),
+					test.want.Type(),
+				)
 			}
 		})
 	}

@@ -89,10 +89,34 @@ func newQuotaShowCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
-	f.StringVarP(&o.report, "report", "", "", "Specify quota report type. e.g. limit, usage.")
-	f.StringVarP(&o.resource, "resource", "", "", "Specify quota resource. e.g. disk, memory.")
-	f.BoolVarP(&o.showResources, "resources", "", false, "Print available resources.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
+	f.StringVarP(
+		&o.report,
+		"report",
+		"",
+		"",
+		"Specify quota report type. e.g. limit, usage.",
+	)
+	f.StringVarP(
+		&o.resource,
+		"resource",
+		"",
+		"",
+		"Specify quota resource. e.g. disk, memory.",
+	)
+	f.BoolVarP(
+		&o.showResources,
+		"resources",
+		"",
+		false,
+		"Print available resources.",
+	)
 	f.BoolVarP(
 		&o.humanReadable,
 		"human-readable",
@@ -172,7 +196,11 @@ func displayQuotaResourceUsage(
 	if limit.Raw > 0 {
 		percentage := fmt.Sprintf("%.0f%%", (usage.Raw/limit.Raw)*100)
 		if humanReadable {
-			limitInfo = fmt.Sprintf("out of %s used (%s)", limit.HumanReadable, percentage)
+			limitInfo = fmt.Sprintf(
+				"out of %s used (%s)",
+				limit.HumanReadable,
+				percentage,
+			)
 		} else {
 			limitInfo = fmt.Sprintf("out of %.0f used (%s)", limit.Raw, percentage)
 		}
@@ -199,7 +227,9 @@ func displayQuotaResourceUsage(
 
 // parseQuotaInfo parses the quota payload to a map of quotaResource values, with the resource names as keys.
 // Necessary because all the resources implement different structs in the swagger API.
-func parseQuotaInfo(quotaBody *operations.GetYouOKBodyQuota) (map[string]quotaResource, error) {
+func parseQuotaInfo(
+	quotaBody *operations.GetYouOKBodyQuota,
+) (map[string]quotaResource, error) {
 	var rawResourcesInfo map[string]json.RawMessage
 	quotaBinary, err := quotaBody.MarshalBinary()
 	if err != nil {

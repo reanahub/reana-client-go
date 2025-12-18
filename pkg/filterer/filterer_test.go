@@ -61,7 +61,9 @@ func TestNewFilters(t *testing.T) {
 				if err == nil {
 					t.Errorf(
 						"Expected error for NewFilters(%v, %v, %v), got nil",
-						test.singleFilterKeys, test.multiFilterKeys, test.inputFilters,
+						test.singleFilterKeys,
+						test.multiFilterKeys,
+						test.inputFilters,
 					)
 				}
 			} else if err != nil {
@@ -124,15 +126,25 @@ func TestFiltersAddFilters(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			filters, err := NewFilters(test.singleFilterKeys, test.multiFilterKeys, []string{})
+			filters, err := NewFilters(
+				test.singleFilterKeys,
+				test.multiFilterKeys,
+				[]string{},
+			)
 			if err != nil {
-				t.Fatalf("Unexpected error when creating filters: '%s'", err.Error())
+				t.Fatalf(
+					"Unexpected error when creating filters: '%s'",
+					err.Error(),
+				)
 			}
 
 			err = filters.AddFilters(test.inputFilters)
 			if test.wantError {
 				if err == nil {
-					t.Errorf("Expected error for AddFilters(%v), got nil", test.inputFilters)
+					t.Errorf(
+						"Expected error for AddFilters(%v), got nil",
+						test.inputFilters,
+					)
 				}
 			} else if err != nil {
 				t.Errorf("Unexpected error for AddFilters(%v): '%s'", test.inputFilters, err.Error())
@@ -154,7 +166,9 @@ func TestFiltersAddFilter(t *testing.T) {
 			filterKey:        "single", filterValue: "value",
 		},
 		"multi value": {
-			singleFilterKeys: []string{"single"}, multiFilterKeys: []string{"multi"},
+			singleFilterKeys: []string{
+				"single",
+			}, multiFilterKeys: []string{"multi"},
 			filterKey: "multi", filterValue: "value",
 		},
 		"invalid key": {
@@ -165,9 +179,16 @@ func TestFiltersAddFilter(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			filters, err := NewFilters(test.singleFilterKeys, test.multiFilterKeys, []string{})
+			filters, err := NewFilters(
+				test.singleFilterKeys,
+				test.multiFilterKeys,
+				[]string{},
+			)
 			if err != nil {
-				t.Fatalf("Unexpected error when creating filters: '%s'", err.Error())
+				t.Fatalf(
+					"Unexpected error when creating filters: '%s'",
+					err.Error(),
+				)
 			}
 
 			err = filters.AddFilter(test.filterKey + "=" + test.filterValue)
@@ -199,7 +220,10 @@ func TestFiltersAddFilter(t *testing.T) {
 		filters, _ := NewFilters([]string{"single"}, []string{}, []string{})
 		err := filters.AddFilter("invalid_filter")
 		if err == nil {
-			t.Errorf("Expected error for AddFilter(%s), got nil", "invalid_filter")
+			t.Errorf(
+				"Expected error for AddFilter(%s), got nil",
+				"invalid_filter",
+			)
 		}
 	})
 }
@@ -228,7 +252,9 @@ func TestFiltersGetSingle(t *testing.T) {
 			key: "single", wantError: true,
 		},
 		"wrong filter type": {
-			multiFilterKeys: []string{"multi"}, inputFilters: []string{"multi=value"},
+			multiFilterKeys: []string{
+				"multi",
+			}, inputFilters: []string{"multi=value"},
 			key: "multi", wantError: true,
 		},
 	}
@@ -241,13 +267,19 @@ func TestFiltersGetSingle(t *testing.T) {
 				test.inputFilters,
 			)
 			if err != nil {
-				t.Fatalf("Unexpected error when creating filters: '%s'", err.Error())
+				t.Fatalf(
+					"Unexpected error when creating filters: '%s'",
+					err.Error(),
+				)
 			}
 
 			value, err := filters.GetSingle(test.key)
 			if test.wantError {
 				if err == nil {
-					t.Errorf("Expected error for GetSingle(%s), got nil", test.key)
+					t.Errorf(
+						"Expected error for GetSingle(%s), got nil",
+						test.key,
+					)
 				}
 			} else if err != nil {
 				t.Errorf("Unexpected error for GetSingle(%s): '%s'", test.key, err.Error())
@@ -288,7 +320,9 @@ func TestFiltersGetMulti(t *testing.T) {
 			key: "multi", wantError: true,
 		},
 		"wrong filter type": {
-			singleFilterKeys: []string{"single"}, inputFilters: []string{"single=value"},
+			singleFilterKeys: []string{
+				"single",
+			}, inputFilters: []string{"single=value"},
 			key: "single", wantError: true,
 		},
 	}
@@ -301,13 +335,19 @@ func TestFiltersGetMulti(t *testing.T) {
 				test.inputFilters,
 			)
 			if err != nil {
-				t.Fatalf("Unexpected error when creating filters: '%s'", err.Error())
+				t.Fatalf(
+					"Unexpected error when creating filters: '%s'",
+					err.Error(),
+				)
 			}
 
 			values, err := filters.GetMulti(test.key)
 			if test.wantError {
 				if err == nil {
-					t.Errorf("Expected error for GetMulti(%s), got nil", test.key)
+					t.Errorf(
+						"Expected error for GetMulti(%s), got nil",
+						test.key,
+					)
 				}
 			} else if err != nil {
 				t.Errorf("Unexpected error for GetMulti(%s): '%s'", test.key, err.Error())
@@ -331,19 +371,28 @@ func TestFiltersGetJson(t *testing.T) {
 			keys: []string{}, expected: "",
 		},
 		"single value filter": {
-			singleFilterKeys: []string{"single"}, inputFilters: []string{"single=value"},
+			singleFilterKeys: []string{
+				"single",
+			}, inputFilters: []string{"single=value"},
 			keys: []string{"single"}, expected: `{"single":"value"}`,
 		},
 		"multiple value filter": {
-			multiFilterKeys: []string{"multi"}, inputFilters: []string{"multi=value"},
+			multiFilterKeys: []string{
+				"multi",
+			}, inputFilters: []string{"multi=value"},
 			keys: []string{"multi"}, expected: `{"multi":["value"]}`,
 		},
 		"filter without value": {
-			singleFilterKeys: []string{"single", "single2"}, inputFilters: []string{"single=value"},
+			singleFilterKeys: []string{
+				"single",
+				"single2",
+			}, inputFilters: []string{"single=value"},
 			keys: []string{"single", "single2"}, expected: `{"single":"value"}`,
 		},
 		"multiple filters": {
-			singleFilterKeys: []string{"single"}, multiFilterKeys: []string{"multi"},
+			singleFilterKeys: []string{
+				"single",
+			}, multiFilterKeys: []string{"multi"},
 			inputFilters: []string{
 				"single=value",
 				"multi=value2",
@@ -363,13 +412,19 @@ func TestFiltersGetJson(t *testing.T) {
 				test.inputFilters,
 			)
 			if err != nil {
-				t.Fatalf("Unexpected error when creating filters: '%s'", err.Error())
+				t.Fatalf(
+					"Unexpected error when creating filters: '%s'",
+					err.Error(),
+				)
 			}
 
 			json, err := filters.GetJson(test.keys)
 			if test.wantError {
 				if err == nil {
-					t.Errorf("Expected error for GetJson(%v), got nil", test.keys)
+					t.Errorf(
+						"Expected error for GetJson(%v), got nil",
+						test.keys,
+					)
 				}
 			} else if err != nil {
 				t.Errorf("Unexpected error for GetJson(%v): '%s'", test.keys, err.Error())
@@ -390,15 +445,21 @@ func TestFiltersValidateValues(t *testing.T) {
 		wantError        bool
 	}{
 		"single filter": {
-			singleFilterKeys: []string{"single"}, inputFilters: []string{"single=value"},
+			singleFilterKeys: []string{
+				"single",
+			}, inputFilters: []string{"single=value"},
 			key: "single", possibleValues: []string{"value"},
 		},
 		"multi filter": {
-			multiFilterKeys: []string{"multi"}, inputFilters: []string{"multi=value"},
+			multiFilterKeys: []string{
+				"multi",
+			}, inputFilters: []string{"multi=value"},
 			key: "multi", possibleValues: []string{"value"},
 		},
 		"single filter with multiple options": {
-			singleFilterKeys: []string{"single"}, inputFilters: []string{"single=value2"},
+			singleFilterKeys: []string{
+				"single",
+			}, inputFilters: []string{"single=value2"},
 			key: "single", possibleValues: []string{"value", "value2", "value3"},
 		},
 		"multi filter with multiple options": {
@@ -419,7 +480,9 @@ func TestFiltersValidateValues(t *testing.T) {
 			key: "key", wantError: true,
 		},
 		"single filter invalid value": {
-			singleFilterKeys: []string{"single"}, inputFilters: []string{"single=value"},
+			singleFilterKeys: []string{
+				"single",
+			}, inputFilters: []string{"single=value"},
 			key: "single", possibleValues: []string{"value2"}, wantError: true,
 		},
 		"multi filter invalid value": {
@@ -438,7 +501,10 @@ func TestFiltersValidateValues(t *testing.T) {
 				test.inputFilters,
 			)
 			if err != nil {
-				t.Fatalf("Unexpected error when creating filters: '%s'", err.Error())
+				t.Fatalf(
+					"Unexpected error when creating filters: '%s'",
+					err.Error(),
+				)
 			}
 
 			err = filters.ValidateValues(test.key, test.possibleValues)
@@ -464,25 +530,43 @@ func TestFiltersGetKeyAndValue(t *testing.T) {
 		value     string
 		wantError bool
 	}{
-		"regular filter":      {filter: "key=value", name: "key", value: "value"},
-		"missing value":       {filter: "key=", name: "key", value: ""},
-		"missing key":         {filter: "=value", name: "", value: "value"},
-		"uppercase key":       {filter: "KEY=value", name: "key", value: "value"},
-		"value including '='": {filter: "key=value=value", name: "key", value: "value=value"},
-		"invalid input":       {filter: "invalid", wantError: true},
+		"regular filter": {
+			filter: "key=value",
+			name:   "key",
+			value:  "value",
+		},
+		"missing value": {filter: "key=", name: "key", value: ""},
+		"missing key":   {filter: "=value", name: "", value: "value"},
+		"uppercase key": {
+			filter: "KEY=value",
+			name:   "key",
+			value:  "value",
+		},
+		"value including '='": {
+			filter: "key=value=value",
+			name:   "key",
+			value:  "value=value",
+		},
+		"invalid input": {filter: "invalid", wantError: true},
 	}
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
 			filters, err := NewFilters([]string{}, []string{}, []string{})
 			if err != nil {
-				t.Fatalf("Unexpected error when creating filters: '%s'", err.Error())
+				t.Fatalf(
+					"Unexpected error when creating filters: '%s'",
+					err.Error(),
+				)
 			}
 
 			name, value, err := filters.getKeyAndValue(test.filter)
 			if test.wantError {
 				if err == nil {
-					t.Errorf("Expected error for GetKeyAndValue(%s), got nil", test.filter)
+					t.Errorf(
+						"Expected error for GetKeyAndValue(%s), got nil",
+						test.filter,
+					)
 				}
 			} else if err != nil {
 				t.Errorf("Unexpected error for GetKeyAndValue(%s): '%s'", test.filter, err.Error())

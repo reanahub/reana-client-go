@@ -29,7 +29,9 @@ type Filters struct {
 
 // NewFilters returns a new instance of Filters, with the given keys.
 // singleFilterKeys are the filters with only one value at a time, while multiFilterKeys can accumulate values.
-func NewFilters(singleFilterKeys, multiFilterKeys, inputFilters []string) (Filters, error) {
+func NewFilters(
+	singleFilterKeys, multiFilterKeys, inputFilters []string,
+) (Filters, error) {
 	filters := Filters{
 		SingleFilterKeys:   singleFilterKeys,
 		MultiFilterKeys:    multiFilterKeys,
@@ -144,7 +146,8 @@ func (f Filters) ValidateValues(key string, possibleValues []string) error {
 		if exists && !slices.Contains(possibleValues, value) {
 			return fmt.Errorf(
 				"'%s' is not a valid value for the filter '%s'\nAvailable values are '%s'",
-				value, key,
+				value,
+				key,
 				strings.Join(possibleValues, "', '"),
 			)
 		}

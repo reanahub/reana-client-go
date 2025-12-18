@@ -89,7 +89,13 @@ func newLsCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
 	f.StringVarP(
 		&o.workflow,
 		"workflow",
@@ -108,8 +114,18 @@ func newLsCmd() *cobra.Command {
 		"Show disk size in human readable format.",
 	)
 	f.StringSliceVar(&o.filters, "filter", []string{}, lsFilterFlagDesc)
-	f.Int64Var(&o.page, "page", 1, "Results page number (to be used with --size).")
-	f.Int64Var(&o.size, "size", 0, "Number of results per page (to be used with --page).")
+	f.Int64Var(
+		&o.page,
+		"page",
+		1,
+		"Results page number (to be used with --size).",
+	)
+	f.Int64Var(
+		&o.size,
+		"size",
+		0,
+		"Number of results per page (to be used with --page).",
+	)
 	// Remove -h shorthand
 	cmd.PersistentFlags().BoolP("help", "", false, "Help for ls")
 
@@ -149,7 +165,10 @@ func (o *lsOptions) run(cmd *cobra.Command) error {
 		return err
 	}
 
-	parsedFormatFilters := formatter.ParseFormatParameters(o.formatFilters, true)
+	parsedFormatFilters := formatter.ParseFormatParameters(
+		o.formatFilters,
+		true,
+	)
 	if o.displayURLs {
 		displayLsURLs(cmd, lsResp.Payload, o.serverURL, o.workflow)
 	} else {
@@ -237,7 +256,12 @@ func displayLsURLs(
 	workflow string,
 ) {
 	for _, file := range p.Items {
-		fileURL := fmt.Sprintf("%s/api/workflows/%s/workspace/%s", serverURL, workflow, file.Name)
+		fileURL := fmt.Sprintf(
+			"%s/api/workflows/%s/workspace/%s",
+			serverURL,
+			workflow,
+			file.Name,
+		)
 		cmd.Println(fileURL)
 	}
 }

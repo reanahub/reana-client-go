@@ -31,8 +31,10 @@ func TestSecretsList(t *testing.T) {
 			},
 		},
 		"unexpected args": {
-			args:      []string{"arg"},
-			expected:  []string{"unknown command \"arg\" for \"reana-client-go secrets-list\""},
+			args: []string{"arg"},
+			expected: []string{
+				"unknown command \"arg\" for \"reana-client-go secrets-list\"",
+			},
 			wantError: true,
 		},
 		"server error": {

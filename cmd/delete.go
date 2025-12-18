@@ -53,14 +53,27 @@ func newDeleteCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
 	f.StringVarP(
 		&o.workflow,
 		"workflow",
-		"w", "",
+		"w",
+		"",
 		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
 	)
-	f.BoolVarP(&o.includeWorkspace, "include-workspace", "", true, "Delete workspace from REANA.")
+	f.BoolVarP(
+		&o.includeWorkspace,
+		"include-workspace",
+		"",
+		true,
+		"Delete workspace from REANA.",
+	)
 	f.BoolVarP(
 		&o.includeAllRuns,
 		"include-all-runs",
@@ -87,14 +100,22 @@ func (o *deleteOptions) run(cmd *cobra.Command) error {
 	var message string
 	if o.includeAllRuns {
 		name, _ := workflows.GetNameAndRunNumber(o.workflow)
-		message = fmt.Sprintf("All workflows named '%s' have been deleted", name)
+		message = fmt.Sprintf(
+			"All workflows named '%s' have been deleted",
+			name,
+		)
 	} else {
 		message, err = workflows.StatusChangeMessage(o.workflow, "deleted")
 		if err != nil {
 			return err
 		}
 	}
-	displayer.DisplayMessage(message, displayer.Success, false, cmd.OutOrStdout())
+	displayer.DisplayMessage(
+		message,
+		displayer.Success,
+		false,
+		cmd.OutOrStdout(),
+	)
 
 	return nil
 }

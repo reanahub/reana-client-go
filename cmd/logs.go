@@ -113,7 +113,13 @@ func newLogsCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
 	f.StringVarP(
 		&o.workflow,
 		"workflow",
@@ -123,8 +129,18 @@ func newLogsCmd() *cobra.Command {
 	)
 	f.BoolVar(&o.jsonOutput, "json", false, "Get output in JSON format.")
 	f.StringSliceVar(&o.filters, "filter", []string{}, logsFilterFlagDesc)
-	f.Int64Var(&o.page, "page", 1, "Results page number (to be used with --size).")
-	f.Int64Var(&o.size, "size", 0, "Size of results per page (to be used with --page).")
+	f.Int64Var(
+		&o.page,
+		"page",
+		1,
+		"Results page number (to be used with --size).",
+	)
+	f.Int64Var(
+		&o.size,
+		"size",
+		0,
+		"Size of results per page (to be used with --page).",
+	)
 	f.BoolVar(
 		&o.follow,
 		"follow",
@@ -146,7 +162,10 @@ func newLogsCmd() *cobra.Command {
 }
 
 // newLogsCommandRunner creates a new logs command runner.
-func newLogsCommandRunner(api *client.API, options *logsOptions) *logsCommandRunner {
+func newLogsCommandRunner(
+	api *client.API,
+	options *logsOptions,
+) *logsCommandRunner {
 	return &logsCommandRunner{api: api, options: options}
 }
 
@@ -208,7 +227,11 @@ func (r *logsCommandRunner) followLogs(
 	workflowStatusParams.SetWorkflowIDOrName(r.options.workflow)
 
 	for {
-		newLogs, status, err := r.getLogsWithStatus(step, logsParams, workflowStatusParams)
+		newLogs, status, err := r.getLogsWithStatus(
+			step,
+			logsParams,
+			workflowStatusParams,
+		)
 		if err != nil {
 			return err
 		}
@@ -256,7 +279,9 @@ func (r *logsCommandRunner) getLogsWithStatus(
 		return job.Logs, job.Status, nil
 	}
 
-	statusResponse, err := r.api.Operations.GetWorkflowStatus(workflowStatusParams)
+	statusResponse, err := r.api.Operations.GetWorkflowStatus(
+		workflowStatusParams,
+	)
 	if err != nil {
 		return "", "", err
 	}
@@ -265,7 +290,9 @@ func (r *logsCommandRunner) getLogsWithStatus(
 }
 
 // getLogs retrieves logs of a workflow and unmarshals data into logs structure.
-func (r *logsCommandRunner) getLogs(logsParams *operations.GetWorkflowLogsParams) (logs, error) {
+func (r *logsCommandRunner) getLogs(
+	logsParams *operations.GetWorkflowLogsParams,
+) (logs, error) {
 	var workflowLogs logs
 	logsResp, err := r.api.Operations.GetWorkflowLogs(logsParams)
 	if err != nil {
@@ -363,7 +390,10 @@ func parseLogsFilters(filterInput []string) (filterer.Filters, error) {
 		return filters, err
 	}
 
-	err = filters.ValidateValues("compute_backend", config.ReanaComputeBackendKeys)
+	err = filters.ValidateValues(
+		"compute_backend",
+		config.ReanaComputeBackendKeys,
+	)
 	if err != nil {
 		return filters, err
 	}
@@ -372,7 +402,10 @@ func parseLogsFilters(filterInput []string) (filterer.Filters, error) {
 }
 
 // filterJobLogs returns a subset of jobLogs based on the given filters.
-func filterJobLogs(jobLogs *map[string]jobLogItem, filters filterer.Filters) error {
+func filterJobLogs(
+	jobLogs *map[string]jobLogItem,
+	filters filterer.Filters,
+) error {
 	// Convert to a map based on json properties
 	var jobLogsMap map[string]map[string]string
 	jsonLogs, err := json.Marshal(jobLogs)
@@ -433,7 +466,12 @@ func displayHumanFriendlyLogs(cmd *cobra.Command, logs logs, steps []string) {
 				"The logs of step(s) %s were not found, check for spelling mistakes in the step names",
 				strings.Join(missingStepNames, ","),
 			)
-			displayer.DisplayMessage(errMsg, displayer.Error, false, cmd.ErrOrStderr())
+			displayer.DisplayMessage(
+				errMsg,
+				displayer.Error,
+				false,
+				cmd.ErrOrStderr(),
+			)
 		}
 	}
 
@@ -451,11 +489,21 @@ func displayHumanFriendlyLogs(cmd *cobra.Command, logs logs, steps []string) {
 				displayer.JobStatusToColor[jobItem.Status],
 			)
 
-			displayLogItem(cmd, &jobItem.WorkflowUuid, "Workflow ID", jobItem.Status)
+			displayLogItem(
+				cmd,
+				&jobItem.WorkflowUuid,
+				"Workflow ID",
+				jobItem.Status,
+			)
 			displayLogItem(cmd, &jobItem.ComputeBackend,
 				"Compute backend", jobItem.Status)
 			displayLogItem(cmd, &jobItem.BackendJobId, "Job ID", jobItem.Status)
-			displayLogItem(cmd, &jobItem.DockerImg, "Docker image", jobItem.Status)
+			displayLogItem(
+				cmd,
+				&jobItem.DockerImg,
+				"Docker image",
+				jobItem.Status,
+			)
 			displayLogItem(cmd, &jobItem.Cmd, "Command", jobItem.Status)
 			displayLogItem(cmd, &jobItem.Status, "Status", jobItem.Status)
 			displayLogItem(cmd, jobItem.StartedAt, "Started", jobItem.Status)

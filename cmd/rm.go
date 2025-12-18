@@ -53,11 +53,18 @@ func newRmCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
 	f.StringVarP(
 		&o.workflow,
 		"workflow",
-		"w", "",
+		"w",
+		"",
 		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
 	)
 
@@ -107,7 +114,11 @@ func (o *rmOptions) run(cmd *cobra.Command) error {
 		for file, errorInfo := range failed {
 			hasError = true
 			displayer.DisplayMessage(
-				fmt.Sprintf("Something went wrong while deleting %s.\n%s", file, errorInfo.Error),
+				fmt.Sprintf(
+					"Something went wrong while deleting %s.\n%s",
+					file,
+					errorInfo.Error,
+				),
 				displayer.Error,
 				false,
 				cmd.OutOrStdout(),

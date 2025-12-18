@@ -31,7 +31,9 @@ func TestHandleApiError(t *testing.T) {
 	})
 
 	urlError := url.Error{}
-	apiError := testApiError{Payload: struct{ Message string }{Message: "API Error"}}
+	apiError := testApiError{
+		Payload: struct{ Message string }{Message: "API Error"},
+	}
 	otherError := errors.New("other Error")
 
 	tests := map[string]struct {

@@ -31,7 +31,12 @@ func main() {
 		log.Debug(err)
 		err = errorhandler.HandleApiError(err)
 		if err != config.ErrEmpty {
-			displayer.DisplayMessage(err.Error(), displayer.Error, false, os.Stderr)
+			displayer.DisplayMessage(
+				err.Error(),
+				displayer.Error,
+				false,
+				os.Stderr,
+			)
 		}
 		os.Exit(1)
 	}

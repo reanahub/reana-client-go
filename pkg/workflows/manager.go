@@ -50,7 +50,9 @@ func UpdateStatus(
 }
 
 // GetStatus returns the status information of the specified workflow.
-func GetStatus(token, workflow string) (*operations.GetWorkflowStatusOKBody, error) {
+func GetStatus(
+	token, workflow string,
+) (*operations.GetWorkflowStatusOKBody, error) {
 	getParams := operations.NewGetWorkflowStatusParams()
 	getParams.SetAccessToken(&token)
 	getParams.SetWorkflowIDOrName(workflow)
@@ -117,7 +119,9 @@ func UploadFile(token, workflow, fileName string) (string, error) {
 }
 
 // DownloadFile downloads a file of the specified workflow.
-func DownloadFile(token, workflow, fileName string) (string, *bytes.Buffer, bool, error) {
+func DownloadFile(
+	token, workflow, fileName string,
+) (string, *bytes.Buffer, bool, error) {
 	fileBuf := new(bytes.Buffer)
 	downloadParams := operations.NewDownloadFileParams()
 	downloadParams.SetAccessToken(&token)

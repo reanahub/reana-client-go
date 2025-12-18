@@ -112,7 +112,10 @@ func ValidateOperationalOptions(
 	for option, value := range options {
 		translationPerType, validOption := config.AvailableOperationalOptions[option]
 		if !validOption {
-			return nil, fmt.Errorf("operational option '%s' not supported", option)
+			return nil, fmt.Errorf(
+				"operational option '%s' not supported",
+				option,
+			)
 		}
 		translation, validType := translationPerType[workflowType]
 		if !validType {

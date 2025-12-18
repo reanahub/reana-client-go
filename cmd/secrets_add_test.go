@@ -114,8 +114,10 @@ func TestParseSecrets(t *testing.T) {
 			envSecrets: []string{"PASSWORD=password"},
 			secrets: map[string]operations.AddSecretsParamsBodyAnon{
 				"PASSWORD": {
-					Type:  "env",
-					Value: base64.StdEncoding.EncodeToString([]byte("password")),
+					Type: "env",
+					Value: base64.StdEncoding.EncodeToString(
+						[]byte("password"),
+					),
 				},
 			},
 			secretNames: []string{"PASSWORD"},
@@ -135,12 +137,16 @@ func TestParseSecrets(t *testing.T) {
 			fileSecrets: []string{emptyFile, piFile},
 			secrets: map[string]operations.AddSecretsParamsBodyAnon{
 				"PASSWORD": {
-					Type:  "env",
-					Value: base64.StdEncoding.EncodeToString([]byte("password")),
+					Type: "env",
+					Value: base64.StdEncoding.EncodeToString(
+						[]byte("password"),
+					),
 				},
 				"USER": {
-					Type:  "env",
-					Value: base64.StdEncoding.EncodeToString([]byte("reanauser")),
+					Type: "env",
+					Value: base64.StdEncoding.EncodeToString(
+						[]byte("reanauser"),
+					),
 				},
 				"empty.txt": {
 					Type:  "file",
@@ -167,7 +173,10 @@ func TestParseSecrets(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			secrets, secretNames, err := parseSecrets(test.envSecrets, test.fileSecrets)
+			secrets, secretNames, err := parseSecrets(
+				test.envSecrets,
+				test.fileSecrets,
+			)
 			if test.wantError {
 				if err == nil {
 					t.Errorf("Expected error, got nil")

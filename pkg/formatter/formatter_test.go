@@ -53,9 +53,16 @@ func TestParseFormatParameters(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			filters := ParseFormatParameters(test.formatOptions, test.filterRows)
+			filters := ParseFormatParameters(
+				test.formatOptions,
+				test.filterRows,
+			)
 			if len(filters) != len(test.formatOptions) {
-				t.Errorf("Expected %d filters, got %d", len(test.formatOptions), len(filters))
+				t.Errorf(
+					"Expected %d filters, got %d",
+					len(test.formatOptions),
+					len(filters),
+				)
 			}
 			for i, filter := range filters {
 				filterCol := strings.SplitN(test.formatOptions[i], "=", 2)[0]
@@ -111,7 +118,9 @@ func TestFormatDataFrame(t *testing.T) {
 				series.New([]string{"a", "b"}, series.String, "col1"),
 				series.New([]int{1, 2}, series.Int, "col2"),
 			),
-			formatFilters: []FormatFilter{{column: "col2", filterRows: true, value: "2"}},
+			formatFilters: []FormatFilter{
+				{column: "col2", filterRows: true, value: "2"},
+			},
 		},
 		"multiple format filters": {
 			df: dataframe.New(
@@ -188,13 +197,21 @@ func TestSortDataFrame(t *testing.T) {
 		wantError  bool
 	}{
 		"sort ascending": {
-			df:         dataframe.New(series.New([]string{"b", "a", "c"}, series.String, "col1")),
-			expected:   dataframe.New(series.New([]string{"a", "b", "c"}, series.String, "col1")),
+			df: dataframe.New(
+				series.New([]string{"b", "a", "c"}, series.String, "col1"),
+			),
+			expected: dataframe.New(
+				series.New([]string{"a", "b", "c"}, series.String, "col1"),
+			),
 			sortColumn: "col1",
 		},
 		"sort descending": {
-			df:         dataframe.New(series.New([]string{"b", "a", "c"}, series.String, "col1")),
-			expected:   dataframe.New(series.New([]string{"c", "b", "a"}, series.String, "col1")),
+			df: dataframe.New(
+				series.New([]string{"b", "a", "c"}, series.String, "col1"),
+			),
+			expected: dataframe.New(
+				series.New([]string{"c", "b", "a"}, series.String, "col1"),
+			),
 			sortColumn: "col1",
 			reverse:    true,
 		},
@@ -203,12 +220,18 @@ func TestSortDataFrame(t *testing.T) {
 				series.New([]string{"b", "a", "c"}, series.String, "col1"),
 				series.New([]int{2, 1, 3}, series.Int, "col2"),
 			),
-			expected:   dataframe.New(series.New([]int{1, 2, 3}, series.Int, "col2")),
+			expected: dataframe.New(
+				series.New([]int{1, 2, 3}, series.Int, "col2"),
+			),
 			sortColumn: "col2",
 		},
 		"sort float": {
-			df:         dataframe.New(series.New([]float64{2.0, 1.0, 3.0}, series.Float, "col1")),
-			expected:   dataframe.New(series.New([]float64{1.0, 2.0, 3.0}, series.Float, "col1")),
+			df: dataframe.New(
+				series.New([]float64{2.0, 1.0, 3.0}, series.Float, "col1"),
+			),
+			expected: dataframe.New(
+				series.New([]float64{1.0, 2.0, 3.0}, series.Float, "col1"),
+			),
 			sortColumn: "col1",
 		},
 		"sort run_numbers": {
@@ -253,7 +276,9 @@ func TestSortDataFrame(t *testing.T) {
 			humanRead: true,
 		},
 		"non-existent column": {
-			df:         dataframe.New(series.New([]string{"b", "a", "c"}, series.String, "col1")),
+			df: dataframe.New(
+				series.New([]string{"b", "a", "c"}, series.String, "col1"),
+			),
 			sortColumn: "invalid", wantError: true,
 		},
 	}
@@ -299,7 +324,9 @@ func TestDataFrameToStringData(t *testing.T) {
 			expected: [][]string{},
 		},
 		"one column": {
-			df:       dataframe.New(series.New([]string{"a", "b", "c"}, series.String, "col1")),
+			df: dataframe.New(
+				series.New([]string{"a", "b", "c"}, series.String, "col1"),
+			),
 			expected: [][]string{{"a"}, {"b"}, {"c"}},
 		},
 		"multiple columns": {
@@ -308,10 +335,16 @@ func TestDataFrameToStringData(t *testing.T) {
 				series.New([]int{1, 2, 3}, series.Int, "col2"),
 				series.New([]bool{true, false, true}, series.Bool, "col3"),
 			),
-			expected: [][]string{{"a", "1", "true"}, {"b", "2", "false"}, {"c", "3", "true"}},
+			expected: [][]string{
+				{"a", "1", "true"},
+				{"b", "2", "false"},
+				{"c", "3", "true"},
+			},
 		},
 		"null values": {
-			df:       dataframe.New(series.New([]any{1, "b", nil, 4}, series.Int, "col1")),
+			df: dataframe.New(
+				series.New([]any{1, "b", nil, 4}, series.Int, "col1"),
+			),
 			expected: [][]string{{"1"}, {"-"}, {"-"}, {"4"}},
 		},
 	}

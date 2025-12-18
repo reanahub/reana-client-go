@@ -65,11 +65,18 @@ func newDownloadCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
 	f.StringVarP(
 		&o.workflow,
 		"workflow",
-		"w", "",
+		"w",
+		"",
 		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
 	)
 	f.StringVarP(
@@ -112,7 +119,12 @@ func (o *downloadOptions) run(cmd *cobra.Command, args []string) error {
 			return err
 		}
 		if o.outputPath == config.StdoutChar {
-			err := o.displayFileContent(cmd, fileName, fileBuf, multipleFilesZipped)
+			err := o.displayFileContent(
+				cmd,
+				fileName,
+				fileBuf,
+				multipleFilesZipped,
+			)
 			if err != nil {
 				return err
 			}

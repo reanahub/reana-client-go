@@ -141,8 +141,18 @@ func TestPrintDiff(t *testing.T) {
 			expectedColors: []text.Color{text.FgGreen},
 		},
 		"mixed text": {
-			lines:          []string{"@@ -1 +1 @@", "context", "- removed text", "+ added text"},
-			expectedColors: []text.Color{text.FgCyan, text.Reset, text.FgRed, text.FgGreen},
+			lines: []string{
+				"@@ -1 +1 @@",
+				"context",
+				"- removed text",
+				"+ added text",
+			},
+			expectedColors: []text.Color{
+				text.FgCyan,
+				text.Reset,
+				text.FgRed,
+				text.FgGreen,
+			},
 		},
 	}
 
@@ -153,11 +163,19 @@ func TestPrintDiff(t *testing.T) {
 			result := datautils.SplitLinesNoEmpty(resBuf.String())
 
 			if len(result) != len(test.lines) {
-				t.Fatalf("Expected %d lines, got %d", len(test.lines), len(result))
+				t.Fatalf(
+					"Expected %d lines, got %d",
+					len(test.lines),
+					len(result),
+				)
 			}
 			for i, line := range result {
 				testBuf := new(bytes.Buffer)
-				displayer.PrintColorable(test.lines[i], testBuf, test.expectedColors[i])
+				displayer.PrintColorable(
+					test.lines[i],
+					testBuf,
+					test.expectedColors[i],
+				)
 				expected := testBuf.String()
 				if line != expected {
 					t.Errorf("Expected %s, got %s", expected, line)

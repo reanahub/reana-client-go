@@ -83,7 +83,12 @@ func TestDu(t *testing.T) {
 					responseFile: "du_filtered.json",
 				},
 			},
-			args: []string{"-w", workflowName, "--filter", "name=./code/gendata.C,size=2048"},
+			args: []string{
+				"-w",
+				workflowName,
+				"--filter",
+				"name=./code/gendata.C,size=2048",
+			},
 			expected: []string{
 				"SIZE", "NAME",
 				"2048", "./code/gendata.C",
@@ -103,7 +108,12 @@ func TestDu(t *testing.T) {
 					responseFile: "du_no_files.json",
 				},
 			},
-			args:      []string{"-w", workflowName, "--filter", "name=nothing.C"},
+			args: []string{
+				"-w",
+				workflowName,
+				"--filter",
+				"name=nothing.C",
+			},
 			expected:  []string{"no files matching filter criteria"},
 			wantError: true,
 		},

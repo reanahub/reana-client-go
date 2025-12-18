@@ -37,8 +37,10 @@ func TestClose(t *testing.T) {
 					responseFile: "close_no_open.json",
 				},
 			},
-			args:      []string{"-w", "my_workflow"},
-			expected:  []string{"Workflow - my_workflow has no open interactive session."},
+			args: []string{"-w", "my_workflow"},
+			expected: []string{
+				"Workflow - my_workflow has no open interactive session.",
+			},
 			wantError: true,
 		},
 	}

@@ -61,7 +61,10 @@ func newSecretsAddCmd() *cobra.Command {
 			}
 			for _, file := range o.fileSecrets {
 				if err := validator.ValidateFile(file); err != nil {
-					return fmt.Errorf("invalid value for '--file': %s", err.Error())
+					return fmt.Errorf(
+						"invalid value for '--file': %s",
+						err.Error(),
+					)
 				}
 			}
 			return o.run(cmd)
@@ -69,11 +72,32 @@ func newSecretsAddCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
-	f.StringSliceVar(&o.envSecrets, "env", []string{}, `Secrets to be uploaded from literal string.
-e.g. PASSWORD=password123`)
-	f.StringSliceVar(&o.fileSecrets, "file", []string{}, "Secrets to be uploaded from file.")
-	f.BoolVar(&o.overwrite, "overwrite", false, "Overwrite the secret if already present.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
+	f.StringSliceVar(
+		&o.envSecrets,
+		"env",
+		[]string{},
+		`Secrets to be uploaded from literal string.
+e.g. PASSWORD=password123`,
+	)
+	f.StringSliceVar(
+		&o.fileSecrets,
+		"file",
+		[]string{},
+		"Secrets to be uploaded from file.",
+	)
+	f.BoolVar(
+		&o.overwrite,
+		"overwrite",
+		false,
+		"Overwrite the secret if already present.",
+	)
 
 	return cmd
 }
@@ -99,7 +123,10 @@ func (o *secretsAddOptions) run(cmd *cobra.Command) error {
 	}
 
 	displayer.DisplayMessage(
-		fmt.Sprintf("Secrets %s were successfully uploaded.", strings.Join(secretNames, ", ")),
+		fmt.Sprintf(
+			"Secrets %s were successfully uploaded.",
+			strings.Join(secretNames, ", "),
+		),
 		displayer.Success,
 		false,
 		cmd.OutOrStdout(),

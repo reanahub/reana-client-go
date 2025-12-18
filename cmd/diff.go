@@ -64,11 +64,27 @@ func newDiffCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
-	f.BoolVarP(&o.brief, "brief", "q", false, `If not set, differences in the contents of the
-files in the two workspaces are shown.`)
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
+	f.BoolVarP(
+		&o.brief,
+		"brief",
+		"q",
+		false,
+		`If not set, differences in the contents of the
+files in the two workspaces are shown.`,
+	)
 	f.IntVarP(
-		&o.unified, "unified", "u", 5, "Sets number of context lines for workspace diff output.",
+		&o.unified,
+		"unified",
+		"u",
+		5,
+		"Sets number of context lines for workspace diff output.",
 	)
 
 	return cmd
@@ -100,7 +116,10 @@ func (o *diffOptions) run(cmd *cobra.Command) error {
 	return nil
 }
 
-func displayDiffPayload(cmd *cobra.Command, p *operations.GetWorkflowDiffOKBody) error {
+func displayDiffPayload(
+	cmd *cobra.Command,
+	p *operations.GetWorkflowDiffOKBody,
+) error {
 	if p.ReanaSpecification != "" {
 		specificationDiff := orderedmap.New()
 		err := json.Unmarshal([]byte(p.ReanaSpecification), &specificationDiff)
@@ -120,13 +139,19 @@ func displayDiffPayload(cmd *cobra.Command, p *operations.GetWorkflowDiffOKBody)
 			sectionDiffs, _ := specificationDiff.Get(section)
 			linesInterface, ok := sectionDiffs.([]any)
 			if !ok {
-				return fmt.Errorf("expected diff to be an array, got %v", sectionDiffs)
+				return fmt.Errorf(
+					"expected diff to be an array, got %v",
+					sectionDiffs,
+				)
 			}
 			lines := make([]string, 0, len(linesInterface))
 			for _, line := range linesInterface {
 				lineString, ok := line.(string)
 				if !ok {
-					return fmt.Errorf("expected diff line to be a string, got %v", line)
+					return fmt.Errorf(
+						"expected diff line to be a string, got %v",
+						line,
+					)
 				}
 				lines = append(lines, lineString)
 			}
@@ -134,7 +159,11 @@ func displayDiffPayload(cmd *cobra.Command, p *operations.GetWorkflowDiffOKBody)
 			if len(lines) != 0 {
 				equalSpecification = false
 				displayer.PrintColorable(
-					fmt.Sprintf("%s Differences in workflow %s\n", config.LeadingMark, section),
+					fmt.Sprintf(
+						"%s Differences in workflow %s\n",
+						config.LeadingMark,
+						section,
+					),
 					cmd.OutOrStdout(),
 					text.FgYellow,
 					text.Bold,
@@ -144,7 +173,10 @@ func displayDiffPayload(cmd *cobra.Command, p *operations.GetWorkflowDiffOKBody)
 		}
 		if equalSpecification {
 			displayer.PrintColorable(
-				fmt.Sprintf("%s No differences in REANA specifications.\n", config.LeadingMark),
+				fmt.Sprintf(
+					"%s No differences in REANA specifications.\n",
+					config.LeadingMark,
+				),
 				cmd.OutOrStdout(),
 				text.FgYellow,
 				text.Bold,
@@ -162,7 +194,10 @@ func displayDiffPayload(cmd *cobra.Command, p *operations.GetWorkflowDiffOKBody)
 		workspaceDiff := datautils.SplitLinesNoEmpty(workspaceDiffRaw)
 
 		displayer.PrintColorable(
-			fmt.Sprintf("%s Differences in workflow workspace\n", config.LeadingMark),
+			fmt.Sprintf(
+				"%s Differences in workflow workspace\n",
+				config.LeadingMark,
+			),
 			cmd.OutOrStdout(),
 			text.FgYellow,
 			text.Bold,

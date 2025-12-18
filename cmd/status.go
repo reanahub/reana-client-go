@@ -65,16 +65,34 @@ func newStatusCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
 	f.StringVarP(
 		&o.workflow,
 		"workflow",
-		"w", "",
+		"w",
+		"",
 		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
 	)
-	f.StringSliceVar(&o.formatFilters, "format", []string{}, statusFormatFlagDesc)
+	f.StringSliceVar(
+		&o.formatFilters,
+		"format",
+		[]string{},
+		statusFormatFlagDesc,
+	)
 	f.BoolVar(&o.jsonOutput, "json", false, "Get output in JSON format.")
-	f.BoolVarP(&o.verbose, "verbose", "v", false, "Set status information verbosity.")
+	f.BoolVarP(
+		&o.verbose,
+		"verbose",
+		"v",
+		false,
+		"Set status information verbosity.",
+	)
 	f.BoolVar(
 		&o.includeDuration,
 		"include-duration",
@@ -98,7 +116,10 @@ func (o *statusOptions) run(cmd *cobra.Command) error {
 		payload.Progress,
 		payload.Status,
 	)
-	parsedFormatFilters := formatter.ParseFormatParameters(o.formatFilters, false)
+	parsedFormatFilters := formatter.ParseFormatParameters(
+		o.formatFilters,
+		false,
+	)
 	err = displayStatusPayload(
 		cmd,
 		payload,
@@ -193,10 +214,14 @@ func buildStatusHeader(
 	headers := []string{"name", "run_number", "created"}
 
 	includeProgress := progress.Total != nil
-	hasRunStarted := slices.Contains([]string{"running", "finished", "failed", "stopped"}, status)
+	hasRunStarted := slices.Contains(
+		[]string{"running", "finished", "failed", "stopped"},
+		status,
+	)
 	includeStarted := progress.RunStartedAt != nil
 	includeEnded := progress.RunFinishedAt != nil
-	includeCommand := progress.CurrentCommand != nil || progress.CurrentStepName != nil
+	includeCommand := progress.CurrentCommand != nil ||
+		progress.CurrentStepName != nil
 
 	if hasRunStarted && includeStarted {
 		headers = append(headers, "started")
@@ -221,7 +246,9 @@ func buildStatusHeader(
 }
 
 // getStatusProgress formats the progress of the workflow as finished/total.
-func getStatusProgress(progress *operations.GetWorkflowStatusOKBodyProgress) any {
+func getStatusProgress(
+	progress *operations.GetWorkflowStatusOKBodyProgress,
+) any {
 	var totalJobs, finishedJobs int64
 	if progress.Total != nil {
 		totalJobs = progress.Total.Total
@@ -237,7 +264,9 @@ func getStatusProgress(progress *operations.GetWorkflowStatusOKBodyProgress) any
 
 // getStatusCommand gets the current command of the workflow.
 // If the command isn't available, it returns the current step name.
-func getStatusCommand(progress *operations.GetWorkflowStatusOKBodyProgress) string {
+func getStatusCommand(
+	progress *operations.GetWorkflowStatusOKBodyProgress,
+) string {
 	if progress.CurrentCommand == nil {
 		return *progress.CurrentStepName
 	}

@@ -68,7 +68,10 @@ func newRestartCmd() *cobra.Command {
 		RunE: func(cmd *cobra.Command, args []string) error {
 			if o.file != "" {
 				if err := validator.ValidateFile(o.file); err != nil {
-					return fmt.Errorf("invalid value for '--file': %s", err.Error())
+					return fmt.Errorf(
+						"invalid value for '--file': %s",
+						err.Error(),
+					)
 				}
 			}
 			return o.run(cmd)
@@ -76,11 +79,18 @@ func newRestartCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
 	f.StringVarP(
 		&o.workflow,
 		"workflow",
-		"w", "",
+		"w",
+		"",
 		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
 	)
 	f.StringToStringVarP(
@@ -146,7 +156,10 @@ func (o *restartOptions) run(cmd *cobra.Command) error {
 	if err != nil {
 		return err
 	}
-	if slices.Contains([]string{"pending", "queued", "running"}, currentStatus) {
+	if slices.Contains(
+		[]string{"pending", "queued", "running"},
+		currentStatus,
+	) {
 		displayer.DisplayMessage(
 			statusMsg,
 			displayer.Success,

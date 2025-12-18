@@ -26,7 +26,11 @@ func TestGetRunStatuses(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			runStatuses := GetRunStatuses(test.includeDeleted)
 			if len(runStatuses) != test.numStatuses {
-				t.Errorf("Expected %d statuses, got %d", test.numStatuses, len(runStatuses))
+				t.Errorf(
+					"Expected %d statuses, got %d",
+					test.numStatuses,
+					len(runStatuses),
+				)
 			}
 
 			if test.includeDeleted {

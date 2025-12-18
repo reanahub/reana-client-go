@@ -33,12 +33,19 @@ var LeadingMark = "==>"
 
 var WorkflowCompletedStatuses = []string{"finished", "failed", "stopped"}
 
-var WorkflowProgressingStatuses = []string{"created", "running", "queued", "pending"}
+var WorkflowProgressingStatuses = []string{
+	"created",
+	"running",
+	"queued",
+	"pending",
+}
 
 // GetRunStatuses provides a list of currently supported run statuses.
 // Includes the deleted status if includeDeleted is set to true.
 func GetRunStatuses(includeDeleted bool) []string {
-	runStatuses := append(WorkflowCompletedStatuses, WorkflowProgressingStatuses...)
+	runStatuses := append(
+		WorkflowCompletedStatuses,
+		WorkflowProgressingStatuses...)
 
 	if includeDeleted {
 		runStatuses = append(runStatuses, "deleted")

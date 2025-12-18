@@ -51,11 +51,18 @@ func newCloseCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
 	f.StringVarP(
 		&o.workflow,
 		"workflow",
-		"w", "",
+		"w",
+		"",
 		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
 	)
 
@@ -78,7 +85,10 @@ func (o *closeOptions) run(cmd *cobra.Command) error {
 	}
 
 	displayer.DisplayMessage(
-		fmt.Sprintf("Interactive session for workflow %s was successfully closed", o.workflow),
+		fmt.Sprintf(
+			"Interactive session for workflow %s was successfully closed",
+			o.workflow,
+		),
 		displayer.Success,
 		false,
 		cmd.OutOrStdout(),

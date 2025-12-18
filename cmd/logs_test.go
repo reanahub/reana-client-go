@@ -78,7 +78,12 @@ func TestLogs(t *testing.T) {
 					responseFile: "logs_complete.json",
 				},
 			},
-			args:     []string{"-w", workflowName, "--filter", "compute_backend=kubernetes"},
+			args: []string{
+				"-w",
+				workflowName,
+				"--filter",
+				"compute_backend=kubernetes",
+			},
 			expected: []string{"Step: job1"},
 			unwanted: []string{"Step: job2"},
 		},
@@ -101,7 +106,12 @@ func TestLogs(t *testing.T) {
 					responseFile: "logs_incomplete.json",
 				},
 			},
-			args:     []string{"-w", workflowName, "--filter", "compute_backend=kubernetes"},
+			args: []string{
+				"-w",
+				workflowName,
+				"--filter",
+				"compute_backend=kubernetes",
+			},
 			expected: []string{"Step: 1", "Step 1 emitted no logs."},
 			unwanted: []string{
 				"job1",
@@ -143,7 +153,9 @@ func TestLogs(t *testing.T) {
 		"invalid server url": {
 			serverURL: "^^*invalid",
 			args:      []string{"-w", workflowName},
-			expected:  []string{"environment variable REANA_SERVER_URL is not set"},
+			expected: []string{
+				"environment variable REANA_SERVER_URL is not set",
+			},
 			wantError: true,
 		},
 		"follow workflow": {
@@ -171,9 +183,11 @@ func TestLogs(t *testing.T) {
 		"follow job with multiple steps, size, interval and json flags": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(logsPathTemplate, workflowName): {
-					statusCode:              http.StatusOK,
-					responseFile:            "logs_running.json",
-					additionalResponseFiles: []string{"logs_complete_live.json"},
+					statusCode:   http.StatusOK,
+					responseFile: "logs_running.json",
+					additionalResponseFiles: []string{
+						"logs_complete_live.json",
+					},
 				},
 			},
 			args: []string{
@@ -204,7 +218,13 @@ func TestLogs(t *testing.T) {
 					responseFile: "logs_empty.json",
 				},
 			},
-			args: []string{"-w", workflowName, "--follow", "--filter", "step=job1"},
+			args: []string{
+				"-w",
+				workflowName,
+				"--follow",
+				"--filter",
+				"step=job1",
+			},
 			expected: []string{
 				"step job1 not found",
 			},
@@ -239,8 +259,10 @@ func TestLogs(t *testing.T) {
 					responseFile: "page.html",
 				},
 			},
-			args:      []string{"-w", workflowName, "--follow"},
-			expected:  []string{"invalid character '<' looking for beginning of value"},
+			args: []string{"-w", workflowName, "--follow"},
+			expected: []string{
+				"invalid character '<' looking for beginning of value",
+			},
 			wantError: true,
 		},
 		"follow logs when server returns malformed logs": {
@@ -250,8 +272,10 @@ func TestLogs(t *testing.T) {
 					responseFile: "logs_malformed.json",
 				},
 			},
-			args:      []string{"-w", workflowName, "--follow"},
-			expected:  []string{"invalid character 'm' looking for beginning of value"},
+			args: []string{"-w", workflowName, "--follow"},
+			expected: []string{
+				"invalid character 'm' looking for beginning of value",
+			},
 			wantError: true,
 		},
 		"follow logs when live logs are disabled": {
@@ -356,28 +380,60 @@ func TestFilterJobLogs(t *testing.T) {
 		"no filters": {
 			filterInput: []string{},
 			wantLogs: map[string]jobLogItem{
-				"1": {ComputeBackend: "Kubernetes", Status: "running", DockerImg: "docker"},
-				"2": {ComputeBackend: "Slurm", Status: "created", DockerImg: "docker2"},
-				"3": {ComputeBackend: "HTCondor", Status: "created", DockerImg: "docker3"},
+				"1": {
+					ComputeBackend: "Kubernetes",
+					Status:         "running",
+					DockerImg:      "docker",
+				},
+				"2": {
+					ComputeBackend: "Slurm",
+					Status:         "created",
+					DockerImg:      "docker2",
+				},
+				"3": {
+					ComputeBackend: "HTCondor",
+					Status:         "created",
+					DockerImg:      "docker3",
+				},
 			},
 		},
 		"single filter": {
 			filterInput: []string{"status=created"},
 			wantLogs: map[string]jobLogItem{
-				"2": {ComputeBackend: "Slurm", Status: "created", DockerImg: "docker2"},
-				"3": {ComputeBackend: "HTCondor", Status: "created", DockerImg: "docker3"},
+				"2": {
+					ComputeBackend: "Slurm",
+					Status:         "created",
+					DockerImg:      "docker2",
+				},
+				"3": {
+					ComputeBackend: "HTCondor",
+					Status:         "created",
+					DockerImg:      "docker3",
+				},
 			},
 		},
 		"multiple filters": {
-			filterInput: []string{"status=created", "compute_backend=slurm", "docker_img=docker2"},
+			filterInput: []string{
+				"status=created",
+				"compute_backend=slurm",
+				"docker_img=docker2",
+			},
 			wantLogs: map[string]jobLogItem{
-				"2": {ComputeBackend: "Slurm", Status: "created", DockerImg: "docker2"},
+				"2": {
+					ComputeBackend: "Slurm",
+					Status:         "created",
+					DockerImg:      "docker2",
+				},
 			},
 		},
 		"uppercase compute_backend": {
 			filterInput: []string{"compute_backend=KUBERNETES"},
 			wantLogs: map[string]jobLogItem{
-				"1": {ComputeBackend: "Kubernetes", Status: "running", DockerImg: "docker"},
+				"1": {
+					ComputeBackend: "Kubernetes",
+					Status:         "running",
+					DockerImg:      "docker",
+				},
 			},
 		},
 	}
@@ -390,17 +446,35 @@ func TestFilterJobLogs(t *testing.T) {
 				test.filterInput,
 			)
 			if err != nil {
-				t.Fatalf("utils.NewFilters returned an unexpected error: %s", err.Error())
+				t.Fatalf(
+					"utils.NewFilters returned an unexpected error: %s",
+					err.Error(),
+				)
 			}
 
 			jobLogs := map[string]jobLogItem{
-				"1": {ComputeBackend: "Kubernetes", Status: "running", DockerImg: "docker"},
-				"2": {ComputeBackend: "Slurm", Status: "created", DockerImg: "docker2"},
-				"3": {ComputeBackend: "HTCondor", Status: "created", DockerImg: "docker3"},
+				"1": {
+					ComputeBackend: "Kubernetes",
+					Status:         "running",
+					DockerImg:      "docker",
+				},
+				"2": {
+					ComputeBackend: "Slurm",
+					Status:         "created",
+					DockerImg:      "docker2",
+				},
+				"3": {
+					ComputeBackend: "HTCondor",
+					Status:         "created",
+					DockerImg:      "docker3",
+				},
 			}
 			err = filterJobLogs(&jobLogs, filters)
 			if err != nil {
-				t.Fatalf("filterJobLogs returned an unexpected error: %s", err.Error())
+				t.Fatalf(
+					"filterJobLogs returned an unexpected error: %s",
+					err.Error(),
+				)
 			}
 			if !reflect.DeepEqual(jobLogs, test.wantLogs) {
 				t.Errorf("expected %#v, got %#v", test.wantLogs, jobLogs)

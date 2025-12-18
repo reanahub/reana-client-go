@@ -8,7 +8,7 @@
 
 SWAGGER := docker run --rm -it -e GOPATH=$(shell go env GOPATH):/go -v $(HOME):$(HOME) -w $(shell pwd) --pull always quay.io/goswagger/swagger
 
-all: build
+all: help
 
 audit: # Run quality control checks.
 	go install honnef.co/go/tools/cmd/staticcheck@latest
@@ -45,16 +45,16 @@ swagger-validate-specs: # Validate OpenAPI specification.
 test: # Run test suite.
 	go test -coverprofile coverage.txt ./cmd/... ./pkg/...
 
+tidy: # Format code and tidy go.mod.
+	go install github.com/segmentio/golines@latest
+	go install golang.org/x/tools/cmd/goimports@latest
+	go fmt ./...
+	goimports -w .
+	golines -w -m 80 -t 4 .
+	go mod tidy
+
 update: # Update go module dependencies.
 	go get -u
 	go mod tidy
 
-lint: # Run lint checks
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-	golangci-lint run --enable=gofmt --enable=goimports
-
-golines: # Run line size checks
-	go install github.com/segmentio/golines@latest
-	golines --dry-run ./
-
-.PHONY: all audit build clean help release swagger-generate-client swagger-validate-specs test update lint golines
+.PHONY: all audit build clean help release swagger-generate-client swagger-validate-specs test tidy update

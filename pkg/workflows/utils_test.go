@@ -18,10 +18,22 @@ func TestGetNameAndRunNumber(t *testing.T) {
 		workflowName string
 		runNumber    string
 	}{
-		"only name":            {arg: "foo", workflowName: "foo", runNumber: ""},
-		"name and run number":  {arg: "foo.bar", workflowName: "foo", runNumber: "bar"},
-		"run number with dots": {arg: "foo.bar.baz", workflowName: "foo", runNumber: "bar.baz"},
-		"empty string":         {arg: "", workflowName: "", runNumber: ""},
+		"only name": {
+			arg:          "foo",
+			workflowName: "foo",
+			runNumber:    "",
+		},
+		"name and run number": {
+			arg:          "foo.bar",
+			workflowName: "foo",
+			runNumber:    "bar",
+		},
+		"run number with dots": {
+			arg:          "foo.bar.baz",
+			workflowName: "foo",
+			runNumber:    "bar.baz",
+		},
+		"empty string": {arg: "", workflowName: "", runNumber: ""},
 	}
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
@@ -49,9 +61,21 @@ func TestGetDuration(t *testing.T) {
 		want          any
 		wantError     bool
 	}{
-		"finished instantly":    {runStartedAt: &curTime, runFinishedAt: &curTime, want: 0.0},
-		"finished in 1 second":  {runStartedAt: &curTime, runFinishedAt: &future, want: 1.0},
-		"finished before start": {runStartedAt: &curTime, runFinishedAt: &past, want: -1.0},
+		"finished instantly": {
+			runStartedAt:  &curTime,
+			runFinishedAt: &curTime,
+			want:          0.0,
+		},
+		"finished in 1 second": {
+			runStartedAt:  &curTime,
+			runFinishedAt: &future,
+			want:          1.0,
+		},
+		"finished before start": {
+			runStartedAt:  &curTime,
+			runFinishedAt: &past,
+			want:          -1.0,
+		},
 		"stopped in 1 second": {
 			runStartedAt:  &curTime,
 			runFinishedAt: nil,
@@ -64,7 +88,11 @@ func TestGetDuration(t *testing.T) {
 			runStoppedAt:  nil,
 			want:          nil,
 		},
-		"nil start":        {runStartedAt: nil, runFinishedAt: &curTime, want: nil},
+		"nil start": {
+			runStartedAt:  nil,
+			runFinishedAt: &curTime,
+			want:          nil,
+		},
 		"nil finish":       {runStartedAt: &curTime, runFinishedAt: nil},
 		"bad start format": {runStartedAt: &badFormat, wantError: true},
 		"bad stop format": {
@@ -80,7 +108,11 @@ func TestGetDuration(t *testing.T) {
 	}
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			got, err := GetDuration(test.runStartedAt, test.runFinishedAt, test.runStoppedAt)
+			got, err := GetDuration(
+				test.runStartedAt,
+				test.runFinishedAt,
+				test.runStoppedAt,
+			)
 			if test.wantError {
 				if err == nil {
 					t.Errorf("Expected error, got nil")

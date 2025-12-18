@@ -111,12 +111,35 @@ func newListCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
-	f.StringVarP(&o.workflow, "workflow", "w", "", "List all runs of the given workflow.")
-	f.BoolVarP(&o.listSessions, "sessions", "s", false, "List all open interactive sessions.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
+	f.StringVarP(
+		&o.workflow,
+		"workflow",
+		"w",
+		"",
+		"List all runs of the given workflow.",
+	)
+	f.BoolVarP(
+		&o.listSessions,
+		"sessions",
+		"s",
+		false,
+		"List all open interactive sessions.",
+	)
 	f.StringSliceVar(&o.formatFilters, "format", []string{}, listFormatFlagDesc)
 	f.BoolVar(&o.jsonOutput, "json", false, "Get output in JSON format.")
-	f.BoolVar(&o.showAll, "all", false, "Show all workflows including deleted ones.")
+	f.BoolVar(
+		&o.showAll,
+		"all",
+		false,
+		"Show all workflows including deleted ones.",
+	)
 	f.BoolVarP(
 		&o.verbose,
 		"verbose",
@@ -132,7 +155,12 @@ progress, duration.`,
 		false,
 		"Show disk size in human readable format.",
 	)
-	f.StringVar(&o.sortColumn, "sort", "CREATED", "Sort the output by specified column.")
+	f.StringVar(
+		&o.sortColumn,
+		"sort",
+		"CREATED",
+		"Sort the output by specified column.",
+	)
 	f.StringSliceVar(&o.filters, "filter", []string{}, listFilterFlagDesc)
 	f.BoolVar(
 		&o.includeDuration,
@@ -159,10 +187,30 @@ In case a workflow is in progress, its duration as of now will be shown.`,
 		false,
 		"Include deleted workflows in the output.",
 	)
-	f.Int64Var(&o.page, "page", 1, "Results page number (to be used with --size).")
-	f.Int64Var(&o.size, "size", 0, "Number of results per page (to be used with --page).")
-	f.BoolVar(&o.shared, "shared", false, "List all shared (owned and unowned) workflows.")
-	f.StringVar(&o.shared_by, "shared-by", "", "List workflows shared by the specified user.")
+	f.Int64Var(
+		&o.page,
+		"page",
+		1,
+		"Results page number (to be used with --size).",
+	)
+	f.Int64Var(
+		&o.size,
+		"size",
+		0,
+		"Number of results per page (to be used with --page).",
+	)
+	f.BoolVar(
+		&o.shared,
+		"shared",
+		false,
+		"List all shared (owned and unowned) workflows.",
+	)
+	f.StringVar(
+		&o.shared_by,
+		"shared-by",
+		"",
+		"List workflows shared by the specified user.",
+	)
 	f.StringVar(
 		&o.shared_with,
 		"shared-with",
@@ -181,7 +229,9 @@ In case a workflow is in progress, its duration as of now will be shown.`,
 
 func (o *listOptions) run(cmd *cobra.Command) error {
 	if o.shared_by != "" && o.shared_with != "" {
-		return errors.New("please provide either --shared-by or --shared-with, not both")
+		return errors.New(
+			"please provide either --shared-by or --shared-with, not both",
+		)
 	}
 
 	var runType string
@@ -191,7 +241,11 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 		runType = "batch"
 	}
 
-	statusFilters, searchFilter, err := parseListFilters(o.filters, o.showDeletedRuns, o.showAll)
+	statusFilters, searchFilter, err := parseListFilters(
+		o.filters,
+		o.showDeletedRuns,
+		o.showAll,
+	)
 	if err != nil {
 		return err
 	}
@@ -243,7 +297,10 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 		o.shared_by,
 		o.shared_with,
 	)
-	parsedFormatFilters := formatter.ParseFormatParameters(o.formatFilters, true)
+	parsedFormatFilters := formatter.ParseFormatParameters(
+		o.formatFilters,
+		true,
+	)
 	err = displayListPayload(
 		cmd,
 		listResp.Payload,
@@ -322,7 +379,11 @@ func displayListPayload(
 				value = getOptionalStringField(&workflow.SessionType)
 			case "session_uri":
 				if workflow.SessionURI != "" {
-					value = formatter.FormatSessionURI(serverURL, workflow.SessionURI, token)
+					value = formatter.FormatSessionURI(
+						serverURL,
+						workflow.SessionURI,
+						token,
+					)
 				}
 			case "session_status":
 				value = getOptionalStringField(&workflow.SessionStatus)
@@ -340,7 +401,13 @@ func displayListPayload(
 		df = df.CBind(dataframe.New(colSeries))
 	}
 
-	df, err := formatter.SortDataFrame(df, sortColumn, true, readableToRaw, humanReadable)
+	df, err := formatter.SortDataFrame(
+		df,
+		sortColumn,
+		true,
+		readableToRaw,
+		humanReadable,
+	)
 	if err != nil {
 		cmd.PrintErrf("Warning: sort operation was aborted, %s\n", err)
 	}
@@ -371,7 +438,14 @@ func buildListHeader(
 	shared_by, shared_with string,
 ) []string {
 	headers := map[string][]string{
-		"batch": {"name", "run_number", "created", "started", "ended", "status"},
+		"batch": {
+			"name",
+			"run_number",
+			"created",
+			"started",
+			"ended",
+			"status",
+		},
 		"interactive": {
 			"name",
 			"run_number",
@@ -415,7 +489,11 @@ func parseListFilters(
 	filterInput []string,
 	showDeletedRuns, showAll bool,
 ) ([]string, string, error) {
-	filters, err := filterer.NewFilters(nil, config.ListMultiFilters, filterInput)
+	filters, err := filterer.NewFilters(
+		nil,
+		config.ListMultiFilters,
+		filterInput,
+	)
 	if err != nil {
 		return nil, "", err
 	}

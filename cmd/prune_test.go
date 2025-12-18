@@ -38,7 +38,12 @@ func TestPrune(t *testing.T) {
 					responseFile: "prune_success.json",
 				},
 			},
-			args: []string{"-w", workflowName, "--include-inputs", "--include-outputs"},
+			args: []string{
+				"-w",
+				workflowName,
+				"--include-inputs",
+				"--include-outputs",
+			},
 			expected: []string{
 				"The workspace has been correctly pruned.",
 			},

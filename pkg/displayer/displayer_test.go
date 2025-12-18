@@ -54,21 +54,34 @@ func TestDisplayTable(t *testing.T) {
 
 			lines := datautils.SplitLinesNoEmpty(result)
 			if len(lines) != len(test.rows)+1 {
-				t.Fatalf("Expected %d table lines, got %d", len(test.rows)+1, len(lines))
+				t.Fatalf(
+					"Expected %d table lines, got %d",
+					len(test.rows)+1,
+					len(lines),
+				)
 			}
 
 			for _, header := range test.headers {
 				header = strings.ToUpper(header)
 				if !strings.Contains(lines[0], header) {
-					t.Fatalf("Expected to contain header: \"%s\", got: \"%s\"", header, result)
+					t.Fatalf(
+						"Expected to contain header: \"%s\", got: \"%s\"",
+						header,
+						result,
+					)
 				}
 			}
 
 			for i, row := range test.rows {
 				for j, col := range row {
 					if !strings.Contains(lines[i+1], fmt.Sprintf("%v", col)) {
-						t.Fatalf("Expected to contain row %d column %d: '%s', got: '%s'",
-							i, j, col, result)
+						t.Fatalf(
+							"Expected to contain row %d column %d: '%s', got: '%s'",
+							i,
+							j,
+							col,
+							result,
+						)
 					}
 				}
 			}
@@ -91,13 +104,18 @@ func TestDisplayJsonOutput(t *testing.T) {
 			arg: 1.1, expected: "1.1\n",
 		},
 		"array of strings": {
-			arg: []string{"test", "test2"}, expected: "[\n  \"test\",\n  \"test2\"\n]\n",
+			arg: []string{
+				"test",
+				"test2",
+			}, expected: "[\n  \"test\",\n  \"test2\"\n]\n",
 		},
 		"array of any": {
 			arg: []any{1, "test"}, expected: "[\n  1,\n  \"test\"\n]\n",
 		},
 		"map of strings": {
-			arg: map[string]string{"key": "value"}, expected: "{\n  \"key\": \"value\"\n}\n",
+			arg: map[string]string{
+				"key": "value",
+			}, expected: "{\n  \"key\": \"value\"\n}\n",
 		},
 		"map of any": {
 			arg: map[string]any{
@@ -167,7 +185,9 @@ func TestDisplayMessage(t *testing.T) {
 			msg:      "test info",
 			msgType:  Info,
 			indented: false,
-			expected: text.Bold.Sprint("==> test info\n"), // should be bold without any color
+			expected: text.Bold.Sprint(
+				"==> test info\n",
+			), // should be bold without any color
 		},
 		"info indented": {
 			msg:      "test info indented",

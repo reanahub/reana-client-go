@@ -21,13 +21,41 @@ func TestHasAnyPrefix(t *testing.T) {
 		str      string
 		want     bool
 	}{
-		"one prefix":               {prefixes: []string{"foo"}, str: "foobar", want: true},
-		"wrong prefix":             {prefixes: []string{"foo"}, str: "bar", want: false},
-		"exact word":               {prefixes: []string{"foo", "bar"}, str: "foo", want: true},
-		"two prefix options":       {prefixes: []string{"foo", "bar"}, str: "foobar", want: true},
-		"wrong prefix two options": {prefixes: []string{"foo", "bar"}, str: "baz", want: false},
-		"no options":               {prefixes: []string{}, str: "foobar", want: false},
-		"empty string":             {prefixes: []string{"foo", "bar"}, str: "", want: false},
+		"one prefix": {
+			prefixes: []string{"foo"},
+			str:      "foobar",
+			want:     true,
+		},
+		"wrong prefix": {
+			prefixes: []string{"foo"},
+			str:      "bar",
+			want:     false,
+		},
+		"exact word": {
+			prefixes: []string{"foo", "bar"},
+			str:      "foo",
+			want:     true,
+		},
+		"two prefix options": {
+			prefixes: []string{"foo", "bar"},
+			str:      "foobar",
+			want:     true,
+		},
+		"wrong prefix two options": {
+			prefixes: []string{"foo", "bar"},
+			str:      "baz",
+			want:     false,
+		},
+		"no options": {
+			prefixes: []string{},
+			str:      "foobar",
+			want:     false,
+		},
+		"empty string": {
+			prefixes: []string{"foo", "bar"},
+			str:      "",
+			want:     false,
+		},
 	}
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
@@ -91,12 +119,18 @@ func TestSplitLinesNoEmpty(t *testing.T) {
 		arg  string
 		want []string
 	}{
-		"empty string":        {arg: "", want: []string{}},
-		"only one line":       {arg: "a", want: []string{"a"}},
-		"two lines":           {arg: "a\nb", want: []string{"a", "b"}},
-		"three lines":         {arg: "a\nb\nc", want: []string{"a", "b", "c"}},
-		"ending with newline": {arg: "a\nb\nc\n", want: []string{"a", "b", "c"}},
-		"with empty lines":    {arg: "a\n\nb\n\nc", want: []string{"a", "b", "c"}},
+		"empty string":  {arg: "", want: []string{}},
+		"only one line": {arg: "a", want: []string{"a"}},
+		"two lines":     {arg: "a\nb", want: []string{"a", "b"}},
+		"three lines":   {arg: "a\nb\nc", want: []string{"a", "b", "c"}},
+		"ending with newline": {
+			arg:  "a\nb\nc\n",
+			want: []string{"a", "b", "c"},
+		},
+		"with empty lines": {
+			arg:  "a\n\nb\n\nc",
+			want: []string{"a", "b", "c"},
+		},
 	}
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
@@ -115,11 +149,15 @@ func TestSplitKeyValue(t *testing.T) {
 		value     string
 		wantError bool
 	}{
-		"regular filter":      {str: "key=value", key: "key", value: "value"},
-		"missing value":       {str: "key=", key: "key", value: ""},
-		"missing key":         {str: "=value", key: "", value: "value"},
-		"value including '='": {str: "key=value=value", key: "key", value: "value=value"},
-		"invalid input":       {str: "invalid", wantError: true},
+		"regular filter": {str: "key=value", key: "key", value: "value"},
+		"missing value":  {str: "key=", key: "key", value: ""},
+		"missing key":    {str: "=value", key: "", value: "value"},
+		"value including '='": {
+			str:   "key=value=value",
+			key:   "key",
+			value: "value=value",
+		},
+		"invalid input": {str: "invalid", wantError: true},
 	}
 
 	for name, test := range tests {
@@ -127,7 +165,10 @@ func TestSplitKeyValue(t *testing.T) {
 			key, value, err := SplitKeyValue(test.str)
 			if test.wantError {
 				if err == nil {
-					t.Errorf("Expected error for SplitKeyValue(%s), got nil", test.str)
+					t.Errorf(
+						"Expected error for SplitKeyValue(%s), got nil",
+						test.str,
+					)
 				}
 			} else if err != nil {
 				t.Errorf("Unexpected error for SplitKeyValue(%s): '%s'", test.str, err.Error())

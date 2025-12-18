@@ -80,7 +80,12 @@ func TestStart(t *testing.T) {
 					responseFile: "start_params_multiple.json",
 				},
 			},
-			args: []string{"-w", workflowName, "-p", "data=results/data2.root,events=100"},
+			args: []string{
+				"-w",
+				workflowName,
+				"-p",
+				"data=results/data2.root,events=100",
+			},
 			expected: []string{
 				workflowName + " is running",
 			},
@@ -96,7 +101,12 @@ func TestStart(t *testing.T) {
 					responseFile: "start_params_multiple.json",
 				},
 			},
-			args: []string{"-w", workflowName, "-o", "CACHE=cache,INVALID=invalid"},
+			args: []string{
+				"-w",
+				workflowName,
+				"-o",
+				"CACHE=cache,INVALID=invalid",
+			},
 			expected: []string{
 				"operational option 'INVALID' not supported",
 			},
@@ -113,7 +123,12 @@ func TestStart(t *testing.T) {
 					responseFile: "start_params_multiple.json",
 				},
 			},
-			args: []string{"-w", workflowName, "-o", "CACHE=cache,report=report"},
+			args: []string{
+				"-w",
+				workflowName,
+				"-o",
+				"CACHE=cache,report=report",
+			},
 			expected: []string{
 				"operational option 'report' not supported for serial workflows",
 			},
@@ -130,7 +145,12 @@ func TestStart(t *testing.T) {
 					responseFile: "start_params_multiple.json",
 				},
 			},
-			args: []string{"-w", workflowName, "-p", "data=results/data2.root,invalid=100"},
+			args: []string{
+				"-w",
+				workflowName,
+				"-p",
+				"data=results/data2.root,invalid=100",
+			},
 			expected: []string{
 				"given parameter - invalid, is not in reana.yaml",
 				workflowName + " is running",

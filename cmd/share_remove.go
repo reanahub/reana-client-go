@@ -60,8 +60,20 @@ func newShareRemoveCmd() *cobra.Command {
 		`Name or UUID of the workflow. Overrides value of 
 	REANA_WORKON environment variable.`,
 	)
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
-	f.StringSliceVarP(&o.users, "user", "u", []string{}, `Users to unshare the workflow with.`)
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
+	f.StringSliceVarP(
+		&o.users,
+		"user",
+		"u",
+		[]string{},
+		`Users to unshare the workflow with.`,
+	)
 	// Remove -h shorthand
 	cmd.PersistentFlags().BoolP("help", "h", false, "Help for share-remove")
 
@@ -91,7 +103,12 @@ func (o *shareRemoveOptions) run(cmd *cobra.Command) error {
 			err := errorhandler.HandleApiError(err)
 			shareErrors = append(
 				shareErrors,
-				fmt.Sprintf("Failed to unshare %s with %s: %s", o.workflow, user, err.Error()),
+				fmt.Sprintf(
+					"Failed to unshare %s with %s: %s",
+					o.workflow,
+					user,
+					err.Error(),
+				),
 			)
 		} else {
 			sharedUsers = append(sharedUsers, user)
@@ -112,7 +129,12 @@ func (o *shareRemoveOptions) run(cmd *cobra.Command) error {
 	}
 	if len(shareErrors) > 0 {
 		for _, err := range shareErrors {
-			displayer.DisplayMessage(err, displayer.Error, false, cmd.OutOrStdout())
+			displayer.DisplayMessage(
+				err,
+				displayer.Error,
+				false,
+				cmd.OutOrStdout(),
+			)
 		}
 		return config.ErrEmpty
 	}

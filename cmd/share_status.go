@@ -63,8 +63,19 @@ func newShareStatusCmd() *cobra.Command {
 		`Name or UUID of the workflow. Overrides value of 
 	REANA_WORKON environment variable.`,
 	)
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
-	f.StringSliceVar(&o.formatFilters, "format", []string{}, shareStatusFormatFlagDesc)
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
+	f.StringSliceVar(
+		&o.formatFilters,
+		"format",
+		[]string{},
+		shareStatusFormatFlagDesc,
+	)
 	f.BoolVar(&o.jsonOutput, "json", false, "Get output in JSON format.")
 
 	// Remove -h shorthand
@@ -82,7 +93,9 @@ func (o *shareStatusOptions) run(cmd *cobra.Command) error {
 	if err != nil {
 		return err
 	}
-	shareStatusResp, err := api.Operations.GetWorkflowShareStatus(shareStatusParams)
+	shareStatusResp, err := api.Operations.GetWorkflowShareStatus(
+		shareStatusParams,
+	)
 	if err != nil {
 		return err
 	}
@@ -98,7 +111,10 @@ func (o *shareStatusOptions) run(cmd *cobra.Command) error {
 		return nil
 	}
 
-	parsedFormatFilters := formatter.ParseFormatParameters(o.formatFilters, true)
+	parsedFormatFilters := formatter.ParseFormatParameters(
+		o.formatFilters,
+		true,
+	)
 	header := []string{"user_email", "valid_until"}
 
 	err = displayShareStatusPayload(

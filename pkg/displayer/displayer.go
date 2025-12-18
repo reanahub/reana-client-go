@@ -111,7 +111,12 @@ func DisplayJsonOutput(output any, out io.Writer) error {
 
 // DisplayMessage takes a message, a messageType (e.g. success or error) and displays it according to the color
 // associated with the messageType and whether it is indented or not.
-func DisplayMessage(message string, messageType MessageType, indented bool, out io.Writer) {
+func DisplayMessage(
+	message string,
+	messageType MessageType,
+	indented bool,
+	out io.Writer,
+) {
 	prefix := config.LeadingMark
 	if indented {
 		prefix = "  ->"

@@ -27,7 +27,10 @@ import (
 
 // ExecuteCommand executes a cobra command with the given args.
 // Returns the output of the command and any error it may provide.
-func ExecuteCommand(cmd *cobra.Command, args ...string) (output string, err error) {
+func ExecuteCommand(
+	cmd *cobra.Command,
+	args ...string,
+) (output string, err error) {
 	buf := new(bytes.Buffer)
 	cmd.SetOut(buf)
 	cmd.SetErr(buf)
@@ -76,36 +79,40 @@ func getResponseFile(callSeqNum int, serverResponse ServerResponse) string {
 
 func testCmdRun(t *testing.T, p TestCmdParams) {
 	callSeqNum := 0
-	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if accessToken := r.URL.Query().Get("access_token"); accessToken != "1234" {
-			t.Errorf("Expected access token '1234', got '%v'", accessToken)
-		}
-		res, validPath := p.serverResponses[r.URL.Path]
-		if validPath {
-			w.Header().Add("Content-Type", "application/json")
-			for name, value := range res.responseHeaders {
-				w.Header().Add(name, value)
+	server := httptest.NewTLSServer(
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if accessToken := r.URL.Query().Get("access_token"); accessToken != "1234" {
+				t.Errorf("Expected access token '1234', got '%v'", accessToken)
 			}
-			w.WriteHeader(res.statusCode)
-
-			var body []byte
-			responseFile := getResponseFile(callSeqNum, res)
-			callSeqNum++
-			if responseFile != "" {
-				var err error
-				body, err = os.ReadFile("../testdata/inputs/" + responseFile)
-				if err != nil {
-					t.Fatalf("Error while reading response file: %v", err)
+			res, validPath := p.serverResponses[r.URL.Path]
+			if validPath {
+				w.Header().Add("Content-Type", "application/json")
+				for name, value := range res.responseHeaders {
+					w.Header().Add(name, value)
 				}
+				w.WriteHeader(res.statusCode)
+
+				var body []byte
+				responseFile := getResponseFile(callSeqNum, res)
+				callSeqNum++
+				if responseFile != "" {
+					var err error
+					body, err = os.ReadFile(
+						"../testdata/inputs/" + responseFile,
+					)
+					if err != nil {
+						t.Fatalf("Error while reading response file: %v", err)
+					}
+				}
+				_, err := w.Write(body)
+				if err != nil {
+					t.Fatalf("Error while writing response body: %v", err)
+				}
+			} else {
+				t.Fatalf("Unexpected request to '%v'", r.URL.Path)
 			}
-			_, err := w.Write(body)
-			if err != nil {
-				t.Fatalf("Error while writing response body: %v", err)
-			}
-		} else {
-			t.Fatalf("Unexpected request to '%v'", r.URL.Path)
-		}
-	}))
+		}),
+	)
 
 	viper.Set("server-url", server.URL)
 	if p.serverURL != "" {
@@ -131,14 +138,23 @@ func testCmdRun(t *testing.T, p TestCmdParams) {
 		if !p.wantError && !strings.Contains(output, test) {
 			t.Errorf("Expected '%s' in output, instead got '%s'", test, output)
 		}
-		if p.wantError && !strings.Contains(err.Error(), test) && !strings.Contains(output, test) {
-			t.Errorf("Expected '%s' in error output, instead got '%s'", test, err.Error())
+		if p.wantError && !strings.Contains(err.Error(), test) &&
+			!strings.Contains(output, test) {
+			t.Errorf(
+				"Expected '%s' in error output, instead got '%s'",
+				test,
+				err.Error(),
+			)
 		}
 	}
 
 	for _, forbidden := range p.unwanted {
 		if !p.wantError && strings.Contains(output, forbidden) {
-			t.Errorf("Expected '%s' not to be in output, instead got '%s'", forbidden, output)
+			t.Errorf(
+				"Expected '%s' not to be in output, instead got '%s'",
+				forbidden,
+				output,
+			)
 		}
 		if p.wantError && (strings.Contains(err.Error(), forbidden) ||
 			strings.Contains(output, forbidden)) {
@@ -218,7 +234,11 @@ func TestValidateFlags(t *testing.T) {
 			if test.hasWorkflow {
 				f.String("workflow", test.workflow, "")
 				if test.isWorkflowOptional {
-					err := f.SetAnnotation("workflow", "properties", []string{"optional"})
+					err := f.SetAnnotation(
+						"workflow",
+						"properties",
+						[]string{"optional"},
+					)
 					if err != nil {
 						t.Fatal(err)
 					}
@@ -250,8 +270,16 @@ func TestSetupViper(t *testing.T) {
 			viperProp: "server-url",
 			value:     "https://localhost:8080",
 		},
-		"access token": {env: "REANA_ACCESS_TOKEN", viperProp: "access-token", value: "1234"},
-		"workflow":     {env: "REANA_WORKON", viperProp: "workflow", value: "workflow"},
+		"access token": {
+			env:       "REANA_ACCESS_TOKEN",
+			viperProp: "access-token",
+			value:     "1234",
+		},
+		"workflow": {
+			env:       "REANA_WORKON",
+			viperProp: "workflow",
+			value:     "workflow",
+		},
 	}
 
 	for name, test := range tests {

@@ -303,7 +303,12 @@ func TestList(t *testing.T) {
 			},
 		},
 		"invalid: shared with and shared by in the same command": {
-			args: []string{"--shared-by", "anybody", "--shared-with", "anybody"},
+			args: []string{
+				"--shared-by",
+				"anybody",
+				"--shared-with",
+				"anybody",
+			},
 			expected: []string{
 				"please provide either --shared-by or --shared-with, not both",
 			},
@@ -332,8 +337,15 @@ func TestBuildListHeader(t *testing.T) {
 		expected             []string
 	}{
 		"batch run": {
-			runType:  "batch",
-			expected: []string{"name", "run_number", "created", "started", "ended", "status"},
+			runType: "batch",
+			expected: []string{
+				"name",
+				"run_number",
+				"created",
+				"started",
+				"ended",
+				"status",
+			},
 		},
 		"interactive run": {
 			runType: "interactive",
@@ -446,7 +458,12 @@ func TestParseListFilters(t *testing.T) {
 			searchFilter:  "",
 		},
 		"valid filters": {
-			filterInput:   []string{"status=running", "status=finished", "name=test", "name=test2"},
+			filterInput: []string{
+				"status=running",
+				"status=finished",
+				"name=test",
+				"name=test2",
+			},
 			statusFilters: []string{"running", "finished"},
 			searchFilter:  "{\"name\":[\"test\",\"test2\"]}",
 		},
@@ -511,10 +528,18 @@ func TestBuildListSeries(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			got := buildListSeries(test.col, test.humanReadable)
 			if got.Name != test.expected.Name {
-				t.Errorf("series has name '%s', wanted '%s'", got.Name, test.expected.Name)
+				t.Errorf(
+					"series has name '%s', wanted '%s'",
+					got.Name,
+					test.expected.Name,
+				)
 			}
 			if got.Type() != test.expected.Type() {
-				t.Errorf("series has type '%s', wanted '%s'", got.Type(), test.expected.Type())
+				t.Errorf(
+					"series has type '%s', wanted '%s'",
+					got.Type(),
+					test.expected.Type(),
+				)
 			}
 		})
 	}

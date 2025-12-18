@@ -29,7 +29,9 @@ func ApiClient() (*API, error) {
 		return nil, err
 	}
 	if u.Host == "" {
-		return nil, errors.New("environment variable REANA_SERVER_URL is not set")
+		return nil, errors.New(
+			"environment variable REANA_SERVER_URL is not set",
+		)
 	}
 
 	// create the transport

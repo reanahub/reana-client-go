@@ -219,7 +219,12 @@ func TestQuotaShow(t *testing.T) {
 			},
 		},
 		"invalid report value": {
-			args: []string{"--resource", "cpu", "--report", "invalid"}, wantError: true,
+			args: []string{
+				"--resource",
+				"cpu",
+				"--report",
+				"invalid",
+			}, wantError: true,
 			expected: []string{fmt.Sprintf(
 				"invalid value for 'report': 'invalid' is not part of '%s'",
 				strings.Join(config.QuotaReports, "', '"),
@@ -293,14 +298,25 @@ func TestDisplayQuotaResourceUsage(t *testing.T) {
 			buf := new(bytes.Buffer)
 			displayQuotaResourceUsage(
 				test.health,
-				quotaResourceStat{HumanReadable: test.usageHuman, Raw: test.usageRaw},
-				quotaResourceStat{HumanReadable: test.limitHuman, Raw: test.limitRaw},
-				test.humanReadable, buf,
+				quotaResourceStat{
+					HumanReadable: test.usageHuman,
+					Raw:           test.usageRaw,
+				},
+				quotaResourceStat{
+					HumanReadable: test.limitHuman,
+					Raw:           test.limitRaw,
+				},
+				test.humanReadable,
+				buf,
 			)
 
 			got := buf.String()
 			testBuf := new(bytes.Buffer)
-			displayer.PrintColorable(test.expected+"\n", testBuf, test.expectedColor)
+			displayer.PrintColorable(
+				test.expected+"\n",
+				testBuf,
+				test.expectedColor,
+			)
 			expected := testBuf.String()
 			if got != expected {
 				t.Errorf("expected %s, got %s", expected, got)

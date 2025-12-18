@@ -54,15 +54,27 @@ func newRetentionRulesListCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
 	f.StringVarP(
 		&o.workflow,
 		"workflow",
-		"w", "",
+		"w",
+		"",
 		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
 	)
 	f.BoolVar(&o.jsonOutput, "json", false, "Get output in JSON format.")
-	f.StringSliceVar(&o.formatFilters, "format", []string{}, retentionRulesListFormatFlagDesc)
+	f.StringSliceVar(
+		&o.formatFilters,
+		"format",
+		[]string{},
+		retentionRulesListFormatFlagDesc,
+	)
 
 	return cmd
 }
@@ -76,7 +88,9 @@ func (o *retentionRulesListOptions) run(cmd *cobra.Command) error {
 	if err != nil {
 		return err
 	}
-	retentionRulesResp, err := api.Operations.GetWorkflowRetentionRules(retentionRulesParams)
+	retentionRulesResp, err := api.Operations.GetWorkflowRetentionRules(
+		retentionRulesParams,
+	)
 	if err != nil {
 		return err
 	}
@@ -84,7 +98,10 @@ func (o *retentionRulesListOptions) run(cmd *cobra.Command) error {
 	df := buildRetentionRulesDataFrame(retentionRulesResp)
 	df = df.Arrange(dataframe.Sort("retention_days"))
 
-	parsedFormatFilters := formatter.ParseFormatParameters(o.formatFilters, true)
+	parsedFormatFilters := formatter.ParseFormatParameters(
+		o.formatFilters,
+		true,
+	)
 	df, err = formatter.FormatDataFrame(df, parsedFormatFilters)
 	if err != nil {
 		return err
@@ -105,7 +122,11 @@ func (o *retentionRulesListOptions) run(cmd *cobra.Command) error {
 func buildRetentionRulesDataFrame(
 	response *operations.GetWorkflowRetentionRulesOK,
 ) dataframe.DataFrame {
-	workspaceFilesSeries := series.New([]string{}, series.String, "workspace_files")
+	workspaceFilesSeries := series.New(
+		[]string{},
+		series.String,
+		"workspace_files",
+	)
 	retentionDaysSeries := series.New([]int{}, series.Int, "retention_days")
 	applyOnSeries := series.New([]string{}, series.String, "apply_on")
 	statusSeries := series.New([]string{}, series.String, "status")
@@ -121,5 +142,10 @@ func buildRetentionRulesDataFrame(
 		statusSeries.Append(rule.Status)
 	}
 
-	return dataframe.New(workspaceFilesSeries, retentionDaysSeries, applyOnSeries, statusSeries)
+	return dataframe.New(
+		workspaceFilesSeries,
+		retentionDaysSeries,
+		applyOnSeries,
+		statusSeries,
+	)
 }

@@ -117,25 +117,58 @@ func TestValidateInputParameters(t *testing.T) {
 			expected: map[string]string{},
 		},
 		"valid input": {
-			inputParams:    map[string]string{"param1": "value1", "param2": "value2"},
-			originalParams: map[string]any{"param1": "value1", "param2": "value2"},
-			expected:       map[string]string{"param1": "value1", "param2": "value2"},
+			inputParams: map[string]string{
+				"param1": "value1",
+				"param2": "value2",
+			},
+			originalParams: map[string]any{
+				"param1": "value1",
+				"param2": "value2",
+			},
+			expected: map[string]string{
+				"param1": "value1",
+				"param2": "value2",
+			},
 		},
 		"different original values": {
-			inputParams:    map[string]string{"param1": "value1", "param2": "value2"},
-			originalParams: map[string]any{"param1": 1, "param2": false, "param3": "value"},
-			expected:       map[string]string{"param1": "value1", "param2": "value2"},
+			inputParams: map[string]string{
+				"param1": "value1",
+				"param2": "value2",
+			},
+			originalParams: map[string]any{
+				"param1": 1,
+				"param2": false,
+				"param3": "value",
+			},
+			expected: map[string]string{
+				"param1": "value1",
+				"param2": "value2",
+			},
 		},
 		"with invalid params": {
-			inputParams:    map[string]string{"param1": "value1", "invalid": "value2"},
-			originalParams: map[string]any{"param1": "value1", "param2": "value2"},
-			expected:       map[string]string{"param1": "value1"},
-			expectedErrors: []string{"given parameter - invalid, is not in reana.yaml"},
+			inputParams: map[string]string{
+				"param1":  "value1",
+				"invalid": "value2",
+			},
+			originalParams: map[string]any{
+				"param1": "value1",
+				"param2": "value2",
+			},
+			expected: map[string]string{"param1": "value1"},
+			expectedErrors: []string{
+				"given parameter - invalid, is not in reana.yaml",
+			},
 		},
 		"only invalid params": {
-			inputParams:    map[string]string{"invalid1": "value1", "invalid2": "value2"},
-			originalParams: map[string]any{"param1": "value1", "param2": "value2"},
-			expected:       map[string]string{},
+			inputParams: map[string]string{
+				"invalid1": "value1",
+				"invalid2": "value2",
+			},
+			originalParams: map[string]any{
+				"param1": "value1",
+				"param2": "value2",
+			},
+			expected: map[string]string{},
 			expectedErrors: []string{
 				"given parameter - invalid1, is not in reana.yaml",
 				"given parameter - invalid2, is not in reana.yaml",
@@ -145,12 +178,19 @@ func TestValidateInputParameters(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			got, errors := ValidateInputParameters(test.inputParams, test.originalParams)
+			got, errors := ValidateInputParameters(
+				test.inputParams,
+				test.originalParams,
+			)
 			if !reflect.DeepEqual(got, test.expected) {
 				t.Errorf("Expected %v, got %v", test.expected, got)
 			}
 			if len(test.expectedErrors) != len(errors) {
-				t.Fatalf("Expected errors: %v, got %v", test.expectedErrors, errors)
+				t.Fatalf(
+					"Expected errors: %v, got %v",
+					test.expectedErrors,
+					errors,
+				)
 			}
 			for _, err := range errors {
 				if !slices.Contains(test.expectedErrors, err.Error()) {
@@ -195,8 +235,11 @@ func TestValidateOperationalOptions(t *testing.T) {
 			expectedError: "operational option 'INVALID' not supported",
 		},
 		"invalid for workflow type": {
-			workflowType:  "serial",
-			options:       map[string]string{"CACHE": "value", "toplevel": "level"},
+			workflowType: "serial",
+			options: map[string]string{
+				"CACHE":    "value",
+				"toplevel": "level",
+			},
 			wantError:     true,
 			expectedError: "operational option 'toplevel' not supported for serial workflows",
 		},
@@ -204,7 +247,10 @@ func TestValidateOperationalOptions(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			got, err := ValidateOperationalOptions(test.workflowType, test.options)
+			got, err := ValidateOperationalOptions(
+				test.workflowType,
+				test.options,
+			)
 			if test.wantError {
 				if err == nil {
 					t.Errorf("Expected error, got nil")
@@ -256,7 +302,10 @@ func TestValidateFile(t *testing.T) {
 		"not readable": {
 			path:      notReadableFile,
 			wantError: true,
-			expected:  fmt.Sprintf("file '%s' is not readable", notReadableFile),
+			expected: fmt.Sprintf(
+				"file '%s' is not readable",
+				notReadableFile,
+			),
 		},
 	}
 	for name, test := range tests {

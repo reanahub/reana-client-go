@@ -36,7 +36,10 @@ func TestFileDownload(t *testing.T) {
 					statusCode:   http.StatusOK,
 					responseFile: "common_empty.json",
 					responseHeaders: map[string]string{
-						"Content-Disposition": fmt.Sprintf(`attachment; filename="%s"`, fileName),
+						"Content-Disposition": fmt.Sprintf(
+							`attachment; filename="%s"`,
+							fileName,
+						),
 					},
 				},
 			},
@@ -60,7 +63,10 @@ func TestFileDownload(t *testing.T) {
 					statusCode:   http.StatusOK,
 					responseFile: "common_empty.json",
 					responseHeaders: map[string]string{
-						"Content-Disposition": fmt.Sprintf(`attachment; filename="%s"`, fileName),
+						"Content-Disposition": fmt.Sprintf(
+							`attachment; filename="%s"`,
+							fileName,
+						),
 					},
 				},
 			},

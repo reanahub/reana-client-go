@@ -29,11 +29,17 @@ type FormatFilter struct {
 
 // ParseFormatParameters parses a list of formatOptions to a slice of FormatFilter.
 // If the format option has a filter, that will be the value in the struct and the filterRows boolean will be true.
-func ParseFormatParameters(formatOptions []string, filterRows bool) []FormatFilter {
+func ParseFormatParameters(
+	formatOptions []string,
+	filterRows bool,
+) []FormatFilter {
 	var parsedFilters []FormatFilter
 	for _, filter := range formatOptions {
 		filterNameAndValue := strings.SplitN(filter, "=", 2)
-		formatFilter := FormatFilter{column: filterNameAndValue[0], filterRows: false}
+		formatFilter := FormatFilter{
+			column:     filterNameAndValue[0],
+			filterRows: false,
+		}
 		if filterRows && len(filterNameAndValue) >= 2 {
 			formatFilter.value = filterNameAndValue[1]
 			formatFilter.filterRows = true
@@ -104,7 +110,9 @@ func SortDataFrame(
 		}
 
 		// Sort dataframe using sortable "sortable_run_number" column
-		df = df.Mutate(series.New(sortableRunNumber, series.Int, "sortable_run_number"))
+		df = df.Mutate(
+			series.New(sortableRunNumber, series.Int, "sortable_run_number"),
+		)
 		sortColumn = "sortable_run_number"
 	}
 
@@ -117,7 +125,9 @@ func SortDataFrame(
 		sortColumn = "sortable_size"
 	}
 
-	sortedDF := df.Arrange(dataframe.Order{Colname: sortColumn, Reverse: reverse})
+	sortedDF := df.Arrange(
+		dataframe.Order{Colname: sortColumn, Reverse: reverse},
+	)
 	if sortColumn == "sortable_run_number" || sortColumn == "sortable_size" {
 		// Remove temporary column used for sorting
 		sortedDF = sortedDF.Drop(sortColumn)

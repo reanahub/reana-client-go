@@ -165,14 +165,24 @@ func TestBuildStatusHeader(t *testing.T) {
 			expected: []string{"name", "run_number", "created", "status"},
 		},
 		"running without started info": {
-			status:   "running",
-			progress: operations.GetWorkflowStatusOKBodyProgress{RunFinishedAt: &dummyStr},
+			status: "running",
+			progress: operations.GetWorkflowStatusOKBodyProgress{
+				RunFinishedAt: &dummyStr,
+			},
 			expected: []string{"name", "run_number", "created", "status"},
 		},
 		"running workflow": {
-			status:   "running",
-			progress: operations.GetWorkflowStatusOKBodyProgress{RunStartedAt: &dummyStr},
-			expected: []string{"name", "run_number", "created", "started", "status"},
+			status: "running",
+			progress: operations.GetWorkflowStatusOKBodyProgress{
+				RunStartedAt: &dummyStr,
+			},
+			expected: []string{
+				"name",
+				"run_number",
+				"created",
+				"started",
+				"status",
+			},
 		},
 		"finished workflow": {
 			status: "finished",
@@ -180,22 +190,47 @@ func TestBuildStatusHeader(t *testing.T) {
 				RunStartedAt:  &dummyStr,
 				RunFinishedAt: &dummyStr,
 			},
-			expected: []string{"name", "run_number", "created", "started", "ended", "status"},
+			expected: []string{
+				"name",
+				"run_number",
+				"created",
+				"started",
+				"ended",
+				"status",
+			},
 		},
 		"with progress": {
-			status:   "running",
-			progress: operations.GetWorkflowStatusOKBodyProgress{Total: &progressTotal},
-			expected: []string{"name", "run_number", "created", "status", "progress"},
+			status: "running",
+			progress: operations.GetWorkflowStatusOKBodyProgress{
+				Total: &progressTotal,
+			},
+			expected: []string{
+				"name",
+				"run_number",
+				"created",
+				"status",
+				"progress",
+			},
 		},
 		"verbose": {
-			status:   "running",
-			verbose:  true,
-			expected: []string{"name", "run_number", "created", "status", "id", "user", "duration"},
+			status:  "running",
+			verbose: true,
+			expected: []string{
+				"name",
+				"run_number",
+				"created",
+				"status",
+				"id",
+				"user",
+				"duration",
+			},
 		},
 		"verbose with command": {
-			status:   "running",
-			verbose:  true,
-			progress: operations.GetWorkflowStatusOKBodyProgress{CurrentCommand: &dummyStr},
+			status:  "running",
+			verbose: true,
+			progress: operations.GetWorkflowStatusOKBodyProgress{
+				CurrentCommand: &dummyStr,
+			},
 			expected: []string{
 				"name",
 				"run_number",
@@ -208,9 +243,11 @@ func TestBuildStatusHeader(t *testing.T) {
 			},
 		},
 		"verbose with step": {
-			status:   "running",
-			verbose:  true,
-			progress: operations.GetWorkflowStatusOKBodyProgress{CurrentStepName: &dummyStr},
+			status:  "running",
+			verbose: true,
+			progress: operations.GetWorkflowStatusOKBodyProgress{
+				CurrentStepName: &dummyStr,
+			},
 			expected: []string{
 				"name",
 				"run_number",
@@ -225,7 +262,13 @@ func TestBuildStatusHeader(t *testing.T) {
 		"include duration": {
 			status:          "running",
 			includeDuration: true,
-			expected:        []string{"name", "run_number", "created", "status", "duration"},
+			expected: []string{
+				"name",
+				"run_number",
+				"created",
+				"status",
+				"duration",
+			},
 		},
 	}
 
@@ -246,7 +289,9 @@ func TestBuildStatusHeader(t *testing.T) {
 
 func TestGetStatusProgress(t *testing.T) {
 	progressTotal := operations.GetWorkflowStatusOKBodyProgressTotal{Total: 60}
-	progressFinished := operations.GetWorkflowStatusOKBodyProgressFinished{Total: 30}
+	progressFinished := operations.GetWorkflowStatusOKBodyProgressFinished{
+		Total: 30,
+	}
 
 	tests := map[string]struct {
 		progress operations.GetWorkflowStatusOKBodyProgress
@@ -256,11 +301,15 @@ func TestGetStatusProgress(t *testing.T) {
 			expected: "-/-",
 		},
 		"with total": {
-			progress: operations.GetWorkflowStatusOKBodyProgress{Total: &progressTotal},
+			progress: operations.GetWorkflowStatusOKBodyProgress{
+				Total: &progressTotal,
+			},
 			expected: "0/60",
 		},
 		"with finished": {
-			progress: operations.GetWorkflowStatusOKBodyProgress{Finished: &progressFinished},
+			progress: operations.GetWorkflowStatusOKBodyProgress{
+				Finished: &progressFinished,
+			},
 			expected: "-/-",
 		},
 		"with finished and total": {
@@ -292,7 +341,9 @@ func TestGetStatusCommand(t *testing.T) {
 		expected string
 	}{
 		"no command": {
-			progress: operations.GetWorkflowStatusOKBodyProgress{CurrentStepName: &stepStr},
+			progress: operations.GetWorkflowStatusOKBodyProgress{
+				CurrentStepName: &stepStr,
+			},
 			expected: stepStr,
 		},
 		"with command": {
@@ -338,10 +389,18 @@ func TestBuildStatusSeries(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			got := buildStatusSeries(test.col)
 			if got.Name != test.expected.Name {
-				t.Errorf("series has name '%s', wanted '%s'", got.Name, test.expected.Name)
+				t.Errorf(
+					"series has name '%s', wanted '%s'",
+					got.Name,
+					test.expected.Name,
+				)
 			}
 			if got.Type() != test.expected.Type() {
-				t.Errorf("series has type '%s', wanted '%s'", got.Type(), test.expected.Type())
+				t.Errorf(
+					"series has type '%s', wanted '%s'",
+					got.Type(),
+					test.expected.Type(),
+				)
 			}
 		})
 	}

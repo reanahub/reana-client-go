@@ -57,11 +57,18 @@ func newUploadCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
 	f.StringVarP(
 		&o.workflow,
 		"workflow",
-		"w", "",
+		"w",
+		"",
 		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
 	)
 
@@ -110,32 +117,40 @@ func (o *uploadOptions) run(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func (o *uploadOptions) collectFiles(cmd *cobra.Command, inputPaths []string) ([]string, error) {
-	log.Debugf("Traverse all the input paths to collect files which needs to be uploaded")
+func (o *uploadOptions) collectFiles(
+	cmd *cobra.Command,
+	inputPaths []string,
+) ([]string, error) {
+	log.Debugf(
+		"Traverse all the input paths to collect files which needs to be uploaded",
+	)
 	log.Debugf("paths: %s", strings.Join(inputPaths, ", "))
 	var files []string
 	for _, dir := range inputPaths {
-		err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
-			}
-			// Filter out directories and symlinks
-			if !info.Mode().IsRegular() {
-				if !info.IsDir() {
-					displayer.DisplayMessage(
-						fmt.Sprintf("Ignoring symlink %s", path),
-						displayer.Info,
-						false,
-						cmd.OutOrStdout(),
-					)
+		err := filepath.Walk(
+			dir,
+			func(path string, info os.FileInfo, err error) error {
+				if err != nil {
+					return err
+				}
+				// Filter out directories and symlinks
+				if !info.Mode().IsRegular() {
+					if !info.IsDir() {
+						displayer.DisplayMessage(
+							fmt.Sprintf("Ignoring symlink %s", path),
+							displayer.Info,
+							false,
+							cmd.OutOrStdout(),
+						)
+					}
+					return nil
+				}
+				if !slices.Contains(files, path) {
+					files = append(files, path)
 				}
 				return nil
-			}
-			if !slices.Contains(files, path) {
-				files = append(files, path)
-			}
-			return nil
-		})
+			},
+		)
 		if err != nil {
 			return nil, err
 		}

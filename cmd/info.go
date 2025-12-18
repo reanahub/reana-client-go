@@ -46,7 +46,13 @@ func newInfoCmd() *cobra.Command {
 	}
 
 	f := cmd.Flags()
-	f.StringVarP(&o.token, "access-token", "t", "", "Access token of the current user.")
+	f.StringVarP(
+		&o.token,
+		"access-token",
+		"t",
+		"",
+		"Access token of the current user.",
+	)
 	f.BoolVarP(&o.jsonOutput, "json", "", false, "Get output in JSON format.")
 
 	return cmd

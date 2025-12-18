@@ -42,6 +42,9 @@ func TestUnreachableServer(t *testing.T) {
 
 	expectedErr := "'https://unreachable.invalid' not found, please verify the provided server URL or check your internet connection"
 	if errorhandler.HandleApiError(err).Error() != expectedErr {
-		t.Errorf("Expected server not found error, instead got '%s'", err.Error())
+		t.Errorf(
+			"Expected server not found error, instead got '%s'",
+			err.Error(),
+		)
 	}
 }
