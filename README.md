@@ -21,6 +21,25 @@ researchers to submit, run, and manage their computational workflows.
 The detailed information on how to install and use REANA can be found in
 [docs.reana.io](https://docs.reana.io).
 
+## Shell completion
+
+The `reana-client-go` supports shell completion for Bash and Zsh. To enable the
+auto-completion of commands and options, add the following to your shell
+configuration file:
+
+**Bash** (add to `~/.bashrc`):
+
+```bash
+source <(reana-client-go completion bash)
+```
+
+**Zsh** (add to `~/.zshrc`):
+
+```bash
+source <(reana-client-go completion zsh)
+compdef _reana-client-go reana-client-go
+```
+
 # Useful links
 
 - [REANA project home page](http://www.reana.io/)

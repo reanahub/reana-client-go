@@ -31,7 +31,7 @@ type rootOptions struct {
 func NewRootCmd() *cobra.Command {
 	o := &rootOptions{}
 	cmd := &cobra.Command{
-		Use:           "reana-client",
+		Use:           "reana-client-go",
 		Short:         "REANA client for interacting with REANA server.",
 		Long:          "REANA client for interacting with REANA server.",
 		SilenceUsage:  true,
@@ -64,6 +64,7 @@ func NewRootCmd() *cobra.Command {
 		{
 			Message: "Configuration commands:",
 			Commands: []*cobra.Command{
+				newCompletionCmd(),
 				newInfoCmd(),
 				newPingCmd(),
 				newVersionCmd(),

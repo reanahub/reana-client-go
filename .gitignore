@@ -4,7 +4,7 @@
 *.dll
 *.so
 *.dylib
-reana-client-go
+/reana-client-go
 
 # Test binary, built with `go test -c`
 *.test
