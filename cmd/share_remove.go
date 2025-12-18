@@ -114,7 +114,7 @@ func (o *shareRemoveOptions) run(cmd *cobra.Command) error {
 		for _, err := range shareErrors {
 			displayer.DisplayMessage(err, displayer.Error, false, cmd.OutOrStdout())
 		}
-		return config.EmptyError
+		return config.ErrEmpty
 	}
 
 	return nil

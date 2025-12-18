@@ -79,9 +79,9 @@ var AvailableOperationalOptions = map[string]map[string]string{
 // CheckInterval interval between workflow status check, in seconds.
 var CheckInterval = 5
 
-// EmptyError Error to be used in case we want to return an error that isn't displayed to the user.
+// ErrEmpty Error to be used in case we want to return an error that isn't displayed to the user.
 // Useful when the command already prints the errors occurred.
-var EmptyError = errors.New("")
+var ErrEmpty = errors.New("")
 
 // StdoutChar used to refer to the standard output.
 var StdoutChar = "-"

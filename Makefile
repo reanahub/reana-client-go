@@ -10,6 +10,14 @@ SWAGGER := docker run --rm -it -e GOPATH=$(shell go env GOPATH):/go -v $(HOME):$
 
 all: build
 
+audit: # Run quality control checks.
+	go install honnef.co/go/tools/cmd/staticcheck@latest
+	go install golang.org/x/vuln/cmd/govulncheck@latest
+	go mod verify
+	go vet ./...
+	staticcheck ./...
+	govulncheck ./...
+
 build: # Build reana-client-go executable.
 	go build
 
@@ -49,4 +57,4 @@ golines: # Run line size checks
 	go install github.com/segmentio/golines@latest
 	golines --dry-run ./
 
-.PHONY: all build clean help release swagger-generate-client swagger-validate-specs test update lint golines
+.PHONY: all audit build clean help release swagger-generate-client swagger-validate-specs test update lint golines

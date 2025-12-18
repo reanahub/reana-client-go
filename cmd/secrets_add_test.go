@@ -52,7 +52,7 @@ func TestSecretsAdd(t *testing.T) {
 			args:      []string{"--env", "INVALID"},
 			wantError: true,
 			expected: []string{
-				"Option \"INVALID\" is invalid:\nFor literal strings use \"SECRET_NAME=VALUE\" format",
+				"option \"INVALID\" is invalid:\nfor literal strings use \"SECRET_NAME=VALUE\" format",
 			},
 		},
 		"no secrets": {
@@ -156,7 +156,7 @@ func TestParseSecrets(t *testing.T) {
 		"invalid env secret": {
 			envSecrets:    []string{"INVALID"},
 			wantError:     true,
-			expectedError: "Option \"INVALID\" is invalid:\nFor literal strings use \"SECRET_NAME=VALUE\" format",
+			expectedError: "option \"INVALID\" is invalid:\nfor literal strings use \"SECRET_NAME=VALUE\" format",
 		},
 		"invalid file secret": {
 			fileSecrets:   []string{"invalid.txt"},

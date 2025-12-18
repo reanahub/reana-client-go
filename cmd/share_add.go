@@ -135,7 +135,7 @@ func (o *shareAddOptions) run(cmd *cobra.Command) error {
 			displayer.DisplayMessage(err, displayer.Error, false, cmd.OutOrStdout())
 		}
 
-		return config.EmptyError
+		return config.ErrEmpty
 	}
 
 	return nil

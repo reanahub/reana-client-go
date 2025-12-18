@@ -11,7 +11,7 @@ require (
 	github.com/go-openapi/validate v0.22.0
 	github.com/iancoleman/orderedmap v0.2.0
 	github.com/jedib0t/go-pretty/v6 v6.3.5
-	github.com/sirupsen/logrus v1.9.0
+	github.com/sirupsen/logrus v1.9.1
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.12.0

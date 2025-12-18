@@ -120,8 +120,8 @@ func parseSecrets(
 		key, value, err := datautils.SplitKeyValue(envLiteral)
 		if err != nil {
 			return nil, nil, fmt.Errorf(
-				`Option "%s" is invalid:
-For literal strings use "SECRET_NAME=VALUE" format`,
+				`option "%s" is invalid:
+for literal strings use "SECRET_NAME=VALUE" format`,
 				envLiteral,
 			)
 		}

@@ -123,7 +123,7 @@ func (o *rmOptions) run(cmd *cobra.Command) error {
 		}
 	}
 	if hasError {
-		return config.EmptyError
+		return config.ErrEmpty
 	}
 	return nil
 }
