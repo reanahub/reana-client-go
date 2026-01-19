@@ -7,10 +7,6 @@
     "title": "Default timeout for Kubernetes jobs",
     "value": "124"
   },
-  "default_kubernetes_memory_limit": {
-    "title": "Default memory limit for Kubernetes jobs",
-    "value": "248"
-  },
   "default_workspace": {
     "title": "Default workspace",
     "value": "/var/reana"
@@ -19,9 +15,37 @@
     "title": "GitLab host",
     "value": "gitlab.cern.ch"
   },
+  "default_kubernetes_cpu_request": {
+    "title": "Default CPU request for Kubernetes jobs",
+    "value": "1"
+  },
+  "kubernetes_max_cpu_request": {
+    "title": "Maximum allowed CPU request for Kubernetes jobs",
+    "value": "2"
+  },
+  "default_kubernetes_cpu_limit": {
+    "title": "Default CPU limit for Kubernetes jobs",
+    "value": "2"
+  },
+  "kubernetes_max_cpu_limit": {
+    "title": "Maximum allowed CPU limit for Kubernetes jobs",
+    "value": "4"
+  },
+  "default_kubernetes_memory_request": {
+    "title": "Default memory request for Kubernetes jobs",
+    "value": "1Gi"
+  },
+  "kubernetes_max_memory_request": {
+    "title": "Maximum allowed memory request for Kubernetes jobs",
+    "value": "5Gi"
+  },
+  "default_kubernetes_memory_limit": {
+    "title": "Default memory limit for Kubernetes jobs",
+    "value": "3Gi"
+  },
   "kubernetes_max_memory_limit": {
     "title": "Maximum allowed memory limit for Kubernetes jobs",
-    "value": "1000"
+    "value": "10Gi"
   },
   "maximum_interactive_session_inactivity_period": {
     "title": "Maximum inactivity period in days before automatic closure of interactive sessions",

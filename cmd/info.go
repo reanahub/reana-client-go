@@ -84,14 +84,32 @@ func (o *infoOptions) run(cmd *cobra.Command) error {
 		if p.DefaultKubernetesJobsTimeout != nil {
 			displayInfoStringItem(cmd, p.DefaultKubernetesJobsTimeout.Title, &p.DefaultKubernetesJobsTimeout.Value)
 		}
-		if p.DefaultKubernetesMemoryLimit != nil {
-			displayInfoStringItem(cmd, p.DefaultKubernetesMemoryLimit.Title, p.DefaultKubernetesMemoryLimit.Value)
-		}
 		if p.DefaultWorkspace != nil {
 			displayInfoStringItem(cmd, p.DefaultWorkspace.Title, &p.DefaultWorkspace.Value)
 		}
 		if p.GitlabHost != nil {
 			displayInfoStringItem(cmd, p.GitlabHost.Title, &p.GitlabHost.Value)
+		}
+		if p.DefaultKubernetesCPURequest != nil {
+			displayInfoStringItem(cmd, p.DefaultKubernetesCPURequest.Title, p.DefaultKubernetesCPURequest.Value)
+		}
+		if p.KubernetesMaxCPURequest != nil {
+			displayInfoStringItem(cmd, p.KubernetesMaxCPURequest.Title, p.KubernetesMaxCPURequest.Value)
+		}
+		if p.DefaultKubernetesCPULimit != nil {
+			displayInfoStringItem(cmd, p.DefaultKubernetesCPULimit.Title, p.DefaultKubernetesCPULimit.Value)
+		}
+		if p.KubernetesMaxCPULimit != nil {
+			displayInfoStringItem(cmd, p.KubernetesMaxCPULimit.Title, p.KubernetesMaxCPULimit.Value)
+		}
+		if p.DefaultKubernetesMemoryRequest != nil {
+			displayInfoStringItem(cmd, p.DefaultKubernetesMemoryRequest.Title, p.DefaultKubernetesMemoryRequest.Value)
+		}
+		if p.KubernetesMaxMemoryRequest != nil {
+			displayInfoStringItem(cmd, p.KubernetesMaxMemoryRequest.Title, p.KubernetesMaxMemoryRequest.Value)
+		}
+		if p.DefaultKubernetesMemoryLimit != nil {
+			displayInfoStringItem(cmd, p.DefaultKubernetesMemoryLimit.Title, p.DefaultKubernetesMemoryLimit.Value)
 		}
 		if p.KubernetesMaxMemoryLimit != nil {
 			displayInfoStringItem(cmd, p.KubernetesMaxMemoryLimit.Title, p.KubernetesMaxMemoryLimit.Value)
