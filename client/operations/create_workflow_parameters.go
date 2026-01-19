@@ -71,7 +71,7 @@ type CreateWorkflowParams struct {
 
 	   REANA specification with necessary data to instantiate a workflow.
 	*/
-	ReanaSpecification interface{}
+	ReanaSpecification any
 
 	/* Spec.
 
@@ -150,13 +150,13 @@ func (o *CreateWorkflowParams) SetAccessToken(accessToken *string) {
 }
 
 // WithReanaSpecification adds the reanaSpecification to the create workflow params
-func (o *CreateWorkflowParams) WithReanaSpecification(reanaSpecification interface{}) *CreateWorkflowParams {
+func (o *CreateWorkflowParams) WithReanaSpecification(reanaSpecification any) *CreateWorkflowParams {
 	o.SetReanaSpecification(reanaSpecification)
 	return o
 }
 
 // SetReanaSpecification adds the reanaSpecification to the create workflow params
-func (o *CreateWorkflowParams) SetReanaSpecification(reanaSpecification interface{}) {
+func (o *CreateWorkflowParams) SetReanaSpecification(reanaSpecification any) {
 	o.ReanaSpecification = reanaSpecification
 }
 

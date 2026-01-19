@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -22,7 +23,7 @@ type UnshareWorkflowReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *UnshareWorkflowReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *UnshareWorkflowReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewUnshareWorkflowOK()
@@ -128,7 +129,7 @@ func (o *UnshareWorkflowOK) readResponse(response runtime.ClientResponse, consum
 	o.Payload = new(UnshareWorkflowOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -198,7 +199,7 @@ func (o *UnshareWorkflowBadRequest) readResponse(response runtime.ClientResponse
 	o.Payload = new(UnshareWorkflowBadRequestBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -268,7 +269,7 @@ func (o *UnshareWorkflowForbidden) readResponse(response runtime.ClientResponse,
 	o.Payload = new(UnshareWorkflowForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -338,7 +339,7 @@ func (o *UnshareWorkflowNotFound) readResponse(response runtime.ClientResponse, 
 	o.Payload = new(UnshareWorkflowNotFoundBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -408,7 +409,7 @@ func (o *UnshareWorkflowConflict) readResponse(response runtime.ClientResponse, 
 	o.Payload = new(UnshareWorkflowConflictBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -478,7 +479,7 @@ func (o *UnshareWorkflowInternalServerError) readResponse(response runtime.Clien
 	o.Payload = new(UnshareWorkflowInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 

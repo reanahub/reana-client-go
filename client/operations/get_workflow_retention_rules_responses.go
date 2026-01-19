@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 	"strconv"
@@ -24,7 +25,7 @@ type GetWorkflowRetentionRulesReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *GetWorkflowRetentionRulesReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *GetWorkflowRetentionRulesReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewGetWorkflowRetentionRulesOK()
@@ -124,7 +125,7 @@ func (o *GetWorkflowRetentionRulesOK) readResponse(response runtime.ClientRespon
 	o.Payload = new(GetWorkflowRetentionRulesOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -194,7 +195,7 @@ func (o *GetWorkflowRetentionRulesUnauthorized) readResponse(response runtime.Cl
 	o.Payload = new(GetWorkflowRetentionRulesUnauthorizedBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -264,7 +265,7 @@ func (o *GetWorkflowRetentionRulesForbidden) readResponse(response runtime.Clien
 	o.Payload = new(GetWorkflowRetentionRulesForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -334,7 +335,7 @@ func (o *GetWorkflowRetentionRulesNotFound) readResponse(response runtime.Client
 	o.Payload = new(GetWorkflowRetentionRulesNotFoundBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -404,7 +405,7 @@ func (o *GetWorkflowRetentionRulesInternalServerError) readResponse(response run
 	o.Payload = new(GetWorkflowRetentionRulesInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -567,11 +568,15 @@ func (o *GetWorkflowRetentionRulesOKBody) validateRetentionRules(formats strfmt.
 
 		if o.RetentionRules[i] != nil {
 			if err := o.RetentionRules[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("getWorkflowRetentionRulesOK" + "." + "retention_rules" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("getWorkflowRetentionRulesOK" + "." + "retention_rules" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -606,11 +611,15 @@ func (o *GetWorkflowRetentionRulesOKBody) contextValidateRetentionRules(ctx cont
 			}
 
 			if err := o.RetentionRules[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("getWorkflowRetentionRulesOK" + "." + "retention_rules" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("getWorkflowRetentionRulesOK" + "." + "retention_rules" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}

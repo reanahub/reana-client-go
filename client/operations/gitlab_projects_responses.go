@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 	"strconv"
@@ -24,7 +25,7 @@ type GitlabProjectsReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *GitlabProjectsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *GitlabProjectsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewGitlabProjectsOK()
@@ -112,7 +113,7 @@ func (o *GitlabProjectsOK) readResponse(response runtime.ClientResponse, consume
 	o.Payload = new(GitlabProjectsOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -182,7 +183,7 @@ func (o *GitlabProjectsForbidden) readResponse(response runtime.ClientResponse, 
 	o.Payload = new(GitlabProjectsForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -252,7 +253,7 @@ func (o *GitlabProjectsInternalServerError) readResponse(response runtime.Client
 	o.Payload = new(GitlabProjectsInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -386,11 +387,15 @@ func (o *GitlabProjectsOKBody) validateItems(formats strfmt.Registry) error {
 
 		if o.Items[i] != nil {
 			if err := o.Items[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("gitlabProjectsOK" + "." + "items" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("gitlabProjectsOK" + "." + "items" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -425,11 +430,15 @@ func (o *GitlabProjectsOKBody) contextValidateItems(ctx context.Context, formats
 			}
 
 			if err := o.Items[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("gitlabProjectsOK" + "." + "items" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("gitlabProjectsOK" + "." + "items" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}

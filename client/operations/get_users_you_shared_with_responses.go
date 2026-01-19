@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 	"strconv"
@@ -24,7 +25,7 @@ type GetUsersYouSharedWithReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *GetUsersYouSharedWithReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *GetUsersYouSharedWithReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewGetUsersYouSharedWithOK()
@@ -118,7 +119,7 @@ func (o *GetUsersYouSharedWithOK) readResponse(response runtime.ClientResponse, 
 	o.Payload = new(GetUsersYouSharedWithOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -188,7 +189,7 @@ func (o *GetUsersYouSharedWithUnauthorized) readResponse(response runtime.Client
 	o.Payload = new(GetUsersYouSharedWithUnauthorizedBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -258,7 +259,7 @@ func (o *GetUsersYouSharedWithForbidden) readResponse(response runtime.ClientRes
 	o.Payload = new(GetUsersYouSharedWithForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -328,7 +329,7 @@ func (o *GetUsersYouSharedWithInternalServerError) readResponse(response runtime
 	o.Payload = new(GetUsersYouSharedWithInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -447,11 +448,15 @@ func (o *GetUsersYouSharedWithOKBody) validateUsers(formats strfmt.Registry) err
 
 		if o.Users[i] != nil {
 			if err := o.Users[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("getUsersYouSharedWithOK" + "." + "users" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("getUsersYouSharedWithOK" + "." + "users" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -486,11 +491,15 @@ func (o *GetUsersYouSharedWithOKBody) contextValidateUsers(ctx context.Context, 
 			}
 
 			if err := o.Users[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("getUsersYouSharedWithOK" + "." + "users" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("getUsersYouSharedWithOK" + "." + "users" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}

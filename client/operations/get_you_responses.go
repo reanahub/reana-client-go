@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -23,7 +24,7 @@ type GetYouReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *GetYouReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *GetYouReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewGetYouOK()
@@ -117,7 +118,7 @@ func (o *GetYouOK) readResponse(response runtime.ClientResponse, consumer runtim
 	o.Payload = new(GetYouOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -187,7 +188,7 @@ func (o *GetYouUnauthorized) readResponse(response runtime.ClientResponse, consu
 	o.Payload = new(GetYouUnauthorizedBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -257,7 +258,7 @@ func (o *GetYouForbidden) readResponse(response runtime.ClientResponse, consumer
 	o.Payload = new(GetYouForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -327,7 +328,7 @@ func (o *GetYouInternalServerError) readResponse(response runtime.ClientResponse
 	o.Payload = new(GetYouInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -454,11 +455,15 @@ func (o *GetYouOKBody) validateQuota(formats strfmt.Registry) error {
 
 	if o.Quota != nil {
 		if err := o.Quota.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "quota")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "quota")
 			}
+
 			return err
 		}
 	}
@@ -473,11 +478,15 @@ func (o *GetYouOKBody) validateReanaToken(formats strfmt.Registry) error {
 
 	if o.ReanaToken != nil {
 		if err := o.ReanaToken.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "reana_token")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "reana_token")
 			}
+
 			return err
 		}
 	}
@@ -512,11 +521,15 @@ func (o *GetYouOKBody) contextValidateQuota(ctx context.Context, formats strfmt.
 		}
 
 		if err := o.Quota.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "quota")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "quota")
 			}
+
 			return err
 		}
 	}
@@ -533,11 +546,15 @@ func (o *GetYouOKBody) contextValidateReanaToken(ctx context.Context, formats st
 		}
 
 		if err := o.ReanaToken.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "reana_token")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "reana_token")
 			}
+
 			return err
 		}
 	}
@@ -601,11 +618,15 @@ func (o *GetYouOKBodyQuota) validateCPU(formats strfmt.Registry) error {
 
 	if o.CPU != nil {
 		if err := o.CPU.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "cpu")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "quota" + "." + "cpu")
 			}
+
 			return err
 		}
 	}
@@ -620,11 +641,15 @@ func (o *GetYouOKBodyQuota) validateDisk(formats strfmt.Registry) error {
 
 	if o.Disk != nil {
 		if err := o.Disk.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "disk")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "quota" + "." + "disk")
 			}
+
 			return err
 		}
 	}
@@ -659,11 +684,15 @@ func (o *GetYouOKBodyQuota) contextValidateCPU(ctx context.Context, formats strf
 		}
 
 		if err := o.CPU.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "cpu")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "quota" + "." + "cpu")
 			}
+
 			return err
 		}
 	}
@@ -680,11 +709,15 @@ func (o *GetYouOKBodyQuota) contextValidateDisk(ctx context.Context, formats str
 		}
 
 		if err := o.Disk.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "disk")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "quota" + "." + "disk")
 			}
+
 			return err
 		}
 	}
@@ -751,11 +784,15 @@ func (o *GetYouOKBodyQuotaCPU) validateLimit(formats strfmt.Registry) error {
 
 	if o.Limit != nil {
 		if err := o.Limit.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "cpu" + "." + "limit")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "quota" + "." + "cpu" + "." + "limit")
 			}
+
 			return err
 		}
 	}
@@ -770,11 +807,15 @@ func (o *GetYouOKBodyQuotaCPU) validateUsage(formats strfmt.Registry) error {
 
 	if o.Usage != nil {
 		if err := o.Usage.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "cpu" + "." + "usage")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "quota" + "." + "cpu" + "." + "usage")
 			}
+
 			return err
 		}
 	}
@@ -809,11 +850,15 @@ func (o *GetYouOKBodyQuotaCPU) contextValidateLimit(ctx context.Context, formats
 		}
 
 		if err := o.Limit.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "cpu" + "." + "limit")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "quota" + "." + "cpu" + "." + "limit")
 			}
+
 			return err
 		}
 	}
@@ -830,11 +875,15 @@ func (o *GetYouOKBodyQuotaCPU) contextValidateUsage(ctx context.Context, formats
 		}
 
 		if err := o.Usage.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "cpu" + "." + "usage")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "quota" + "." + "cpu" + "." + "usage")
 			}
+
 			return err
 		}
 	}
@@ -983,11 +1032,15 @@ func (o *GetYouOKBodyQuotaDisk) validateLimit(formats strfmt.Registry) error {
 
 	if o.Limit != nil {
 		if err := o.Limit.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "disk" + "." + "limit")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "quota" + "." + "disk" + "." + "limit")
 			}
+
 			return err
 		}
 	}
@@ -1002,11 +1055,15 @@ func (o *GetYouOKBodyQuotaDisk) validateUsage(formats strfmt.Registry) error {
 
 	if o.Usage != nil {
 		if err := o.Usage.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "disk" + "." + "usage")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "quota" + "." + "disk" + "." + "usage")
 			}
+
 			return err
 		}
 	}
@@ -1041,11 +1098,15 @@ func (o *GetYouOKBodyQuotaDisk) contextValidateLimit(ctx context.Context, format
 		}
 
 		if err := o.Limit.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "disk" + "." + "limit")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "quota" + "." + "disk" + "." + "limit")
 			}
+
 			return err
 		}
 	}
@@ -1062,11 +1123,15 @@ func (o *GetYouOKBodyQuotaDisk) contextValidateUsage(ctx context.Context, format
 		}
 
 		if err := o.Usage.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getYouOK" + "." + "quota" + "." + "disk" + "." + "usage")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "quota" + "." + "disk" + "." + "usage")
 			}
+
 			return err
 		}
 	}

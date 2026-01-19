@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -22,7 +23,7 @@ type CloseInteractiveSessionReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *CloseInteractiveSessionReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *CloseInteractiveSessionReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewCloseInteractiveSessionOK()
@@ -122,7 +123,7 @@ func (o *CloseInteractiveSessionOK) readResponse(response runtime.ClientResponse
 	o.Payload = new(CloseInteractiveSessionOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -192,7 +193,7 @@ func (o *CloseInteractiveSessionBadRequest) readResponse(response runtime.Client
 	o.Payload = new(CloseInteractiveSessionBadRequestBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -262,7 +263,7 @@ func (o *CloseInteractiveSessionForbidden) readResponse(response runtime.ClientR
 	o.Payload = new(CloseInteractiveSessionForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -332,7 +333,7 @@ func (o *CloseInteractiveSessionNotFound) readResponse(response runtime.ClientRe
 	o.Payload = new(CloseInteractiveSessionNotFoundBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -402,7 +403,7 @@ func (o *CloseInteractiveSessionInternalServerError) readResponse(response runti
 	o.Payload = new(CloseInteractiveSessionInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 

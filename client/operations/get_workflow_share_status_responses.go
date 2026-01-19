@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 	"strconv"
@@ -24,7 +25,7 @@ type GetWorkflowShareStatusReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *GetWorkflowShareStatusReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *GetWorkflowShareStatusReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewGetWorkflowShareStatusOK()
@@ -124,7 +125,7 @@ func (o *GetWorkflowShareStatusOK) readResponse(response runtime.ClientResponse,
 	o.Payload = new(GetWorkflowShareStatusOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -194,7 +195,7 @@ func (o *GetWorkflowShareStatusUnauthorized) readResponse(response runtime.Clien
 	o.Payload = new(GetWorkflowShareStatusUnauthorizedBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -264,7 +265,7 @@ func (o *GetWorkflowShareStatusForbidden) readResponse(response runtime.ClientRe
 	o.Payload = new(GetWorkflowShareStatusForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -334,7 +335,7 @@ func (o *GetWorkflowShareStatusNotFound) readResponse(response runtime.ClientRes
 	o.Payload = new(GetWorkflowShareStatusNotFoundBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -404,7 +405,7 @@ func (o *GetWorkflowShareStatusInternalServerError) readResponse(response runtim
 	o.Payload = new(GetWorkflowShareStatusInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -567,11 +568,15 @@ func (o *GetWorkflowShareStatusOKBody) validateSharedWith(formats strfmt.Registr
 
 		if o.SharedWith[i] != nil {
 			if err := o.SharedWith[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("getWorkflowShareStatusOK" + "." + "shared_with" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("getWorkflowShareStatusOK" + "." + "shared_with" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -606,11 +611,15 @@ func (o *GetWorkflowShareStatusOKBody) contextValidateSharedWith(ctx context.Con
 			}
 
 			if err := o.SharedWith[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("getWorkflowShareStatusOK" + "." + "shared_with" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("getWorkflowShareStatusOK" + "." + "shared_with" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}

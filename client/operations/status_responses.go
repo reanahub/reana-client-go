@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -23,7 +24,7 @@ type StatusReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *StatusReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *StatusReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewStatusOK()
@@ -105,7 +106,7 @@ func (o *StatusOK) readResponse(response runtime.ClientResponse, consumer runtim
 	o.Payload = new(StatusOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -175,7 +176,7 @@ func (o *StatusInternalServerError) readResponse(response runtime.ClientResponse
 	o.Payload = new(StatusInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -272,11 +273,15 @@ func (o *StatusOKBody) validateJob(formats strfmt.Registry) error {
 
 	if o.Job != nil {
 		if err := o.Job.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("statusOK" + "." + "job")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("statusOK" + "." + "job")
 			}
+
 			return err
 		}
 	}
@@ -291,11 +296,15 @@ func (o *StatusOKBody) validateNode(formats strfmt.Registry) error {
 
 	if o.Node != nil {
 		if err := o.Node.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("statusOK" + "." + "node")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("statusOK" + "." + "node")
 			}
+
 			return err
 		}
 	}
@@ -310,11 +319,15 @@ func (o *StatusOKBody) validateSession(formats strfmt.Registry) error {
 
 	if o.Session != nil {
 		if err := o.Session.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("statusOK" + "." + "session")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("statusOK" + "." + "session")
 			}
+
 			return err
 		}
 	}
@@ -329,11 +342,15 @@ func (o *StatusOKBody) validateWorkflow(formats strfmt.Registry) error {
 
 	if o.Workflow != nil {
 		if err := o.Workflow.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("statusOK" + "." + "workflow")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("statusOK" + "." + "workflow")
 			}
+
 			return err
 		}
 	}
@@ -376,11 +393,15 @@ func (o *StatusOKBody) contextValidateJob(ctx context.Context, formats strfmt.Re
 		}
 
 		if err := o.Job.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("statusOK" + "." + "job")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("statusOK" + "." + "job")
 			}
+
 			return err
 		}
 	}
@@ -397,11 +418,15 @@ func (o *StatusOKBody) contextValidateNode(ctx context.Context, formats strfmt.R
 		}
 
 		if err := o.Node.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("statusOK" + "." + "node")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("statusOK" + "." + "node")
 			}
+
 			return err
 		}
 	}
@@ -418,11 +443,15 @@ func (o *StatusOKBody) contextValidateSession(ctx context.Context, formats strfm
 		}
 
 		if err := o.Session.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("statusOK" + "." + "session")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("statusOK" + "." + "session")
 			}
+
 			return err
 		}
 	}
@@ -439,11 +468,15 @@ func (o *StatusOKBody) contextValidateWorkflow(ctx context.Context, formats strf
 		}
 
 		if err := o.Workflow.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("statusOK" + "." + "workflow")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("statusOK" + "." + "workflow")
 			}
+
 			return err
 		}
 	}

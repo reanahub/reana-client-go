@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -24,7 +25,7 @@ type AddSecretsReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *AddSecretsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *AddSecretsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 201:
 		result := NewAddSecretsCreated()
@@ -118,7 +119,7 @@ func (o *AddSecretsCreated) readResponse(response runtime.ClientResponse, consum
 	o.Payload = new(AddSecretsCreatedBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -188,7 +189,7 @@ func (o *AddSecretsForbidden) readResponse(response runtime.ClientResponse, cons
 	o.Payload = new(AddSecretsForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -258,7 +259,7 @@ func (o *AddSecretsConflict) readResponse(response runtime.ClientResponse, consu
 	o.Payload = new(AddSecretsConflictBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -328,7 +329,7 @@ func (o *AddSecretsInternalServerError) readResponse(response runtime.ClientResp
 	o.Payload = new(AddSecretsInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -515,7 +516,7 @@ func (o *AddSecretsParamsBodyAnon) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-var addSecretsParamsBodyAnonTypeTypePropEnum []interface{}
+var addSecretsParamsBodyAnonTypeTypePropEnum []any
 
 func init() {
 	var res []string

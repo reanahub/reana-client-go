@@ -18,7 +18,7 @@ type GitlabConnectReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *GitlabConnectReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *GitlabConnectReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 302:
 		result := NewGitlabConnectFound()

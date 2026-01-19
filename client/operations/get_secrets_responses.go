@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -24,7 +25,7 @@ type GetSecretsReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *GetSecretsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *GetSecretsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewGetSecretsOK()
@@ -110,7 +111,7 @@ func (o *GetSecretsOK) GetPayload() []*GetSecretsOKBodyItems0 {
 func (o *GetSecretsOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -180,7 +181,7 @@ func (o *GetSecretsForbidden) readResponse(response runtime.ClientResponse, cons
 	o.Payload = new(GetSecretsForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -250,7 +251,7 @@ func (o *GetSecretsInternalServerError) readResponse(response runtime.ClientResp
 	o.Payload = new(GetSecretsInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -361,7 +362,7 @@ func (o *GetSecretsOKBodyItems0) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-var getSecretsOKBodyItems0TypeTypePropEnum []interface{}
+var getSecretsOKBodyItems0TypeTypePropEnum []any
 
 func init() {
 	var res []string

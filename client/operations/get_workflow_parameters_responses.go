@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -23,7 +24,7 @@ type GetWorkflowParametersReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *GetWorkflowParametersReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *GetWorkflowParametersReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewGetWorkflowParametersOK()
@@ -123,7 +124,7 @@ func (o *GetWorkflowParametersOK) readResponse(response runtime.ClientResponse, 
 	o.Payload = new(GetWorkflowParametersOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -193,7 +194,7 @@ func (o *GetWorkflowParametersBadRequest) readResponse(response runtime.ClientRe
 	o.Payload = new(GetWorkflowParametersBadRequestBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -263,7 +264,7 @@ func (o *GetWorkflowParametersForbidden) readResponse(response runtime.ClientRes
 	o.Payload = new(GetWorkflowParametersForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -333,7 +334,7 @@ func (o *GetWorkflowParametersNotFound) readResponse(response runtime.ClientResp
 	o.Payload = new(GetWorkflowParametersNotFoundBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -403,7 +404,7 @@ func (o *GetWorkflowParametersInternalServerError) readResponse(response runtime
 	o.Payload = new(GetWorkflowParametersInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -577,7 +578,7 @@ type GetWorkflowParametersOKBody struct {
 	// parameters
 	//
 	// MinProperties: 0
-	Parameters map[string]interface{} `json:"parameters,omitempty"`
+	Parameters map[string]any `json:"parameters,omitempty"`
 
 	// type
 	Type string `json:"type,omitempty"`

@@ -203,7 +203,7 @@ AddSecrets adds user secrets to r e a n a
 This resource adds secrets for the authenticated user.
 */
 func (a *Client) AddSecrets(params *AddSecretsParams, opts ...ClientOption) (*AddSecretsCreated, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewAddSecretsParams()
 	}
@@ -222,17 +222,22 @@ func (a *Client) AddSecrets(params *AddSecretsParams, opts ...ClientOption) (*Ad
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*AddSecretsCreated)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for add_secrets: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -243,7 +248,7 @@ CloseInteractiveSession closes an interactive workflow session
 This resource is expecting a workflow to close an interactive session within its workspace.
 */
 func (a *Client) CloseInteractiveSession(params *CloseInteractiveSessionParams, opts ...ClientOption) (*CloseInteractiveSessionOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewCloseInteractiveSessionParams()
 	}
@@ -262,17 +267,22 @@ func (a *Client) CloseInteractiveSession(params *CloseInteractiveSessionParams, 
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*CloseInteractiveSessionOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for close_interactive_session: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -283,7 +293,7 @@ CreateGitlabWebhook sets a webhook on a user project from git lab
 Setup a webhook for a GitLab project on GitLab.
 */
 func (a *Client) CreateGitlabWebhook(params *CreateGitlabWebhookParams, opts ...ClientOption) (*CreateGitlabWebhookCreated, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewCreateGitlabWebhookParams()
 	}
@@ -302,17 +312,22 @@ func (a *Client) CreateGitlabWebhook(params *CreateGitlabWebhookParams, opts ...
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*CreateGitlabWebhookCreated)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for create_gitlab_webhook: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -323,7 +338,7 @@ CreateWorkflow creates a new workflow based on a r e a n a specification file
 This resource is expecting a REANA specification in JSON format with all the necessary information to instantiate a workflow.
 */
 func (a *Client) CreateWorkflow(params *CreateWorkflowParams, opts ...ClientOption) (*CreateWorkflowCreated, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewCreateWorkflowParams()
 	}
@@ -342,17 +357,22 @@ func (a *Client) CreateWorkflow(params *CreateWorkflowParams, opts ...ClientOpti
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*CreateWorkflowCreated)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for create_workflow: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -363,7 +383,7 @@ DeleteFile deletes the specified file
 This resource is expecting a workflow UUID and a filename existing inside the workspace to be deleted.
 */
 func (a *Client) DeleteFile(params *DeleteFileParams, opts ...ClientOption) (*DeleteFileOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewDeleteFileParams()
 	}
@@ -382,17 +402,22 @@ func (a *Client) DeleteFile(params *DeleteFileParams, opts ...ClientOption) (*De
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*DeleteFileOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for delete_file: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -403,7 +428,7 @@ DeleteGitlabWebhook deletes an existing webhook from git lab
 Remove an existing REANA webhook from a project on GitLab
 */
 func (a *Client) DeleteGitlabWebhook(params *DeleteGitlabWebhookParams, opts ...ClientOption) (*DeleteGitlabWebhookNoContent, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewDeleteGitlabWebhookParams()
 	}
@@ -422,17 +447,22 @@ func (a *Client) DeleteGitlabWebhook(params *DeleteGitlabWebhookParams, opts ...
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*DeleteGitlabWebhookNoContent)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for delete_gitlab_webhook: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -443,7 +473,7 @@ DeleteSecrets deletes the specified secret s
 This resource deletes the requested secrets.
 */
 func (a *Client) DeleteSecrets(params *DeleteSecretsParams, opts ...ClientOption) (*DeleteSecretsOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewDeleteSecretsParams()
 	}
@@ -462,17 +492,22 @@ func (a *Client) DeleteSecrets(params *DeleteSecretsParams, opts ...ClientOption
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*DeleteSecretsOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for delete_secrets: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -483,7 +518,7 @@ DownloadFile returns the requested file
 This resource is expecting a workflow UUID and a file name existing inside the workspace to return its content.
 */
 func (a *Client) DownloadFile(params *DownloadFileParams, writer io.Writer, opts ...ClientOption) (*DownloadFileOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewDownloadFileParams()
 	}
@@ -502,17 +537,22 @@ func (a *Client) DownloadFile(params *DownloadFileParams, writer io.Writer, opts
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*DownloadFileOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for download_file: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -523,7 +563,7 @@ GetConfig gets information about reana UI configuration user
 This resource provides configuration needed by Reana-UI.
 */
 func (a *Client) GetConfig(params *GetConfigParams, opts ...ClientOption) (*GetConfigOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetConfigParams()
 	}
@@ -542,17 +582,22 @@ func (a *Client) GetConfig(params *GetConfigParams, opts ...ClientOption) (*GetC
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GetConfigOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_config: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -563,7 +608,7 @@ GetFiles returns the workspace file list
 This resource retrieves the file list of a workspace, given its workflow UUID.
 */
 func (a *Client) GetFiles(params *GetFilesParams, opts ...ClientOption) (*GetFilesOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetFilesParams()
 	}
@@ -582,17 +627,22 @@ func (a *Client) GetFiles(params *GetFilesParams, opts ...ClientOption) (*GetFil
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GetFilesOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_files: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -603,7 +653,7 @@ GetSecrets gets user secrets requires an user access token
 Get user secrets.
 */
 func (a *Client) GetSecrets(params *GetSecretsParams, opts ...ClientOption) (*GetSecretsOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetSecretsParams()
 	}
@@ -622,17 +672,22 @@ func (a *Client) GetSecrets(params *GetSecretsParams, opts ...ClientOption) (*Ge
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GetSecretsOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_secrets: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -643,7 +698,7 @@ GetUsersSharedWithYou gets users that shared workflow s with the authenticated u
 This resource provides information about users that shared workflow(s) with the authenticated user.
 */
 func (a *Client) GetUsersSharedWithYou(params *GetUsersSharedWithYouParams, opts ...ClientOption) (*GetUsersSharedWithYouOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetUsersSharedWithYouParams()
 	}
@@ -662,17 +717,22 @@ func (a *Client) GetUsersSharedWithYou(params *GetUsersSharedWithYouParams, opts
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GetUsersSharedWithYouOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_users_shared_with_you: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -683,7 +743,7 @@ GetUsersYouSharedWith gets users that the authenticated user shared workflow s w
 This resource provides information about users that the authenticated user shared workflow(s) with.
 */
 func (a *Client) GetUsersYouSharedWith(params *GetUsersYouSharedWithParams, opts ...ClientOption) (*GetUsersYouSharedWithOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetUsersYouSharedWithParams()
 	}
@@ -702,17 +762,22 @@ func (a *Client) GetUsersYouSharedWith(params *GetUsersYouSharedWithParams, opts
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GetUsersYouSharedWithOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_users_you_shared_with: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -723,7 +788,7 @@ GetWorkflowDiff gets diff between two workflows
 This resource shows the differences between the assets of two workflows. Resource is expecting two workflow UUIDs or names.
 */
 func (a *Client) GetWorkflowDiff(params *GetWorkflowDiffParams, opts ...ClientOption) (*GetWorkflowDiffOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowDiffParams()
 	}
@@ -742,17 +807,22 @@ func (a *Client) GetWorkflowDiff(params *GetWorkflowDiffParams, opts ...ClientOp
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GetWorkflowDiffOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_workflow_diff: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -763,7 +833,7 @@ GetWorkflowDiskUsage gets disk usage of a workflow
 This resource reports the disk usage of a workflow. Resource is expecting a workflow UUID and some parameters .
 */
 func (a *Client) GetWorkflowDiskUsage(params *GetWorkflowDiskUsageParams, opts ...ClientOption) (*GetWorkflowDiskUsageOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowDiskUsageParams()
 	}
@@ -782,17 +852,22 @@ func (a *Client) GetWorkflowDiskUsage(params *GetWorkflowDiskUsageParams, opts .
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GetWorkflowDiskUsageOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_workflow_disk_usage: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -803,7 +878,7 @@ GetWorkflowLogs gets workflow logs of a workflow
 This resource reports the status of a workflow. Resource is expecting a workflow UUID.
 */
 func (a *Client) GetWorkflowLogs(params *GetWorkflowLogsParams, opts ...ClientOption) (*GetWorkflowLogsOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowLogsParams()
 	}
@@ -822,17 +897,22 @@ func (a *Client) GetWorkflowLogs(params *GetWorkflowLogsParams, opts ...ClientOp
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GetWorkflowLogsOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_workflow_logs: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -843,7 +923,7 @@ GetWorkflowParameters gets parameters of a workflow
 This resource reports the input parameters of a workflow. Resource is expecting a workflow UUID.
 */
 func (a *Client) GetWorkflowParameters(params *GetWorkflowParametersParams, opts ...ClientOption) (*GetWorkflowParametersOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowParametersParams()
 	}
@@ -862,17 +942,22 @@ func (a *Client) GetWorkflowParameters(params *GetWorkflowParametersParams, opts
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GetWorkflowParametersOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_workflow_parameters: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -883,7 +968,7 @@ GetWorkflowRetentionRules gets the retention rules of a workflow
 This resource returns all the retention rules of a given workflow.
 */
 func (a *Client) GetWorkflowRetentionRules(params *GetWorkflowRetentionRulesParams, opts ...ClientOption) (*GetWorkflowRetentionRulesOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowRetentionRulesParams()
 	}
@@ -902,17 +987,22 @@ func (a *Client) GetWorkflowRetentionRules(params *GetWorkflowRetentionRulesPara
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GetWorkflowRetentionRulesOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_workflow_retention_rules: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -923,7 +1013,7 @@ GetWorkflowShareStatus gets the share status of a workflow
 This resource returns the share status of a given workflow.
 */
 func (a *Client) GetWorkflowShareStatus(params *GetWorkflowShareStatusParams, opts ...ClientOption) (*GetWorkflowShareStatusOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowShareStatusParams()
 	}
@@ -942,17 +1032,22 @@ func (a *Client) GetWorkflowShareStatus(params *GetWorkflowShareStatusParams, op
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GetWorkflowShareStatusOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_workflow_share_status: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -963,7 +1058,7 @@ GetWorkflowSpecification gets the specification used for this workflow run
 This resource returns the REANA workflow specification used to start the workflow run. Resource is expecting a workflow UUID.
 */
 func (a *Client) GetWorkflowSpecification(params *GetWorkflowSpecificationParams, opts ...ClientOption) (*GetWorkflowSpecificationOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowSpecificationParams()
 	}
@@ -982,17 +1077,22 @@ func (a *Client) GetWorkflowSpecification(params *GetWorkflowSpecificationParams
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GetWorkflowSpecificationOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_workflow_specification: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1003,7 +1103,7 @@ GetWorkflowStatus gets status of a workflow
 This resource reports the status of a workflow. Resource is expecting a workflow UUID.
 */
 func (a *Client) GetWorkflowStatus(params *GetWorkflowStatusParams, opts ...ClientOption) (*GetWorkflowStatusOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowStatusParams()
 	}
@@ -1022,17 +1122,22 @@ func (a *Client) GetWorkflowStatus(params *GetWorkflowStatusParams, opts ...Clie
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GetWorkflowStatusOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_workflow_status: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1043,7 +1148,7 @@ GetWorkflows returns list of all current workflows in r e a n a
 This resource return all current workflows in JSON format.
 */
 func (a *Client) GetWorkflows(params *GetWorkflowsParams, opts ...ClientOption) (*GetWorkflowsOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowsParams()
 	}
@@ -1062,17 +1167,22 @@ func (a *Client) GetWorkflows(params *GetWorkflowsParams, opts ...ClientOption) 
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GetWorkflowsOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_workflows: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1083,7 +1193,7 @@ GetYou gets information about authenticated user
 This resource provides basic information about an authenticated user based on the session cookie presence.
 */
 func (a *Client) GetYou(params *GetYouParams, opts ...ClientOption) (*GetYouOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetYouParams()
 	}
@@ -1102,17 +1212,22 @@ func (a *Client) GetYou(params *GetYouParams, opts ...ClientOption) (*GetYouOK, 
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GetYouOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_you: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1123,7 +1238,7 @@ GitlabConnect initiates connection to git lab
 Initiate connection to GitLab to authorize accessing the authenticated user's API.
 */
 func (a *Client) GitlabConnect(params *GitlabConnectParams, opts ...ClientOption) error {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGitlabConnectParams()
 	}
@@ -1142,11 +1257,12 @@ func (a *Client) GitlabConnect(params *GitlabConnectParams, opts ...ClientOption
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	_, err := a.transport.Submit(op)
 	if err != nil {
 		return err
 	}
+	// no success response is defined: return nil
+
 	return nil
 }
 
@@ -1156,7 +1272,7 @@ GitlabOauth gets access token from git lab
 Authorize REANA on GitLab.
 */
 func (a *Client) GitlabOauth(params *GitlabOauthParams, opts ...ClientOption) (*GitlabOauthOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGitlabOauthParams()
 	}
@@ -1175,17 +1291,22 @@ func (a *Client) GitlabOauth(params *GitlabOauthParams, opts ...ClientOption) (*
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GitlabOauthOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for gitlab_oauth: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1196,7 +1317,7 @@ GitlabProjects gets user project from git lab
 Retrieve projects from GitLab.
 */
 func (a *Client) GitlabProjects(params *GitlabProjectsParams, opts ...ClientOption) (*GitlabProjectsOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGitlabProjectsParams()
 	}
@@ -1215,17 +1336,22 @@ func (a *Client) GitlabProjects(params *GitlabProjectsParams, opts ...ClientOpti
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*GitlabProjectsOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for gitlab_projects: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1236,7 +1362,7 @@ Info gets information about the cluster capabilities
 This resource reports information about cluster capabilities.
 */
 func (a *Client) Info(params *InfoParams, opts ...ClientOption) (*InfoOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewInfoParams()
 	}
@@ -1255,17 +1381,22 @@ func (a *Client) Info(params *InfoParams, opts ...ClientOption) (*InfoOK, error)
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*InfoOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for info: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1276,7 +1407,7 @@ Launch launches workflow from a remote r e a n a specification file
 This resource expects a remote reference to a REANA specification file needed to launch a workflow via URL.
 */
 func (a *Client) Launch(params *LaunchParams, opts ...ClientOption) (*LaunchOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewLaunchParams()
 	}
@@ -1295,17 +1426,22 @@ func (a *Client) Launch(params *LaunchParams, opts ...ClientOption) (*LaunchOK, 
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*LaunchOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for launch: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1316,7 +1452,7 @@ MoveFiles moves files within workspace
 This resource moves files within the workspace. Resource is expecting a workflow UUID.
 */
 func (a *Client) MoveFiles(params *MoveFilesParams, opts ...ClientOption) (*MoveFilesOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewMoveFilesParams()
 	}
@@ -1335,17 +1471,22 @@ func (a *Client) MoveFiles(params *MoveFilesParams, opts ...ClientOption) (*Move
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*MoveFilesOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for move_files: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1356,7 +1497,7 @@ OpenInteractiveSession starts an interactive session inside the workflow workspa
 This resource is expecting a workflow to start an interactive session within its workspace.
 */
 func (a *Client) OpenInteractiveSession(params *OpenInteractiveSessionParams, opts ...ClientOption) (*OpenInteractiveSessionOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewOpenInteractiveSessionParams()
 	}
@@ -1375,17 +1516,22 @@ func (a *Client) OpenInteractiveSession(params *OpenInteractiveSessionParams, op
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*OpenInteractiveSessionOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for open_interactive_session: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1396,7 +1542,7 @@ Ping pings the server healthcheck
 Ping the server.
 */
 func (a *Client) Ping(params *PingParams, opts ...ClientOption) (*PingOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewPingParams()
 	}
@@ -1415,17 +1561,22 @@ func (a *Client) Ping(params *PingParams, opts ...ClientOption) (*PingOK, error)
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*PingOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for ping: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1436,7 +1587,7 @@ PruneWorkspace prunes the workspace s files
 This resource deletes the workspace's files that are neither in the input nor in the output of the workflow definition. This resource is expecting a workflow UUID and some parameters.
 */
 func (a *Client) PruneWorkspace(params *PruneWorkspaceParams, opts ...ClientOption) (*PruneWorkspaceOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewPruneWorkspaceParams()
 	}
@@ -1455,17 +1606,22 @@ func (a *Client) PruneWorkspace(params *PruneWorkspaceParams, opts ...ClientOpti
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*PruneWorkspaceOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for prune_workspace: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1476,7 +1632,7 @@ RequestToken requests a new access token for the authenticated user
 This resource allows the user to create an empty REANA access token and mark it as requested.
 */
 func (a *Client) RequestToken(params *RequestTokenParams, opts ...ClientOption) (*RequestTokenOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewRequestTokenParams()
 	}
@@ -1495,17 +1651,22 @@ func (a *Client) RequestToken(params *RequestTokenParams, opts ...ClientOption) 
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*RequestTokenOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for request_token: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1516,7 +1677,7 @@ SetWorkflowStatus sets status of a workflow
 This resource reports the status of a workflow. Resource is expecting a workflow UUID.
 */
 func (a *Client) SetWorkflowStatus(params *SetWorkflowStatusParams, opts ...ClientOption) (*SetWorkflowStatusOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewSetWorkflowStatusParams()
 	}
@@ -1535,17 +1696,22 @@ func (a *Client) SetWorkflowStatus(params *SetWorkflowStatusParams, opts ...Clie
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*SetWorkflowStatusOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for set_workflow_status: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1556,7 +1722,7 @@ ShareWorkflow shares a workflow with another user
 This resource shares a workflow with another user. This resource is expecting a workflow UUID and some parameters.
 */
 func (a *Client) ShareWorkflow(params *ShareWorkflowParams, opts ...ClientOption) (*ShareWorkflowOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewShareWorkflowParams()
 	}
@@ -1575,17 +1741,22 @@ func (a *Client) ShareWorkflow(params *ShareWorkflowParams, opts ...ClientOption
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*ShareWorkflowOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for share_workflow: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1596,7 +1767,7 @@ StartWorkflow starts workflow
 This resource starts the workflow execution process. Resource is expecting a workflow UUID.
 */
 func (a *Client) StartWorkflow(params *StartWorkflowParams, opts ...ClientOption) (*StartWorkflowOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewStartWorkflowParams()
 	}
@@ -1615,17 +1786,22 @@ func (a *Client) StartWorkflow(params *StartWorkflowParams, opts ...ClientOption
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*StartWorkflowOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for start_workflow: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1636,7 +1812,7 @@ Status retrieves cluster health status
 Retrieve cluster health status.
 */
 func (a *Client) Status(params *StatusParams, opts ...ClientOption) (*StatusOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewStatusParams()
 	}
@@ -1655,17 +1831,22 @@ func (a *Client) Status(params *StatusParams, opts ...ClientOption) (*StatusOK, 
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*StatusOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for status: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1676,7 +1857,7 @@ UnshareWorkflow unshares a workflow with another user
 This resource unshares a workflow with another user. This resource is expecting a workflow UUID and some parameters.
 */
 func (a *Client) UnshareWorkflow(params *UnshareWorkflowParams, opts ...ClientOption) (*UnshareWorkflowOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewUnshareWorkflowParams()
 	}
@@ -1695,17 +1876,22 @@ func (a *Client) UnshareWorkflow(params *UnshareWorkflowParams, opts ...ClientOp
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*UnshareWorkflowOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for unshare_workflow: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
@@ -1716,7 +1902,7 @@ UploadFile adds a file to the workspace
 This resource is expecting a file to place in the workspace.
 */
 func (a *Client) UploadFile(params *UploadFileParams, opts ...ClientOption) (*UploadFileOK, error) {
-	// TODO: Validate the params before sending
+	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewUploadFileParams()
 	}
@@ -1735,17 +1921,22 @@ func (a *Client) UploadFile(params *UploadFileParams, opts ...ClientOption) (*Up
 	for _, opt := range opts {
 		opt(op)
 	}
-
 	result, err := a.transport.Submit(op)
 	if err != nil {
 		return nil, err
 	}
+
+	// only one success response has to be checked
 	success, ok := result.(*UploadFileOK)
 	if ok {
 		return success, nil
 	}
-	// unexpected success response
-	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for upload_file: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }

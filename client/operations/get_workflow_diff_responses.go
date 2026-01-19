@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -22,7 +23,7 @@ type GetWorkflowDiffReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *GetWorkflowDiffReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *GetWorkflowDiffReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewGetWorkflowDiffOK()
@@ -122,7 +123,7 @@ func (o *GetWorkflowDiffOK) readResponse(response runtime.ClientResponse, consum
 	o.Payload = new(GetWorkflowDiffOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -192,7 +193,7 @@ func (o *GetWorkflowDiffBadRequest) readResponse(response runtime.ClientResponse
 	o.Payload = new(GetWorkflowDiffBadRequestBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -262,7 +263,7 @@ func (o *GetWorkflowDiffForbidden) readResponse(response runtime.ClientResponse,
 	o.Payload = new(GetWorkflowDiffForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -332,7 +333,7 @@ func (o *GetWorkflowDiffNotFound) readResponse(response runtime.ClientResponse, 
 	o.Payload = new(GetWorkflowDiffNotFoundBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -402,7 +403,7 @@ func (o *GetWorkflowDiffInternalServerError) readResponse(response runtime.Clien
 	o.Payload = new(GetWorkflowDiffInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 

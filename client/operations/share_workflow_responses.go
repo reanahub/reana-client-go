@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -24,7 +25,7 @@ type ShareWorkflowReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *ShareWorkflowReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *ShareWorkflowReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewShareWorkflowOK()
@@ -136,7 +137,7 @@ func (o *ShareWorkflowOK) readResponse(response runtime.ClientResponse, consumer
 	o.Payload = new(ShareWorkflowOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -206,7 +207,7 @@ func (o *ShareWorkflowBadRequest) readResponse(response runtime.ClientResponse, 
 	o.Payload = new(ShareWorkflowBadRequestBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -276,7 +277,7 @@ func (o *ShareWorkflowUnauthorized) readResponse(response runtime.ClientResponse
 	o.Payload = new(ShareWorkflowUnauthorizedBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -346,7 +347,7 @@ func (o *ShareWorkflowForbidden) readResponse(response runtime.ClientResponse, c
 	o.Payload = new(ShareWorkflowForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -416,7 +417,7 @@ func (o *ShareWorkflowNotFound) readResponse(response runtime.ClientResponse, co
 	o.Payload = new(ShareWorkflowNotFoundBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -486,7 +487,7 @@ func (o *ShareWorkflowConflict) readResponse(response runtime.ClientResponse, co
 	o.Payload = new(ShareWorkflowConflictBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -556,7 +557,7 @@ func (o *ShareWorkflowInternalServerError) readResponse(response runtime.ClientR
 	o.Payload = new(ShareWorkflowInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 

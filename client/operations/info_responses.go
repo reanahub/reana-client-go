@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -23,7 +24,7 @@ type InfoReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *InfoReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *InfoReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewInfoOK()
@@ -105,7 +106,7 @@ func (o *InfoOK) readResponse(response runtime.ClientResponse, consumer runtime.
 	o.Payload = new(InfoOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -175,7 +176,7 @@ func (o *InfoInternalServerError) readResponse(response runtime.ClientResponse, 
 	o.Payload = new(InfoInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -262,14 +263,26 @@ type InfoOKBody struct {
 	// dask enabled
 	DaskEnabled *InfoOKBodyDaskEnabled `json:"dask_enabled,omitempty"`
 
+	// default kubernetes cpu limit
+	DefaultKubernetesCPULimit *InfoOKBodyDefaultKubernetesCPULimit `json:"default_kubernetes_cpu_limit,omitempty"`
+
+	// default kubernetes cpu request
+	DefaultKubernetesCPURequest *InfoOKBodyDefaultKubernetesCPURequest `json:"default_kubernetes_cpu_request,omitempty"`
+
 	// default kubernetes jobs timeout
 	DefaultKubernetesJobsTimeout *InfoOKBodyDefaultKubernetesJobsTimeout `json:"default_kubernetes_jobs_timeout,omitempty"`
 
 	// default kubernetes memory limit
 	DefaultKubernetesMemoryLimit *InfoOKBodyDefaultKubernetesMemoryLimit `json:"default_kubernetes_memory_limit,omitempty"`
 
+	// default kubernetes memory request
+	DefaultKubernetesMemoryRequest *InfoOKBodyDefaultKubernetesMemoryRequest `json:"default_kubernetes_memory_request,omitempty"`
+
 	// default workspace
 	DefaultWorkspace *InfoOKBodyDefaultWorkspace `json:"default_workspace,omitempty"`
+
+	// gitlab host
+	GitlabHost *InfoOKBodyGitlabHost `json:"gitlab_host,omitempty"`
 
 	// interactive session recommended jupyter images
 	InteractiveSessionRecommendedJupyterImages *InfoOKBodyInteractiveSessionRecommendedJupyterImages `json:"interactive_session_recommended_jupyter_images,omitempty"`
@@ -277,8 +290,17 @@ type InfoOKBody struct {
 	// interactive sessions custom image allowed
 	InteractiveSessionsCustomImageAllowed *InfoOKBodyInteractiveSessionsCustomImageAllowed `json:"interactive_sessions_custom_image_allowed,omitempty"`
 
+	// kubernetes max cpu limit
+	KubernetesMaxCPULimit *InfoOKBodyKubernetesMaxCPULimit `json:"kubernetes_max_cpu_limit,omitempty"`
+
+	// kubernetes max cpu request
+	KubernetesMaxCPURequest *InfoOKBodyKubernetesMaxCPURequest `json:"kubernetes_max_cpu_request,omitempty"`
+
 	// kubernetes max memory limit
 	KubernetesMaxMemoryLimit *InfoOKBodyKubernetesMaxMemoryLimit `json:"kubernetes_max_memory_limit,omitempty"`
+
+	// kubernetes max memory request
+	KubernetesMaxMemoryRequest *InfoOKBodyKubernetesMaxMemoryRequest `json:"kubernetes_max_memory_request,omitempty"`
 
 	// maximum interactive session inactivity period
 	MaximumInteractiveSessionInactivityPeriod *InfoOKBodyMaximumInteractiveSessionInactivityPeriod `json:"maximum_interactive_session_inactivity_period,omitempty"`
@@ -360,6 +382,14 @@ func (o *InfoOKBody) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := o.validateDefaultKubernetesCPULimit(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateDefaultKubernetesCPURequest(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := o.validateDefaultKubernetesJobsTimeout(formats); err != nil {
 		res = append(res, err)
 	}
@@ -368,7 +398,15 @@ func (o *InfoOKBody) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := o.validateDefaultKubernetesMemoryRequest(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := o.validateDefaultWorkspace(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateGitlabHost(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -380,7 +418,19 @@ func (o *InfoOKBody) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := o.validateKubernetesMaxCPULimit(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateKubernetesMaxCPURequest(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := o.validateKubernetesMaxMemoryLimit(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.validateKubernetesMaxMemoryRequest(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -433,11 +483,15 @@ func (o *InfoOKBody) validateComputeBackends(formats strfmt.Registry) error {
 
 	if o.ComputeBackends != nil {
 		if err := o.ComputeBackends.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "compute_backends")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "compute_backends")
 			}
+
 			return err
 		}
 	}
@@ -452,11 +506,15 @@ func (o *InfoOKBody) validateCwlEngineTool(formats strfmt.Registry) error {
 
 	if o.CwlEngineTool != nil {
 		if err := o.CwlEngineTool.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "cwl_engine_tool")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "cwl_engine_tool")
 			}
+
 			return err
 		}
 	}
@@ -471,11 +529,15 @@ func (o *InfoOKBody) validateCwlEngineVersion(formats strfmt.Registry) error {
 
 	if o.CwlEngineVersion != nil {
 		if err := o.CwlEngineVersion.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "cwl_engine_version")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "cwl_engine_version")
 			}
+
 			return err
 		}
 	}
@@ -490,11 +552,15 @@ func (o *InfoOKBody) validateDaskAutoscalerEnabled(formats strfmt.Registry) erro
 
 	if o.DaskAutoscalerEnabled != nil {
 		if err := o.DaskAutoscalerEnabled.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_autoscaler_enabled")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_autoscaler_enabled")
 			}
+
 			return err
 		}
 	}
@@ -509,11 +575,15 @@ func (o *InfoOKBody) validateDaskClusterDefaultNumberOfWorkers(formats strfmt.Re
 
 	if o.DaskClusterDefaultNumberOfWorkers != nil {
 		if err := o.DaskClusterDefaultNumberOfWorkers.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_default_number_of_workers")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_default_number_of_workers")
 			}
+
 			return err
 		}
 	}
@@ -528,11 +598,15 @@ func (o *InfoOKBody) validateDaskClusterDefaultSingleWorkerMemory(formats strfmt
 
 	if o.DaskClusterDefaultSingleWorkerMemory != nil {
 		if err := o.DaskClusterDefaultSingleWorkerMemory.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_memory")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_memory")
 			}
+
 			return err
 		}
 	}
@@ -547,11 +621,15 @@ func (o *InfoOKBody) validateDaskClusterDefaultSingleWorkerThreads(formats strfm
 
 	if o.DaskClusterDefaultSingleWorkerThreads != nil {
 		if err := o.DaskClusterDefaultSingleWorkerThreads.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_threads")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_threads")
 			}
+
 			return err
 		}
 	}
@@ -566,11 +644,15 @@ func (o *InfoOKBody) validateDaskClusterMaxMemoryLimit(formats strfmt.Registry) 
 
 	if o.DaskClusterMaxMemoryLimit != nil {
 		if err := o.DaskClusterMaxMemoryLimit.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_memory_limit")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_memory_limit")
 			}
+
 			return err
 		}
 	}
@@ -585,11 +667,15 @@ func (o *InfoOKBody) validateDaskClusterMaxNumberOfWorkers(formats strfmt.Regist
 
 	if o.DaskClusterMaxNumberOfWorkers != nil {
 		if err := o.DaskClusterMaxNumberOfWorkers.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_number_of_workers")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_number_of_workers")
 			}
+
 			return err
 		}
 	}
@@ -604,11 +690,15 @@ func (o *InfoOKBody) validateDaskClusterMaxSingleWorkerMemory(formats strfmt.Reg
 
 	if o.DaskClusterMaxSingleWorkerMemory != nil {
 		if err := o.DaskClusterMaxSingleWorkerMemory.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_memory")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_memory")
 			}
+
 			return err
 		}
 	}
@@ -623,11 +713,15 @@ func (o *InfoOKBody) validateDaskClusterMaxSingleWorkerThreads(formats strfmt.Re
 
 	if o.DaskClusterMaxSingleWorkerThreads != nil {
 		if err := o.DaskClusterMaxSingleWorkerThreads.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_threads")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_threads")
 			}
+
 			return err
 		}
 	}
@@ -642,11 +736,61 @@ func (o *InfoOKBody) validateDaskEnabled(formats strfmt.Registry) error {
 
 	if o.DaskEnabled != nil {
 		if err := o.DaskEnabled.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_enabled")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_enabled")
 			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateDefaultKubernetesCPULimit(formats strfmt.Registry) error {
+	if swag.IsZero(o.DefaultKubernetesCPULimit) { // not required
+		return nil
+	}
+
+	if o.DefaultKubernetesCPULimit != nil {
+		if err := o.DefaultKubernetesCPULimit.Validate(formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("infoOK" + "." + "default_kubernetes_cpu_limit")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("infoOK" + "." + "default_kubernetes_cpu_limit")
+			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateDefaultKubernetesCPURequest(formats strfmt.Registry) error {
+	if swag.IsZero(o.DefaultKubernetesCPURequest) { // not required
+		return nil
+	}
+
+	if o.DefaultKubernetesCPURequest != nil {
+		if err := o.DefaultKubernetesCPURequest.Validate(formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("infoOK" + "." + "default_kubernetes_cpu_request")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("infoOK" + "." + "default_kubernetes_cpu_request")
+			}
+
 			return err
 		}
 	}
@@ -661,11 +805,15 @@ func (o *InfoOKBody) validateDefaultKubernetesJobsTimeout(formats strfmt.Registr
 
 	if o.DefaultKubernetesJobsTimeout != nil {
 		if err := o.DefaultKubernetesJobsTimeout.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "default_kubernetes_jobs_timeout")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "default_kubernetes_jobs_timeout")
 			}
+
 			return err
 		}
 	}
@@ -680,11 +828,38 @@ func (o *InfoOKBody) validateDefaultKubernetesMemoryLimit(formats strfmt.Registr
 
 	if o.DefaultKubernetesMemoryLimit != nil {
 		if err := o.DefaultKubernetesMemoryLimit.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "default_kubernetes_memory_limit")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "default_kubernetes_memory_limit")
 			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateDefaultKubernetesMemoryRequest(formats strfmt.Registry) error {
+	if swag.IsZero(o.DefaultKubernetesMemoryRequest) { // not required
+		return nil
+	}
+
+	if o.DefaultKubernetesMemoryRequest != nil {
+		if err := o.DefaultKubernetesMemoryRequest.Validate(formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("infoOK" + "." + "default_kubernetes_memory_request")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("infoOK" + "." + "default_kubernetes_memory_request")
+			}
+
 			return err
 		}
 	}
@@ -699,11 +874,38 @@ func (o *InfoOKBody) validateDefaultWorkspace(formats strfmt.Registry) error {
 
 	if o.DefaultWorkspace != nil {
 		if err := o.DefaultWorkspace.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "default_workspace")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "default_workspace")
 			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateGitlabHost(formats strfmt.Registry) error {
+	if swag.IsZero(o.GitlabHost) { // not required
+		return nil
+	}
+
+	if o.GitlabHost != nil {
+		if err := o.GitlabHost.Validate(formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("infoOK" + "." + "gitlab_host")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("infoOK" + "." + "gitlab_host")
+			}
+
 			return err
 		}
 	}
@@ -718,11 +920,15 @@ func (o *InfoOKBody) validateInteractiveSessionRecommendedJupyterImages(formats 
 
 	if o.InteractiveSessionRecommendedJupyterImages != nil {
 		if err := o.InteractiveSessionRecommendedJupyterImages.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "interactive_session_recommended_jupyter_images")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "interactive_session_recommended_jupyter_images")
 			}
+
 			return err
 		}
 	}
@@ -737,11 +943,61 @@ func (o *InfoOKBody) validateInteractiveSessionsCustomImageAllowed(formats strfm
 
 	if o.InteractiveSessionsCustomImageAllowed != nil {
 		if err := o.InteractiveSessionsCustomImageAllowed.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "interactive_sessions_custom_image_allowed")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "interactive_sessions_custom_image_allowed")
 			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateKubernetesMaxCPULimit(formats strfmt.Registry) error {
+	if swag.IsZero(o.KubernetesMaxCPULimit) { // not required
+		return nil
+	}
+
+	if o.KubernetesMaxCPULimit != nil {
+		if err := o.KubernetesMaxCPULimit.Validate(formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("infoOK" + "." + "kubernetes_max_cpu_limit")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("infoOK" + "." + "kubernetes_max_cpu_limit")
+			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateKubernetesMaxCPURequest(formats strfmt.Registry) error {
+	if swag.IsZero(o.KubernetesMaxCPURequest) { // not required
+		return nil
+	}
+
+	if o.KubernetesMaxCPURequest != nil {
+		if err := o.KubernetesMaxCPURequest.Validate(formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("infoOK" + "." + "kubernetes_max_cpu_request")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("infoOK" + "." + "kubernetes_max_cpu_request")
+			}
+
 			return err
 		}
 	}
@@ -756,11 +1012,38 @@ func (o *InfoOKBody) validateKubernetesMaxMemoryLimit(formats strfmt.Registry) e
 
 	if o.KubernetesMaxMemoryLimit != nil {
 		if err := o.KubernetesMaxMemoryLimit.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "kubernetes_max_memory_limit")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "kubernetes_max_memory_limit")
 			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) validateKubernetesMaxMemoryRequest(formats strfmt.Registry) error {
+	if swag.IsZero(o.KubernetesMaxMemoryRequest) { // not required
+		return nil
+	}
+
+	if o.KubernetesMaxMemoryRequest != nil {
+		if err := o.KubernetesMaxMemoryRequest.Validate(formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("infoOK" + "." + "kubernetes_max_memory_request")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("infoOK" + "." + "kubernetes_max_memory_request")
+			}
+
 			return err
 		}
 	}
@@ -775,11 +1058,15 @@ func (o *InfoOKBody) validateMaximumInteractiveSessionInactivityPeriod(formats s
 
 	if o.MaximumInteractiveSessionInactivityPeriod != nil {
 		if err := o.MaximumInteractiveSessionInactivityPeriod.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "maximum_interactive_session_inactivity_period")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "maximum_interactive_session_inactivity_period")
 			}
+
 			return err
 		}
 	}
@@ -794,11 +1081,15 @@ func (o *InfoOKBody) validateMaximumKubernetesJobsTimeout(formats strfmt.Registr
 
 	if o.MaximumKubernetesJobsTimeout != nil {
 		if err := o.MaximumKubernetesJobsTimeout.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "maximum_kubernetes_jobs_timeout")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "maximum_kubernetes_jobs_timeout")
 			}
+
 			return err
 		}
 	}
@@ -813,11 +1104,15 @@ func (o *InfoOKBody) validateMaximumWorkspaceRetentionPeriod(formats strfmt.Regi
 
 	if o.MaximumWorkspaceRetentionPeriod != nil {
 		if err := o.MaximumWorkspaceRetentionPeriod.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "maximum_workspace_retention_period")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "maximum_workspace_retention_period")
 			}
+
 			return err
 		}
 	}
@@ -832,11 +1127,15 @@ func (o *InfoOKBody) validateSnakemakeEngineVersion(formats strfmt.Registry) err
 
 	if o.SnakemakeEngineVersion != nil {
 		if err := o.SnakemakeEngineVersion.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "snakemake_engine_version")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "snakemake_engine_version")
 			}
+
 			return err
 		}
 	}
@@ -851,11 +1150,15 @@ func (o *InfoOKBody) validateSupportedWorkflowEngines(formats strfmt.Registry) e
 
 	if o.SupportedWorkflowEngines != nil {
 		if err := o.SupportedWorkflowEngines.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "supported_workflow_engines")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "supported_workflow_engines")
 			}
+
 			return err
 		}
 	}
@@ -870,11 +1173,15 @@ func (o *InfoOKBody) validateWorkspacesAvailable(formats strfmt.Registry) error 
 
 	if o.WorkspacesAvailable != nil {
 		if err := o.WorkspacesAvailable.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "workspaces_available")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "workspaces_available")
 			}
+
 			return err
 		}
 	}
@@ -889,11 +1196,15 @@ func (o *InfoOKBody) validateYadageEngineAdageVersion(formats strfmt.Registry) e
 
 	if o.YadageEngineAdageVersion != nil {
 		if err := o.YadageEngineAdageVersion.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "yadage_engine_adage_version")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "yadage_engine_adage_version")
 			}
+
 			return err
 		}
 	}
@@ -908,11 +1219,15 @@ func (o *InfoOKBody) validateYadageEnginePacktivityVersion(formats strfmt.Regist
 
 	if o.YadageEnginePacktivityVersion != nil {
 		if err := o.YadageEnginePacktivityVersion.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "yadage_engine_packtivity_version")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "yadage_engine_packtivity_version")
 			}
+
 			return err
 		}
 	}
@@ -927,11 +1242,15 @@ func (o *InfoOKBody) validateYadageEngineVersion(formats strfmt.Registry) error 
 
 	if o.YadageEngineVersion != nil {
 		if err := o.YadageEngineVersion.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "yadage_engine_version")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "yadage_engine_version")
 			}
+
 			return err
 		}
 	}
@@ -991,6 +1310,14 @@ func (o *InfoOKBody) ContextValidate(ctx context.Context, formats strfmt.Registr
 		res = append(res, err)
 	}
 
+	if err := o.contextValidateDefaultKubernetesCPULimit(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateDefaultKubernetesCPURequest(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := o.contextValidateDefaultKubernetesJobsTimeout(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -999,7 +1326,15 @@ func (o *InfoOKBody) ContextValidate(ctx context.Context, formats strfmt.Registr
 		res = append(res, err)
 	}
 
+	if err := o.contextValidateDefaultKubernetesMemoryRequest(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := o.contextValidateDefaultWorkspace(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateGitlabHost(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1011,7 +1346,19 @@ func (o *InfoOKBody) ContextValidate(ctx context.Context, formats strfmt.Registr
 		res = append(res, err)
 	}
 
+	if err := o.contextValidateKubernetesMaxCPULimit(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateKubernetesMaxCPURequest(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := o.contextValidateKubernetesMaxMemoryLimit(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := o.contextValidateKubernetesMaxMemoryRequest(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -1066,11 +1413,15 @@ func (o *InfoOKBody) contextValidateComputeBackends(ctx context.Context, formats
 		}
 
 		if err := o.ComputeBackends.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "compute_backends")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "compute_backends")
 			}
+
 			return err
 		}
 	}
@@ -1087,11 +1438,15 @@ func (o *InfoOKBody) contextValidateCwlEngineTool(ctx context.Context, formats s
 		}
 
 		if err := o.CwlEngineTool.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "cwl_engine_tool")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "cwl_engine_tool")
 			}
+
 			return err
 		}
 	}
@@ -1108,11 +1463,15 @@ func (o *InfoOKBody) contextValidateCwlEngineVersion(ctx context.Context, format
 		}
 
 		if err := o.CwlEngineVersion.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "cwl_engine_version")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "cwl_engine_version")
 			}
+
 			return err
 		}
 	}
@@ -1129,11 +1488,15 @@ func (o *InfoOKBody) contextValidateDaskAutoscalerEnabled(ctx context.Context, f
 		}
 
 		if err := o.DaskAutoscalerEnabled.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_autoscaler_enabled")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_autoscaler_enabled")
 			}
+
 			return err
 		}
 	}
@@ -1150,11 +1513,15 @@ func (o *InfoOKBody) contextValidateDaskClusterDefaultNumberOfWorkers(ctx contex
 		}
 
 		if err := o.DaskClusterDefaultNumberOfWorkers.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_default_number_of_workers")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_default_number_of_workers")
 			}
+
 			return err
 		}
 	}
@@ -1171,11 +1538,15 @@ func (o *InfoOKBody) contextValidateDaskClusterDefaultSingleWorkerMemory(ctx con
 		}
 
 		if err := o.DaskClusterDefaultSingleWorkerMemory.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_memory")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_memory")
 			}
+
 			return err
 		}
 	}
@@ -1192,11 +1563,15 @@ func (o *InfoOKBody) contextValidateDaskClusterDefaultSingleWorkerThreads(ctx co
 		}
 
 		if err := o.DaskClusterDefaultSingleWorkerThreads.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_threads")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_default_single_worker_threads")
 			}
+
 			return err
 		}
 	}
@@ -1213,11 +1588,15 @@ func (o *InfoOKBody) contextValidateDaskClusterMaxMemoryLimit(ctx context.Contex
 		}
 
 		if err := o.DaskClusterMaxMemoryLimit.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_memory_limit")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_memory_limit")
 			}
+
 			return err
 		}
 	}
@@ -1234,11 +1613,15 @@ func (o *InfoOKBody) contextValidateDaskClusterMaxNumberOfWorkers(ctx context.Co
 		}
 
 		if err := o.DaskClusterMaxNumberOfWorkers.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_number_of_workers")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_number_of_workers")
 			}
+
 			return err
 		}
 	}
@@ -1255,11 +1638,15 @@ func (o *InfoOKBody) contextValidateDaskClusterMaxSingleWorkerMemory(ctx context
 		}
 
 		if err := o.DaskClusterMaxSingleWorkerMemory.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_memory")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_memory")
 			}
+
 			return err
 		}
 	}
@@ -1276,11 +1663,15 @@ func (o *InfoOKBody) contextValidateDaskClusterMaxSingleWorkerThreads(ctx contex
 		}
 
 		if err := o.DaskClusterMaxSingleWorkerThreads.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_threads")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_cluster_max_single_worker_threads")
 			}
+
 			return err
 		}
 	}
@@ -1297,11 +1688,65 @@ func (o *InfoOKBody) contextValidateDaskEnabled(ctx context.Context, formats str
 		}
 
 		if err := o.DaskEnabled.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "dask_enabled")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "dask_enabled")
 			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateDefaultKubernetesCPULimit(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.DefaultKubernetesCPULimit != nil {
+
+		if swag.IsZero(o.DefaultKubernetesCPULimit) { // not required
+			return nil
+		}
+
+		if err := o.DefaultKubernetesCPULimit.ContextValidate(ctx, formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("infoOK" + "." + "default_kubernetes_cpu_limit")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("infoOK" + "." + "default_kubernetes_cpu_limit")
+			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateDefaultKubernetesCPURequest(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.DefaultKubernetesCPURequest != nil {
+
+		if swag.IsZero(o.DefaultKubernetesCPURequest) { // not required
+			return nil
+		}
+
+		if err := o.DefaultKubernetesCPURequest.ContextValidate(ctx, formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("infoOK" + "." + "default_kubernetes_cpu_request")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("infoOK" + "." + "default_kubernetes_cpu_request")
+			}
+
 			return err
 		}
 	}
@@ -1318,11 +1763,15 @@ func (o *InfoOKBody) contextValidateDefaultKubernetesJobsTimeout(ctx context.Con
 		}
 
 		if err := o.DefaultKubernetesJobsTimeout.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "default_kubernetes_jobs_timeout")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "default_kubernetes_jobs_timeout")
 			}
+
 			return err
 		}
 	}
@@ -1339,11 +1788,40 @@ func (o *InfoOKBody) contextValidateDefaultKubernetesMemoryLimit(ctx context.Con
 		}
 
 		if err := o.DefaultKubernetesMemoryLimit.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "default_kubernetes_memory_limit")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "default_kubernetes_memory_limit")
 			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateDefaultKubernetesMemoryRequest(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.DefaultKubernetesMemoryRequest != nil {
+
+		if swag.IsZero(o.DefaultKubernetesMemoryRequest) { // not required
+			return nil
+		}
+
+		if err := o.DefaultKubernetesMemoryRequest.ContextValidate(ctx, formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("infoOK" + "." + "default_kubernetes_memory_request")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("infoOK" + "." + "default_kubernetes_memory_request")
+			}
+
 			return err
 		}
 	}
@@ -1360,11 +1838,40 @@ func (o *InfoOKBody) contextValidateDefaultWorkspace(ctx context.Context, format
 		}
 
 		if err := o.DefaultWorkspace.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "default_workspace")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "default_workspace")
 			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateGitlabHost(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.GitlabHost != nil {
+
+		if swag.IsZero(o.GitlabHost) { // not required
+			return nil
+		}
+
+		if err := o.GitlabHost.ContextValidate(ctx, formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("infoOK" + "." + "gitlab_host")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("infoOK" + "." + "gitlab_host")
+			}
+
 			return err
 		}
 	}
@@ -1381,11 +1888,15 @@ func (o *InfoOKBody) contextValidateInteractiveSessionRecommendedJupyterImages(c
 		}
 
 		if err := o.InteractiveSessionRecommendedJupyterImages.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "interactive_session_recommended_jupyter_images")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "interactive_session_recommended_jupyter_images")
 			}
+
 			return err
 		}
 	}
@@ -1402,11 +1913,65 @@ func (o *InfoOKBody) contextValidateInteractiveSessionsCustomImageAllowed(ctx co
 		}
 
 		if err := o.InteractiveSessionsCustomImageAllowed.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "interactive_sessions_custom_image_allowed")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "interactive_sessions_custom_image_allowed")
 			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateKubernetesMaxCPULimit(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.KubernetesMaxCPULimit != nil {
+
+		if swag.IsZero(o.KubernetesMaxCPULimit) { // not required
+			return nil
+		}
+
+		if err := o.KubernetesMaxCPULimit.ContextValidate(ctx, formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("infoOK" + "." + "kubernetes_max_cpu_limit")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("infoOK" + "." + "kubernetes_max_cpu_limit")
+			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateKubernetesMaxCPURequest(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.KubernetesMaxCPURequest != nil {
+
+		if swag.IsZero(o.KubernetesMaxCPURequest) { // not required
+			return nil
+		}
+
+		if err := o.KubernetesMaxCPURequest.ContextValidate(ctx, formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("infoOK" + "." + "kubernetes_max_cpu_request")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("infoOK" + "." + "kubernetes_max_cpu_request")
+			}
+
 			return err
 		}
 	}
@@ -1423,11 +1988,40 @@ func (o *InfoOKBody) contextValidateKubernetesMaxMemoryLimit(ctx context.Context
 		}
 
 		if err := o.KubernetesMaxMemoryLimit.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "kubernetes_max_memory_limit")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "kubernetes_max_memory_limit")
 			}
+
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (o *InfoOKBody) contextValidateKubernetesMaxMemoryRequest(ctx context.Context, formats strfmt.Registry) error {
+
+	if o.KubernetesMaxMemoryRequest != nil {
+
+		if swag.IsZero(o.KubernetesMaxMemoryRequest) { // not required
+			return nil
+		}
+
+		if err := o.KubernetesMaxMemoryRequest.ContextValidate(ctx, formats); err != nil {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
+				return ve.ValidateName("infoOK" + "." + "kubernetes_max_memory_request")
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
+				return ce.ValidateName("infoOK" + "." + "kubernetes_max_memory_request")
+			}
+
 			return err
 		}
 	}
@@ -1444,11 +2038,15 @@ func (o *InfoOKBody) contextValidateMaximumInteractiveSessionInactivityPeriod(ct
 		}
 
 		if err := o.MaximumInteractiveSessionInactivityPeriod.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "maximum_interactive_session_inactivity_period")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "maximum_interactive_session_inactivity_period")
 			}
+
 			return err
 		}
 	}
@@ -1465,11 +2063,15 @@ func (o *InfoOKBody) contextValidateMaximumKubernetesJobsTimeout(ctx context.Con
 		}
 
 		if err := o.MaximumKubernetesJobsTimeout.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "maximum_kubernetes_jobs_timeout")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "maximum_kubernetes_jobs_timeout")
 			}
+
 			return err
 		}
 	}
@@ -1486,11 +2088,15 @@ func (o *InfoOKBody) contextValidateMaximumWorkspaceRetentionPeriod(ctx context.
 		}
 
 		if err := o.MaximumWorkspaceRetentionPeriod.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "maximum_workspace_retention_period")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "maximum_workspace_retention_period")
 			}
+
 			return err
 		}
 	}
@@ -1507,11 +2113,15 @@ func (o *InfoOKBody) contextValidateSnakemakeEngineVersion(ctx context.Context, 
 		}
 
 		if err := o.SnakemakeEngineVersion.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "snakemake_engine_version")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "snakemake_engine_version")
 			}
+
 			return err
 		}
 	}
@@ -1528,11 +2138,15 @@ func (o *InfoOKBody) contextValidateSupportedWorkflowEngines(ctx context.Context
 		}
 
 		if err := o.SupportedWorkflowEngines.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "supported_workflow_engines")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "supported_workflow_engines")
 			}
+
 			return err
 		}
 	}
@@ -1549,11 +2163,15 @@ func (o *InfoOKBody) contextValidateWorkspacesAvailable(ctx context.Context, for
 		}
 
 		if err := o.WorkspacesAvailable.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "workspaces_available")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "workspaces_available")
 			}
+
 			return err
 		}
 	}
@@ -1570,11 +2188,15 @@ func (o *InfoOKBody) contextValidateYadageEngineAdageVersion(ctx context.Context
 		}
 
 		if err := o.YadageEngineAdageVersion.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "yadage_engine_adage_version")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "yadage_engine_adage_version")
 			}
+
 			return err
 		}
 	}
@@ -1591,11 +2213,15 @@ func (o *InfoOKBody) contextValidateYadageEnginePacktivityVersion(ctx context.Co
 		}
 
 		if err := o.YadageEnginePacktivityVersion.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "yadage_engine_packtivity_version")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "yadage_engine_packtivity_version")
 			}
+
 			return err
 		}
 	}
@@ -1612,11 +2238,15 @@ func (o *InfoOKBody) contextValidateYadageEngineVersion(ctx context.Context, for
 		}
 
 		if err := o.YadageEngineVersion.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("infoOK" + "." + "yadage_engine_version")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("infoOK" + "." + "yadage_engine_version")
 			}
+
 			return err
 		}
 	}
@@ -2135,6 +2765,88 @@ func (o *InfoOKBodyDaskEnabled) UnmarshalBinary(b []byte) error {
 }
 
 /*
+InfoOKBodyDefaultKubernetesCPULimit info o k body default kubernetes CPU limit
+swagger:model InfoOKBodyDefaultKubernetesCPULimit
+*/
+type InfoOKBodyDefaultKubernetesCPULimit struct {
+
+	// title
+	Title string `json:"title,omitempty"`
+
+	// value
+	Value *string `json:"value,omitempty"`
+}
+
+// Validate validates this info o k body default kubernetes CPU limit
+func (o *InfoOKBodyDefaultKubernetesCPULimit) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body default kubernetes CPU limit based on context it is used
+func (o *InfoOKBodyDefaultKubernetesCPULimit) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyDefaultKubernetesCPULimit) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyDefaultKubernetesCPULimit) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyDefaultKubernetesCPULimit
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyDefaultKubernetesCPURequest info o k body default kubernetes CPU request
+swagger:model InfoOKBodyDefaultKubernetesCPURequest
+*/
+type InfoOKBodyDefaultKubernetesCPURequest struct {
+
+	// title
+	Title string `json:"title,omitempty"`
+
+	// value
+	Value *string `json:"value,omitempty"`
+}
+
+// Validate validates this info o k body default kubernetes CPU request
+func (o *InfoOKBodyDefaultKubernetesCPURequest) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body default kubernetes CPU request based on context it is used
+func (o *InfoOKBodyDefaultKubernetesCPURequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyDefaultKubernetesCPURequest) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyDefaultKubernetesCPURequest) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyDefaultKubernetesCPURequest
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
 InfoOKBodyDefaultKubernetesJobsTimeout info o k body default kubernetes jobs timeout
 swagger:model InfoOKBodyDefaultKubernetesJobsTimeout
 */
@@ -2185,7 +2897,7 @@ type InfoOKBodyDefaultKubernetesMemoryLimit struct {
 	Title string `json:"title,omitempty"`
 
 	// value
-	Value string `json:"value,omitempty"`
+	Value *string `json:"value,omitempty"`
 }
 
 // Validate validates this info o k body default kubernetes memory limit
@@ -2209,6 +2921,47 @@ func (o *InfoOKBodyDefaultKubernetesMemoryLimit) MarshalBinary() ([]byte, error)
 // UnmarshalBinary interface implementation
 func (o *InfoOKBodyDefaultKubernetesMemoryLimit) UnmarshalBinary(b []byte) error {
 	var res InfoOKBodyDefaultKubernetesMemoryLimit
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyDefaultKubernetesMemoryRequest info o k body default kubernetes memory request
+swagger:model InfoOKBodyDefaultKubernetesMemoryRequest
+*/
+type InfoOKBodyDefaultKubernetesMemoryRequest struct {
+
+	// title
+	Title string `json:"title,omitempty"`
+
+	// value
+	Value *string `json:"value,omitempty"`
+}
+
+// Validate validates this info o k body default kubernetes memory request
+func (o *InfoOKBodyDefaultKubernetesMemoryRequest) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body default kubernetes memory request based on context it is used
+func (o *InfoOKBodyDefaultKubernetesMemoryRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyDefaultKubernetesMemoryRequest) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyDefaultKubernetesMemoryRequest) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyDefaultKubernetesMemoryRequest
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
@@ -2250,6 +3003,47 @@ func (o *InfoOKBodyDefaultWorkspace) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *InfoOKBodyDefaultWorkspace) UnmarshalBinary(b []byte) error {
 	var res InfoOKBodyDefaultWorkspace
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyGitlabHost info o k body gitlab host
+swagger:model InfoOKBodyGitlabHost
+*/
+type InfoOKBodyGitlabHost struct {
+
+	// title
+	Title string `json:"title,omitempty"`
+
+	// value
+	Value string `json:"value,omitempty"`
+}
+
+// Validate validates this info o k body gitlab host
+func (o *InfoOKBodyGitlabHost) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body gitlab host based on context it is used
+func (o *InfoOKBodyGitlabHost) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyGitlabHost) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyGitlabHost) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyGitlabHost
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
@@ -2340,6 +3134,88 @@ func (o *InfoOKBodyInteractiveSessionsCustomImageAllowed) UnmarshalBinary(b []by
 }
 
 /*
+InfoOKBodyKubernetesMaxCPULimit info o k body kubernetes max CPU limit
+swagger:model InfoOKBodyKubernetesMaxCPULimit
+*/
+type InfoOKBodyKubernetesMaxCPULimit struct {
+
+	// title
+	Title string `json:"title,omitempty"`
+
+	// value
+	Value *string `json:"value,omitempty"`
+}
+
+// Validate validates this info o k body kubernetes max CPU limit
+func (o *InfoOKBodyKubernetesMaxCPULimit) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body kubernetes max CPU limit based on context it is used
+func (o *InfoOKBodyKubernetesMaxCPULimit) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyKubernetesMaxCPULimit) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyKubernetesMaxCPULimit) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyKubernetesMaxCPULimit
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyKubernetesMaxCPURequest info o k body kubernetes max CPU request
+swagger:model InfoOKBodyKubernetesMaxCPURequest
+*/
+type InfoOKBodyKubernetesMaxCPURequest struct {
+
+	// title
+	Title string `json:"title,omitempty"`
+
+	// value
+	Value *string `json:"value,omitempty"`
+}
+
+// Validate validates this info o k body kubernetes max CPU request
+func (o *InfoOKBodyKubernetesMaxCPURequest) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body kubernetes max CPU request based on context it is used
+func (o *InfoOKBodyKubernetesMaxCPURequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyKubernetesMaxCPURequest) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyKubernetesMaxCPURequest) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyKubernetesMaxCPURequest
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
 InfoOKBodyKubernetesMaxMemoryLimit info o k body kubernetes max memory limit
 swagger:model InfoOKBodyKubernetesMaxMemoryLimit
 */
@@ -2373,6 +3249,47 @@ func (o *InfoOKBodyKubernetesMaxMemoryLimit) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *InfoOKBodyKubernetesMaxMemoryLimit) UnmarshalBinary(b []byte) error {
 	var res InfoOKBodyKubernetesMaxMemoryLimit
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+InfoOKBodyKubernetesMaxMemoryRequest info o k body kubernetes max memory request
+swagger:model InfoOKBodyKubernetesMaxMemoryRequest
+*/
+type InfoOKBodyKubernetesMaxMemoryRequest struct {
+
+	// title
+	Title string `json:"title,omitempty"`
+
+	// value
+	Value *string `json:"value,omitempty"`
+}
+
+// Validate validates this info o k body kubernetes max memory request
+func (o *InfoOKBodyKubernetesMaxMemoryRequest) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this info o k body kubernetes max memory request based on context it is used
+func (o *InfoOKBodyKubernetesMaxMemoryRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *InfoOKBodyKubernetesMaxMemoryRequest) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *InfoOKBodyKubernetesMaxMemoryRequest) UnmarshalBinary(b []byte) error {
+	var res InfoOKBodyKubernetesMaxMemoryRequest
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

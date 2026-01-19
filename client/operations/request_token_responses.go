@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -23,7 +24,7 @@ type RequestTokenReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *RequestTokenReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *RequestTokenReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewRequestTokenOK()
@@ -117,7 +118,7 @@ func (o *RequestTokenOK) readResponse(response runtime.ClientResponse, consumer 
 	o.Payload = new(RequestTokenOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -187,7 +188,7 @@ func (o *RequestTokenUnauthorized) readResponse(response runtime.ClientResponse,
 	o.Payload = new(RequestTokenUnauthorizedBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -257,7 +258,7 @@ func (o *RequestTokenForbidden) readResponse(response runtime.ClientResponse, co
 	o.Payload = new(RequestTokenForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -327,7 +328,7 @@ func (o *RequestTokenInternalServerError) readResponse(response runtime.ClientRe
 	o.Payload = new(RequestTokenInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -441,11 +442,15 @@ func (o *RequestTokenOKBody) validateReanaToken(formats strfmt.Registry) error {
 
 	if o.ReanaToken != nil {
 		if err := o.ReanaToken.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("requestTokenOK" + "." + "reana_token")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("requestTokenOK" + "." + "reana_token")
 			}
+
 			return err
 		}
 	}
@@ -476,11 +481,15 @@ func (o *RequestTokenOKBody) contextValidateReanaToken(ctx context.Context, form
 		}
 
 		if err := o.ReanaToken.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("requestTokenOK" + "." + "reana_token")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("requestTokenOK" + "." + "reana_token")
 			}
+
 			return err
 		}
 	}

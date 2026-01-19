@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 	"strconv"
@@ -24,7 +25,7 @@ type GetWorkflowDiskUsageReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *GetWorkflowDiskUsageReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *GetWorkflowDiskUsageReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewGetWorkflowDiskUsageOK()
@@ -124,7 +125,7 @@ func (o *GetWorkflowDiskUsageOK) readResponse(response runtime.ClientResponse, c
 	o.Payload = new(GetWorkflowDiskUsageOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -194,7 +195,7 @@ func (o *GetWorkflowDiskUsageBadRequest) readResponse(response runtime.ClientRes
 	o.Payload = new(GetWorkflowDiskUsageBadRequestBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -264,7 +265,7 @@ func (o *GetWorkflowDiskUsageForbidden) readResponse(response runtime.ClientResp
 	o.Payload = new(GetWorkflowDiskUsageForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -334,7 +335,7 @@ func (o *GetWorkflowDiskUsageNotFound) readResponse(response runtime.ClientRespo
 	o.Payload = new(GetWorkflowDiskUsageNotFoundBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -404,7 +405,7 @@ func (o *GetWorkflowDiskUsageInternalServerError) readResponse(response runtime.
 	o.Payload = new(GetWorkflowDiskUsageInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -649,11 +650,15 @@ func (o *GetWorkflowDiskUsageOKBody) validateDiskUsageInfo(formats strfmt.Regist
 
 		if o.DiskUsageInfo[i] != nil {
 			if err := o.DiskUsageInfo[i].Validate(formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("getWorkflowDiskUsageOK" + "." + "disk_usage_info" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("getWorkflowDiskUsageOK" + "." + "disk_usage_info" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -688,11 +693,15 @@ func (o *GetWorkflowDiskUsageOKBody) contextValidateDiskUsageInfo(ctx context.Co
 			}
 
 			if err := o.DiskUsageInfo[i].ContextValidate(ctx, formats); err != nil {
-				if ve, ok := err.(*errors.Validation); ok {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
 					return ve.ValidateName("getWorkflowDiskUsageOK" + "." + "disk_usage_info" + "." + strconv.Itoa(i))
-				} else if ce, ok := err.(*errors.CompositeError); ok {
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
 					return ce.ValidateName("getWorkflowDiskUsageOK" + "." + "disk_usage_info" + "." + strconv.Itoa(i))
 				}
+
 				return err
 			}
 		}
@@ -754,11 +763,15 @@ func (o *GetWorkflowDiskUsageOKBodyDiskUsageInfoItems0) validateSize(formats str
 
 	if o.Size != nil {
 		if err := o.Size.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("size")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("size")
 			}
+
 			return err
 		}
 	}
@@ -789,11 +802,15 @@ func (o *GetWorkflowDiskUsageOKBodyDiskUsageInfoItems0) contextValidateSize(ctx 
 		}
 
 		if err := o.Size.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("size")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("size")
 			}
+
 			return err
 		}
 	}

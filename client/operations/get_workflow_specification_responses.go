@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -23,7 +24,7 @@ type GetWorkflowSpecificationReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *GetWorkflowSpecificationReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *GetWorkflowSpecificationReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewGetWorkflowSpecificationOK()
@@ -117,7 +118,7 @@ func (o *GetWorkflowSpecificationOK) readResponse(response runtime.ClientRespons
 	o.Payload = new(GetWorkflowSpecificationOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -187,7 +188,7 @@ func (o *GetWorkflowSpecificationForbidden) readResponse(response runtime.Client
 	o.Payload = new(GetWorkflowSpecificationForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -257,7 +258,7 @@ func (o *GetWorkflowSpecificationNotFound) readResponse(response runtime.ClientR
 	o.Payload = new(GetWorkflowSpecificationNotFoundBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -327,7 +328,7 @@ func (o *GetWorkflowSpecificationInternalServerError) readResponse(response runt
 	o.Payload = new(GetWorkflowSpecificationInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -455,7 +456,7 @@ swagger:model GetWorkflowSpecificationOKBody
 type GetWorkflowSpecificationOKBody struct {
 
 	// parameters
-	Parameters interface{} `json:"parameters,omitempty"`
+	Parameters any `json:"parameters,omitempty"`
 
 	// specification
 	Specification *GetWorkflowSpecificationOKBodySpecification `json:"specification,omitempty"`
@@ -482,11 +483,15 @@ func (o *GetWorkflowSpecificationOKBody) validateSpecification(formats strfmt.Re
 
 	if o.Specification != nil {
 		if err := o.Specification.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowSpecificationOK" + "." + "specification")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowSpecificationOK" + "." + "specification")
 			}
+
 			return err
 		}
 	}
@@ -517,11 +522,15 @@ func (o *GetWorkflowSpecificationOKBody) contextValidateSpecification(ctx contex
 		}
 
 		if err := o.Specification.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowSpecificationOK" + "." + "specification")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowSpecificationOK" + "." + "specification")
 			}
+
 			return err
 		}
 	}
@@ -595,11 +604,15 @@ func (o *GetWorkflowSpecificationOKBodySpecification) validateInputs(formats str
 
 	if o.Inputs != nil {
 		if err := o.Inputs.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "inputs")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "inputs")
 			}
+
 			return err
 		}
 	}
@@ -614,11 +627,15 @@ func (o *GetWorkflowSpecificationOKBodySpecification) validateOutputs(formats st
 
 	if o.Outputs != nil {
 		if err := o.Outputs.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "outputs")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "outputs")
 			}
+
 			return err
 		}
 	}
@@ -633,11 +650,15 @@ func (o *GetWorkflowSpecificationOKBodySpecification) validateWorkflow(formats s
 
 	if o.Workflow != nil {
 		if err := o.Workflow.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "workflow")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "workflow")
 			}
+
 			return err
 		}
 	}
@@ -676,11 +697,15 @@ func (o *GetWorkflowSpecificationOKBodySpecification) contextValidateInputs(ctx 
 		}
 
 		if err := o.Inputs.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "inputs")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "inputs")
 			}
+
 			return err
 		}
 	}
@@ -697,11 +722,15 @@ func (o *GetWorkflowSpecificationOKBodySpecification) contextValidateOutputs(ctx
 		}
 
 		if err := o.Outputs.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "outputs")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "outputs")
 			}
+
 			return err
 		}
 	}
@@ -718,11 +747,15 @@ func (o *GetWorkflowSpecificationOKBodySpecification) contextValidateWorkflow(ct
 		}
 
 		if err := o.Workflow.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "workflow")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "workflow")
 			}
+
 			return err
 		}
 	}
@@ -761,10 +794,10 @@ type GetWorkflowSpecificationOKBodySpecificationInputs struct {
 	Files []string `json:"files"`
 
 	// options
-	Options interface{} `json:"options,omitempty"`
+	Options any `json:"options,omitempty"`
 
 	// parameters
-	Parameters interface{} `json:"parameters,omitempty"`
+	Parameters any `json:"parameters,omitempty"`
 }
 
 // Validate validates this get workflow specification o k body specification inputs
@@ -873,11 +906,15 @@ func (o *GetWorkflowSpecificationOKBodySpecificationWorkflow) validateSpecificat
 
 	if o.Specification != nil {
 		if err := o.Specification.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "workflow" + "." + "specification")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "workflow" + "." + "specification")
 			}
+
 			return err
 		}
 	}
@@ -908,11 +945,15 @@ func (o *GetWorkflowSpecificationOKBodySpecificationWorkflow) contextValidateSpe
 		}
 
 		if err := o.Specification.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "workflow" + "." + "specification")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowSpecificationOK" + "." + "specification" + "." + "workflow" + "." + "specification")
 			}
+
 			return err
 		}
 	}
@@ -945,7 +986,7 @@ swagger:model GetWorkflowSpecificationOKBodySpecificationWorkflowSpecification
 type GetWorkflowSpecificationOKBodySpecificationWorkflowSpecification struct {
 
 	// steps
-	Steps []interface{} `json:"steps"`
+	Steps []any `json:"steps"`
 }
 
 // Validate validates this get workflow specification o k body specification workflow specification

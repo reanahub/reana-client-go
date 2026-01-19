@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -22,7 +23,7 @@ type GetConfigReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *GetConfigReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *GetConfigReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewGetConfigOK()
@@ -52,7 +53,7 @@ GetConfigOK describes a response with status code 200, with default header value
 Configuration information to consume by Reana-UI.
 */
 type GetConfigOK struct {
-	Payload interface{}
+	Payload any
 }
 
 // IsSuccess returns true when this get config o k response has a 2xx status code
@@ -95,14 +96,14 @@ func (o *GetConfigOK) String() string {
 	return fmt.Sprintf("[GET /api/config][%d] getConfigOK %s", 200, payload)
 }
 
-func (o *GetConfigOK) GetPayload() interface{} {
+func (o *GetConfigOK) GetPayload() any {
 	return o.Payload
 }
 
 func (o *GetConfigOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// response payload
-	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -172,7 +173,7 @@ func (o *GetConfigInternalServerError) readResponse(response runtime.ClientRespo
 	o.Payload = new(GetConfigInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 

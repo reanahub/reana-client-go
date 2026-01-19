@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -23,7 +24,7 @@ type GetWorkflowStatusReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *GetWorkflowStatusReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *GetWorkflowStatusReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewGetWorkflowStatusOK()
@@ -123,7 +124,7 @@ func (o *GetWorkflowStatusOK) readResponse(response runtime.ClientResponse, cons
 	o.Payload = new(GetWorkflowStatusOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -193,7 +194,7 @@ func (o *GetWorkflowStatusBadRequest) readResponse(response runtime.ClientRespon
 	o.Payload = new(GetWorkflowStatusBadRequestBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -263,7 +264,7 @@ func (o *GetWorkflowStatusForbidden) readResponse(response runtime.ClientRespons
 	o.Payload = new(GetWorkflowStatusForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -333,7 +334,7 @@ func (o *GetWorkflowStatusNotFound) readResponse(response runtime.ClientResponse
 	o.Payload = new(GetWorkflowStatusNotFoundBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -403,7 +404,7 @@ func (o *GetWorkflowStatusInternalServerError) readResponse(response runtime.Cli
 	o.Payload = new(GetWorkflowStatusInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -611,11 +612,15 @@ func (o *GetWorkflowStatusOKBody) validateProgress(formats strfmt.Registry) erro
 
 	if o.Progress != nil {
 		if err := o.Progress.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress")
 			}
+
 			return err
 		}
 	}
@@ -646,11 +651,15 @@ func (o *GetWorkflowStatusOKBody) contextValidateProgress(ctx context.Context, f
 		}
 
 		if err := o.Progress.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress")
 			}
+
 			return err
 		}
 	}
@@ -743,11 +752,15 @@ func (o *GetWorkflowStatusOKBodyProgress) validateFailed(formats strfmt.Registry
 
 	if o.Failed != nil {
 		if err := o.Failed.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "failed")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "failed")
 			}
+
 			return err
 		}
 	}
@@ -762,11 +775,15 @@ func (o *GetWorkflowStatusOKBodyProgress) validateFinished(formats strfmt.Regist
 
 	if o.Finished != nil {
 		if err := o.Finished.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "finished")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "finished")
 			}
+
 			return err
 		}
 	}
@@ -781,11 +798,15 @@ func (o *GetWorkflowStatusOKBodyProgress) validateRunning(formats strfmt.Registr
 
 	if o.Running != nil {
 		if err := o.Running.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "running")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "running")
 			}
+
 			return err
 		}
 	}
@@ -800,11 +821,15 @@ func (o *GetWorkflowStatusOKBodyProgress) validateTotal(formats strfmt.Registry)
 
 	if o.Total != nil {
 		if err := o.Total.Validate(formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "total")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "total")
 			}
+
 			return err
 		}
 	}
@@ -847,11 +872,15 @@ func (o *GetWorkflowStatusOKBodyProgress) contextValidateFailed(ctx context.Cont
 		}
 
 		if err := o.Failed.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "failed")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "failed")
 			}
+
 			return err
 		}
 	}
@@ -868,11 +897,15 @@ func (o *GetWorkflowStatusOKBodyProgress) contextValidateFinished(ctx context.Co
 		}
 
 		if err := o.Finished.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "finished")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "finished")
 			}
+
 			return err
 		}
 	}
@@ -889,11 +922,15 @@ func (o *GetWorkflowStatusOKBodyProgress) contextValidateRunning(ctx context.Con
 		}
 
 		if err := o.Running.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "running")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "running")
 			}
+
 			return err
 		}
 	}
@@ -910,11 +947,15 @@ func (o *GetWorkflowStatusOKBodyProgress) contextValidateTotal(ctx context.Conte
 		}
 
 		if err := o.Total.ContextValidate(ctx, formats); err != nil {
-			if ve, ok := err.(*errors.Validation); ok {
+			ve := new(errors.Validation)
+			if stderrors.As(err, &ve) {
 				return ve.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "total")
-			} else if ce, ok := err.(*errors.CompositeError); ok {
+			}
+			ce := new(errors.CompositeError)
+			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getWorkflowStatusOK" + "." + "progress" + "." + "total")
 			}
+
 			return err
 		}
 	}

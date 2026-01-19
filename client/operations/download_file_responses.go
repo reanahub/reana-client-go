@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -23,7 +24,7 @@ type DownloadFileReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *DownloadFileReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *DownloadFileReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewDownloadFileOK(o.writer)
@@ -139,7 +140,7 @@ func (o *DownloadFileOK) readResponse(response runtime.ClientResponse, consumer 
 	}
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -265,7 +266,7 @@ func (o *DownloadFileForbidden) readResponse(response runtime.ClientResponse, co
 	o.Payload = new(DownloadFileForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -335,7 +336,7 @@ func (o *DownloadFileNotFound) readResponse(response runtime.ClientResponse, con
 	o.Payload = new(DownloadFileNotFoundBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -405,7 +406,7 @@ func (o *DownloadFileInternalServerError) readResponse(response runtime.ClientRe
 	o.Payload = new(DownloadFileInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 

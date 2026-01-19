@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -22,7 +23,7 @@ type GitlabOauthReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *GitlabOauthReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *GitlabOauthReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewGitlabOauthOK()
@@ -116,7 +117,7 @@ func (o *GitlabOauthOK) readResponse(response runtime.ClientResponse, consumer r
 	o.Payload = new(GitlabOauthOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -242,7 +243,7 @@ func (o *GitlabOauthForbidden) readResponse(response runtime.ClientResponse, con
 	o.Payload = new(GitlabOauthForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -312,7 +313,7 @@ func (o *GitlabOauthInternalServerError) readResponse(response runtime.ClientRes
 	o.Payload = new(GitlabOauthInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 

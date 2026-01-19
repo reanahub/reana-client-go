@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -22,7 +23,7 @@ type PruneWorkspaceReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *PruneWorkspaceReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *PruneWorkspaceReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewPruneWorkspaceOK()
@@ -122,7 +123,7 @@ func (o *PruneWorkspaceOK) readResponse(response runtime.ClientResponse, consume
 	o.Payload = new(PruneWorkspaceOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -192,7 +193,7 @@ func (o *PruneWorkspaceBadRequest) readResponse(response runtime.ClientResponse,
 	o.Payload = new(PruneWorkspaceBadRequestBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -262,7 +263,7 @@ func (o *PruneWorkspaceForbidden) readResponse(response runtime.ClientResponse, 
 	o.Payload = new(PruneWorkspaceForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -332,7 +333,7 @@ func (o *PruneWorkspaceNotFound) readResponse(response runtime.ClientResponse, c
 	o.Payload = new(PruneWorkspaceNotFoundBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -402,7 +403,7 @@ func (o *PruneWorkspaceInternalServerError) readResponse(response runtime.Client
 	o.Payload = new(PruneWorkspaceInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 

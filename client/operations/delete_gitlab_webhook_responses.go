@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -24,7 +25,7 @@ type DeleteGitlabWebhookReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *DeleteGitlabWebhookReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *DeleteGitlabWebhookReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 204:
 		result := NewDeleteGitlabWebhookNoContent()
@@ -174,7 +175,7 @@ func (o *DeleteGitlabWebhookForbidden) readResponse(response runtime.ClientRespo
 	o.Payload = new(DeleteGitlabWebhookForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -300,7 +301,7 @@ func (o *DeleteGitlabWebhookInternalServerError) readResponse(response runtime.C
 	o.Payload = new(DeleteGitlabWebhookInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 

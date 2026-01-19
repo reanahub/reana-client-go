@@ -8,6 +8,7 @@ package operations
 import (
 	"context"
 	"encoding/json"
+	stderrors "errors"
 	"fmt"
 	"io"
 
@@ -22,7 +23,7 @@ type SetWorkflowStatusReader struct {
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *SetWorkflowStatusReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *SetWorkflowStatusReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
 	case 200:
 		result := NewSetWorkflowStatusOK()
@@ -134,7 +135,7 @@ func (o *SetWorkflowStatusOK) readResponse(response runtime.ClientResponse, cons
 	o.Payload = new(SetWorkflowStatusOKBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -204,7 +205,7 @@ func (o *SetWorkflowStatusBadRequest) readResponse(response runtime.ClientRespon
 	o.Payload = new(SetWorkflowStatusBadRequestBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -274,7 +275,7 @@ func (o *SetWorkflowStatusForbidden) readResponse(response runtime.ClientRespons
 	o.Payload = new(SetWorkflowStatusForbiddenBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -344,7 +345,7 @@ func (o *SetWorkflowStatusNotFound) readResponse(response runtime.ClientResponse
 	o.Payload = new(SetWorkflowStatusNotFoundBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -414,7 +415,7 @@ func (o *SetWorkflowStatusConflict) readResponse(response runtime.ClientResponse
 	o.Payload = new(SetWorkflowStatusConflictBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -484,7 +485,7 @@ func (o *SetWorkflowStatusInternalServerError) readResponse(response runtime.Cli
 	o.Payload = new(SetWorkflowStatusInternalServerErrorBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -554,7 +555,7 @@ func (o *SetWorkflowStatusNotImplemented) readResponse(response runtime.ClientRe
 	o.Payload = new(SetWorkflowStatusNotImplementedBody)
 
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
 
@@ -609,10 +610,10 @@ type SetWorkflowStatusBody struct {
 	AllRuns bool `json:"all_runs,omitempty"`
 
 	// Optional. Additional input parameters that override the ones from the workflow specification. Only allowed when status is `start`.
-	InputParameters interface{} `json:"input_parameters,omitempty"`
+	InputParameters any `json:"input_parameters,omitempty"`
 
 	// Optional. Additional operational options for workflow execution. Only allowed when status is `start`.
-	OperationalOptions interface{} `json:"operational_options,omitempty"`
+	OperationalOptions any `json:"operational_options,omitempty"`
 
 	// Optional. If true, the workflow is a restart of an earlier workflow execution. Only allowed when status is `start`.
 	Restart bool `json:"restart,omitempty"`
