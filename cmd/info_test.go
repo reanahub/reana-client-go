@@ -29,6 +29,7 @@ func TestInfo(t *testing.T) {
 				"Default timeout for Kubernetes jobs: 124",
 				"Default memory limit for Kubernetes jobs: 248",
 				"Default workspace: /var/reana",
+				"GitLab host: gitlab.cern.ch",
 				"Maximum allowed memory limit for Kubernetes jobs: 1000",
 				"Maximum inactivity period in days before automatic closure of interactive sessions: 7",
 				"Maximum timeout for Kubernetes jobs: 500",
@@ -56,6 +57,7 @@ func TestInfo(t *testing.T) {
 			expected: []string{
 				"\"compute_backends\": {", "\"value\": [", "\"kubernetes\",", "\"slurmcern\"",
 				"\"default_kubernetes_jobs_timeout\": {", "\"value\": \"124\"",
+				"\"gitlab_host\": {", "\"value\": \"gitlab.cern.ch\"",
 				"\"workspaces_available\": {", "\"value\": [", "\"/var/reana\",", "\"/var/cern\"",
 				"\"interactive_sessions_custom_image_allowed\": {", "\"value\": \"False\"",
 				"\"interactive_session_recommended_jupyter_images\": {", "\"value\": [", "\"docker.io/jupyter/scipy-notebook:notebook-6.4.5\"",

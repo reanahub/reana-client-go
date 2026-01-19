@@ -15,6 +15,10 @@
     "title": "Default workspace",
     "value": "/var/reana"
   },
+  "gitlab_host": {
+    "title": "GitLab host",
+    "value": "gitlab.cern.ch"
+  },
   "kubernetes_max_memory_limit": {
     "title": "Maximum allowed memory limit for Kubernetes jobs",
     "value": "1000"

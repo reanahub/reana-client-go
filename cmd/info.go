@@ -85,10 +85,13 @@ func (o *infoOptions) run(cmd *cobra.Command) error {
 			displayInfoStringItem(cmd, p.DefaultKubernetesJobsTimeout.Title, &p.DefaultKubernetesJobsTimeout.Value)
 		}
 		if p.DefaultKubernetesMemoryLimit != nil {
-			displayInfoStringItem(cmd, p.DefaultKubernetesMemoryLimit.Title, &p.DefaultKubernetesMemoryLimit.Value)
+			displayInfoStringItem(cmd, p.DefaultKubernetesMemoryLimit.Title, p.DefaultKubernetesMemoryLimit.Value)
 		}
 		if p.DefaultWorkspace != nil {
 			displayInfoStringItem(cmd, p.DefaultWorkspace.Title, &p.DefaultWorkspace.Value)
+		}
+		if p.GitlabHost != nil {
+			displayInfoStringItem(cmd, p.GitlabHost.Title, &p.GitlabHost.Value)
 		}
 		if p.KubernetesMaxMemoryLimit != nil {
 			displayInfoStringItem(cmd, p.KubernetesMaxMemoryLimit.Title, p.KubernetesMaxMemoryLimit.Value)
