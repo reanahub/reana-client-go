@@ -44,6 +44,7 @@ func TestInfo(t *testing.T) {
 				"Yadage engine adage version: 0.11.0",
 				"Yadage engine packtivity version: 0.16.2",
 				"Snakemake engine version: 8.24.1",
+				"Dask workflows allowed in the cluster: False",
 			},
 		},
 		"json": {
@@ -68,6 +69,7 @@ func TestInfo(t *testing.T) {
 				"\"yadage_engine_adage_version\": {", "\"value\": \"0.11.0\"",
 				"\"yadage_engine_packtivity_version\": {", "\"value\": \"0.16.2\"",
 				"\"snakemake_engine_version\": {", "\"value\": \"8.24.1\"",
+				"\"dask_enabled\": {", "\"value\": \"False\"",
 			},
 		},
 		"dask": {

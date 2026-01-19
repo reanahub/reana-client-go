@@ -74,5 +74,9 @@
   "snakemake_engine_version": {
     "title": "Snakemake engine version",
     "value": "8.24.1"
+  },
+  "dask_enabled": {
+    "title": "Dask workflows allowed in the cluster",
+    "value": "False"
   }
 }
