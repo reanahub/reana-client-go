@@ -28,7 +28,10 @@ func TestPing(t *testing.T) {
 }
 
 func TestUnreachableServer(t *testing.T) {
-	viper.Set("server-url", "https://unreachable.invalid")
+	// Use localhost:1 to simulate an unreachable server and avoid DNS resolution hangs in CI.
+	// Connection to port 1 on localhost is immediately refused, producing the same
+	// *url.Error that triggers the "not found" error message.
+	viper.Set("server-url", "https://localhost:1")
 	t.Cleanup(func() {
 		viper.Reset()
 	})
@@ -40,7 +43,7 @@ func TestUnreachableServer(t *testing.T) {
 		t.Errorf("Expected an error, instead got '%s'", output)
 	}
 
-	expectedErr := "'https://unreachable.invalid' not found, please verify the provided server URL or check your internet connection"
+	expectedErr := "'https://localhost:1' not found, please verify the provided server URL or check your internet connection"
 	if errorhandler.HandleApiError(err).Error() != expectedErr {
 		t.Errorf(
 			"Expected server not found error, instead got '%s'",
