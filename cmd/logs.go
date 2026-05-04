@@ -17,6 +17,7 @@ import (
 	"reanahub/reana-client-go/pkg/config"
 	"reanahub/reana-client-go/pkg/displayer"
 	"reanahub/reana-client-go/pkg/filterer"
+	"sort"
 	"strings"
 	"time"
 
@@ -272,7 +273,7 @@ func (r *logsCommandRunner) getLogsWithStatus(
 	}
 
 	if step != "" {
-		job := getFirstJob(workflowLogs.JobLogs)
+		job := findJobByStep(workflowLogs.JobLogs, step)
 		if job == nil {
 			return "", "", fmt.Errorf("step %s not found", step)
 		}
@@ -364,11 +365,24 @@ func (r *logsCommandRunner) retrieveLogs(
 	return nil
 }
 
-// getFirstJob returns the first job in the given map,
-// or nil if the map is empty.
-func getFirstJob(items map[string]jobLogItem) *jobLogItem {
-	for _, item := range items {
-		return &item
+// findJobByStep returns the job whose JobName matches step, or nil
+// if no entry matches. When several jobs share the same step name
+// (scatter and parallel steps in yadage/cwl, snakemake fan-outs,
+// retried jobs all produce many Job rows under one job_name), the
+// one with the lowest map key is returned so the choice is stable
+// across calls; ranging over a Go map directly would yield a
+// non-deterministic entry.
+func findJobByStep(items map[string]jobLogItem, step string) *jobLogItem {
+	keys := make([]string, 0, len(items))
+	for k := range items {
+		keys = append(keys, k)
+	}
+	sort.Strings(keys)
+	for _, k := range keys {
+		if items[k].JobName == step {
+			item := items[k]
+			return &item
+		}
 	}
 	return nil
 }
