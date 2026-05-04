@@ -35,6 +35,10 @@ func TestLogs(t *testing.T) {
 			expected: []string{
 				"Workflow engine logs", "workflow logs",
 				"Engine internal logs", "engine logs",
+				"Service logs",
+				"Component: scheduler", "Service: dask-service-12345abc",
+				"scheduler dask logs",
+				"Component: worker-1b35478060", "worker dask logs",
 				"Job logs", "Step:", "job1", "Workflow ID:", "workflow_1",
 				"Compute backend:", "Kubernetes", "Job ID:", "backend1",
 				"Docker image:", "docker1", "Command:", "ls", "Status:", "finished",
@@ -55,6 +59,19 @@ func TestLogs(t *testing.T) {
 				"Job logs", "Step:", "job1",
 			},
 		},
+		"with empty service logs": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode:   http.StatusOK,
+					responseFile: "logs_empty_service_logs.json",
+				},
+			},
+			args:     []string{"-w", workflowName},
+			expected: []string{"Workflow engine logs", "workflow logs"},
+			unwanted: []string{
+				"Service logs", "Service: dask-service-12345abc",
+			},
+		},
 		"json": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(logsPathTemplate, workflowName): {
@@ -68,6 +85,10 @@ func TestLogs(t *testing.T) {
 				"\"job_logs\": {", "\"1\": {",
 				"\"workflow_uuid\": \"workflow_1\"",
 				"\"logs\": \"workflow 1 logs\"",
+				"\"service_logs\": {",
+				"\"dask-service-12345abc\": [",
+				"\"component\": \"scheduler\"",
+				"\"content\": \"scheduler dask logs\"",
 				"\"engine_specific\": \"engine logs\"",
 			},
 		},

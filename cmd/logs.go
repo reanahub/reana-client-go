@@ -57,9 +57,16 @@ const logsFollowDefautlInterval = 10
 // logs struct that contains the logs of a workflow.
 // Pointers used for nullable values
 type logs struct {
-	WorkflowLogs   *string               `json:"workflow_logs"`
-	JobLogs        map[string]jobLogItem `json:"job_logs"`
-	EngineSpecific *string               `json:"engine_specific"`
+	WorkflowLogs   *string                     `json:"workflow_logs"`
+	JobLogs        map[string]jobLogItem       `json:"job_logs"`
+	ServiceLogs    map[string][]serviceLogItem `json:"service_logs"`
+	EngineSpecific *string                     `json:"engine_specific"`
+}
+
+// serviceLogItem struct that contains a single component's log within a service.
+type serviceLogItem struct {
+	Component string `json:"component"`
+	Content   string `json:"content"`
 }
 
 // jobLogItem struct that contains the log information of a job.
@@ -461,6 +468,59 @@ func displayHumanFriendlyLogs(cmd *cobra.Command, logs logs, steps []string) {
 	if logs.EngineSpecific != nil && *logs.EngineSpecific != "" {
 		displayLogHeader(cmd, "Engine internal logs")
 		cmd.Println(*logs.EngineSpecific)
+	}
+
+	serviceNames := make([]string, 0, len(logs.ServiceLogs))
+	for serviceName, entries := range logs.ServiceLogs {
+		if len(entries) > 0 {
+			serviceNames = append(serviceNames, serviceName)
+		}
+	}
+	sort.Strings(serviceNames)
+	if len(serviceNames) > 0 {
+		displayLogHeader(cmd, "Service logs")
+		for _, serviceName := range serviceNames {
+			displayer.PrintColorable(
+				fmt.Sprintf(
+					"%s Service: %s\n",
+					config.LeadingMark,
+					serviceName,
+				),
+				cmd.OutOrStdout(),
+				text.Bold,
+				text.FgYellow,
+			)
+			for _, entry := range logs.ServiceLogs[serviceName] {
+				displayer.PrintColorable(
+					fmt.Sprintf(
+						"%s Component: %s\n",
+						config.LeadingMark,
+						entry.Component,
+					),
+					cmd.OutOrStdout(),
+					text.FgYellow,
+				)
+				if entry.Content != "" {
+					displayer.PrintColorable(
+						fmt.Sprintf("%s Logs:\n", config.LeadingMark),
+						cmd.OutOrStdout(),
+						text.FgYellow,
+					)
+					cmd.Println(entry.Content)
+				} else {
+					msg := fmt.Sprintf(
+						"Component %s emitted no logs.",
+						entry.Component,
+					)
+					displayer.DisplayMessage(
+						msg,
+						displayer.Info,
+						false,
+						cmd.OutOrStdout(),
+					)
+				}
+			}
+		}
 	}
 
 	if len(steps) > 0 {
