@@ -9,10 +9,13 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
+	"encoding/json"
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
 	"reanahub/reana-client-go/pkg/displayer"
 	"strings"
+
+	log "github.com/sirupsen/logrus"
 
 	"github.com/spf13/cobra"
 )
@@ -61,6 +64,8 @@ func newInfoCmd() *cobra.Command {
 func (o *infoOptions) run(cmd *cobra.Command) error {
 	infoParams := operations.NewInfoParams()
 	infoParams.SetAccessToken(o.token)
+	quotaParams := operations.NewGetYouParams()
+	quotaParams.SetAccessToken(&o.token)
 
 	api, err := client.ApiClient()
 	if err != nil {
@@ -70,10 +75,29 @@ func (o *infoOptions) run(cmd *cobra.Command) error {
 	if err != nil {
 		return err
 	}
+	quotaPeriodInfo := quotaPeriodInfo{}
+	quotaResp, err := api.Operations.GetYou(quotaParams)
+	if err != nil {
+		log.Debugf(
+			"Could not enrich cluster info with quota period details: %v",
+			err,
+		)
+	} else {
+		quotaResources, err := parseQuotaInfo(quotaResp.Payload.Quota)
+		if err != nil {
+			log.Debugf("Could not parse quota period details: %v", err)
+		} else {
+			quotaPeriodInfo = buildCPUQuotaPeriodInfo(quotaResources)
+		}
+	}
 
 	p := infoResp.Payload
 	if o.jsonOutput {
-		err := displayer.DisplayJsonOutput(p, cmd.OutOrStdout())
+		infoMap, err := buildInfoOutputMap(p, quotaPeriodInfo)
+		if err != nil {
+			return err
+		}
+		err = displayer.DisplayJsonOutput(infoMap, cmd.OutOrStdout())
 		if err != nil {
 			return err
 		}
@@ -183,8 +207,55 @@ func (o *infoOptions) run(cmd *cobra.Command) error {
 		if p.YadageEngineVersion != nil {
 			displayInfoStringItem(cmd, p.YadageEngineVersion.Title, &p.YadageEngineVersion.Value)
 		}
+		displayQuotaPeriodInfo(cmd, quotaPeriodInfo)
 	}
 	return nil
+}
+
+func buildInfoOutputMap(
+	payload *operations.InfoOKBody,
+	quotaInfo quotaPeriodInfo,
+) (map[string]any, error) {
+	var infoMap map[string]any
+	infoBinary, err := payload.MarshalBinary()
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(infoBinary, &infoMap)
+	if err != nil {
+		return nil, err
+	}
+	if quotaInfo.PeriodMonths != nil {
+		infoMap["cpu_quota_period_months"] = map[string]any{
+			"title": "CPU quota period in months",
+			"value": *quotaInfo.PeriodMonths,
+		}
+	}
+	if quotaInfo.StartDate != "" {
+		infoMap["current_cpu_quota_period_start"] = map[string]string{
+			"title": "Current CPU quota period start",
+			"value": quotaInfo.StartDate,
+		}
+	}
+	if quotaInfo.EndDate != "" {
+		infoMap["current_cpu_quota_period_end"] = map[string]string{
+			"title": "Current CPU quota period end",
+			"value": quotaInfo.EndDate,
+		}
+	}
+	return infoMap, nil
+}
+
+func displayQuotaPeriodInfo(cmd *cobra.Command, quotaInfo quotaPeriodInfo) {
+	if quotaInfo.PeriodMonths != nil {
+		cmd.Printf("CPU quota period in months: %d\n", *quotaInfo.PeriodMonths)
+	}
+	if quotaInfo.StartDate != "" {
+		cmd.Printf("Current CPU quota period start: %s\n", quotaInfo.StartDate)
+	}
+	if quotaInfo.EndDate != "" {
+		cmd.Printf("Current CPU quota period end: %s\n", quotaInfo.EndDate)
+	}
 }
 
 func displayInfoStringItem(cmd *cobra.Command, title string, valuePtr *string) {

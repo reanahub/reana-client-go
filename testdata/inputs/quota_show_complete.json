@@ -2,6 +2,8 @@
   "quota": {
     "cpu": {
       "health": "healthy",
+      "quota_period_months": 3,
+      "quota_period_start_at": "2026-06-04T00:00:00Z",
       "usage": {
         "human_readable": "1m 5s",
         "raw": 10

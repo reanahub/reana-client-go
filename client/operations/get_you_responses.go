@@ -755,6 +755,12 @@ type GetYouOKBodyQuotaCPU struct {
 	// limit
 	Limit *GetYouOKBodyQuotaCPULimit `json:"limit,omitempty"`
 
+	// quota period months
+	QuotaPeriodMonths *int64 `json:"quota_period_months,omitempty"`
+
+	// quota period start at
+	QuotaPeriodStartAt *string `json:"quota_period_start_at,omitempty"`
+
 	// usage
 	Usage *GetYouOKBodyQuotaCPUUsage `json:"usage,omitempty"`
 }
