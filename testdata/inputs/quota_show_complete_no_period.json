@@ -1,0 +1,26 @@
+{
+  "quota": {
+    "cpu": {
+      "health": "healthy",
+      "usage": {
+        "human_readable": "1m 5s",
+        "raw": 10
+      },
+      "limit": {
+        "human_readable": "10m 50s",
+        "raw": 100
+      }
+    },
+    "disk": {
+      "health": "healthy",
+      "usage": {
+        "human_readable": "2 MiB",
+        "raw": 20
+      },
+      "limit": {
+        "human_readable": "20 MiB",
+        "raw": 200
+      }
+    }
+  }
+}

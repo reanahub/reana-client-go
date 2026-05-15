@@ -64,8 +64,10 @@ func TestQuotaShow(t *testing.T) {
 					responseFile: "quota_show_complete.json",
 				},
 			},
-			args:     []string{"--resource", "cpu", "--report", "limit", "-h"},
-			expected: []string{"10m 50s"},
+			args: []string{"--resource", "cpu", "--report", "limit", "-h"},
+			expected: []string{
+				"10m 50s in the period from 2026-06-04 to 2026-09-04",
+			},
 			unwanted: []string{"used", "limit", "usage", "cpu", "disk", "100"},
 		},
 		"cpu usage human": {
@@ -75,9 +77,33 @@ func TestQuotaShow(t *testing.T) {
 					responseFile: "quota_show_complete.json",
 				},
 			},
+			args: []string{"--resource", "cpu", "--report", "usage", "-h"},
+			expected: []string{
+				"1m 5s in the period from 2026-06-04 to 2026-09-04",
+			},
+			unwanted: []string{"used", "limit", "usage", "cpu", "disk", "10"},
+		},
+		"cpu usage human without period": {
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show_complete_no_period.json",
+				},
+			},
 			args:     []string{"--resource", "cpu", "--report", "usage", "-h"},
 			expected: []string{"1m 5s"},
-			unwanted: []string{"used", "limit", "usage", "cpu", "disk", "10"},
+			unwanted: []string{"in the period from"},
+		},
+		"cpu usage raw with period": {
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show_complete.json",
+				},
+			},
+			args:     []string{"--resource", "cpu", "--report", "usage"},
+			expected: []string{"10"},
+			unwanted: []string{"in the period from", "1m 5s"},
 		},
 		"cpu all reports": {
 			serverResponses: map[string]ServerResponse{
@@ -86,8 +112,23 @@ func TestQuotaShow(t *testing.T) {
 					responseFile: "quota_show_complete.json",
 				},
 			},
-			args:     []string{"--resource", "cpu"},
-			expected: []string{"10 out of 100 used (10%)"},
+			args: []string{"--resource", "cpu"},
+			expected: []string{
+				"10 out of 100 used (10% in the period from 2026-06-04 to 2026-09-04)",
+			},
+			unwanted: []string{"limit", "usage", "cpu", "disk"},
+		},
+		"cpu all reports human": {
+			serverResponses: map[string]ServerResponse{
+				quotaShowServerPath: {
+					statusCode:   http.StatusOK,
+					responseFile: "quota_show_complete.json",
+				},
+			},
+			args: []string{"--resource", "cpu", "-h"},
+			expected: []string{
+				"1m 5s out of 10m 50s used (10% in the period from 2026-06-04 to 2026-09-04)",
+			},
 			unwanted: []string{"limit", "usage", "cpu", "disk"},
 		},
 		"cpu limit no info": {
@@ -165,7 +206,15 @@ func TestQuotaShow(t *testing.T) {
 			},
 			args:     []string{"--resource", "disk", "--report", "usage", "-h"},
 			expected: []string{"2 MiB"},
-			unwanted: []string{"used", "limit", "usage", "cpu", "disk", "20"},
+			unwanted: []string{
+				"used",
+				"limit",
+				"usage",
+				"cpu",
+				"disk",
+				"20",
+				"in the period from",
+			},
 		},
 		"disk all reports": {
 			serverResponses: map[string]ServerResponse{
@@ -258,6 +307,7 @@ func TestQuotaShow(t *testing.T) {
 func TestDisplayQuotaResourceUsage(t *testing.T) {
 	tests := map[string]struct {
 		health        string
+		periodWindow  string
 		usageHuman    string
 		limitHuman    string
 		usageRaw      float64
@@ -291,6 +341,12 @@ func TestDisplayQuotaResourceUsage(t *testing.T) {
 			usageRaw: 95, limitRaw: 100, health: "critical",
 			expected: "95 out of 100 used (95%)", expectedColor: displayer.ResourceHealthToColor["critical"],
 		},
+		"with quota period": {
+			usageRaw: 10, limitRaw: 100, health: "healthy",
+			periodWindow:  "2026-06-04 to 2026-09-04",
+			expected:      "10 out of 100 used (10% in the period from 2026-06-04 to 2026-09-04)",
+			expectedColor: displayer.ResourceHealthToColor["healthy"],
+		},
 	}
 
 	for name, test := range tests {
@@ -306,6 +362,7 @@ func TestDisplayQuotaResourceUsage(t *testing.T) {
 					HumanReadable: test.limitHuman,
 					Raw:           test.limitRaw,
 				},
+				test.periodWindow,
 				test.humanReadable,
 				buf,
 			)

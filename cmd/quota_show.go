@@ -18,9 +18,10 @@ import (
 	"reanahub/reana-client-go/pkg/displayer"
 	"reanahub/reana-client-go/pkg/validator"
 	"strings"
+	"time"
 
 	"github.com/jedib0t/go-pretty/v6/text"
-
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -41,7 +42,11 @@ Examples:
 `
 
 type quotaResource struct {
-	Health string `json:"health"`
+	Health             string             `json:"health"`
+	Limit              *quotaResourceStat `json:"limit"`
+	QuotaPeriodMonths  *int64             `json:"quota_period_months"`
+	QuotaPeriodStartAt *string            `json:"quota_period_start_at"`
+	Usage              *quotaResourceStat `json:"usage"`
 
 	Stats map[string]quotaResourceStat `json:"-"`
 }
@@ -58,6 +63,12 @@ type quotaShowOptions struct {
 	showResources     bool
 	humanReadable     bool
 	unspecifiedReport bool
+}
+
+type quotaPeriodInfo struct {
+	PeriodMonths *int64
+	StartDate    string
+	EndDate      string
 }
 
 // newQuotaShowCmd creates a command to show user quota.
@@ -171,12 +182,19 @@ func (o *quotaShowOptions) run(cmd *cobra.Command) error {
 		displayQuotaResourceUsage(
 			resource.Health,
 			resource.Stats["usage"], resource.Stats["limit"],
+			formatQuotaPeriodWindow(resource),
 			o.humanReadable, cmd.OutOrStdout(),
 		)
 	} else if !reportExists || report.Raw <= 0 {
 		cmd.Printf("No %s.\n", o.report)
 	} else if o.humanReadable {
-		cmd.Println(report.HumanReadable)
+		msg := report.HumanReadable
+		if o.resource == "cpu" {
+			if window := formatQuotaPeriodWindow(resource); window != "" {
+				msg = fmt.Sprintf("%s in the period from %s", msg, window)
+			}
+		}
+		cmd.Println(msg)
 	} else {
 		cmd.Printf("%.0f\n", report.Raw)
 	}
@@ -184,10 +202,97 @@ func (o *quotaShowOptions) run(cmd *cobra.Command) error {
 	return nil
 }
 
+// NOTE: Keep this month-boundary arithmetic in sync with
+// reana_db/utils.py (_add_months), reana-client's _add_months helper,
+// and reana-ui's quota period window calculation.
+func addMonths(dt time.Time, months int) time.Time {
+	year := dt.Year() + int((int(dt.Month())-1+months)/12)
+	month := time.Month((int(dt.Month())-1+months)%12 + 1)
+	lastDay := time.Date(
+		year,
+		month+1,
+		0,
+		dt.Hour(),
+		dt.Minute(),
+		dt.Second(),
+		dt.Nanosecond(),
+		dt.Location(),
+	).Day()
+	day := dt.Day()
+	if day > lastDay {
+		day = lastDay
+	}
+	return time.Date(
+		year,
+		month,
+		day,
+		dt.Hour(),
+		dt.Minute(),
+		dt.Second(),
+		dt.Nanosecond(),
+		dt.Location(),
+	)
+}
+
+func formatQuotaPeriodDate(dt time.Time) string {
+	return dt.Format("2006-01-02")
+}
+
+func getQuotaPeriodDateRange(resource quotaResource) (string, string) {
+	if resource.QuotaPeriodMonths == nil || resource.QuotaPeriodStartAt == nil {
+		return "", ""
+	}
+
+	startAt, err := time.Parse(time.RFC3339Nano, *resource.QuotaPeriodStartAt)
+	if err != nil {
+		log.Debugf(
+			"Could not parse server datetime %q as RFC3339: %v",
+			*resource.QuotaPeriodStartAt,
+			err,
+		)
+		return "", ""
+	}
+
+	endAt := addMonths(startAt, int(*resource.QuotaPeriodMonths))
+	return formatQuotaPeriodDate(startAt), formatQuotaPeriodDate(endAt)
+}
+
+func formatQuotaPeriodWindow(resource quotaResource) string {
+	startDate, endDate := getQuotaPeriodDateRange(resource)
+	if startDate == "" || endDate == "" {
+		return ""
+	}
+
+	return fmt.Sprintf("%s to %s", startDate, endDate)
+}
+
+func buildCPUQuotaPeriodInfo(
+	quotaResources map[string]quotaResource,
+) quotaPeriodInfo {
+	cpuResource, ok := quotaResources["cpu"]
+	if !ok {
+		return quotaPeriodInfo{}
+	}
+
+	periodMonths := int64(0)
+	if cpuResource.QuotaPeriodMonths != nil &&
+		*cpuResource.QuotaPeriodMonths > 0 {
+		periodMonths = *cpuResource.QuotaPeriodMonths
+	}
+
+	startDate, endDate := getQuotaPeriodDateRange(cpuResource)
+	return quotaPeriodInfo{
+		PeriodMonths: &periodMonths,
+		StartDate:    startDate,
+		EndDate:      endDate,
+	}
+}
+
 // displayQuotaResourceUsage displays the resource usage of the quotas, using its usage and limit.
 func displayQuotaResourceUsage(
 	health string,
 	usage, limit quotaResourceStat,
+	periodWindow string,
 	humanReadable bool,
 	out io.Writer,
 ) {
@@ -221,7 +326,18 @@ func displayQuotaResourceUsage(
 	} else {
 		usageMsg = fmt.Sprintf("%.0f", usage.Raw)
 	}
-	usageMsg = fmt.Sprintf("%s %s\n", usageMsg, limitInfo)
+	usageMsg = fmt.Sprintf("%s %s", usageMsg, limitInfo)
+	if periodWindow != "" {
+		// NOTE: This splice relies on the formatted usage message ending with
+		// a trailing parenthetical when percentage output is present.
+		if strings.HasSuffix(usageMsg, ")") {
+			usageMsg = strings.TrimSuffix(usageMsg, ")") +
+				fmt.Sprintf(" in the period from %s)", periodWindow)
+		} else {
+			usageMsg = fmt.Sprintf("%s in the period from %s", usageMsg, periodWindow)
+		}
+	}
+	usageMsg += "\n"
 	displayer.PrintColorable(usageMsg, out, color)
 }
 
@@ -243,13 +359,17 @@ func parseQuotaInfo(
 	quotaResources := make(map[string]quotaResource)
 	for resourceName, rawInfo := range rawResourcesInfo {
 		var resourceInfo quotaResource
-		// Need to unmarshal twice to have "health" in the right field
 		err = json.Unmarshal(rawInfo, &resourceInfo)
 		if err != nil {
 			return nil, err
 		}
-		_ = json.Unmarshal(rawInfo, &resourceInfo.Stats)
-		delete(resourceInfo.Stats, "health") // Delete the invalid stat
+		resourceInfo.Stats = map[string]quotaResourceStat{}
+		if resourceInfo.Limit != nil {
+			resourceInfo.Stats["limit"] = *resourceInfo.Limit
+		}
+		if resourceInfo.Usage != nil {
+			resourceInfo.Stats["usage"] = *resourceInfo.Usage
+		}
 
 		quotaResources[resourceName] = resourceInfo
 	}
