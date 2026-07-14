@@ -61,12 +61,6 @@ GetWorkflowShareStatusParams contains all the parameters to send to the API endp
 */
 type GetWorkflowShareStatusParams struct {
 
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* WorkflowIDOrName.
 
 	   Required. Workflow UUID or name.
@@ -126,17 +120,6 @@ func (o *GetWorkflowShareStatusParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the get workflow share status params
-func (o *GetWorkflowShareStatusParams) WithAccessToken(accessToken *string) *GetWorkflowShareStatusParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the get workflow share status params
-func (o *GetWorkflowShareStatusParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithWorkflowIDOrName adds the workflowIDOrName to the get workflow share status params
 func (o *GetWorkflowShareStatusParams) WithWorkflowIDOrName(workflowIDOrName string) *GetWorkflowShareStatusParams {
 	o.SetWorkflowIDOrName(workflowIDOrName)
@@ -155,23 +138,6 @@ func (o *GetWorkflowShareStatusParams) WriteToRequest(r runtime.ClientRequest, r
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 
 	// path param workflow_id_or_name
 	if err := r.SetPathParam("workflow_id_or_name", o.WorkflowIDOrName); err != nil {

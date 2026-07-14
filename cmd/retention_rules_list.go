@@ -81,15 +81,15 @@ func newRetentionRulesListCmd() *cobra.Command {
 
 func (o *retentionRulesListOptions) run(cmd *cobra.Command) error {
 	retentionRulesParams := operations.NewGetWorkflowRetentionRulesParams()
-	retentionRulesParams.SetAccessToken(&o.token)
 	retentionRulesParams.SetWorkflowIDOrName(o.workflow)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
 	retentionRulesResp, err := api.Operations.GetWorkflowRetentionRules(
 		retentionRulesParams,
+		nil,
 	)
 	if err != nil {
 		return err

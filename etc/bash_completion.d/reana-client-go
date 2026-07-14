@@ -828,6 +828,62 @@ _reana-client-go_list()
     noun_aliases=()
 }
 
+_reana-client-go_login()
+{
+    last_command="reana-client-go_login"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--headless")
+    local_nonpersistent_flags+=("--headless")
+    flags+=("--server-url=")
+    two_word_flags+=("--server-url")
+    local_nonpersistent_flags+=("--server-url")
+    local_nonpersistent_flags+=("--server-url=")
+    flags+=("--loglevel=")
+    two_word_flags+=("--loglevel")
+    two_word_flags+=("-l")
+    flags+=("--profile=")
+    two_word_flags+=("--profile")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_reana-client-go_logout()
+{
+    last_command="reana-client-go_logout"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--loglevel=")
+    two_word_flags+=("--loglevel")
+    two_word_flags+=("-l")
+    flags+=("--profile=")
+    two_word_flags+=("--profile")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
 _reana-client-go_logs()
 {
     last_command="reana-client-go_logs"
@@ -1908,6 +1964,8 @@ _reana-client-go_root_command()
     commands+=("help")
     commands+=("info")
     commands+=("list")
+    commands+=("login")
+    commands+=("logout")
     commands+=("logs")
     commands+=("ls")
     commands+=("mv")

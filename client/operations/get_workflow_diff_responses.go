@@ -37,6 +37,12 @@ func (o *GetWorkflowDiffReader) ReadResponse(response runtime.ClientResponse, co
 			return nil, err
 		}
 		return nil, result
+	case 401:
+		result := NewGetWorkflowDiffUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewGetWorkflowDiffForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -51,6 +57,12 @@ func (o *GetWorkflowDiffReader) ReadResponse(response runtime.ClientResponse, co
 		return nil, result
 	case 500:
 		result := NewGetWorkflowDiffInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewGetWorkflowDiffServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -196,6 +208,62 @@ func (o *GetWorkflowDiffBadRequest) readResponse(response runtime.ClientResponse
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewGetWorkflowDiffUnauthorized creates a GetWorkflowDiffUnauthorized with default headers values
+func NewGetWorkflowDiffUnauthorized() *GetWorkflowDiffUnauthorized {
+	return &GetWorkflowDiffUnauthorized{}
+}
+
+/*
+GetWorkflowDiffUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type GetWorkflowDiffUnauthorized struct {
+}
+
+// IsSuccess returns true when this get workflow diff unauthorized response has a 2xx status code
+func (o *GetWorkflowDiffUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow diff unauthorized response has a 3xx status code
+func (o *GetWorkflowDiffUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow diff unauthorized response has a 4xx status code
+func (o *GetWorkflowDiffUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow diff unauthorized response has a 5xx status code
+func (o *GetWorkflowDiffUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow diff unauthorized response a status code equal to that given
+func (o *GetWorkflowDiffUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the get workflow diff unauthorized response
+func (o *GetWorkflowDiffUnauthorized) Code() int {
+	return 401
+}
+
+func (o *GetWorkflowDiffUnauthorized) Error() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffUnauthorized", 401)
+}
+
+func (o *GetWorkflowDiffUnauthorized) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffUnauthorized", 401)
+}
+
+func (o *GetWorkflowDiffUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
@@ -406,6 +474,62 @@ func (o *GetWorkflowDiffInternalServerError) readResponse(response runtime.Clien
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewGetWorkflowDiffServiceUnavailable creates a GetWorkflowDiffServiceUnavailable with default headers values
+func NewGetWorkflowDiffServiceUnavailable() *GetWorkflowDiffServiceUnavailable {
+	return &GetWorkflowDiffServiceUnavailable{}
+}
+
+/*
+GetWorkflowDiffServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type GetWorkflowDiffServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this get workflow diff service unavailable response has a 2xx status code
+func (o *GetWorkflowDiffServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow diff service unavailable response has a 3xx status code
+func (o *GetWorkflowDiffServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow diff service unavailable response has a 4xx status code
+func (o *GetWorkflowDiffServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow diff service unavailable response has a 5xx status code
+func (o *GetWorkflowDiffServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get workflow diff service unavailable response a status code equal to that given
+func (o *GetWorkflowDiffServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the get workflow diff service unavailable response
+func (o *GetWorkflowDiffServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *GetWorkflowDiffServiceUnavailable) Error() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffServiceUnavailable", 503)
+}
+
+func (o *GetWorkflowDiffServiceUnavailable) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name_a}/diff/{workflow_id_or_name_b}][%d] getWorkflowDiffServiceUnavailable", 503)
+}
+
+func (o *GetWorkflowDiffServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

@@ -62,12 +62,6 @@ GetWorkflowLogsParams contains all the parameters to send to the API endpoint
 */
 type GetWorkflowLogsParams struct {
 
-	/* AccessToken.
-
-	   API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* Page.
 
 	   Results page number (pagination).
@@ -145,17 +139,6 @@ func (o *GetWorkflowLogsParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the get workflow logs params
-func (o *GetWorkflowLogsParams) WithAccessToken(accessToken *string) *GetWorkflowLogsParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the get workflow logs params
-func (o *GetWorkflowLogsParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithPage adds the page to the get workflow logs params
 func (o *GetWorkflowLogsParams) WithPage(page *int64) *GetWorkflowLogsParams {
 	o.SetPage(page)
@@ -207,23 +190,6 @@ func (o *GetWorkflowLogsParams) WriteToRequest(r runtime.ClientRequest, reg strf
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 
 	if o.Page != nil {
 

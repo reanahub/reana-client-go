@@ -34,6 +34,12 @@ func (o *DeleteFileReader) ReadResponse(response runtime.ClientResponse, consume
 			return nil, err
 		}
 		return result, nil
+	case 401:
+		result := NewDeleteFileUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewDeleteFileForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -135,6 +141,62 @@ func (o *DeleteFileOK) readResponse(response runtime.ClientResponse, consumer ru
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewDeleteFileUnauthorized creates a DeleteFileUnauthorized with default headers values
+func NewDeleteFileUnauthorized() *DeleteFileUnauthorized {
+	return &DeleteFileUnauthorized{}
+}
+
+/*
+DeleteFileUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type DeleteFileUnauthorized struct {
+}
+
+// IsSuccess returns true when this delete file unauthorized response has a 2xx status code
+func (o *DeleteFileUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete file unauthorized response has a 3xx status code
+func (o *DeleteFileUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete file unauthorized response has a 4xx status code
+func (o *DeleteFileUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this delete file unauthorized response has a 5xx status code
+func (o *DeleteFileUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete file unauthorized response a status code equal to that given
+func (o *DeleteFileUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the delete file unauthorized response
+func (o *DeleteFileUnauthorized) Code() int {
+	return 401
+}
+
+func (o *DeleteFileUnauthorized) Error() string {
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileUnauthorized", 401)
+}
+
+func (o *DeleteFileUnauthorized) String() string {
+	return fmt.Sprintf("[DELETE /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] deleteFileUnauthorized", 401)
+}
+
+func (o *DeleteFileUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

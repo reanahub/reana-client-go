@@ -41,6 +41,12 @@ func (o *StartWorkflowReader) ReadResponse(response runtime.ClientResponse, cons
 			return nil, err
 		}
 		return nil, result
+	case 401:
+		result := NewStartWorkflowUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewStartWorkflowForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -224,6 +230,62 @@ func (o *StartWorkflowBadRequest) readResponse(response runtime.ClientResponse, 
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewStartWorkflowUnauthorized creates a StartWorkflowUnauthorized with default headers values
+func NewStartWorkflowUnauthorized() *StartWorkflowUnauthorized {
+	return &StartWorkflowUnauthorized{}
+}
+
+/*
+StartWorkflowUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type StartWorkflowUnauthorized struct {
+}
+
+// IsSuccess returns true when this start workflow unauthorized response has a 2xx status code
+func (o *StartWorkflowUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this start workflow unauthorized response has a 3xx status code
+func (o *StartWorkflowUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this start workflow unauthorized response has a 4xx status code
+func (o *StartWorkflowUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this start workflow unauthorized response has a 5xx status code
+func (o *StartWorkflowUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this start workflow unauthorized response a status code equal to that given
+func (o *StartWorkflowUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the start workflow unauthorized response
+func (o *StartWorkflowUnauthorized) Code() int {
+	return 401
+}
+
+func (o *StartWorkflowUnauthorized) Error() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowUnauthorized", 401)
+}
+
+func (o *StartWorkflowUnauthorized) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/start][%d] startWorkflowUnauthorized", 401)
+}
+
+func (o *StartWorkflowUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

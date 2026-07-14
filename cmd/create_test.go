@@ -233,6 +233,35 @@ func TestCreateWarnsSkipValidationIsIgnored(t *testing.T) {
 	}
 }
 
+func TestCreateReturnsErrorOnLegacyOKResponse(t *testing.T) {
+	reanaFile := writeSerialSpec(t)
+
+	server := httptest.NewTLSServer(
+		withPingFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			w.WriteHeader(http.StatusOK)
+			_, _ = w.Write([]byte(`{"message": "OK"}`))
+		}),
+	)
+	defer server.Close()
+
+	viper.Set("server-url", server.URL)
+	t.Cleanup(viper.Reset)
+
+	_, err := ExecuteCommand(
+		NewRootCmd(),
+		"create",
+		"-t",
+		"1234",
+		"-f",
+		reanaFile,
+	)
+	if err == nil ||
+		!strings.Contains(err.Error(), "legacy create response") {
+		t.Fatalf("expected a legacy-response error, got %v", err)
+	}
+}
+
 func TestCreateRejectsInvalidName(t *testing.T) {
 	// Client-side guardrails matching the Python client: a name is rejected
 	// before contacting the server, so no request is made.

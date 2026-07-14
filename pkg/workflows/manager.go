@@ -10,6 +10,7 @@ package workflows
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -34,7 +35,6 @@ func UpdateStatus(
 	}
 
 	deleteParams := operations.NewSetWorkflowStatusParams()
-	deleteParams.SetAccessToken(&token)
 	deleteParams.SetWorkflowIDOrName(workflow)
 	deleteParams.SetStatus(status)
 	deleteParams.SetParameters(operations.SetWorkflowStatusBody{
@@ -42,11 +42,11 @@ func UpdateStatus(
 		Workspace: includeWorkspace,
 	})
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(token)
 	if err != nil {
 		return err
 	}
-	_, err = api.Operations.SetWorkflowStatus(deleteParams)
+	_, err = api.Operations.SetWorkflowStatus(deleteParams, nil)
 	if err != nil {
 		return err
 	}
@@ -59,14 +59,13 @@ func GetStatus(
 	token, workflow string,
 ) (*operations.GetWorkflowStatusOKBody, error) {
 	getParams := operations.NewGetWorkflowStatusParams()
-	getParams.SetAccessToken(&token)
 	getParams.SetWorkflowIDOrName(workflow)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(token)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := api.Operations.GetWorkflowStatus(getParams)
+	resp, err := api.Operations.GetWorkflowStatus(getParams, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -82,18 +81,17 @@ func ListRuns(
 	page, size int64,
 ) ([]*operations.GetWorkflowsOKBodyItemsItems0, int64, error) {
 	listParams := operations.NewGetWorkflowsParams()
-	listParams.SetAccessToken(&token)
 	listParams.SetType("batch")
 	listParams.SetWorkflowIDOrName(&workflow)
 	listParams.SetStatus(statuses)
 	listParams.SetPage(&page)
 	listParams.SetSize(&size)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(token)
 	if err != nil {
 		return nil, 0, err
 	}
-	resp, err := api.Operations.GetWorkflows(listParams)
+	resp, err := api.Operations.GetWorkflows(listParams, nil)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -109,14 +107,13 @@ func GetWorkflowSpecification(
 	token, workflow string,
 ) (*operations.GetWorkflowSpecificationOKBody, error) {
 	specParams := operations.NewGetWorkflowSpecificationParams()
-	specParams.SetAccessToken(&token)
 	specParams.SetWorkflowIDOrName(workflow)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(token)
 	if err != nil {
 		return nil, err
 	}
-	resp, err := api.Operations.GetWorkflowSpecification(specParams)
+	resp, err := api.Operations.GetWorkflowSpecification(specParams, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -171,11 +168,19 @@ func uploadFileAs(
 		)
 	}
 
-	endpoint := serverURL.ResolveReference(&url.URL{
-		Path: fmt.Sprintf("/api/workflows/%s/workspace", workflow),
-	})
+	// url.PathEscape encodes "/" and other reserved characters within the
+	// workflow name, unlike setting url.URL.Path directly with an
+	// unescaped value -- a workflow name containing ".." could otherwise
+	// retarget ResolveReference's dot-segment resolution outside
+	// /api/workflows/ entirely.
+	reference, err := url.Parse(
+		fmt.Sprintf("/api/workflows/%s/workspace", url.PathEscape(workflow)),
+	)
+	if err != nil {
+		return "", fmt.Errorf("could not build workspace URL: %w", err)
+	}
+	endpoint := serverURL.ResolveReference(reference)
 	query := endpoint.Query()
-	query.Set("access_token", token)
 	query.Set("file_name", workspaceFileName)
 	endpoint.RawQuery = query.Encode()
 	var body io.Reader = http.NoBody
@@ -188,6 +193,11 @@ func uploadFileAs(
 	}
 	request.ContentLength = info.Size()
 	request.Header.Set("Content-Type", "application/octet-stream")
+	accessToken, err := client.AccessToken(context.Background(), token)
+	if err != nil {
+		return "", err
+	}
+	request.Header.Set("Authorization", "Bearer "+accessToken)
 	response, err := httpClient.Do(request)
 	if err != nil {
 		return "", err
@@ -216,15 +226,18 @@ func DownloadFile(
 ) (string, *bytes.Buffer, bool, error) {
 	fileBuf := new(bytes.Buffer)
 	downloadParams := operations.NewDownloadFileParams()
-	downloadParams.SetAccessToken(&token)
 	downloadParams.SetWorkflowIDOrName(workflow)
 	downloadParams.SetFileName(fileName)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(token)
 	if err != nil {
 		return "", nil, false, err
 	}
-	downloadResp, err := api.Operations.DownloadFile(downloadParams, fileBuf)
+	downloadResp, err := api.Operations.DownloadFile(
+		downloadParams,
+		nil,
+		fileBuf,
+	)
 	if err != nil {
 		return "", nil, false, err
 	}

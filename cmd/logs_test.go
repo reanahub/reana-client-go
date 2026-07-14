@@ -175,7 +175,7 @@ func TestLogs(t *testing.T) {
 			serverURL: "^^*invalid",
 			args:      []string{"-w", workflowName},
 			expected: []string{
-				"environment variable REANA_SERVER_URL is not set",
+				"REANA server URL must include scheme and host",
 			},
 			wantError: true,
 		},

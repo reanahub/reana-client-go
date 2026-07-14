@@ -96,10 +96,9 @@ func newShareRemoveCmd() *cobra.Command {
 
 func (o *shareRemoveOptions) run(cmd *cobra.Command) error {
 	shareRemoveParams := operations.NewUnshareWorkflowParams()
-	shareRemoveParams.SetAccessToken(&o.token)
 	shareRemoveParams.SetWorkflowIDOrName(o.workflow)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
@@ -111,7 +110,7 @@ func (o *shareRemoveOptions) run(cmd *cobra.Command) error {
 		log.Infof("Unsharing workflow %s with user %s", o.workflow, user)
 
 		shareRemoveParams.SetUserEmailToUnshareWith(user)
-		_, err := api.Operations.UnshareWorkflow(shareRemoveParams)
+		_, err := api.Operations.UnshareWorkflow(shareRemoveParams, nil)
 
 		if err != nil {
 			err := errorhandler.HandleApiError(err)

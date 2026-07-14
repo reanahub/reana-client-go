@@ -363,25 +363,34 @@ func TestFormatSessionURI(t *testing.T) {
 	tests := map[string]struct {
 		serverURL string
 		path      string
-		token     string
+		secret    string
 		want      string
 	}{
 		"regular uri": {
 			serverURL: "https://server.com",
 			path:      "/api/",
-			token:     "token",
+			secret:    "token",
 			want:      "https://server.com/api/?token=token",
 		},
 		"no path": {
 			serverURL: "https://server.com/",
 			path:      "",
-			token:     "token",
+			secret:    "token",
 			want:      "https://server.com/?token=token",
+		},
+		"escaped path secret and existing query": {
+			serverURL: "https://server.com/reana/",
+			path:      "notebook/my file?view=lab",
+			secret:    "secret+/=?",
+			want:      "https://server.com/reana/notebook/my%20file?token=secret%2B%2F%3D%3F&view=lab",
 		},
 	}
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
-			got := FormatSessionURI(test.serverURL, test.path, test.token)
+			got, err := FormatSessionURI(test.serverURL, test.path, test.secret)
+			if err != nil {
+				t.Fatal(err)
+			}
 			if got != test.want {
 				t.Errorf("Expected %s, got %s", test.want, got)
 			}

@@ -145,13 +145,12 @@ func newQuotaShowCmd() *cobra.Command {
 
 func (o *quotaShowOptions) run(cmd *cobra.Command) error {
 	quotaParams := operations.NewGetYouParams()
-	quotaParams.SetAccessToken(&o.token)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
-	quotaResp, err := api.Operations.GetYou(quotaParams)
+	quotaResp, err := api.Operations.GetYou(quotaParams, nil)
 	if err != nil {
 		return err
 	}

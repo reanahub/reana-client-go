@@ -86,11 +86,11 @@ func newTestCmd() *cobra.Command {
 
 func (o *testOptions) run(cmd *cobra.Command) error {
 	startedAt := time.Now()
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
-	dataFetcher := tester.NewAPIFetcher(api, o.token)
+	dataFetcher := tester.NewAPIFetcher(api)
 	status, err := dataFetcher.Status(o.workflow)
 	if err != nil {
 		return fmt.Errorf("could not find workflow %q: %v", o.workflow, err)

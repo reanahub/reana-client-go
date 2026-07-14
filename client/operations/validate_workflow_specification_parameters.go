@@ -62,9 +62,6 @@ ValidateWorkflowSpecificationParams contains all the parameters to send to the A
 */
 type ValidateWorkflowSpecificationParams struct {
 
-	// AccessToken.
-	AccessToken *string
-
 	/* Bundle.
 
 	   Uncompressed ZIP validation snapshot containing canonical reana.yaml plus explicitly declared workflow sources.
@@ -130,17 +127,6 @@ func (o *ValidateWorkflowSpecificationParams) SetHTTPClient(client *http.Client)
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the validate workflow specification params
-func (o *ValidateWorkflowSpecificationParams) WithAccessToken(accessToken *string) *ValidateWorkflowSpecificationParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the validate workflow specification params
-func (o *ValidateWorkflowSpecificationParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithBundle adds the bundle to the validate workflow specification params
 func (o *ValidateWorkflowSpecificationParams) WithBundle(bundle runtime.NamedReadCloser) *ValidateWorkflowSpecificationParams {
 	o.SetBundle(bundle)
@@ -170,23 +156,6 @@ func (o *ValidateWorkflowSpecificationParams) WriteToRequest(r runtime.ClientReq
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 	// form file param bundle
 	if err := r.SetFileParam("bundle", o.Bundle); err != nil {
 		return err

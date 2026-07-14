@@ -38,6 +38,12 @@ func (o *GetWorkflowStatusReader) ReadResponse(response runtime.ClientResponse, 
 			return nil, err
 		}
 		return nil, result
+	case 401:
+		result := NewGetWorkflowStatusUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewGetWorkflowStatusForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -52,6 +58,12 @@ func (o *GetWorkflowStatusReader) ReadResponse(response runtime.ClientResponse, 
 		return nil, result
 	case 500:
 		result := NewGetWorkflowStatusInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewGetWorkflowStatusServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -197,6 +209,62 @@ func (o *GetWorkflowStatusBadRequest) readResponse(response runtime.ClientRespon
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewGetWorkflowStatusUnauthorized creates a GetWorkflowStatusUnauthorized with default headers values
+func NewGetWorkflowStatusUnauthorized() *GetWorkflowStatusUnauthorized {
+	return &GetWorkflowStatusUnauthorized{}
+}
+
+/*
+GetWorkflowStatusUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type GetWorkflowStatusUnauthorized struct {
+}
+
+// IsSuccess returns true when this get workflow status unauthorized response has a 2xx status code
+func (o *GetWorkflowStatusUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow status unauthorized response has a 3xx status code
+func (o *GetWorkflowStatusUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow status unauthorized response has a 4xx status code
+func (o *GetWorkflowStatusUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow status unauthorized response has a 5xx status code
+func (o *GetWorkflowStatusUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow status unauthorized response a status code equal to that given
+func (o *GetWorkflowStatusUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the get workflow status unauthorized response
+func (o *GetWorkflowStatusUnauthorized) Code() int {
+	return 401
+}
+
+func (o *GetWorkflowStatusUnauthorized) Error() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusUnauthorized", 401)
+}
+
+func (o *GetWorkflowStatusUnauthorized) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusUnauthorized", 401)
+}
+
+func (o *GetWorkflowStatusUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
@@ -407,6 +475,62 @@ func (o *GetWorkflowStatusInternalServerError) readResponse(response runtime.Cli
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewGetWorkflowStatusServiceUnavailable creates a GetWorkflowStatusServiceUnavailable with default headers values
+func NewGetWorkflowStatusServiceUnavailable() *GetWorkflowStatusServiceUnavailable {
+	return &GetWorkflowStatusServiceUnavailable{}
+}
+
+/*
+GetWorkflowStatusServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type GetWorkflowStatusServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this get workflow status service unavailable response has a 2xx status code
+func (o *GetWorkflowStatusServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow status service unavailable response has a 3xx status code
+func (o *GetWorkflowStatusServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow status service unavailable response has a 4xx status code
+func (o *GetWorkflowStatusServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow status service unavailable response has a 5xx status code
+func (o *GetWorkflowStatusServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get workflow status service unavailable response a status code equal to that given
+func (o *GetWorkflowStatusServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the get workflow status service unavailable response
+func (o *GetWorkflowStatusServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *GetWorkflowStatusServiceUnavailable) Error() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusServiceUnavailable", 503)
+}
+
+func (o *GetWorkflowStatusServiceUnavailable) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/status][%d] getWorkflowStatusServiceUnavailable", 503)
+}
+
+func (o *GetWorkflowStatusServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

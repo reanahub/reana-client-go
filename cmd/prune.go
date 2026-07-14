@@ -90,16 +90,15 @@ func newPruneCmd() *cobra.Command {
 
 func (o *pruneOptions) run(cmd *cobra.Command) error {
 	pruneParams := operations.NewPruneWorkspaceParams()
-	pruneParams.SetAccessToken(&o.token)
 	pruneParams.SetWorkflowIDOrName(o.workflow)
 	pruneParams.SetIncludeInputs(&o.includeInputs)
 	pruneParams.SetIncludeOutputs(&o.includeOutputs)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
-	pruneResp, err := api.Operations.PruneWorkspace(pruneParams)
+	pruneResp, err := api.Operations.PruneWorkspace(pruneParams, nil)
 	if err != nil {
 		return err
 	}

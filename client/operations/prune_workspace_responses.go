@@ -39,6 +39,12 @@ func (o *PruneWorkspaceReader) ReadResponse(response runtime.ClientResponse, con
 			return nil, err
 		}
 		return nil, result
+	case 401:
+		result := NewPruneWorkspaceUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewPruneWorkspaceForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -210,6 +216,62 @@ func (o *PruneWorkspaceBadRequest) readResponse(response runtime.ClientResponse,
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewPruneWorkspaceUnauthorized creates a PruneWorkspaceUnauthorized with default headers values
+func NewPruneWorkspaceUnauthorized() *PruneWorkspaceUnauthorized {
+	return &PruneWorkspaceUnauthorized{}
+}
+
+/*
+PruneWorkspaceUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type PruneWorkspaceUnauthorized struct {
+}
+
+// IsSuccess returns true when this prune workspace unauthorized response has a 2xx status code
+func (o *PruneWorkspaceUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this prune workspace unauthorized response has a 3xx status code
+func (o *PruneWorkspaceUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this prune workspace unauthorized response has a 4xx status code
+func (o *PruneWorkspaceUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this prune workspace unauthorized response has a 5xx status code
+func (o *PruneWorkspaceUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this prune workspace unauthorized response a status code equal to that given
+func (o *PruneWorkspaceUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the prune workspace unauthorized response
+func (o *PruneWorkspaceUnauthorized) Code() int {
+	return 401
+}
+
+func (o *PruneWorkspaceUnauthorized) Error() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceUnauthorized", 401)
+}
+
+func (o *PruneWorkspaceUnauthorized) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceUnauthorized", 401)
+}
+
+func (o *PruneWorkspaceUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
@@ -502,10 +564,9 @@ func NewPruneWorkspaceServiceUnavailable() *PruneWorkspaceServiceUnavailable {
 /*
 PruneWorkspaceServiceUnavailable describes a response with status code 503, with default header values.
 
-Workspace mutation serialization is unavailable.
+The identity provider or the authentication session store is temporarily unavailable.
 */
 type PruneWorkspaceServiceUnavailable struct {
-	Payload *models.ErrorResponse
 }
 
 // IsSuccess returns true when this prune workspace service unavailable response has a 2xx status code
@@ -539,27 +600,14 @@ func (o *PruneWorkspaceServiceUnavailable) Code() int {
 }
 
 func (o *PruneWorkspaceServiceUnavailable) Error() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceServiceUnavailable %s", 503, payload)
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceServiceUnavailable", 503)
 }
 
 func (o *PruneWorkspaceServiceUnavailable) String() string {
-	payload, _ := json.Marshal(o.Payload)
-	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceServiceUnavailable %s", 503, payload)
-}
-
-func (o *PruneWorkspaceServiceUnavailable) GetPayload() *models.ErrorResponse {
-	return o.Payload
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/prune][%d] pruneWorkspaceServiceUnavailable", 503)
 }
 
 func (o *PruneWorkspaceServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
-
-	o.Payload = new(models.ErrorResponse)
-
-	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
-		return err
-	}
 
 	return nil
 }

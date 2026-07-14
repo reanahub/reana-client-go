@@ -107,8 +107,11 @@ func executeDeleteCommand(
 					t.Errorf("Could not decode delete request body: %v", err)
 				}
 			}
-			if token := request.query.Get("access_token"); token != "1234" {
-				t.Errorf("Expected access token 1234, got %q", token)
+			if got := r.Header.Get("Authorization"); got != "Bearer 1234" {
+				t.Errorf("Expected Authorization Bearer 1234, got %q", got)
+			}
+			if request.query.Has("access_token") {
+				t.Errorf("Access token leaked into query: %s", r.URL.RawQuery)
 			}
 
 			mu.Lock()

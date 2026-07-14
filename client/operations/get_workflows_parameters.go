@@ -62,17 +62,17 @@ GetWorkflowsParams contains all the parameters to send to the API endpoint
 */
 type GetWorkflowsParams struct {
 
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* IncludeProgress.
 
 	   Include progress information of the workflows.
 	*/
 	IncludeProgress *bool
+
+	/* IncludeSessionSecrets.
+
+	   Include per-session notebook secrets for workflows owned by the authenticated user. Intended for interactive-session launch clients.
+	*/
+	IncludeSessionSecrets *bool
 
 	/* IncludeWorkspaceSize.
 
@@ -199,17 +199,6 @@ func (o *GetWorkflowsParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the get workflows params
-func (o *GetWorkflowsParams) WithAccessToken(accessToken *string) *GetWorkflowsParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the get workflows params
-func (o *GetWorkflowsParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithIncludeProgress adds the includeProgress to the get workflows params
 func (o *GetWorkflowsParams) WithIncludeProgress(includeProgress *bool) *GetWorkflowsParams {
 	o.SetIncludeProgress(includeProgress)
@@ -219,6 +208,17 @@ func (o *GetWorkflowsParams) WithIncludeProgress(includeProgress *bool) *GetWork
 // SetIncludeProgress adds the includeProgress to the get workflows params
 func (o *GetWorkflowsParams) SetIncludeProgress(includeProgress *bool) {
 	o.IncludeProgress = includeProgress
+}
+
+// WithIncludeSessionSecrets adds the includeSessionSecrets to the get workflows params
+func (o *GetWorkflowsParams) WithIncludeSessionSecrets(includeSessionSecrets *bool) *GetWorkflowsParams {
+	o.SetIncludeSessionSecrets(includeSessionSecrets)
+	return o
+}
+
+// SetIncludeSessionSecrets adds the includeSessionSecrets to the get workflows params
+func (o *GetWorkflowsParams) SetIncludeSessionSecrets(includeSessionSecrets *bool) {
+	o.IncludeSessionSecrets = includeSessionSecrets
 }
 
 // WithIncludeWorkspaceSize adds the includeWorkspaceSize to the get workflows params
@@ -361,23 +361,6 @@ func (o *GetWorkflowsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 	}
 	var res []error
 
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
-
 	if o.IncludeProgress != nil {
 
 		// query param include_progress
@@ -390,6 +373,23 @@ func (o *GetWorkflowsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		if qIncludeProgress != "" {
 
 			if err := r.SetQueryParam("include_progress", qIncludeProgress); err != nil {
+				return err
+			}
+		}
+	}
+
+	if o.IncludeSessionSecrets != nil {
+
+		// query param include_session_secrets
+		var qrIncludeSessionSecrets bool
+
+		if o.IncludeSessionSecrets != nil {
+			qrIncludeSessionSecrets = *o.IncludeSessionSecrets
+		}
+		qIncludeSessionSecrets := swag.FormatBool(qrIncludeSessionSecrets)
+		if qIncludeSessionSecrets != "" {
+
+			if err := r.SetQueryParam("include_session_secrets", qIncludeSessionSecrets); err != nil {
 				return err
 			}
 		}

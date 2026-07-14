@@ -161,7 +161,7 @@ func (o *validateOptions) run(cmd *cobra.Command) error {
 	)
 
 	// Refuse an incompatible server before any bundle is built or uploaded.
-	api, err := bundleCapableAPIClient()
+	api, err := bundleCapableAPIClient(o.token)
 	if err != nil {
 		return err
 	}
@@ -181,12 +181,11 @@ func (o *validateOptions) run(cmd *cobra.Command) error {
 	params := operations.NewValidateWorkflowSpecificationParamsWithTimeout(
 		controlOperationTimeout,
 	)
-	params.SetAccessToken(&o.token)
 	params.SetBundle(bundle)
 	if o.environments {
 		params.SetEnvironments(&o.environments)
 	}
-	response, err := api.Operations.ValidateWorkflowSpecification(params)
+	response, err := api.Operations.ValidateWorkflowSpecification(params, nil)
 	if err != nil {
 		return err
 	}

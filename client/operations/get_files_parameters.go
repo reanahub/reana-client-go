@@ -62,12 +62,6 @@ GetFilesParams contains all the parameters to send to the API endpoint
 */
 type GetFilesParams struct {
 
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* FileName.
 
 	   File name(s) (glob) to list.
@@ -151,17 +145,6 @@ func (o *GetFilesParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the get files params
-func (o *GetFilesParams) WithAccessToken(accessToken *string) *GetFilesParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the get files params
-func (o *GetFilesParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithFileName adds the fileName to the get files params
 func (o *GetFilesParams) WithFileName(fileName *string) *GetFilesParams {
 	o.SetFileName(fileName)
@@ -224,23 +207,6 @@ func (o *GetFilesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regi
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 
 	if o.FileName != nil {
 

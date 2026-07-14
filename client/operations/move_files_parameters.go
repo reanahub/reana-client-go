@@ -61,12 +61,6 @@ MoveFilesParams contains all the parameters to send to the API endpoint
 */
 type MoveFilesParams struct {
 
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* Source.
 
 	   Required. Source file(s).
@@ -138,17 +132,6 @@ func (o *MoveFilesParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the move files params
-func (o *MoveFilesParams) WithAccessToken(accessToken *string) *MoveFilesParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the move files params
-func (o *MoveFilesParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithSource adds the source to the move files params
 func (o *MoveFilesParams) WithSource(source string) *MoveFilesParams {
 	o.SetSource(source)
@@ -189,23 +172,6 @@ func (o *MoveFilesParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 
 	// query param source
 	qrSource := o.Source

@@ -61,12 +61,6 @@ OpenInteractiveSessionParams contains all the parameters to send to the API endp
 */
 type OpenInteractiveSessionParams struct {
 
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* InteractiveSessionConfiguration.
 
 	   Interactive session configuration.
@@ -138,17 +132,6 @@ func (o *OpenInteractiveSessionParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the open interactive session params
-func (o *OpenInteractiveSessionParams) WithAccessToken(accessToken *string) *OpenInteractiveSessionParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the open interactive session params
-func (o *OpenInteractiveSessionParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithInteractiveSessionConfiguration adds the interactiveSessionConfiguration to the open interactive session params
 func (o *OpenInteractiveSessionParams) WithInteractiveSessionConfiguration(interactiveSessionConfiguration OpenInteractiveSessionBody) *OpenInteractiveSessionParams {
 	o.SetInteractiveSessionConfiguration(interactiveSessionConfiguration)
@@ -189,23 +172,6 @@ func (o *OpenInteractiveSessionParams) WriteToRequest(r runtime.ClientRequest, r
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 	if err := r.SetBodyParam(o.InteractiveSessionConfiguration); err != nil {
 		return err
 	}

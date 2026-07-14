@@ -33,14 +33,32 @@ func (o *CreateGitlabWebhookReader) ReadResponse(response runtime.ClientResponse
 			return nil, err
 		}
 		return result, nil
+	case 401:
+		result := NewCreateGitlabWebhookUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewCreateGitlabWebhookForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return nil, result
+	case 409:
+		result := NewCreateGitlabWebhookConflict()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 500:
 		result := NewCreateGitlabWebhookInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewCreateGitlabWebhookServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -106,6 +124,76 @@ func (o *CreateGitlabWebhookCreated) readResponse(response runtime.ClientRespons
 	return nil
 }
 
+// NewCreateGitlabWebhookUnauthorized creates a CreateGitlabWebhookUnauthorized with default headers values
+func NewCreateGitlabWebhookUnauthorized() *CreateGitlabWebhookUnauthorized {
+	return &CreateGitlabWebhookUnauthorized{}
+}
+
+/*
+CreateGitlabWebhookUnauthorized describes a response with status code 401, with default header values.
+
+Request failed. The stored GitLab access token is not valid.
+*/
+type CreateGitlabWebhookUnauthorized struct {
+	Payload *CreateGitlabWebhookUnauthorizedBody
+}
+
+// IsSuccess returns true when this create gitlab webhook unauthorized response has a 2xx status code
+func (o *CreateGitlabWebhookUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this create gitlab webhook unauthorized response has a 3xx status code
+func (o *CreateGitlabWebhookUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this create gitlab webhook unauthorized response has a 4xx status code
+func (o *CreateGitlabWebhookUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this create gitlab webhook unauthorized response has a 5xx status code
+func (o *CreateGitlabWebhookUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this create gitlab webhook unauthorized response a status code equal to that given
+func (o *CreateGitlabWebhookUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the create gitlab webhook unauthorized response
+func (o *CreateGitlabWebhookUnauthorized) Code() int {
+	return 401
+}
+
+func (o *CreateGitlabWebhookUnauthorized) Error() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookUnauthorized %s", 401, payload)
+}
+
+func (o *CreateGitlabWebhookUnauthorized) String() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookUnauthorized %s", 401, payload)
+}
+
+func (o *CreateGitlabWebhookUnauthorized) GetPayload() *CreateGitlabWebhookUnauthorizedBody {
+	return o.Payload
+}
+
+func (o *CreateGitlabWebhookUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(CreateGitlabWebhookUnauthorizedBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
+		return err
+	}
+
+	return nil
+}
+
 // NewCreateGitlabWebhookForbidden creates a CreateGitlabWebhookForbidden with default headers values
 func NewCreateGitlabWebhookForbidden() *CreateGitlabWebhookForbidden {
 	return &CreateGitlabWebhookForbidden{}
@@ -167,6 +255,76 @@ func (o *CreateGitlabWebhookForbidden) GetPayload() *CreateGitlabWebhookForbidde
 func (o *CreateGitlabWebhookForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	o.Payload = new(CreateGitlabWebhookForbiddenBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
+		return err
+	}
+
+	return nil
+}
+
+// NewCreateGitlabWebhookConflict creates a CreateGitlabWebhookConflict with default headers values
+func NewCreateGitlabWebhookConflict() *CreateGitlabWebhookConflict {
+	return &CreateGitlabWebhookConflict{}
+}
+
+/*
+CreateGitlabWebhookConflict describes a response with status code 409, with default header values.
+
+The delegated GitLab webhook authorization has expired and must be renewed before enabling another project.
+*/
+type CreateGitlabWebhookConflict struct {
+	Payload *CreateGitlabWebhookConflictBody
+}
+
+// IsSuccess returns true when this create gitlab webhook conflict response has a 2xx status code
+func (o *CreateGitlabWebhookConflict) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this create gitlab webhook conflict response has a 3xx status code
+func (o *CreateGitlabWebhookConflict) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this create gitlab webhook conflict response has a 4xx status code
+func (o *CreateGitlabWebhookConflict) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this create gitlab webhook conflict response has a 5xx status code
+func (o *CreateGitlabWebhookConflict) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this create gitlab webhook conflict response a status code equal to that given
+func (o *CreateGitlabWebhookConflict) IsCode(code int) bool {
+	return code == 409
+}
+
+// Code gets the status code for the create gitlab webhook conflict response
+func (o *CreateGitlabWebhookConflict) Code() int {
+	return 409
+}
+
+func (o *CreateGitlabWebhookConflict) Error() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookConflict %s", 409, payload)
+}
+
+func (o *CreateGitlabWebhookConflict) String() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookConflict %s", 409, payload)
+}
+
+func (o *CreateGitlabWebhookConflict) GetPayload() *CreateGitlabWebhookConflictBody {
+	return o.Payload
+}
+
+func (o *CreateGitlabWebhookConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(CreateGitlabWebhookConflictBody)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
@@ -246,6 +404,62 @@ func (o *CreateGitlabWebhookInternalServerError) readResponse(response runtime.C
 	return nil
 }
 
+// NewCreateGitlabWebhookServiceUnavailable creates a CreateGitlabWebhookServiceUnavailable with default headers values
+func NewCreateGitlabWebhookServiceUnavailable() *CreateGitlabWebhookServiceUnavailable {
+	return &CreateGitlabWebhookServiceUnavailable{}
+}
+
+/*
+CreateGitlabWebhookServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type CreateGitlabWebhookServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this create gitlab webhook service unavailable response has a 2xx status code
+func (o *CreateGitlabWebhookServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this create gitlab webhook service unavailable response has a 3xx status code
+func (o *CreateGitlabWebhookServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this create gitlab webhook service unavailable response has a 4xx status code
+func (o *CreateGitlabWebhookServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this create gitlab webhook service unavailable response has a 5xx status code
+func (o *CreateGitlabWebhookServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this create gitlab webhook service unavailable response a status code equal to that given
+func (o *CreateGitlabWebhookServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the create gitlab webhook service unavailable response
+func (o *CreateGitlabWebhookServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *CreateGitlabWebhookServiceUnavailable) Error() string {
+	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookServiceUnavailable", 503)
+}
+
+func (o *CreateGitlabWebhookServiceUnavailable) String() string {
+	return fmt.Sprintf("[POST /api/gitlab/webhook][%d] createGitlabWebhookServiceUnavailable", 503)
+}
+
+func (o *CreateGitlabWebhookServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
 /*
 CreateGitlabWebhookBody create gitlab webhook body
 swagger:model CreateGitlabWebhookBody
@@ -296,6 +510,44 @@ func (o *CreateGitlabWebhookBody) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *CreateGitlabWebhookBody) UnmarshalBinary(b []byte) error {
 	var res CreateGitlabWebhookBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+CreateGitlabWebhookConflictBody create gitlab webhook conflict body
+swagger:model CreateGitlabWebhookConflictBody
+*/
+type CreateGitlabWebhookConflictBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this create gitlab webhook conflict body
+func (o *CreateGitlabWebhookConflictBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this create gitlab webhook conflict body based on context it is used
+func (o *CreateGitlabWebhookConflictBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *CreateGitlabWebhookConflictBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *CreateGitlabWebhookConflictBody) UnmarshalBinary(b []byte) error {
+	var res CreateGitlabWebhookConflictBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
@@ -372,6 +624,44 @@ func (o *CreateGitlabWebhookInternalServerErrorBody) MarshalBinary() ([]byte, er
 // UnmarshalBinary interface implementation
 func (o *CreateGitlabWebhookInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	var res CreateGitlabWebhookInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+CreateGitlabWebhookUnauthorizedBody create gitlab webhook unauthorized body
+swagger:model CreateGitlabWebhookUnauthorizedBody
+*/
+type CreateGitlabWebhookUnauthorizedBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this create gitlab webhook unauthorized body
+func (o *CreateGitlabWebhookUnauthorizedBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this create gitlab webhook unauthorized body based on context it is used
+func (o *CreateGitlabWebhookUnauthorizedBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *CreateGitlabWebhookUnauthorizedBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *CreateGitlabWebhookUnauthorizedBody) UnmarshalBinary(b []byte) error {
+	var res CreateGitlabWebhookUnauthorizedBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

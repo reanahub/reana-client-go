@@ -61,12 +61,6 @@ DeleteFileParams contains all the parameters to send to the API endpoint
 */
 type DeleteFileParams struct {
 
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* FileName.
 
 	   Required. Name (or path) of the file to be deleted.
@@ -132,17 +126,6 @@ func (o *DeleteFileParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the delete file params
-func (o *DeleteFileParams) WithAccessToken(accessToken *string) *DeleteFileParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the delete file params
-func (o *DeleteFileParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithFileName adds the fileName to the delete file params
 func (o *DeleteFileParams) WithFileName(fileName string) *DeleteFileParams {
 	o.SetFileName(fileName)
@@ -172,23 +155,6 @@ func (o *DeleteFileParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 
 	// path param file_name
 	if err := r.SetPathParam("file_name", o.FileName); err != nil {

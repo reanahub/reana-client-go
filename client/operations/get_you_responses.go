@@ -51,6 +51,12 @@ func (o *GetYouReader) ReadResponse(response runtime.ClientResponse, consumer ru
 			return nil, err
 		}
 		return nil, result
+	case 503:
+		result := NewGetYouServiceUnavailable()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	default:
 		return nil, runtime.NewAPIError("[GET /api/you] get_you", response, response.Code())
 	}
@@ -204,7 +210,7 @@ func NewGetYouForbidden() *GetYouForbidden {
 /*
 GetYouForbidden describes a response with status code 403, with default header values.
 
-Request failed. User token not valid.
+The authenticated identity lacks the required REANA access role.
 */
 type GetYouForbidden struct {
 	Payload *GetYouForbiddenBody
@@ -336,11 +342,70 @@ func (o *GetYouInternalServerError) readResponse(response runtime.ClientResponse
 	return nil
 }
 
+// NewGetYouServiceUnavailable creates a GetYouServiceUnavailable with default headers values
+func NewGetYouServiceUnavailable() *GetYouServiceUnavailable {
+	return &GetYouServiceUnavailable{}
+}
+
+/*
+GetYouServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type GetYouServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this get you service unavailable response has a 2xx status code
+func (o *GetYouServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get you service unavailable response has a 3xx status code
+func (o *GetYouServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get you service unavailable response has a 4xx status code
+func (o *GetYouServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get you service unavailable response has a 5xx status code
+func (o *GetYouServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get you service unavailable response a status code equal to that given
+func (o *GetYouServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the get you service unavailable response
+func (o *GetYouServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *GetYouServiceUnavailable) Error() string {
+	return fmt.Sprintf("[GET /api/you][%d] getYouServiceUnavailable", 503)
+}
+
+func (o *GetYouServiceUnavailable) String() string {
+	return fmt.Sprintf("[GET /api/you][%d] getYouServiceUnavailable", 503)
+}
+
+func (o *GetYouServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
 /*
 GetYouForbiddenBody get you forbidden body
 swagger:model GetYouForbiddenBody
 */
 type GetYouForbiddenBody struct {
+
+	// code
+	Code string `json:"code,omitempty"`
 
 	// message
 	Message string `json:"message,omitempty"`
@@ -426,9 +491,6 @@ type GetYouOKBody struct {
 
 	// reana server version
 	ReanaServerVersion string `json:"reana_server_version,omitempty"`
-
-	// reana token
-	ReanaToken *GetYouOKBodyReanaToken `json:"reana_token,omitempty"`
 }
 
 // Validate validates this get you o k body
@@ -436,10 +498,6 @@ func (o *GetYouOKBody) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := o.validateQuota(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := o.validateReanaToken(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -472,38 +530,11 @@ func (o *GetYouOKBody) validateQuota(formats strfmt.Registry) error {
 	return nil
 }
 
-func (o *GetYouOKBody) validateReanaToken(formats strfmt.Registry) error {
-	if swag.IsZero(o.ReanaToken) { // not required
-		return nil
-	}
-
-	if o.ReanaToken != nil {
-		if err := o.ReanaToken.Validate(formats); err != nil {
-			ve := new(errors.Validation)
-			if stderrors.As(err, &ve) {
-				return ve.ValidateName("getYouOK" + "." + "reana_token")
-			}
-			ce := new(errors.CompositeError)
-			if stderrors.As(err, &ce) {
-				return ce.ValidateName("getYouOK" + "." + "reana_token")
-			}
-
-			return err
-		}
-	}
-
-	return nil
-}
-
 // ContextValidate validate this get you o k body based on the context it is used
 func (o *GetYouOKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := o.contextValidateQuota(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := o.contextValidateReanaToken(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -529,31 +560,6 @@ func (o *GetYouOKBody) contextValidateQuota(ctx context.Context, formats strfmt.
 			ce := new(errors.CompositeError)
 			if stderrors.As(err, &ce) {
 				return ce.ValidateName("getYouOK" + "." + "quota")
-			}
-
-			return err
-		}
-	}
-
-	return nil
-}
-
-func (o *GetYouOKBody) contextValidateReanaToken(ctx context.Context, formats strfmt.Registry) error {
-
-	if o.ReanaToken != nil {
-
-		if swag.IsZero(o.ReanaToken) { // not required
-			return nil
-		}
-
-		if err := o.ReanaToken.ContextValidate(ctx, formats); err != nil {
-			ve := new(errors.Validation)
-			if stderrors.As(err, &ve) {
-				return ve.ValidateName("getYouOK" + "." + "reana_token")
-			}
-			ce := new(errors.CompositeError)
-			if stderrors.As(err, &ce) {
-				return ce.ValidateName("getYouOK" + "." + "reana_token")
 			}
 
 			return err
@@ -1256,50 +1262,6 @@ func (o *GetYouOKBodyQuotaDiskUsage) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *GetYouOKBodyQuotaDiskUsage) UnmarshalBinary(b []byte) error {
 	var res GetYouOKBodyQuotaDiskUsage
-	if err := swag.ReadJSON(b, &res); err != nil {
-		return err
-	}
-	*o = res
-	return nil
-}
-
-/*
-GetYouOKBodyReanaToken get you o k body reana token
-swagger:model GetYouOKBodyReanaToken
-*/
-type GetYouOKBodyReanaToken struct {
-
-	// requested at
-	RequestedAt string `json:"requested_at,omitempty"`
-
-	// status
-	Status string `json:"status,omitempty"`
-
-	// value
-	Value string `json:"value,omitempty"`
-}
-
-// Validate validates this get you o k body reana token
-func (o *GetYouOKBodyReanaToken) Validate(formats strfmt.Registry) error {
-	return nil
-}
-
-// ContextValidate validates this get you o k body reana token based on context it is used
-func (o *GetYouOKBodyReanaToken) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	return nil
-}
-
-// MarshalBinary interface implementation
-func (o *GetYouOKBodyReanaToken) MarshalBinary() ([]byte, error) {
-	if o == nil {
-		return nil, nil
-	}
-	return swag.WriteJSON(o)
-}
-
-// UnmarshalBinary interface implementation
-func (o *GetYouOKBodyReanaToken) UnmarshalBinary(b []byte) error {
-	var res GetYouOKBodyReanaToken
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

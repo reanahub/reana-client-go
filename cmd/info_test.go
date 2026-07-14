@@ -160,10 +160,16 @@ func TestInfo(t *testing.T) {
 }
 
 func TestInfoQuotaPeriodIsPrintedAfterInfoBlock(t *testing.T) {
-	server := httptest.NewTLSServer(
+	server := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if accessToken := r.URL.Query().Get("access_token"); accessToken != "1234" {
-				t.Errorf("Expected access token '1234', got '%v'", accessToken)
+			if authorization := r.Header.Get("Authorization"); authorization != "Bearer 1234" {
+				t.Errorf(
+					"Expected Authorization 'Bearer 1234', got '%v'",
+					authorization,
+				)
+			}
+			if r.URL.Query().Has("access_token") {
+				t.Errorf("Access token leaked into query: %s", r.URL.RawQuery)
 			}
 			w.Header().Add("Content-Type", "application/json")
 			w.WriteHeader(http.StatusOK)

@@ -56,13 +56,12 @@ func newSecretsListCmd() *cobra.Command {
 
 func (o *secretsListOptions) run(cmd *cobra.Command) error {
 	listSecretsParams := operations.NewGetSecretsParams()
-	listSecretsParams.SetAccessToken(&o.token)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
-	listSecretsResp, err := api.Operations.GetSecrets(listSecretsParams)
+	listSecretsResp, err := api.Operations.GetSecrets(listSecretsParams, nil)
 	if err != nil {
 		return err
 	}

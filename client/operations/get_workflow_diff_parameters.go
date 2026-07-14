@@ -62,12 +62,6 @@ GetWorkflowDiffParams contains all the parameters to send to the API endpoint
 */
 type GetWorkflowDiffParams struct {
 
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* Brief.
 
 	   Optional flag. If set, file contents are examined.
@@ -161,17 +155,6 @@ func (o *GetWorkflowDiffParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the get workflow diff params
-func (o *GetWorkflowDiffParams) WithAccessToken(accessToken *string) *GetWorkflowDiffParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the get workflow diff params
-func (o *GetWorkflowDiffParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithBrief adds the brief to the get workflow diff params
 func (o *GetWorkflowDiffParams) WithBrief(brief *bool) *GetWorkflowDiffParams {
 	o.SetBrief(brief)
@@ -223,23 +206,6 @@ func (o *GetWorkflowDiffParams) WriteToRequest(r runtime.ClientRequest, reg strf
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 
 	if o.Brief != nil {
 

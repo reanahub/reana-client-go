@@ -38,6 +38,12 @@ func (o *DownloadFileReader) ReadResponse(response runtime.ClientResponse, consu
 			return nil, err
 		}
 		return nil, result
+	case 401:
+		result := NewDownloadFileUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewDownloadFileForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -52,6 +58,12 @@ func (o *DownloadFileReader) ReadResponse(response runtime.ClientResponse, consu
 		return nil, result
 	case 500:
 		result := NewDownloadFileInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewDownloadFileServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -199,6 +211,62 @@ func (o *DownloadFileBadRequest) String() string {
 }
 
 func (o *DownloadFileBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+// NewDownloadFileUnauthorized creates a DownloadFileUnauthorized with default headers values
+func NewDownloadFileUnauthorized() *DownloadFileUnauthorized {
+	return &DownloadFileUnauthorized{}
+}
+
+/*
+DownloadFileUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type DownloadFileUnauthorized struct {
+}
+
+// IsSuccess returns true when this download file unauthorized response has a 2xx status code
+func (o *DownloadFileUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this download file unauthorized response has a 3xx status code
+func (o *DownloadFileUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download file unauthorized response has a 4xx status code
+func (o *DownloadFileUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this download file unauthorized response has a 5xx status code
+func (o *DownloadFileUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this download file unauthorized response a status code equal to that given
+func (o *DownloadFileUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the download file unauthorized response
+func (o *DownloadFileUnauthorized) Code() int {
+	return 401
+}
+
+func (o *DownloadFileUnauthorized) Error() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileUnauthorized", 401)
+}
+
+func (o *DownloadFileUnauthorized) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileUnauthorized", 401)
+}
+
+func (o *DownloadFileUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
@@ -409,6 +477,62 @@ func (o *DownloadFileInternalServerError) readResponse(response runtime.ClientRe
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewDownloadFileServiceUnavailable creates a DownloadFileServiceUnavailable with default headers values
+func NewDownloadFileServiceUnavailable() *DownloadFileServiceUnavailable {
+	return &DownloadFileServiceUnavailable{}
+}
+
+/*
+DownloadFileServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type DownloadFileServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this download file service unavailable response has a 2xx status code
+func (o *DownloadFileServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this download file service unavailable response has a 3xx status code
+func (o *DownloadFileServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this download file service unavailable response has a 4xx status code
+func (o *DownloadFileServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this download file service unavailable response has a 5xx status code
+func (o *DownloadFileServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this download file service unavailable response a status code equal to that given
+func (o *DownloadFileServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the download file service unavailable response
+func (o *DownloadFileServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *DownloadFileServiceUnavailable) Error() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileServiceUnavailable", 503)
+}
+
+func (o *DownloadFileServiceUnavailable) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace/{file_name}][%d] downloadFileServiceUnavailable", 503)
+}
+
+func (o *DownloadFileServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

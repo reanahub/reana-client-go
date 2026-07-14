@@ -61,12 +61,6 @@ GetWorkflowRetentionRulesParams contains all the parameters to send to the API e
 */
 type GetWorkflowRetentionRulesParams struct {
 
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* WorkflowIDOrName.
 
 	   Required. Analysis UUID or name.
@@ -126,17 +120,6 @@ func (o *GetWorkflowRetentionRulesParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the get workflow retention rules params
-func (o *GetWorkflowRetentionRulesParams) WithAccessToken(accessToken *string) *GetWorkflowRetentionRulesParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the get workflow retention rules params
-func (o *GetWorkflowRetentionRulesParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithWorkflowIDOrName adds the workflowIDOrName to the get workflow retention rules params
 func (o *GetWorkflowRetentionRulesParams) WithWorkflowIDOrName(workflowIDOrName string) *GetWorkflowRetentionRulesParams {
 	o.SetWorkflowIDOrName(workflowIDOrName)
@@ -155,23 +138,6 @@ func (o *GetWorkflowRetentionRulesParams) WriteToRequest(r runtime.ClientRequest
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 
 	// path param workflow_id_or_name
 	if err := r.SetPathParam("workflow_id_or_name", o.WorkflowIDOrName); err != nil {

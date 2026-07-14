@@ -139,9 +139,13 @@ func (o *restartOptions) run(cmd *cobra.Command) error {
 	var api *client.API
 	var err error
 	if o.file != "" {
-		api, err = bundleCapableAPIClient()
+		api, err = bundleCapableAPIClient(o.token)
 	} else {
-		api, err = client.ControlAPIClient()
+		var authenticated *client.AuthenticatedClient
+		authenticated, err = client.ControlAPIClient(o.token)
+		if err == nil {
+			api = authenticated.API
+		}
 	}
 	if err != nil {
 		return err
@@ -194,12 +198,14 @@ func (o *restartOptions) run(cmd *cobra.Command) error {
 		restartParams := operations.NewRestartWorkflowParamsWithTimeout(
 			controlOperationTimeout,
 		)
-		restartParams.SetAccessToken(&o.token)
 		restartParams.SetWorkflowIDOrName(o.workflow)
 		restartParams.SetReplacement(replacement)
 		parametersJSON := string(parameters)
 		restartParams.SetParameters(&parametersJSON)
-		restartResp, restartErr := api.Operations.RestartWorkflow(restartParams)
+		restartResp, restartErr := api.Operations.RestartWorkflow(
+			restartParams,
+			nil,
+		)
 		if restartErr != nil {
 			return restartErr
 		}
@@ -215,14 +221,13 @@ func (o *restartOptions) run(cmd *cobra.Command) error {
 		startParams := operations.NewStartWorkflowParamsWithTimeout(
 			controlOperationTimeout,
 		)
-		startParams.SetAccessToken(&o.token)
 		startParams.SetWorkflowIDOrName(o.workflow)
 		startParams.SetParameters(operations.StartWorkflowBody{
 			InputParameters:    o.parameters,
 			OperationalOptions: o.options,
 			Restart:            true,
 		})
-		startResp, startErr := api.Operations.StartWorkflow(startParams)
+		startResp, startErr := api.Operations.StartWorkflow(startParams, nil)
 		if startErr != nil {
 			return startErr
 		}

@@ -21,12 +21,16 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
+
+	"reanahub/reana-client-go/pkg/auth"
 
 	"github.com/spf13/viper"
 )
 
 func useWorkflowServer(t *testing.T, handler http.Handler) {
 	t.Helper()
+	t.Setenv("REANA_SERVER_TLS_VERIFY", "false")
 	server := httptest.NewTLSServer(handler)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(func() {
@@ -47,8 +51,11 @@ func TestWorkflowOperations(t *testing.T) {
 		t,
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			requests = append(requests, r.Method+" "+r.URL.Path)
-			if got := r.URL.Query().Get("access_token"); got != "token" {
-				t.Errorf("expected access token, got %q", got)
+			if got := r.Header.Get("Authorization"); got != "Bearer token" {
+				t.Errorf("expected bearer token, got %q", got)
+			}
+			if r.URL.Query().Has("access_token") {
+				t.Errorf("access token leaked into query: %s", r.URL.RawQuery)
 			}
 			w.Header().Set("Content-Type", "application/json")
 			switch {
@@ -163,6 +170,45 @@ func assertUploadedFile(
 	}
 }
 
+func TestListRunsUsesStoredOIDCToken(t *testing.T) {
+	useWorkflowServer(
+		t,
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if got := r.Header.Get("Authorization"); got != "Bearer stored.jwt.token" {
+				t.Errorf("Authorization = %q, want stored token", got)
+			}
+			if r.URL.Query().Has("access_token") {
+				t.Errorf("access token leaked into query: %s", r.URL.RawQuery)
+			}
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{
+                "items":[{"name":"analysis.1","status":"finished"}],
+                "total":1
+            }`))
+		}),
+	)
+	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/credentials.json")
+	store, err := auth.NewStore()
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = store.Put(viper.GetString("server-url"), auth.Credentials{
+		AccessToken:          "stored.jwt.token",
+		AccessTokenExpiresAt: time.Now().Add(time.Hour).Format(time.RFC3339),
+	}, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	runs, total, err := ListRuns("", "analysis", []string{"finished"}, 1, 10)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if total != 1 || len(runs) != 1 || runs[0].Name != "analysis.1" {
+		t.Errorf("unexpected runs: %+v, total %d", runs, total)
+	}
+}
+
 func TestUploadFileUsesLocalName(t *testing.T) {
 	t.Chdir(t.TempDir())
 	if err := os.WriteFile("input.txt", []byte("input"), 0o600); err != nil {
@@ -178,6 +224,39 @@ func TestUploadFileUsesLocalName(t *testing.T) {
 	)
 
 	if _, err := UploadFile("token", "analysis", "input.txt"); err != nil {
+		t.Fatal(err)
+	}
+}
+
+func TestUploadFileUsesStoredOIDCToken(t *testing.T) {
+	t.Chdir(t.TempDir())
+	if err := os.WriteFile("input.txt", []byte("input"), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	useWorkflowServer(
+		t,
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if got := r.Header.Get("Authorization"); got != "Bearer stored.jwt.token" {
+				t.Errorf("Authorization = %q, want stored token", got)
+			}
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write([]byte(`{"message":"uploaded"}`))
+		}),
+	)
+	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/credentials.json")
+	store, err := auth.NewStore()
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = store.Put(viper.GetString("server-url"), auth.Credentials{
+		AccessToken:          "stored.jwt.token",
+		AccessTokenExpiresAt: time.Now().Add(time.Hour).Format(time.RFC3339),
+	}, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	if _, err := UploadFile("", "analysis", "input.txt"); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -234,6 +313,10 @@ func TestUploadWorkflowNameIsEscapedOnce(t *testing.T) {
 		{"analysis#fragment", "/api/workflows/analysis%23fragment/workspace"},
 		{"analysis?query", "/api/workflows/analysis%3Fquery/workspace"},
 		{"analysis%percent", "/api/workflows/analysis%25percent/workspace"},
+		{
+			"../../etc/passwd",
+			"/api/workflows/..%2F..%2Fetc%2Fpasswd/workspace",
+		},
 	}
 	for _, test := range tests {
 		t.Run(test.workflow, func(t *testing.T) {

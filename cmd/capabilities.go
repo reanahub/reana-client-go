@@ -61,13 +61,13 @@ func requireSpecificationBundleSupport(api *client.API) error {
 
 // bundleCapableAPIClient returns a control-plane API client only when the
 // connected server implements the specification-bundle protocol.
-func bundleCapableAPIClient() (*client.API, error) {
-	api, err := client.ControlAPIClient()
+func bundleCapableAPIClient(token string) (*client.API, error) {
+	api, err := client.ControlAPIClient(token)
 	if err != nil {
 		return nil, err
 	}
-	if err := requireSpecificationBundleSupport(api); err != nil {
+	if err := requireSpecificationBundleSupport(api.API); err != nil {
 		return nil, err
 	}
-	return api, nil
+	return api.API, nil
 }

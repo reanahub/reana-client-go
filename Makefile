@@ -61,6 +61,7 @@ release: # Prepare standalone reana-client-go-* executables for release.
 	GOOS=linux GOARCH=arm64 CGO_ENABLED=0 go build -o reana-client-go-$$version-linux-arm64
 
 swagger-generate-client: # Generate OpenAPI client.
+	rm -f client/api_client.go client/operations/*.go models/*.go
 	$(SWAGGER) generate client -f "../reana-server/docs/openapi.json" -A api
 
 swagger-validate-specs: # Validate OpenAPI specification.

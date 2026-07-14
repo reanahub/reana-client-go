@@ -134,14 +134,13 @@ func validateShareExpiry(value string) error {
 
 func (o *shareAddOptions) run(cmd *cobra.Command) error {
 	shareAddParams := operations.NewShareWorkflowParams()
-	shareAddParams.SetAccessToken(&o.token)
 	shareAddParams.SetWorkflowIDOrName(o.workflow)
 	shareAddParams.SetShareDetails(operations.ShareWorkflowBody{
 		Message:    o.message,
 		ValidUntil: o.validUntil,
 	})
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
@@ -153,7 +152,7 @@ func (o *shareAddOptions) run(cmd *cobra.Command) error {
 		log.Infof("Sharing workflow %s with user %s", o.workflow, user)
 
 		shareAddParams.ShareDetails.UserEmailToShareWith = &user
-		_, err := api.Operations.ShareWorkflow(shareAddParams)
+		_, err := api.Operations.ShareWorkflow(shareAddParams, nil)
 
 		if err != nil {
 			err := errorhandler.HandleApiError(err)

@@ -31,6 +31,12 @@ func (o *DeleteSecretsReader) ReadResponse(response runtime.ClientResponse, cons
 			return nil, err
 		}
 		return result, nil
+	case 401:
+		result := NewDeleteSecretsUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewDeleteSecretsForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -45,6 +51,12 @@ func (o *DeleteSecretsReader) ReadResponse(response runtime.ClientResponse, cons
 		return nil, result
 	case 500:
 		result := NewDeleteSecretsInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewDeleteSecretsServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -118,6 +130,62 @@ func (o *DeleteSecretsOK) readResponse(response runtime.ClientResponse, consumer
 	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewDeleteSecretsUnauthorized creates a DeleteSecretsUnauthorized with default headers values
+func NewDeleteSecretsUnauthorized() *DeleteSecretsUnauthorized {
+	return &DeleteSecretsUnauthorized{}
+}
+
+/*
+DeleteSecretsUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type DeleteSecretsUnauthorized struct {
+}
+
+// IsSuccess returns true when this delete secrets unauthorized response has a 2xx status code
+func (o *DeleteSecretsUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete secrets unauthorized response has a 3xx status code
+func (o *DeleteSecretsUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete secrets unauthorized response has a 4xx status code
+func (o *DeleteSecretsUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this delete secrets unauthorized response has a 5xx status code
+func (o *DeleteSecretsUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete secrets unauthorized response a status code equal to that given
+func (o *DeleteSecretsUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the delete secrets unauthorized response
+func (o *DeleteSecretsUnauthorized) Code() int {
+	return 401
+}
+
+func (o *DeleteSecretsUnauthorized) Error() string {
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsUnauthorized", 401)
+}
+
+func (o *DeleteSecretsUnauthorized) String() string {
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsUnauthorized", 401)
+}
+
+func (o *DeleteSecretsUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
@@ -326,6 +394,62 @@ func (o *DeleteSecretsInternalServerError) readResponse(response runtime.ClientR
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewDeleteSecretsServiceUnavailable creates a DeleteSecretsServiceUnavailable with default headers values
+func NewDeleteSecretsServiceUnavailable() *DeleteSecretsServiceUnavailable {
+	return &DeleteSecretsServiceUnavailable{}
+}
+
+/*
+DeleteSecretsServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type DeleteSecretsServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this delete secrets service unavailable response has a 2xx status code
+func (o *DeleteSecretsServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete secrets service unavailable response has a 3xx status code
+func (o *DeleteSecretsServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete secrets service unavailable response has a 4xx status code
+func (o *DeleteSecretsServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this delete secrets service unavailable response has a 5xx status code
+func (o *DeleteSecretsServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this delete secrets service unavailable response a status code equal to that given
+func (o *DeleteSecretsServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the delete secrets service unavailable response
+func (o *DeleteSecretsServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *DeleteSecretsServiceUnavailable) Error() string {
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsServiceUnavailable", 503)
+}
+
+func (o *DeleteSecretsServiceUnavailable) String() string {
+	return fmt.Sprintf("[DELETE /api/secrets/][%d] deleteSecretsServiceUnavailable", 503)
+}
+
+func (o *DeleteSecretsServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

@@ -102,7 +102,6 @@ func (o *duOptions) run(cmd *cobra.Command) error {
 	}
 
 	duParams := operations.NewGetWorkflowDiskUsageParams()
-	duParams.SetAccessToken(&o.token)
 	duParams.SetWorkflowIDOrName(o.workflow)
 	additionalParams := operations.GetWorkflowDiskUsageBody{
 		Summarize: o.summarize,
@@ -110,11 +109,11 @@ func (o *duOptions) run(cmd *cobra.Command) error {
 	}
 	duParams.SetParameters(additionalParams)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
-	duResp, err := api.Operations.GetWorkflowDiskUsage(duParams)
+	duResp, err := api.Operations.GetWorkflowDiskUsage(duParams, nil)
 	if err != nil {
 		return err
 	}

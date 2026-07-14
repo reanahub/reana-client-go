@@ -32,8 +32,26 @@ func (o *InfoReader) ReadResponse(response runtime.ClientResponse, consumer runt
 			return nil, err
 		}
 		return result, nil
+	case 401:
+		result := NewInfoUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 403:
+		result := NewInfoForbidden()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 500:
 		result := NewInfoInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewInfoServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -113,6 +131,118 @@ func (o *InfoOK) readResponse(response runtime.ClientResponse, consumer runtime.
 	return nil
 }
 
+// NewInfoUnauthorized creates a InfoUnauthorized with default headers values
+func NewInfoUnauthorized() *InfoUnauthorized {
+	return &InfoUnauthorized{}
+}
+
+/*
+InfoUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type InfoUnauthorized struct {
+}
+
+// IsSuccess returns true when this info unauthorized response has a 2xx status code
+func (o *InfoUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this info unauthorized response has a 3xx status code
+func (o *InfoUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this info unauthorized response has a 4xx status code
+func (o *InfoUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this info unauthorized response has a 5xx status code
+func (o *InfoUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this info unauthorized response a status code equal to that given
+func (o *InfoUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the info unauthorized response
+func (o *InfoUnauthorized) Code() int {
+	return 401
+}
+
+func (o *InfoUnauthorized) Error() string {
+	return fmt.Sprintf("[GET /api/info][%d] infoUnauthorized", 401)
+}
+
+func (o *InfoUnauthorized) String() string {
+	return fmt.Sprintf("[GET /api/info][%d] infoUnauthorized", 401)
+}
+
+func (o *InfoUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+// NewInfoForbidden creates a InfoForbidden with default headers values
+func NewInfoForbidden() *InfoForbidden {
+	return &InfoForbidden{}
+}
+
+/*
+InfoForbidden describes a response with status code 403, with default header values.
+
+The authenticated user lacks the required REANA role.
+*/
+type InfoForbidden struct {
+}
+
+// IsSuccess returns true when this info forbidden response has a 2xx status code
+func (o *InfoForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this info forbidden response has a 3xx status code
+func (o *InfoForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this info forbidden response has a 4xx status code
+func (o *InfoForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this info forbidden response has a 5xx status code
+func (o *InfoForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this info forbidden response a status code equal to that given
+func (o *InfoForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
+// Code gets the status code for the info forbidden response
+func (o *InfoForbidden) Code() int {
+	return 403
+}
+
+func (o *InfoForbidden) Error() string {
+	return fmt.Sprintf("[GET /api/info][%d] infoForbidden", 403)
+}
+
+func (o *InfoForbidden) String() string {
+	return fmt.Sprintf("[GET /api/info][%d] infoForbidden", 403)
+}
+
+func (o *InfoForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
 // NewInfoInternalServerError creates a InfoInternalServerError with default headers values
 func NewInfoInternalServerError() *InfoInternalServerError {
 	return &InfoInternalServerError{}
@@ -179,6 +309,62 @@ func (o *InfoInternalServerError) readResponse(response runtime.ClientResponse, 
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewInfoServiceUnavailable creates a InfoServiceUnavailable with default headers values
+func NewInfoServiceUnavailable() *InfoServiceUnavailable {
+	return &InfoServiceUnavailable{}
+}
+
+/*
+InfoServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type InfoServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this info service unavailable response has a 2xx status code
+func (o *InfoServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this info service unavailable response has a 3xx status code
+func (o *InfoServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this info service unavailable response has a 4xx status code
+func (o *InfoServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this info service unavailable response has a 5xx status code
+func (o *InfoServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this info service unavailable response a status code equal to that given
+func (o *InfoServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the info service unavailable response
+func (o *InfoServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *InfoServiceUnavailable) Error() string {
+	return fmt.Sprintf("[GET /api/info][%d] infoServiceUnavailable", 503)
+}
+
+func (o *InfoServiceUnavailable) String() string {
+	return fmt.Sprintf("[GET /api/info][%d] infoServiceUnavailable", 503)
+}
+
+func (o *InfoServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

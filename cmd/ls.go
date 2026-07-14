@@ -147,7 +147,6 @@ func (o *lsOptions) run(cmd *cobra.Command) error {
 	log.Infof("Workflow %s selected", o.workflow)
 
 	lsParams := operations.NewGetFilesParams()
-	lsParams.SetAccessToken(&o.token)
 	lsParams.SetWorkflowIDOrName(o.workflow)
 	lsParams.SetFileName(&o.fileName)
 	lsParams.SetSearch(&searchFilter)
@@ -156,11 +155,11 @@ func (o *lsOptions) run(cmd *cobra.Command) error {
 		lsParams.SetSize(&o.size)
 	}
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
-	lsResp, err := api.Operations.GetFiles(lsParams)
+	lsResp, err := api.Operations.GetFiles(lsParams, nil)
 	if err != nil {
 		return err
 	}

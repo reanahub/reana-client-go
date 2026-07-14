@@ -37,6 +37,12 @@ func (o *OpenInteractiveSessionReader) ReadResponse(response runtime.ClientRespo
 			return nil, err
 		}
 		return nil, result
+	case 401:
+		result := NewOpenInteractiveSessionUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewOpenInteractiveSessionForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -51,6 +57,12 @@ func (o *OpenInteractiveSessionReader) ReadResponse(response runtime.ClientRespo
 		return nil, result
 	case 500:
 		result := NewOpenInteractiveSessionInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewOpenInteractiveSessionServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -196,6 +208,62 @@ func (o *OpenInteractiveSessionBadRequest) readResponse(response runtime.ClientR
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewOpenInteractiveSessionUnauthorized creates a OpenInteractiveSessionUnauthorized with default headers values
+func NewOpenInteractiveSessionUnauthorized() *OpenInteractiveSessionUnauthorized {
+	return &OpenInteractiveSessionUnauthorized{}
+}
+
+/*
+OpenInteractiveSessionUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type OpenInteractiveSessionUnauthorized struct {
+}
+
+// IsSuccess returns true when this open interactive session unauthorized response has a 2xx status code
+func (o *OpenInteractiveSessionUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this open interactive session unauthorized response has a 3xx status code
+func (o *OpenInteractiveSessionUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this open interactive session unauthorized response has a 4xx status code
+func (o *OpenInteractiveSessionUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this open interactive session unauthorized response has a 5xx status code
+func (o *OpenInteractiveSessionUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this open interactive session unauthorized response a status code equal to that given
+func (o *OpenInteractiveSessionUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the open interactive session unauthorized response
+func (o *OpenInteractiveSessionUnauthorized) Code() int {
+	return 401
+}
+
+func (o *OpenInteractiveSessionUnauthorized) Error() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionUnauthorized", 401)
+}
+
+func (o *OpenInteractiveSessionUnauthorized) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionUnauthorized", 401)
+}
+
+func (o *OpenInteractiveSessionUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
@@ -406,6 +474,62 @@ func (o *OpenInteractiveSessionInternalServerError) readResponse(response runtim
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewOpenInteractiveSessionServiceUnavailable creates a OpenInteractiveSessionServiceUnavailable with default headers values
+func NewOpenInteractiveSessionServiceUnavailable() *OpenInteractiveSessionServiceUnavailable {
+	return &OpenInteractiveSessionServiceUnavailable{}
+}
+
+/*
+OpenInteractiveSessionServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type OpenInteractiveSessionServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this open interactive session service unavailable response has a 2xx status code
+func (o *OpenInteractiveSessionServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this open interactive session service unavailable response has a 3xx status code
+func (o *OpenInteractiveSessionServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this open interactive session service unavailable response has a 4xx status code
+func (o *OpenInteractiveSessionServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this open interactive session service unavailable response has a 5xx status code
+func (o *OpenInteractiveSessionServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this open interactive session service unavailable response a status code equal to that given
+func (o *OpenInteractiveSessionServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the open interactive session service unavailable response
+func (o *OpenInteractiveSessionServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *OpenInteractiveSessionServiceUnavailable) Error() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionServiceUnavailable", 503)
+}
+
+func (o *OpenInteractiveSessionServiceUnavailable) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/open/{interactive_session_type}][%d] openInteractiveSessionServiceUnavailable", 503)
+}
+
+func (o *OpenInteractiveSessionServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

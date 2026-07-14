@@ -109,15 +109,14 @@ func (o *secretsAddOptions) run(cmd *cobra.Command) error {
 	}
 
 	addSecretsParams := operations.NewAddSecretsParams()
-	addSecretsParams.SetAccessToken(&o.token)
 	addSecretsParams.SetOverwrite(&o.overwrite)
 	addSecretsParams.SetSecrets(secrets)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
-	_, err = api.Operations.AddSecrets(addSecretsParams)
+	_, err = api.Operations.AddSecrets(addSecretsParams, nil)
 	if err != nil {
 		return err
 	}

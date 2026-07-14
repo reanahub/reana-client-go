@@ -37,6 +37,12 @@ func (o *UnshareWorkflowReader) ReadResponse(response runtime.ClientResponse, co
 			return nil, err
 		}
 		return nil, result
+	case 401:
+		result := NewUnshareWorkflowUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewUnshareWorkflowForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -57,6 +63,12 @@ func (o *UnshareWorkflowReader) ReadResponse(response runtime.ClientResponse, co
 		return nil, result
 	case 500:
 		result := NewUnshareWorkflowInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewUnshareWorkflowServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -202,6 +214,62 @@ func (o *UnshareWorkflowBadRequest) readResponse(response runtime.ClientResponse
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewUnshareWorkflowUnauthorized creates a UnshareWorkflowUnauthorized with default headers values
+func NewUnshareWorkflowUnauthorized() *UnshareWorkflowUnauthorized {
+	return &UnshareWorkflowUnauthorized{}
+}
+
+/*
+UnshareWorkflowUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type UnshareWorkflowUnauthorized struct {
+}
+
+// IsSuccess returns true when this unshare workflow unauthorized response has a 2xx status code
+func (o *UnshareWorkflowUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this unshare workflow unauthorized response has a 3xx status code
+func (o *UnshareWorkflowUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this unshare workflow unauthorized response has a 4xx status code
+func (o *UnshareWorkflowUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this unshare workflow unauthorized response has a 5xx status code
+func (o *UnshareWorkflowUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this unshare workflow unauthorized response a status code equal to that given
+func (o *UnshareWorkflowUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the unshare workflow unauthorized response
+func (o *UnshareWorkflowUnauthorized) Code() int {
+	return 401
+}
+
+func (o *UnshareWorkflowUnauthorized) Error() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/unshare][%d] unshareWorkflowUnauthorized", 401)
+}
+
+func (o *UnshareWorkflowUnauthorized) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/unshare][%d] unshareWorkflowUnauthorized", 401)
+}
+
+func (o *UnshareWorkflowUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
@@ -482,6 +550,62 @@ func (o *UnshareWorkflowInternalServerError) readResponse(response runtime.Clien
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewUnshareWorkflowServiceUnavailable creates a UnshareWorkflowServiceUnavailable with default headers values
+func NewUnshareWorkflowServiceUnavailable() *UnshareWorkflowServiceUnavailable {
+	return &UnshareWorkflowServiceUnavailable{}
+}
+
+/*
+UnshareWorkflowServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type UnshareWorkflowServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this unshare workflow service unavailable response has a 2xx status code
+func (o *UnshareWorkflowServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this unshare workflow service unavailable response has a 3xx status code
+func (o *UnshareWorkflowServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this unshare workflow service unavailable response has a 4xx status code
+func (o *UnshareWorkflowServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this unshare workflow service unavailable response has a 5xx status code
+func (o *UnshareWorkflowServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this unshare workflow service unavailable response a status code equal to that given
+func (o *UnshareWorkflowServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the unshare workflow service unavailable response
+func (o *UnshareWorkflowServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *UnshareWorkflowServiceUnavailable) Error() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/unshare][%d] unshareWorkflowServiceUnavailable", 503)
+}
+
+func (o *UnshareWorkflowServiceUnavailable) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/unshare][%d] unshareWorkflowServiceUnavailable", 503)
+}
+
+func (o *UnshareWorkflowServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

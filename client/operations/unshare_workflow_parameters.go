@@ -61,12 +61,6 @@ UnshareWorkflowParams contains all the parameters to send to the API endpoint
 */
 type UnshareWorkflowParams struct {
 
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* UserEmailToUnshareWith.
 
 	   Required. User to unshare the workflow with.
@@ -132,17 +126,6 @@ func (o *UnshareWorkflowParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the unshare workflow params
-func (o *UnshareWorkflowParams) WithAccessToken(accessToken *string) *UnshareWorkflowParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the unshare workflow params
-func (o *UnshareWorkflowParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithUserEmailToUnshareWith adds the userEmailToUnshareWith to the unshare workflow params
 func (o *UnshareWorkflowParams) WithUserEmailToUnshareWith(userEmailToUnshareWith string) *UnshareWorkflowParams {
 	o.SetUserEmailToUnshareWith(userEmailToUnshareWith)
@@ -172,23 +155,6 @@ func (o *UnshareWorkflowParams) WriteToRequest(r runtime.ClientRequest, reg strf
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 
 	// query param user_email_to_unshare_with
 	qrUserEmailToUnshareWith := o.UserEmailToUnshareWith

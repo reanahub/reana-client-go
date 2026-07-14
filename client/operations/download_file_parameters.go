@@ -61,12 +61,6 @@ DownloadFileParams contains all the parameters to send to the API endpoint
 */
 type DownloadFileParams struct {
 
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* FileName.
 
 	   Required. Name (or path) of the file to be downloaded.
@@ -132,17 +126,6 @@ func (o *DownloadFileParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the download file params
-func (o *DownloadFileParams) WithAccessToken(accessToken *string) *DownloadFileParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the download file params
-func (o *DownloadFileParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithFileName adds the fileName to the download file params
 func (o *DownloadFileParams) WithFileName(fileName string) *DownloadFileParams {
 	o.SetFileName(fileName)
@@ -172,23 +155,6 @@ func (o *DownloadFileParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 
 	// path param file_name
 	if err := r.SetPathParam("file_name", o.FileName); err != nil {

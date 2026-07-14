@@ -10,10 +10,13 @@ package cmd
 
 import (
 	"net/http"
+	"net/http/httptest"
 	"reanahub/reana-client-go/pkg/config"
+	"strings"
 	"testing"
 
 	"github.com/go-gota/gota/series"
+	"github.com/spf13/viper"
 
 	"golang.org/x/exp/slices"
 )
@@ -50,8 +53,8 @@ func TestList(t *testing.T) {
 			args: []string{"-s"},
 			expected: []string{
 				"NAME", "RUN_NUMBER", "CREATED", "SESSION_TYPE", "SESSION_URI", "SESSION_STATUS",
-				"my_workflow", "23", "2022-07-28T12:04:37", "jupyter", "/session1uri", "created",
-				"my_workflow2", "12", "2022-08-10T17:14:12", "/session2uri",
+				"my_workflow", "23", "2022-07-28T12:04:37", "jupyter", "/session1uri?token=session-secret", "created",
+				"my_workflow2", "12", "2022-08-10T17:14:12", "/session2uri?token=session-secret",
 			},
 			unwanted: []string{
 				"ID", "USER", "SIZE", "PROGRESS", "DURATION",
@@ -321,6 +324,83 @@ func TestList(t *testing.T) {
 			params.cmd = "list"
 			testCmdRun(t, params)
 		})
+	}
+}
+
+func TestListDegradesToPlaceholderWhenSessionSecretFetchFails(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			switch {
+			case r.URL.Path == listServerPath:
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				_, _ = w.Write([]byte(`{
+                "total": 2,
+                "items": [{
+                    "created": "2022-07-28T12:04:37",
+                    "id": "my_workflow_id",
+                    "name": "my_workflow.23",
+                    "progress": {
+                        "finished": {"job_ids": [], "total": 0},
+                        "total": {"job_ids": [], "total": 0}
+                    },
+                    "status": "created",
+                    "user": "user",
+                    "session_status": "created",
+                    "session_type": "jupyter",
+                    "session_uri": "/session1uri",
+                    "shared_with": []
+                }, {
+                    "created": "2022-07-28T12:04:37",
+                    "id": "other_workflow_id",
+                    "name": "other_workflow.1",
+                    "progress": {
+                        "finished": {"job_ids": [], "total": 0},
+                        "total": {"job_ids": [], "total": 0}
+                    },
+                    "status": "created",
+                    "user": "user",
+                    "session_status": "created",
+                    "session_type": "jupyter",
+                    "session_uri": "/session2uri",
+                    "shared_with": []
+                }]
+            }`))
+			case strings.HasSuffix(r.URL.Path, "/interactive-session-secret"):
+				if strings.Contains(r.URL.Path, "other_workflow") {
+					w.WriteHeader(http.StatusInternalServerError)
+					return
+				}
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				_, _ = w.Write(
+					[]byte(
+						`{"path": "/session1uri", "session_secret": "session-secret"}`,
+					),
+				)
+			default:
+				t.Errorf("unexpected request to %q", r.URL.Path)
+			}
+		},
+	))
+	defer server.Close()
+
+	viper.Set("server-url", server.URL)
+	t.Cleanup(viper.Reset)
+
+	out, err := ExecuteCommand(NewRootCmd(), "list", "-t", "1234", "-s")
+	if err != nil {
+		t.Fatalf(
+			"list should degrade a single row's secret-fetch failure, not abort: %v",
+			err,
+		)
+	}
+	if !strings.Contains(out, "my_workflow") ||
+		!strings.Contains(out, "other_workflow") {
+		t.Fatalf("expected both workflows in the listing, got %q", out)
+	}
+	if !strings.Contains(out, "(unavailable)") {
+		t.Errorf("expected a placeholder for the failed row, got %q", out)
 	}
 }
 

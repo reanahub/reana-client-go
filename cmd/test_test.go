@@ -17,7 +17,9 @@ import (
 	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
+	"reanahub/reana-client-go/pkg/auth"
 	"reanahub/reana-client-go/pkg/config"
 
 	"github.com/spf13/viper"
@@ -59,8 +61,47 @@ func configureTestServer(t *testing.T, handler http.HandlerFunc) {
 
 func requireTestToken(t *testing.T, request *http.Request) {
 	t.Helper()
-	if token := request.URL.Query().Get("access_token"); token != "1234" {
-		t.Errorf("got access token %q, want 1234", token)
+	if got := request.Header.Get("Authorization"); got != "Bearer 1234" {
+		t.Errorf("got Authorization %q, want Bearer 1234", got)
+	}
+	if request.URL.Query().Has("access_token") {
+		t.Errorf("access token leaked into query: %s", request.URL.RawQuery)
+	}
+}
+
+func TestTestCommandUsesStoredOIDCToken(t *testing.T) {
+	t.Setenv("REANA_ACCESS_TOKEN", "")
+	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/credentials.json")
+	feature := writeCommandFeature(t, "stored.feature", passingFeature)
+	configureTestServer(t, func(w http.ResponseWriter, r *http.Request) {
+		if got := r.Header.Get("Authorization"); got != "Bearer stored.jwt.token" {
+			t.Errorf("got Authorization %q, want stored token", got)
+		}
+		if r.URL.Query().Has("access_token") {
+			t.Errorf("access token leaked into query: %s", r.URL.RawQuery)
+		}
+		serveTestStatus(w, "finished")
+	})
+	store, err := auth.NewStore()
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = store.Put(viper.GetString("server-url"), auth.Credentials{
+		AccessToken:          "stored.jwt.token",
+		AccessTokenExpiresAt: time.Now().Add(time.Hour).Format(time.RFC3339),
+	}, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	output, err := ExecuteCommand(
+		NewRootCmd(), "test", "-w", "analysis.1", "-n", feature,
+	)
+	if err != nil {
+		t.Fatalf("test command failed: %v", err)
+	}
+	if !strings.Contains(output, "1 passed, 0 failed") {
+		t.Errorf("unexpected output: %q", output)
 	}
 }
 

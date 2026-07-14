@@ -111,14 +111,14 @@ E.g. --debug (workflow engine - cwl)`,
 }
 
 func (o *startOptions) run(cmd *cobra.Command) error {
-	api, err := client.ControlAPIClient()
+	api, err := client.ControlAPIClient(o.token)
 	if err != nil {
 		return err
 	}
 
 	if len(o.parameters) > 0 || len(o.options) > 0 {
 		o.options, o.parameters, err = validateStartOptionsAndParams(
-			api,
+			api.API,
 			o.token, o.workflow, o.options, o.parameters,
 			cmd.OutOrStdout(),
 		)
@@ -130,13 +130,12 @@ func (o *startOptions) run(cmd *cobra.Command) error {
 	startParams := operations.NewStartWorkflowParamsWithTimeout(
 		controlOperationTimeout,
 	)
-	startParams.SetAccessToken(&o.token)
 	startParams.SetWorkflowIDOrName(o.workflow)
 	startParams.SetParameters(operations.StartWorkflowBody{
 		InputParameters:    o.parameters,
 		OperationalOptions: o.options,
 	})
-	startResp, err := api.Operations.StartWorkflow(startParams)
+	startResp, err := api.Operations.StartWorkflow(startParams, nil)
 	if err != nil {
 		return err
 	}
@@ -207,9 +206,8 @@ func validateStartOptionsAndParams(
 	out io.Writer,
 ) (validatedOptions map[string]string, validatedParams map[string]string, err error) {
 	params := operations.NewGetWorkflowParametersParams()
-	params.SetAccessToken(&token)
 	params.SetWorkflowIDOrName(workflow)
-	paramsResp, err := api.Operations.GetWorkflowParameters(params)
+	paramsResp, err := api.Operations.GetWorkflowParameters(params, nil)
 	if err != nil {
 		return nil, nil, err
 	}

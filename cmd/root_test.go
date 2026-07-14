@@ -13,12 +13,15 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
+	"reanahub/reana-client-go/pkg/auth"
 	"reanahub/reana-client-go/pkg/errorhandler"
 	"reanahub/reana-client-go/pkg/validator"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/pflag"
 
 	log "github.com/sirupsen/logrus"
 
@@ -117,10 +120,25 @@ func getResponseFile(callSeqNum int, serverResponse ServerResponse) string {
 
 func testCmdRun(t *testing.T, p TestCmdParams) {
 	callSeqNum := 0
-	server := httptest.NewTLSServer(
+	server := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			if accessToken := r.URL.Query().Get("access_token"); accessToken != "1234" {
-				t.Errorf("Expected access token '1234', got '%v'", accessToken)
+			if authorization := r.Header.Get("Authorization"); authorization != "Bearer 1234" {
+				t.Errorf(
+					"Expected Authorization 'Bearer 1234', got '%v'",
+					authorization,
+				)
+			}
+			if r.URL.Query().Has("access_token") {
+				t.Errorf("Access token leaked into query: %s", r.URL.RawQuery)
+			}
+			if strings.HasSuffix(r.URL.Path, "/interactive-session-secret") {
+				w.Header().Add("Content-Type", "application/json")
+				_, _ = w.Write(
+					[]byte(
+						`{"session_secret":"session-secret","path":"/session"}`,
+					),
+				)
+				return
 			}
 			res, validPath := p.serverResponses[r.URL.Path]
 			if validPath {
@@ -230,7 +248,7 @@ func TestValidateFlags(t *testing.T) {
 		"invalid token": {
 			hasToken: true, token: "",
 			hasServerURL: false, hasWorkflow: false,
-			wantError: true, errorMsg: validator.InvalidAccessTokenMsg,
+			wantError: true, errorMsg: "REANA client is not connected to any REANA cluster; run `reana-client-go login`",
 		},
 		"invalid server url": {
 			hasToken: true, token: "token",
@@ -268,6 +286,11 @@ func TestValidateFlags(t *testing.T) {
 
 	for name, test := range tests {
 		t.Run(name, func(t *testing.T) {
+			t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/credentials.json")
+			t.Setenv("REANA_SERVER_URL", "")
+			t.Setenv("REANA_ACCESS_TOKEN", "")
+			viper.Reset()
+			t.Cleanup(viper.Reset)
 			cmd := NewRootCmd()
 			f := cmd.Flags()
 			if test.hasToken {
@@ -275,9 +298,6 @@ func TestValidateFlags(t *testing.T) {
 			}
 			if test.hasServerURL {
 				viper.Set("server-url", test.serverURL)
-				t.Cleanup(func() {
-					viper.Reset()
-				})
 			}
 			if test.hasWorkflow {
 				f.String("workflow", test.workflow, "")
@@ -355,6 +375,18 @@ func TestSetupViper(t *testing.T) {
 	}
 }
 
+func TestMalformedEnvironmentAccessTokenIsRejected(t *testing.T) {
+	t.Setenv("REANA_ACCESS_TOKEN", "legacy-opaque-token")
+	t.Setenv("REANA_SERVER_URL", "https://reana.example.org")
+	viper.Reset()
+	t.Cleanup(viper.Reset)
+
+	_, err := ExecuteCommand(NewRootCmd(), "ping")
+	if err == nil || !strings.Contains(err.Error(), "must contain a JWT") {
+		t.Fatalf("expected JWT migration error, got %v", err)
+	}
+}
+
 func TestSetupLogger(t *testing.T) {
 	tests := map[string]struct {
 		level   string
@@ -381,5 +413,89 @@ func TestSetupLogger(t *testing.T) {
 				t.Error("Expected error, instead got nil")
 			}
 		})
+	}
+}
+
+func TestLogCmdFlagsRedactsAccessToken(t *testing.T) {
+	oldLevel := log.GetLevel()
+	oldOutput := log.StandardLogger().Out
+	log.SetLevel(log.DebugLevel)
+	var output bytes.Buffer
+	log.SetOutput(&output)
+	t.Cleanup(func() {
+		log.SetLevel(oldLevel)
+		log.SetOutput(oldOutput)
+	})
+
+	cmd := &cobra.Command{Use: "test"}
+	cmd.Flags().String("access-token", "", "")
+	cmd.Flags().String("workflow", "", "")
+	if err := cmd.Flags().Set("access-token", "secret-jwt"); err != nil {
+		t.Fatal(err)
+	}
+	if err := cmd.Flags().Set("workflow", "analysis"); err != nil {
+		t.Fatal(err)
+	}
+
+	logCmdFlags(cmd)
+	logged := output.String()
+	if strings.Contains(logged, "secret-jwt") {
+		t.Fatalf("access token was logged: %s", logged)
+	}
+	if !strings.Contains(logged, "access-token: [REDACTED]") {
+		t.Fatalf("redaction marker missing: %s", logged)
+	}
+	if !strings.Contains(logged, "workflow: analysis") {
+		t.Fatalf("non-sensitive flag missing: %s", logged)
+	}
+}
+
+func TestValidateFlagsResolvesServerURLFromActiveCredentialStore(t *testing.T) {
+	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/credentials.json")
+	t.Setenv("REANA_SERVER_URL", "")
+	t.Setenv("REANA_ACCESS_TOKEN", "")
+	viper.Reset()
+	t.Cleanup(viper.Reset)
+
+	store, err := auth.NewStore()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := store.Put("https://reana.example.org", auth.Credentials{
+		AccessToken: "a.b.c",
+		AccessTokenExpiresAt: time.Now().
+			Add(time.Hour).
+			Format(time.RFC3339),
+	}, true); err != nil {
+		t.Fatal(err)
+	}
+
+	cmd := NewRootCmd()
+	cmd.Flags().String("access-token", "", "")
+
+	if err := validateFlags(cmd); err != nil {
+		t.Fatalf("Got unexpected error '%s'", err.Error())
+	}
+	if got := viper.GetString("server-url"); got != "https://reana.example.org" {
+		t.Fatalf(
+			"server-url = %q, want the active credential store server",
+			got,
+		)
+	}
+}
+
+func TestBindViperToCmdFlagPropagatesSetError(t *testing.T) {
+	viper.Reset()
+	t.Cleanup(viper.Reset)
+	viper.Set("retries", "not-a-number")
+
+	flags := pflag.NewFlagSet("test", pflag.ContinueOnError)
+	flags.Int("retries", 0, "")
+	flag := flags.Lookup("retries")
+
+	if err := bindViperToCmdFlag(flag); err == nil {
+		t.Fatal(
+			"expected an error when the viper value cannot be applied to the flag",
+		)
 	}
 }

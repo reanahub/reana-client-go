@@ -73,7 +73,7 @@ func newRmCmd() *cobra.Command {
 }
 
 func (o *rmOptions) run(cmd *cobra.Command) error {
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
@@ -81,11 +81,10 @@ func (o *rmOptions) run(cmd *cobra.Command) error {
 	hasError := false
 	for _, fileName := range o.fileNames {
 		rmParams := operations.NewDeleteFileParams()
-		rmParams.SetAccessToken(&o.token)
 		rmParams.SetWorkflowIDOrName(o.workflow)
 		rmParams.SetFileName(fileName)
 
-		rmResp, err := api.Operations.DeleteFile(rmParams)
+		rmResp, err := api.Operations.DeleteFile(rmParams, nil)
 		if err != nil {
 			hasError = true
 			displayer.DisplayMessage(

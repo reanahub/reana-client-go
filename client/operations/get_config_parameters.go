@@ -60,13 +60,6 @@ GetConfigParams contains all the parameters to send to the API endpoint
 	Typically these are written to a http.Request.
 */
 type GetConfigParams struct {
-
-	/* AccessToken.
-
-	   API access_token of user.
-	*/
-	AccessToken *string
-
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -120,17 +113,6 @@ func (o *GetConfigParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the get config params
-func (o *GetConfigParams) WithAccessToken(accessToken *string) *GetConfigParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the get config params
-func (o *GetConfigParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WriteToRequest writes these params to a swagger request
 func (o *GetConfigParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -138,23 +120,6 @@ func (o *GetConfigParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Reg
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

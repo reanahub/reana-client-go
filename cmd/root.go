@@ -10,7 +10,9 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
+	"errors"
 	"os"
+	"reanahub/reana-client-go/pkg/auth"
 	"reanahub/reana-client-go/pkg/commandgroups"
 	"reanahub/reana-client-go/pkg/validator"
 
@@ -66,6 +68,8 @@ func NewRootCmd() *cobra.Command {
 			Commands: []*cobra.Command{
 				newCompletionCmd(),
 				newInfoCmd(),
+				newLoginCmd(),
+				newLogoutCmd(),
 				newPingCmd(),
 				newVersionCmd(),
 			},
@@ -175,8 +179,30 @@ func validateFlags(cmd *cobra.Command) error {
 			return err
 		}
 		tokenValue := token.Value.String()
-		if err := validator.ValidateAccessToken(tokenValue); err != nil {
-			return err
+		if tokenValue != "" {
+			if !token.Changed && os.Getenv("REANA_ACCESS_TOKEN") != "" &&
+				!auth.IsJWT(tokenValue) {
+				return errors.New(
+					"REANA_ACCESS_TOKEN must contain a JWT; run `reana-client-go login` or provide a valid JWT",
+				)
+			}
+		} else {
+			manager, err := auth.NewManager()
+			if err != nil {
+				return err
+			}
+			if serverURL == "" {
+				serverURL, err = manager.Store.ActiveServer()
+				if err != nil {
+					return err
+				}
+				if serverURL != "" {
+					viper.Set("server-url", serverURL)
+				}
+			}
+			if _, err := manager.AccessToken(cmd.Context(), serverURL); err != nil {
+				return err
+			}
 		}
 		if err := validator.ValidateServerURL(serverURL); err != nil {
 			return err
@@ -240,6 +266,10 @@ func setupLogger(logLevelFlag string) error {
 func logCmdFlags(cmd *cobra.Command) {
 	log.Debugf("command: %s", cmd.CalledAs())
 	cmd.Flags().Visit(func(f *pflag.Flag) {
+		if f.Name == "access-token" {
+			log.Debugf("%s: [REDACTED]", f.Name)
+			return
+		}
 		log.Debugf("%s: %s", f.Name, f.Value)
 	})
 }

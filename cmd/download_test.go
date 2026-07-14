@@ -269,8 +269,11 @@ func TestDownloadToStdoutKeepsDiagnosticsOnStderr(t *testing.T) {
 				http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 				return
 			}
-			if token := r.URL.Query().Get("access_token"); token != "1234" {
-				t.Errorf("Expected access token 1234, got %q", token)
+			if got := r.Header.Get("Authorization"); got != "Bearer 1234" {
+				t.Errorf("Expected Authorization Bearer 1234, got %q", got)
+			}
+			if r.URL.Query().Has("access_token") {
+				t.Errorf("Access token leaked into query: %s", r.URL.RawQuery)
 			}
 			switch r.URL.Path {
 			case "/api/workflows/my_workflow/workspace/missing.txt":

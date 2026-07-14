@@ -96,19 +96,33 @@ func newOpenCmd() *cobra.Command {
 
 func (o *openOptions) run(cmd *cobra.Command) error {
 	openParams := operations.NewOpenInteractiveSessionParams()
-	openParams.SetAccessToken(&o.token)
 	openParams.SetWorkflowIDOrName(o.workflow)
 	openParams.SetInteractiveSessionType(o.interactiveSessionType)
 	openParams.SetInteractiveSessionConfiguration(
 		operations.OpenInteractiveSessionBody{Image: o.image},
 	)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
 	log.Infof("Opening an interactive session on %s", o.workflow)
-	openResp, err := api.Operations.OpenInteractiveSession(openParams)
+	openResp, err := api.Operations.OpenInteractiveSession(openParams, nil)
+	if err != nil {
+		return err
+	}
+	sessionSecret, err := api.GetInteractiveSessionSecret(
+		cmd.Context(),
+		o.workflow,
+	)
+	if err != nil {
+		return err
+	}
+	sessionURI, err := formatter.FormatSessionURI(
+		o.serverURL,
+		openResp.Payload.Path,
+		sessionSecret,
+	)
 	if err != nil {
 		return err
 	}
@@ -119,19 +133,13 @@ func (o *openOptions) run(cmd *cobra.Command) error {
 		false,
 		cmd.OutOrStdout(),
 	)
-	sessionURI := formatter.FormatSessionURI(
-		o.serverURL,
-		openResp.Payload.Path,
-		o.token,
-	)
 	displayer.PrintColorable(sessionURI+"\n", cmd.OutOrStdout(), text.FgGreen)
 	cmd.Println(
 		"It could take several minutes to start the interactive session.",
 	)
 
 	infoParams := operations.NewInfoParams()
-	infoParams.SetAccessToken(o.token)
-	infoResp, err := api.Operations.Info(infoParams)
+	infoResp, err := api.Operations.Info(infoParams, nil)
 	if err != nil {
 		return nil
 	}
