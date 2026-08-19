@@ -10,6 +10,7 @@ package cmd
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"reanahub/reana-client-go/client"
@@ -353,6 +354,16 @@ func (r *logsCommandRunner) retrieveLogs(
 ) error {
 	workflowLogs, err := r.getLogs(logsParams)
 	if err != nil {
+		var logsPrunedError *operations.GetWorkflowLogsGone
+		if r.options.jsonOutput && errors.As(err, &logsPrunedError) {
+			if err := displayer.DisplayJsonOutput(
+				logsPrunedError.GetPayload(),
+				cmd.OutOrStdout(),
+			); err != nil {
+				return err
+			}
+			return config.ErrEmpty
+		}
 		return err
 	}
 

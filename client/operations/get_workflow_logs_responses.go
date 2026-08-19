@@ -12,9 +12,11 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // GetWorkflowLogsReader is a Reader for the GetWorkflowLogs structure.
@@ -45,6 +47,12 @@ func (o *GetWorkflowLogsReader) ReadResponse(response runtime.ClientResponse, co
 		return nil, result
 	case 404:
 		result := NewGetWorkflowLogsNotFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 410:
+		result := NewGetWorkflowLogsGone()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -340,6 +348,76 @@ func (o *GetWorkflowLogsNotFound) readResponse(response runtime.ClientResponse, 
 	return nil
 }
 
+// NewGetWorkflowLogsGone creates a GetWorkflowLogsGone with default headers values
+func NewGetWorkflowLogsGone() *GetWorkflowLogsGone {
+	return &GetWorkflowLogsGone{}
+}
+
+/*
+GetWorkflowLogsGone describes a response with status code 410, with default header values.
+
+Request failed because the workflow logs were pruned by the cluster retention policy.
+*/
+type GetWorkflowLogsGone struct {
+	Payload *GetWorkflowLogsGoneBody
+}
+
+// IsSuccess returns true when this get workflow logs gone response has a 2xx status code
+func (o *GetWorkflowLogsGone) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow logs gone response has a 3xx status code
+func (o *GetWorkflowLogsGone) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow logs gone response has a 4xx status code
+func (o *GetWorkflowLogsGone) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow logs gone response has a 5xx status code
+func (o *GetWorkflowLogsGone) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow logs gone response a status code equal to that given
+func (o *GetWorkflowLogsGone) IsCode(code int) bool {
+	return code == 410
+}
+
+// Code gets the status code for the get workflow logs gone response
+func (o *GetWorkflowLogsGone) Code() int {
+	return 410
+}
+
+func (o *GetWorkflowLogsGone) Error() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsGone %s", 410, payload)
+}
+
+func (o *GetWorkflowLogsGone) String() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/logs][%d] getWorkflowLogsGone %s", 410, payload)
+}
+
+func (o *GetWorkflowLogsGone) GetPayload() *GetWorkflowLogsGoneBody {
+	return o.Payload
+}
+
+func (o *GetWorkflowLogsGone) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GetWorkflowLogsGoneBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
+		return err
+	}
+
+	return nil
+}
+
 // NewGetWorkflowLogsInternalServerError creates a GetWorkflowLogsInternalServerError with default headers values
 func NewGetWorkflowLogsInternalServerError() *GetWorkflowLogsInternalServerError {
 	return &GetWorkflowLogsInternalServerError{}
@@ -479,6 +557,69 @@ func (o *GetWorkflowLogsForbiddenBody) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *GetWorkflowLogsForbiddenBody) UnmarshalBinary(b []byte) error {
 	var res GetWorkflowLogsForbiddenBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+GetWorkflowLogsGoneBody get workflow logs gone body
+swagger:model GetWorkflowLogsGoneBody
+*/
+type GetWorkflowLogsGoneBody struct {
+
+	// logs pruned at
+	// Format: date-time
+	LogsPrunedAt strfmt.DateTime `json:"logs_pruned_at,omitempty"`
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this get workflow logs gone body
+func (o *GetWorkflowLogsGoneBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateLogsPrunedAt(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *GetWorkflowLogsGoneBody) validateLogsPrunedAt(formats strfmt.Registry) error {
+	if swag.IsZero(o.LogsPrunedAt) { // not required
+		return nil
+	}
+
+	if err := validate.FormatOf("getWorkflowLogsGone"+"."+"logs_pruned_at", "body", "date-time", o.LogsPrunedAt.String(), formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ContextValidate validates this get workflow logs gone body based on context it is used
+func (o *GetWorkflowLogsGoneBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GetWorkflowLogsGoneBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GetWorkflowLogsGoneBody) UnmarshalBinary(b []byte) error {
+	var res GetWorkflowLogsGoneBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

@@ -92,6 +92,34 @@ func TestLogs(t *testing.T) {
 				"\"engine_specific\": \"engine logs\"",
 			},
 		},
+		"pruned logs": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode:   http.StatusGone,
+					responseFile: "logs_pruned.json",
+				},
+			},
+			args: []string{"-w", workflowName},
+			expected: []string{
+				"The logs for this run were pruned by the cluster's retention policy on 2026-07-13T03:00:00Z and are no longer available.",
+			},
+			wantError: true,
+		},
+		"pruned logs in json": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode:   http.StatusGone,
+					responseFile: "logs_pruned.json",
+				},
+			},
+			args: []string{"-w", workflowName, "--json"},
+			expected: []string{
+				"\"logs_pruned_at\": \"2026-07-13T03:00:00.000Z\"",
+				"\"message\": \"The logs for this run were pruned by the cluster's retention policy on 2026-07-13T03:00:00Z and are no longer available.\"",
+			},
+			unwanted:  []string{"getWorkflowLogsGone"},
+			wantError: true,
+		},
 		"with filters": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(logsPathTemplate, workflowName): {
