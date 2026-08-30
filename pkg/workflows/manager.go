@@ -93,6 +93,28 @@ func GetWorkflowSpecification(
 	return resp.GetPayload(), nil
 }
 
+// InputPaths returns the files and directories declared under `inputs`.
+func InputPaths(
+	spec *operations.GetWorkflowSpecificationOKBody,
+) (files, directories []string) {
+	if spec == nil || spec.Specification == nil ||
+		spec.Specification.Inputs == nil {
+		return nil, nil
+	}
+	return spec.Specification.Inputs.Files, spec.Specification.Inputs.Directories
+}
+
+// OutputPaths returns the files and directories declared under `outputs`.
+func OutputPaths(
+	spec *operations.GetWorkflowSpecificationOKBody,
+) (files, directories []string) {
+	if spec == nil || spec.Specification == nil ||
+		spec.Specification.Outputs == nil {
+		return nil, nil
+	}
+	return spec.Specification.Outputs.Files, spec.Specification.Outputs.Directories
+}
+
 // UploadFile uploads a file to the specified workflow.
 func UploadFile(token, workflow, fileName string) (string, error) {
 	return UploadFileAs(token, workflow, fileName, fileName)

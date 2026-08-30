@@ -18,9 +18,12 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strconv"
 	"strings"
 	"testing"
+
+	"reanahub/reana-client-go/client/operations"
 
 	"github.com/spf13/viper"
 )
@@ -428,4 +431,68 @@ func TestWorkflowOperationErrors(t *testing.T) {
 			t.Fatal("expected malformed Content-Disposition error")
 		}
 	})
+}
+
+func TestInputAndOutputPaths(t *testing.T) {
+	declared := &operations.GetWorkflowSpecificationOKBody{
+		Specification: &operations.GetWorkflowSpecificationOKBodySpecification{
+			Inputs: &operations.GetWorkflowSpecificationOKBodySpecificationInputs{
+				Files:       []string{"data.txt"},
+				Directories: []string{"code"},
+			},
+			Outputs: &operations.GetWorkflowSpecificationOKBodySpecificationOutputs{
+				Files: []string{"results/plot.png"},
+			},
+		},
+	}
+
+	tests := map[string]struct {
+		spec       *operations.GetWorkflowSpecificationOKBody
+		wantInFile []string
+		wantInDir  []string
+		wantOutRes []string
+	}{
+		"nil payload": {spec: nil},
+		"no specification": {
+			spec: &operations.GetWorkflowSpecificationOKBody{},
+		},
+		"no inputs or outputs": {
+			spec: &operations.GetWorkflowSpecificationOKBody{
+				Specification: &operations.GetWorkflowSpecificationOKBodySpecification{},
+			},
+		},
+		"both declared": {
+			spec:       declared,
+			wantInFile: []string{"data.txt"},
+			wantInDir:  []string{"code"},
+			wantOutRes: []string{"results/plot.png"},
+		},
+	}
+
+	for name, test := range tests {
+		t.Run(name, func(t *testing.T) {
+			files, directories := InputPaths(test.spec)
+			if !reflect.DeepEqual(files, test.wantInFile) {
+				t.Errorf("input files: got %v, want %v", files, test.wantInFile)
+			}
+			if !reflect.DeepEqual(directories, test.wantInDir) {
+				t.Errorf(
+					"input directories: got %v, want %v",
+					directories,
+					test.wantInDir,
+				)
+			}
+			outFiles, outDirs := OutputPaths(test.spec)
+			if !reflect.DeepEqual(outFiles, test.wantOutRes) {
+				t.Errorf(
+					"output files: got %v, want %v",
+					outFiles,
+					test.wantOutRes,
+				)
+			}
+			if outDirs != nil {
+				t.Errorf("output directories: got %v, want nil", outDirs)
+			}
+		})
+	}
 }
