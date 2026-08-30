@@ -1,0 +1,17 @@
+{
+  "parameters": {},
+  "specification": {
+    "version": "0.9.0",
+    "workflow": {
+      "specification": {
+        "steps": [
+          {
+            "commands": ["echo hi"],
+            "environment": "python:3"
+          }
+        ]
+      },
+      "type": "serial"
+    }
+  }
+}

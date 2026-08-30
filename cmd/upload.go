@@ -89,12 +89,20 @@ func (o *uploadOptions) run(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
-		inputFiles := spec.Specification.Inputs.Files
-		inputDirs := spec.Specification.Inputs.Directories
+		inputFiles, inputDirs := workflows.InputPaths(spec)
 		if err := o.validateInputs(inputFiles, inputDirs); err != nil {
 			return err
 		}
-		inputPaths = append(inputFiles, inputDirs...)
+		inputPaths = append(inputPaths, inputFiles...)
+		inputPaths = append(inputPaths, inputDirs...)
+		if len(inputPaths) == 0 {
+			displayer.DisplayMessage(
+				"The specification declares no inputs, nothing to upload.",
+				displayer.Info,
+				false,
+				cmd.OutOrStdout(),
+			)
+		}
 	}
 
 	files, err := o.collectFiles(cmd, inputPaths)

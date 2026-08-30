@@ -44,6 +44,28 @@ func TestFileUpload(t *testing.T) {
 				"no such file or directory",
 			},
 		},
+		"specification without inputs": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(workflowSpecServerPath, "my_workflow"): {
+					statusCode:   http.StatusOK,
+					responseFile: "workflow_specification_without_inputs.json",
+				},
+			},
+			args:     []string{"-w", "my_workflow"},
+			expected: []string{"declares no inputs, nothing to upload"},
+			unwanted: []string{"was successfully uploaded"},
+		},
+		"specification omitted entirely": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(workflowSpecServerPath, "my_workflow"): {
+					statusCode:   http.StatusOK,
+					responseFile: "workflow_specification_empty.json",
+				},
+			},
+			args:     []string{"-w", "my_workflow"},
+			expected: []string{"declares no inputs, nothing to upload"},
+			unwanted: []string{"was successfully uploaded"},
+		},
 		"unexisting workflow": {
 			args:      []string{},
 			wantError: true,
