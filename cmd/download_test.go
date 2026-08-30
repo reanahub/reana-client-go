@@ -16,7 +16,7 @@ import (
 	"testing"
 )
 
-var downloadWorkflowSpecServerPath = "/api/workflows/%s/specification"
+var workflowSpecServerPath = "/api/workflows/%s/specification"
 var downloadServerPath = "/api/workflows/%s/workspace/%s"
 
 func TestFileDownload(t *testing.T) {
@@ -26,9 +26,20 @@ func TestFileDownload(t *testing.T) {
 	dirZipFileName := "download_roofit.1_results_2022-10-03-122917.zip"
 
 	tests := map[string]TestCmdParams{
+		"specification omitted entirely": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(workflowSpecServerPath, "my_workflow"): {
+					statusCode:   http.StatusOK,
+					responseFile: "workflow_specification_empty.json",
+				},
+			},
+			args:     []string{"-w", "my_workflow"},
+			expected: []string{"declares no outputs, nothing to download"},
+			unwanted: []string{"was successfully downloaded"},
+		},
 		"download file specified in the workflow specification as outputs": {
 			serverResponses: map[string]ServerResponse{
-				fmt.Sprintf(downloadWorkflowSpecServerPath, "my_workflow"): {
+				fmt.Sprintf(workflowSpecServerPath, "my_workflow"): {
 					statusCode:   http.StatusOK,
 					responseFile: "workflow_specification.json",
 				},
@@ -50,7 +61,7 @@ func TestFileDownload(t *testing.T) {
 		},
 		"download from workflow without outputs": {
 			serverResponses: map[string]ServerResponse{
-				fmt.Sprintf(downloadWorkflowSpecServerPath, "my_workflow"): {
+				fmt.Sprintf(workflowSpecServerPath, "my_workflow"): {
 					statusCode:   http.StatusOK,
 					responseFile: "workflow_specification_without_outputs.json",
 				},

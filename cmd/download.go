@@ -102,9 +102,16 @@ func (o *downloadOptions) run(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
-		if outputs := spec.Specification.Outputs; outputs != nil {
-			downloadPaths = append(downloadPaths, outputs.Files...)
-			downloadPaths = append(downloadPaths, outputs.Directories...)
+		outputFiles, outputDirs := workflows.OutputPaths(spec)
+		downloadPaths = append(downloadPaths, outputFiles...)
+		downloadPaths = append(downloadPaths, outputDirs...)
+		if len(downloadPaths) == 0 {
+			displayer.DisplayMessage(
+				"The specification declares no outputs, nothing to download.",
+				displayer.Info,
+				false,
+				cmd.OutOrStdout(),
+			)
 		}
 	}
 	log.Debugf("Download paths: %s", strings.Join(downloadPaths, ", "))
