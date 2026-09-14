@@ -11,7 +11,7 @@
 #     . /path/to/reana-client-go/etc/bash_completion.d/reana-client-go
 #
 #   Option 2: Copy to system completion directory:
-#     cp /path/to/reana-client-go/etc/bash_completion.d/reana-client-go \
+#     cp /path/to/reana-client-go/etc/bash_completion.d/reana-client-go \\
 #        /etc/bash_completion.d/
 #
 #   Option 3: Generate dynamically (add to .bashrc):
@@ -1012,6 +1012,12 @@ _reana-client-go_open()
     local_nonpersistent_flags+=("--image")
     local_nonpersistent_flags+=("--image=")
     local_nonpersistent_flags+=("-i")
+    flags+=("--no-secrets")
+    local_nonpersistent_flags+=("--no-secrets")
+    flags+=("--secret-name=")
+    two_word_flags+=("--secret-name")
+    local_nonpersistent_flags+=("--secret-name")
+    local_nonpersistent_flags+=("--secret-name=")
     flags+=("--workflow=")
     two_word_flags+=("--workflow")
     two_word_flags+=("-w")

@@ -49,6 +49,7 @@ type TestCmdParams struct {
 	unwanted        []string
 	wantError       bool
 	serverURL       string
+	assertRequest   func(t *testing.T, r *http.Request)
 }
 
 type ServerResponse struct {
@@ -121,6 +122,9 @@ func testCmdRun(t *testing.T, p TestCmdParams) {
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if accessToken := r.URL.Query().Get("access_token"); accessToken != "1234" {
 				t.Errorf("Expected access token '1234', got '%v'", accessToken)
+			}
+			if p.assertRequest != nil {
+				p.assertRequest(t, r)
 			}
 			res, validPath := p.serverResponses[r.URL.Path]
 			if validPath {

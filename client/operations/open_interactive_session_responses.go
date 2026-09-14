@@ -456,6 +456,9 @@ type OpenInteractiveSessionBody struct {
 
 	// Replaces the default Docker image of an interactive session.
 	Image string `json:"image,omitempty"`
+
+	// Optional. Explicit allowlist of user secret names to expose to the interactive session.
+	SecretNames *[]string `json:"secret_names,omitempty"`
 }
 
 // Validate validates this open interactive session body

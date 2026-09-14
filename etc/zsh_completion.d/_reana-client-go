@@ -13,7 +13,7 @@
 #     autoload -Uz compinit && compinit
 #
 #   Option 2: Copy to system completion directory:
-#     cp /path/to/reana-client-go/etc/zsh_completion.d/_reana-client-go \
+#     cp /path/to/reana-client-go/etc/zsh_completion.d/_reana-client-go \\
 #        /usr/local/share/zsh/site-functions/
 #
 #   Option 3: Generate dynamically (add to .zshrc):

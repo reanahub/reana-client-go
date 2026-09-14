@@ -40,11 +40,18 @@ const openImageFlagDesc = `Docker image which will be used to spawn the
 interactive session. Overrides the default image
 for the selected type.`
 
+const openSecretNameFlagDesc = `Name of a user secret to expose to the
+interactive session. Can be passed multiple times. If omitted, the session
+inherits workflow.resources.secret_names when present; otherwise, all user
+secrets are exposed.`
+
 type openOptions struct {
 	token                  string
 	serverURL              string
 	workflow               string
 	image                  string
+	secretNames            []string
+	noSecrets              bool
 	interactiveSessionType string
 }
 
@@ -70,6 +77,11 @@ func newOpenCmd() *cobra.Command {
 			); err != nil {
 				return err
 			}
+			if o.noSecrets && len(o.secretNames) > 0 {
+				return fmt.Errorf(
+					"options --no-secrets and --secret-name cannot be used together",
+				)
+			}
 			return o.run(cmd)
 		},
 	}
@@ -90,6 +102,18 @@ func newOpenCmd() *cobra.Command {
 		"Name or UUID of the workflow. Overrides value of REANA_WORKON environment variable.",
 	)
 	f.StringVarP(&o.image, "image", "i", "", openImageFlagDesc)
+	f.StringSliceVar(
+		&o.secretNames,
+		"secret-name",
+		[]string{},
+		openSecretNameFlagDesc,
+	)
+	f.BoolVar(
+		&o.noSecrets,
+		"no-secrets",
+		false,
+		"Do not expose any user secrets to the interactive session.",
+	)
 
 	return cmd
 }
@@ -100,7 +124,7 @@ func (o *openOptions) run(cmd *cobra.Command) error {
 	openParams.SetWorkflowIDOrName(o.workflow)
 	openParams.SetInteractiveSessionType(o.interactiveSessionType)
 	openParams.SetInteractiveSessionConfiguration(
-		operations.OpenInteractiveSessionBody{Image: o.image},
+		o.interactiveSessionConfiguration(),
 	)
 
 	api, err := client.ApiClient()
@@ -146,4 +170,20 @@ func (o *openOptions) run(cmd *cobra.Command) error {
 	}
 
 	return nil
+}
+
+func (o *openOptions) interactiveSessionConfiguration() operations.OpenInteractiveSessionBody {
+	interactiveSessionConfiguration := operations.OpenInteractiveSessionBody{
+		Image: o.image,
+	}
+
+	if o.noSecrets {
+		secretNames := []string{}
+		interactiveSessionConfiguration.SecretNames = &secretNames
+	} else if len(o.secretNames) > 0 {
+		secretNames := append([]string(nil), o.secretNames...)
+		interactiveSessionConfiguration.SecretNames = &secretNames
+	}
+
+	return interactiveSessionConfiguration
 }
