@@ -11,9 +11,12 @@ package cmd
 import (
 	"fmt"
 	"net/http"
+	"net/http/httptest"
 	"reanahub/reana-client-go/pkg/config"
 	"strings"
 	"testing"
+
+	"github.com/spf13/viper"
 )
 
 var openPathTemplate = "/api/workflows/%s/open/%s"
@@ -36,7 +39,7 @@ func TestOpen(t *testing.T) {
 			args: []string{"-w", workflowName},
 			expected: []string{
 				"Interactive session opened successfully",
-				"/test/jupyter?token=1234",
+				"/test/jupyter?token=session-secret",
 				"It could take several minutes to start the interactive session.",
 				"Please note that it will be automatically closed after 7 days of inactivity.",
 			},
@@ -55,7 +58,7 @@ func TestOpen(t *testing.T) {
 			args: []string{"-w", workflowName},
 			expected: []string{
 				"Interactive session opened successfully",
-				"/test/jupyter?token=1234",
+				"/test/jupyter?token=session-secret",
 				"It could take several minutes to start the interactive session.",
 			},
 		},
@@ -73,7 +76,7 @@ func TestOpen(t *testing.T) {
 			args: []string{"-w", workflowName},
 			expected: []string{
 				"Interactive session opened successfully",
-				"/test/jupyter?token=1234",
+				"/test/jupyter?token=session-secret",
 				"It could take several minutes to start the interactive session.",
 			},
 		},
@@ -91,7 +94,7 @@ func TestOpen(t *testing.T) {
 			args: []string{"-w", workflowName, "-i", "image", "jupyter"},
 			expected: []string{
 				"Interactive session opened successfully",
-				"/test/jupyter?token=1234",
+				"/test/jupyter?token=session-secret",
 				"It could take several minutes to start the interactive session.",
 				"Please note that it will be automatically closed after 7 days of inactivity.",
 			},
@@ -124,5 +127,41 @@ func TestOpen(t *testing.T) {
 			params.cmd = "open"
 			testCmdRun(t, params)
 		})
+	}
+}
+
+func TestOpenReturnsErrorWhenSessionSecretFetchFails(t *testing.T) {
+	workflowName := "my_workflow"
+	server := httptest.NewServer(http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			switch {
+			case r.URL.Path == fmt.Sprintf(openPathTemplate, workflowName, config.InteractiveSessionTypes[0]):
+				w.Header().Set("Content-Type", "application/json")
+				w.WriteHeader(http.StatusOK)
+				_, _ = w.Write(
+					[]byte(`{"path": "/session1", "info": {}}`),
+				)
+			case strings.HasSuffix(r.URL.Path, "/interactive-session-secret"):
+				w.WriteHeader(http.StatusInternalServerError)
+			default:
+				t.Errorf("unexpected request to %q", r.URL.Path)
+			}
+		},
+	))
+	defer server.Close()
+
+	viper.Set("server-url", server.URL)
+	t.Cleanup(viper.Reset)
+
+	_, err := ExecuteCommand(
+		NewRootCmd(),
+		"open",
+		"-t",
+		"1234",
+		"-w",
+		workflowName,
+	)
+	if err == nil {
+		t.Fatal("expected an error when the session secret fetch fails")
 	}
 }

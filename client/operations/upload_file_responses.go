@@ -39,6 +39,12 @@ func (o *UploadFileReader) ReadResponse(response runtime.ClientResponse, consume
 			return nil, err
 		}
 		return nil, result
+	case 401:
+		result := NewUploadFileUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewUploadFileForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -216,6 +222,62 @@ func (o *UploadFileBadRequest) readResponse(response runtime.ClientResponse, con
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewUploadFileUnauthorized creates a UploadFileUnauthorized with default headers values
+func NewUploadFileUnauthorized() *UploadFileUnauthorized {
+	return &UploadFileUnauthorized{}
+}
+
+/*
+UploadFileUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type UploadFileUnauthorized struct {
+}
+
+// IsSuccess returns true when this upload file unauthorized response has a 2xx status code
+func (o *UploadFileUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this upload file unauthorized response has a 3xx status code
+func (o *UploadFileUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this upload file unauthorized response has a 4xx status code
+func (o *UploadFileUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this upload file unauthorized response has a 5xx status code
+func (o *UploadFileUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this upload file unauthorized response a status code equal to that given
+func (o *UploadFileUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the upload file unauthorized response
+func (o *UploadFileUnauthorized) Code() int {
+	return 401
+}
+
+func (o *UploadFileUnauthorized) Error() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileUnauthorized", 401)
+}
+
+func (o *UploadFileUnauthorized) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/workspace][%d] uploadFileUnauthorized", 401)
+}
+
+func (o *UploadFileUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

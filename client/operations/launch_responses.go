@@ -41,6 +41,18 @@ func (o *LaunchReader) ReadResponse(response runtime.ClientResponse, consumer ru
 			return nil, err
 		}
 		return nil, result
+	case 401:
+		result := NewLaunchUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 403:
+		result := NewLaunchForbidden()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 409:
 		result := NewLaunchConflict()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -201,6 +213,132 @@ func (o *LaunchBadRequest) GetPayload() *LaunchBadRequestBody {
 func (o *LaunchBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	o.Payload = new(LaunchBadRequestBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
+		return err
+	}
+
+	return nil
+}
+
+// NewLaunchUnauthorized creates a LaunchUnauthorized with default headers values
+func NewLaunchUnauthorized() *LaunchUnauthorized {
+	return &LaunchUnauthorized{}
+}
+
+/*
+LaunchUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type LaunchUnauthorized struct {
+}
+
+// IsSuccess returns true when this launch unauthorized response has a 2xx status code
+func (o *LaunchUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this launch unauthorized response has a 3xx status code
+func (o *LaunchUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this launch unauthorized response has a 4xx status code
+func (o *LaunchUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this launch unauthorized response has a 5xx status code
+func (o *LaunchUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this launch unauthorized response a status code equal to that given
+func (o *LaunchUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the launch unauthorized response
+func (o *LaunchUnauthorized) Code() int {
+	return 401
+}
+
+func (o *LaunchUnauthorized) Error() string {
+	return fmt.Sprintf("[POST /api/launch][%d] launchUnauthorized", 401)
+}
+
+func (o *LaunchUnauthorized) String() string {
+	return fmt.Sprintf("[POST /api/launch][%d] launchUnauthorized", 401)
+}
+
+func (o *LaunchUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+// NewLaunchForbidden creates a LaunchForbidden with default headers values
+func NewLaunchForbidden() *LaunchForbidden {
+	return &LaunchForbidden{}
+}
+
+/*
+LaunchForbidden describes a response with status code 403, with default header values.
+
+Request failed. The user's compute quota has been exceeded.
+*/
+type LaunchForbidden struct {
+	Payload *LaunchForbiddenBody
+}
+
+// IsSuccess returns true when this launch forbidden response has a 2xx status code
+func (o *LaunchForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this launch forbidden response has a 3xx status code
+func (o *LaunchForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this launch forbidden response has a 4xx status code
+func (o *LaunchForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this launch forbidden response has a 5xx status code
+func (o *LaunchForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this launch forbidden response a status code equal to that given
+func (o *LaunchForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
+// Code gets the status code for the launch forbidden response
+func (o *LaunchForbidden) Code() int {
+	return 403
+}
+
+func (o *LaunchForbidden) Error() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/launch][%d] launchForbidden %s", 403, payload)
+}
+
+func (o *LaunchForbidden) String() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/launch][%d] launchForbidden %s", 403, payload)
+}
+
+func (o *LaunchForbidden) GetPayload() *LaunchForbiddenBody {
+	return o.Payload
+}
+
+func (o *LaunchForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(LaunchForbiddenBody)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
@@ -587,6 +725,44 @@ func (o *LaunchBody) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *LaunchBody) UnmarshalBinary(b []byte) error {
 	var res LaunchBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+LaunchForbiddenBody launch forbidden body
+swagger:model LaunchForbiddenBody
+*/
+type LaunchForbiddenBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this launch forbidden body
+func (o *LaunchForbiddenBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this launch forbidden body based on context it is used
+func (o *LaunchForbiddenBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *LaunchForbiddenBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *LaunchForbiddenBody) UnmarshalBinary(b []byte) error {
+	var res LaunchForbiddenBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

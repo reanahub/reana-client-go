@@ -251,7 +251,6 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 	}
 
 	listParams := operations.NewGetWorkflowsParams()
-	listParams.SetAccessToken(&o.token)
 	listParams.SetType(runType)
 	listParams.SetVerbose(&o.verbose)
 	listParams.SetPage(&o.page)
@@ -278,11 +277,11 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 		listParams.SetSharedWith(&o.shared_with)
 	}
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
-	listResp, err := api.Operations.GetWorkflows(listParams)
+	listResp, err := api.Operations.GetWorkflows(listParams, nil)
 	if err != nil {
 		return err
 	}
@@ -307,7 +306,7 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 		header,
 		parsedFormatFilters,
 		o.serverURL,
-		o.token,
+		api,
 		o.sortColumn,
 		o.jsonOutput,
 		o.humanReadable,
@@ -325,7 +324,9 @@ func displayListPayload(
 	p *operations.GetWorkflowsOKBody,
 	header []string,
 	formatFilters []formatter.FormatFilter,
-	serverURL, token, sortColumn string,
+	serverURL string,
+	api *client.AuthenticatedClient,
+	sortColumn string,
 	jsonOutput, humanReadable bool,
 ) error {
 	var df dataframe.DataFrame
@@ -379,11 +380,27 @@ func displayListPayload(
 				value = getOptionalStringField(&workflow.SessionType)
 			case "session_uri":
 				if workflow.SessionURI != "" {
-					value = formatter.FormatSessionURI(
+					sessionSecret, err := api.GetInteractiveSessionSecret(
+						cmd.Context(),
+						workflow.Name,
+					)
+					if err != nil {
+						log.Debugf(
+							"could not fetch interactive session secret for %q: %v",
+							workflow.Name,
+							err,
+						)
+						value = "(unavailable)"
+						break
+					}
+					value, err = formatter.FormatSessionURI(
 						serverURL,
 						workflow.SessionURI,
-						token,
+						sessionSecret,
 					)
+					if err != nil {
+						return err
+					}
 				}
 			case "session_status":
 				value = getOptionalStringField(&workflow.SessionStatus)

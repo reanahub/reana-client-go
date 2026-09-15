@@ -26,25 +26,29 @@ func newTestAPIFetcher(
 	handler http.HandlerFunc,
 ) *APIFetcher {
 	t.Helper()
+	t.Setenv("REANA_SERVER_TLS_VERIFY", "false")
 	server := httptest.NewTLSServer(handler)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(func() {
 		server.Close()
 		viper.Reset()
 	})
-	api, err := client.ApiClient()
+	api, err := client.ApiClient("1234")
 	if err != nil {
 		t.Fatal(err)
 	}
-	return NewAPIFetcher(api, "1234")
+	return NewAPIFetcher(api)
 }
 
 func TestAPIFetcherMapsWorkflowResponses(t *testing.T) {
 	fetcher := newTestAPIFetcher(
 		t,
 		func(w http.ResponseWriter, r *http.Request) {
-			if token := r.URL.Query().Get("access_token"); token != "1234" {
-				t.Errorf("got token %q, want 1234", token)
+			if got := r.Header.Get("Authorization"); got != "Bearer 1234" {
+				t.Errorf("got Authorization %q, want Bearer 1234", got)
+			}
+			if r.URL.Query().Has("access_token") {
+				t.Errorf("access token leaked into query: %s", r.URL.RawQuery)
 			}
 			w.Header().Set("Content-Type", "application/json")
 			switch r.URL.Path {
@@ -107,13 +111,7 @@ func TestAPIFetcherMapsWorkflowResponses(t *testing.T) {
                 "logs":"{\"workflow_logs\":\"engine\",\"job_logs\":{\"1\":{\"job_name\":\"step1\",\"logs\":\"job\"}},\"engine_specific\":{\"dag\":{\"nodes\":[]}}}"
               }`))
 			default:
-				if strings.HasPrefix(
-					r.URL.Path,
-					"/api/workflows/analysis.1/workspace/",
-				) {
-					if !strings.HasSuffix(r.URL.Path, "/result.txt") {
-						t.Errorf("unexpected download path %q", r.URL.Path)
-					}
+				if r.URL.Path == "/api/workflows/analysis.1/workspace/result.txt" {
 					w.Header().Set("Content-Type", "application/octet-stream")
 					_, _ = w.Write([]byte("hello world"))
 					return
@@ -171,11 +169,52 @@ func TestAPIFetcherMapsWorkflowResponses(t *testing.T) {
 		t.Errorf("unexpected logs: %+v", logs)
 	}
 
-	download, err := fetcher.Download("analysis.1", "/result.txt")
+	download, err := fetcher.Download("analysis.1", "result.txt")
 	if err != nil {
 		t.Fatal(err)
 	}
 	if string(download.Content) != "hello world" || download.IsArchive {
 		t.Errorf("unexpected download: %+v", download)
+	}
+}
+
+func TestAPIFetcherContentAssertionsUseRelativePaths(t *testing.T) {
+	fetcher := newTestAPIFetcher(
+		t,
+		func(w http.ResponseWriter, r *http.Request) {
+			const path = "/api/workflows/analysis.1/workspace/results/message.txt"
+			if r.URL.Path != path {
+				t.Errorf("got download path %q, want %q", r.URL.Path, path)
+				http.Redirect(w, r, path, http.StatusPermanentRedirect)
+				return
+			}
+			w.Header().Set("Content-Type", "application/octet-stream")
+			_, _ = w.Write([]byte("hello world"))
+		},
+	)
+
+	for _, filename := range []string{
+		"results/message.txt",
+		`"results/message.txt"`,
+		`"/results/message.txt"`,
+	} {
+		t.Run(filename, func(t *testing.T) {
+			if err := assertFileContains(fetcher)(
+				"analysis.1",
+				map[string]string{"filename": filename, "content": "hello world"},
+			); err != nil {
+				t.Fatalf("file content assertion failed: %v", err)
+			}
+			if err := assertFileChecksum(fetcher)(
+				"analysis.1",
+				map[string]string{
+					"filename":  filename,
+					"algorithm": "sha256",
+					"checksum":  "b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9",
+				},
+			); err != nil {
+				t.Fatalf("checksum assertion failed: %v", err)
+			}
+		})
 	}
 }

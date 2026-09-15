@@ -41,6 +41,12 @@ func (o *SetWorkflowStatusReader) ReadResponse(response runtime.ClientResponse, 
 			return nil, err
 		}
 		return nil, result
+	case 401:
+		result := NewSetWorkflowStatusUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewSetWorkflowStatusForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -224,6 +230,62 @@ func (o *SetWorkflowStatusBadRequest) readResponse(response runtime.ClientRespon
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewSetWorkflowStatusUnauthorized creates a SetWorkflowStatusUnauthorized with default headers values
+func NewSetWorkflowStatusUnauthorized() *SetWorkflowStatusUnauthorized {
+	return &SetWorkflowStatusUnauthorized{}
+}
+
+/*
+SetWorkflowStatusUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type SetWorkflowStatusUnauthorized struct {
+}
+
+// IsSuccess returns true when this set workflow status unauthorized response has a 2xx status code
+func (o *SetWorkflowStatusUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this set workflow status unauthorized response has a 3xx status code
+func (o *SetWorkflowStatusUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this set workflow status unauthorized response has a 4xx status code
+func (o *SetWorkflowStatusUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this set workflow status unauthorized response has a 5xx status code
+func (o *SetWorkflowStatusUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this set workflow status unauthorized response a status code equal to that given
+func (o *SetWorkflowStatusUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the set workflow status unauthorized response
+func (o *SetWorkflowStatusUnauthorized) Code() int {
+	return 401
+}
+
+func (o *SetWorkflowStatusUnauthorized) Error() string {
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusUnauthorized", 401)
+}
+
+func (o *SetWorkflowStatusUnauthorized) String() string {
+	return fmt.Sprintf("[PUT /api/workflows/{workflow_id_or_name}/status][%d] setWorkflowStatusUnauthorized", 401)
+}
+
+func (o *SetWorkflowStatusUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

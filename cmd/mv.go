@@ -71,16 +71,15 @@ func newMvCmd() *cobra.Command {
 
 func (o *mvOptions) run(cmd *cobra.Command) error {
 	mvParams := operations.NewMoveFilesParams()
-	mvParams.SetAccessToken(&o.token)
 	mvParams.SetWorkflowIDOrName(o.workflow)
 	mvParams.SetSource(o.source)
 	mvParams.SetTarget(o.target)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
-	_, err = api.Operations.MoveFiles(mvParams)
+	_, err = api.Operations.MoveFiles(mvParams, nil)
 	if err != nil {
 		return err
 	}

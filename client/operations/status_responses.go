@@ -32,8 +32,26 @@ func (o *StatusReader) ReadResponse(response runtime.ClientResponse, consumer ru
 			return nil, err
 		}
 		return result, nil
+	case 401:
+		result := NewStatusUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 403:
+		result := NewStatusForbidden()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 500:
 		result := NewStatusInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewStatusServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -113,6 +131,118 @@ func (o *StatusOK) readResponse(response runtime.ClientResponse, consumer runtim
 	return nil
 }
 
+// NewStatusUnauthorized creates a StatusUnauthorized with default headers values
+func NewStatusUnauthorized() *StatusUnauthorized {
+	return &StatusUnauthorized{}
+}
+
+/*
+StatusUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type StatusUnauthorized struct {
+}
+
+// IsSuccess returns true when this status unauthorized response has a 2xx status code
+func (o *StatusUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this status unauthorized response has a 3xx status code
+func (o *StatusUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this status unauthorized response has a 4xx status code
+func (o *StatusUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this status unauthorized response has a 5xx status code
+func (o *StatusUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this status unauthorized response a status code equal to that given
+func (o *StatusUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the status unauthorized response
+func (o *StatusUnauthorized) Code() int {
+	return 401
+}
+
+func (o *StatusUnauthorized) Error() string {
+	return fmt.Sprintf("[GET /api/status][%d] statusUnauthorized", 401)
+}
+
+func (o *StatusUnauthorized) String() string {
+	return fmt.Sprintf("[GET /api/status][%d] statusUnauthorized", 401)
+}
+
+func (o *StatusUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+// NewStatusForbidden creates a StatusForbidden with default headers values
+func NewStatusForbidden() *StatusForbidden {
+	return &StatusForbidden{}
+}
+
+/*
+StatusForbidden describes a response with status code 403, with default header values.
+
+The authenticated user lacks the required REANA role.
+*/
+type StatusForbidden struct {
+}
+
+// IsSuccess returns true when this status forbidden response has a 2xx status code
+func (o *StatusForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this status forbidden response has a 3xx status code
+func (o *StatusForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this status forbidden response has a 4xx status code
+func (o *StatusForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this status forbidden response has a 5xx status code
+func (o *StatusForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this status forbidden response a status code equal to that given
+func (o *StatusForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
+// Code gets the status code for the status forbidden response
+func (o *StatusForbidden) Code() int {
+	return 403
+}
+
+func (o *StatusForbidden) Error() string {
+	return fmt.Sprintf("[GET /api/status][%d] statusForbidden", 403)
+}
+
+func (o *StatusForbidden) String() string {
+	return fmt.Sprintf("[GET /api/status][%d] statusForbidden", 403)
+}
+
+func (o *StatusForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
 // NewStatusInternalServerError creates a StatusInternalServerError with default headers values
 func NewStatusInternalServerError() *StatusInternalServerError {
 	return &StatusInternalServerError{}
@@ -179,6 +309,62 @@ func (o *StatusInternalServerError) readResponse(response runtime.ClientResponse
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewStatusServiceUnavailable creates a StatusServiceUnavailable with default headers values
+func NewStatusServiceUnavailable() *StatusServiceUnavailable {
+	return &StatusServiceUnavailable{}
+}
+
+/*
+StatusServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type StatusServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this status service unavailable response has a 2xx status code
+func (o *StatusServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this status service unavailable response has a 3xx status code
+func (o *StatusServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this status service unavailable response has a 4xx status code
+func (o *StatusServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this status service unavailable response has a 5xx status code
+func (o *StatusServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this status service unavailable response a status code equal to that given
+func (o *StatusServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the status service unavailable response
+func (o *StatusServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *StatusServiceUnavailable) Error() string {
+	return fmt.Sprintf("[GET /api/status][%d] statusServiceUnavailable", 503)
+}
+
+func (o *StatusServiceUnavailable) String() string {
+	return fmt.Sprintf("[GET /api/status][%d] statusServiceUnavailable", 503)
+}
+
+func (o *StatusServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

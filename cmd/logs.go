@@ -111,11 +111,11 @@ func newLogsCmd() *cobra.Command {
 		Long:  logsDesc,
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
-			api, err := client.ApiClient()
+			api, err := client.ApiClient(o.token)
 			if err != nil {
 				return err
 			}
-			runner := newLogsCommandRunner(api, o)
+			runner := newLogsCommandRunner(api.API, o)
 			return runner.run(cmd)
 		},
 	}
@@ -191,7 +191,6 @@ func (r *logsCommandRunner) run(cmd *cobra.Command) error {
 	}
 
 	logsParams := operations.NewGetWorkflowLogsParams()
-	logsParams.SetAccessToken(&r.options.token)
 	logsParams.SetWorkflowIDOrName(r.options.workflow)
 	logsParams.SetPage(&r.options.page)
 	logsParams.SetSteps(steps)
@@ -231,7 +230,6 @@ func (r *logsCommandRunner) followLogs(
 	}
 
 	workflowStatusParams := operations.NewGetWorkflowStatusParams()
-	workflowStatusParams.SetAccessToken(&r.options.token)
 	workflowStatusParams.SetWorkflowIDOrName(r.options.workflow)
 
 	for {
@@ -289,6 +287,7 @@ func (r *logsCommandRunner) getLogsWithStatus(
 
 	statusResponse, err := r.api.Operations.GetWorkflowStatus(
 		workflowStatusParams,
+		nil,
 	)
 	if err != nil {
 		return "", "", err
@@ -302,7 +301,7 @@ func (r *logsCommandRunner) getLogs(
 	logsParams *operations.GetWorkflowLogsParams,
 ) (logs, error) {
 	var workflowLogs logs
-	logsResp, err := r.api.Operations.GetWorkflowLogs(logsParams)
+	logsResp, err := r.api.Operations.GetWorkflowLogs(logsParams, nil)
 	if err != nil {
 		return workflowLogs, err
 	}

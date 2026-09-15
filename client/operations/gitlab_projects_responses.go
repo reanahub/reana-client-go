@@ -33,6 +33,12 @@ func (o *GitlabProjectsReader) ReadResponse(response runtime.ClientResponse, con
 			return nil, err
 		}
 		return result, nil
+	case 401:
+		result := NewGitlabProjectsUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewGitlabProjectsForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -41,6 +47,12 @@ func (o *GitlabProjectsReader) ReadResponse(response runtime.ClientResponse, con
 		return nil, result
 	case 500:
 		result := NewGitlabProjectsInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewGitlabProjectsServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -111,6 +123,76 @@ func (o *GitlabProjectsOK) GetPayload() *GitlabProjectsOKBody {
 func (o *GitlabProjectsOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	o.Payload = new(GitlabProjectsOKBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
+		return err
+	}
+
+	return nil
+}
+
+// NewGitlabProjectsUnauthorized creates a GitlabProjectsUnauthorized with default headers values
+func NewGitlabProjectsUnauthorized() *GitlabProjectsUnauthorized {
+	return &GitlabProjectsUnauthorized{}
+}
+
+/*
+GitlabProjectsUnauthorized describes a response with status code 401, with default header values.
+
+Request failed. The stored GitLab access token is not valid.
+*/
+type GitlabProjectsUnauthorized struct {
+	Payload *GitlabProjectsUnauthorizedBody
+}
+
+// IsSuccess returns true when this gitlab projects unauthorized response has a 2xx status code
+func (o *GitlabProjectsUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this gitlab projects unauthorized response has a 3xx status code
+func (o *GitlabProjectsUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this gitlab projects unauthorized response has a 4xx status code
+func (o *GitlabProjectsUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this gitlab projects unauthorized response has a 5xx status code
+func (o *GitlabProjectsUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this gitlab projects unauthorized response a status code equal to that given
+func (o *GitlabProjectsUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the gitlab projects unauthorized response
+func (o *GitlabProjectsUnauthorized) Code() int {
+	return 401
+}
+
+func (o *GitlabProjectsUnauthorized) Error() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsUnauthorized %s", 401, payload)
+}
+
+func (o *GitlabProjectsUnauthorized) String() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsUnauthorized %s", 401, payload)
+}
+
+func (o *GitlabProjectsUnauthorized) GetPayload() *GitlabProjectsUnauthorizedBody {
+	return o.Payload
+}
+
+func (o *GitlabProjectsUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GitlabProjectsUnauthorizedBody)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
@@ -256,6 +338,62 @@ func (o *GitlabProjectsInternalServerError) readResponse(response runtime.Client
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewGitlabProjectsServiceUnavailable creates a GitlabProjectsServiceUnavailable with default headers values
+func NewGitlabProjectsServiceUnavailable() *GitlabProjectsServiceUnavailable {
+	return &GitlabProjectsServiceUnavailable{}
+}
+
+/*
+GitlabProjectsServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type GitlabProjectsServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this gitlab projects service unavailable response has a 2xx status code
+func (o *GitlabProjectsServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this gitlab projects service unavailable response has a 3xx status code
+func (o *GitlabProjectsServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this gitlab projects service unavailable response has a 4xx status code
+func (o *GitlabProjectsServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this gitlab projects service unavailable response has a 5xx status code
+func (o *GitlabProjectsServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this gitlab projects service unavailable response a status code equal to that given
+func (o *GitlabProjectsServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the gitlab projects service unavailable response
+func (o *GitlabProjectsServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *GitlabProjectsServiceUnavailable) Error() string {
+	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsServiceUnavailable", 503)
+}
+
+func (o *GitlabProjectsServiceUnavailable) String() string {
+	return fmt.Sprintf("[GET /api/gitlab/projects][%d] gitlabProjectsServiceUnavailable", 503)
+}
+
+func (o *GitlabProjectsServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
@@ -509,6 +647,44 @@ func (o *GitlabProjectsOKBodyItemsItems0) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *GitlabProjectsOKBodyItemsItems0) UnmarshalBinary(b []byte) error {
 	var res GitlabProjectsOKBodyItemsItems0
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+GitlabProjectsUnauthorizedBody gitlab projects unauthorized body
+swagger:model GitlabProjectsUnauthorizedBody
+*/
+type GitlabProjectsUnauthorizedBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this gitlab projects unauthorized body
+func (o *GitlabProjectsUnauthorizedBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this gitlab projects unauthorized body based on context it is used
+func (o *GitlabProjectsUnauthorizedBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GitlabProjectsUnauthorizedBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GitlabProjectsUnauthorizedBody) UnmarshalBinary(b []byte) error {
+	var res GitlabProjectsUnauthorizedBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

@@ -6,10 +6,15 @@ package operations
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"context"
+	"encoding/json"
+	stderrors "errors"
 	"fmt"
+	"io"
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
+	"github.com/go-openapi/swag"
 )
 
 // GitlabConnectReader is a Reader for the GitlabConnect structure.
@@ -22,6 +27,30 @@ func (o *GitlabConnectReader) ReadResponse(response runtime.ClientResponse, cons
 	switch response.Code() {
 	case 302:
 		result := NewGitlabConnectFound()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 401:
+		result := NewGitlabConnectUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 403:
+		result := NewGitlabConnectForbidden()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 500:
+		result := NewGitlabConnectInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewGitlabConnectServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -84,5 +113,281 @@ func (o *GitlabConnectFound) String() string {
 
 func (o *GitlabConnectFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
+	return nil
+}
+
+// NewGitlabConnectUnauthorized creates a GitlabConnectUnauthorized with default headers values
+func NewGitlabConnectUnauthorized() *GitlabConnectUnauthorized {
+	return &GitlabConnectUnauthorized{}
+}
+
+/*
+GitlabConnectUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type GitlabConnectUnauthorized struct {
+}
+
+// IsSuccess returns true when this gitlab connect unauthorized response has a 2xx status code
+func (o *GitlabConnectUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this gitlab connect unauthorized response has a 3xx status code
+func (o *GitlabConnectUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this gitlab connect unauthorized response has a 4xx status code
+func (o *GitlabConnectUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this gitlab connect unauthorized response has a 5xx status code
+func (o *GitlabConnectUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this gitlab connect unauthorized response a status code equal to that given
+func (o *GitlabConnectUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the gitlab connect unauthorized response
+func (o *GitlabConnectUnauthorized) Code() int {
+	return 401
+}
+
+func (o *GitlabConnectUnauthorized) Error() string {
+	return fmt.Sprintf("[GET /api/gitlab/connect][%d] gitlabConnectUnauthorized", 401)
+}
+
+func (o *GitlabConnectUnauthorized) String() string {
+	return fmt.Sprintf("[GET /api/gitlab/connect][%d] gitlabConnectUnauthorized", 401)
+}
+
+func (o *GitlabConnectUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+// NewGitlabConnectForbidden creates a GitlabConnectForbidden with default headers values
+func NewGitlabConnectForbidden() *GitlabConnectForbidden {
+	return &GitlabConnectForbidden{}
+}
+
+/*
+GitlabConnectForbidden describes a response with status code 403, with default header values.
+
+The authenticated user lacks the required REANA role.
+*/
+type GitlabConnectForbidden struct {
+}
+
+// IsSuccess returns true when this gitlab connect forbidden response has a 2xx status code
+func (o *GitlabConnectForbidden) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this gitlab connect forbidden response has a 3xx status code
+func (o *GitlabConnectForbidden) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this gitlab connect forbidden response has a 4xx status code
+func (o *GitlabConnectForbidden) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this gitlab connect forbidden response has a 5xx status code
+func (o *GitlabConnectForbidden) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this gitlab connect forbidden response a status code equal to that given
+func (o *GitlabConnectForbidden) IsCode(code int) bool {
+	return code == 403
+}
+
+// Code gets the status code for the gitlab connect forbidden response
+func (o *GitlabConnectForbidden) Code() int {
+	return 403
+}
+
+func (o *GitlabConnectForbidden) Error() string {
+	return fmt.Sprintf("[GET /api/gitlab/connect][%d] gitlabConnectForbidden", 403)
+}
+
+func (o *GitlabConnectForbidden) String() string {
+	return fmt.Sprintf("[GET /api/gitlab/connect][%d] gitlabConnectForbidden", 403)
+}
+
+func (o *GitlabConnectForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+// NewGitlabConnectInternalServerError creates a GitlabConnectInternalServerError with default headers values
+func NewGitlabConnectInternalServerError() *GitlabConnectInternalServerError {
+	return &GitlabConnectInternalServerError{}
+}
+
+/*
+GitlabConnectInternalServerError describes a response with status code 500, with default header values.
+
+The identity provider integration is not correctly configured.
+*/
+type GitlabConnectInternalServerError struct {
+	Payload *GitlabConnectInternalServerErrorBody
+}
+
+// IsSuccess returns true when this gitlab connect internal server error response has a 2xx status code
+func (o *GitlabConnectInternalServerError) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this gitlab connect internal server error response has a 3xx status code
+func (o *GitlabConnectInternalServerError) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this gitlab connect internal server error response has a 4xx status code
+func (o *GitlabConnectInternalServerError) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this gitlab connect internal server error response has a 5xx status code
+func (o *GitlabConnectInternalServerError) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this gitlab connect internal server error response a status code equal to that given
+func (o *GitlabConnectInternalServerError) IsCode(code int) bool {
+	return code == 500
+}
+
+// Code gets the status code for the gitlab connect internal server error response
+func (o *GitlabConnectInternalServerError) Code() int {
+	return 500
+}
+
+func (o *GitlabConnectInternalServerError) Error() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab/connect][%d] gitlabConnectInternalServerError %s", 500, payload)
+}
+
+func (o *GitlabConnectInternalServerError) String() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[GET /api/gitlab/connect][%d] gitlabConnectInternalServerError %s", 500, payload)
+}
+
+func (o *GitlabConnectInternalServerError) GetPayload() *GitlabConnectInternalServerErrorBody {
+	return o.Payload
+}
+
+func (o *GitlabConnectInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(GitlabConnectInternalServerErrorBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
+		return err
+	}
+
+	return nil
+}
+
+// NewGitlabConnectServiceUnavailable creates a GitlabConnectServiceUnavailable with default headers values
+func NewGitlabConnectServiceUnavailable() *GitlabConnectServiceUnavailable {
+	return &GitlabConnectServiceUnavailable{}
+}
+
+/*
+GitlabConnectServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type GitlabConnectServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this gitlab connect service unavailable response has a 2xx status code
+func (o *GitlabConnectServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this gitlab connect service unavailable response has a 3xx status code
+func (o *GitlabConnectServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this gitlab connect service unavailable response has a 4xx status code
+func (o *GitlabConnectServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this gitlab connect service unavailable response has a 5xx status code
+func (o *GitlabConnectServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this gitlab connect service unavailable response a status code equal to that given
+func (o *GitlabConnectServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the gitlab connect service unavailable response
+func (o *GitlabConnectServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *GitlabConnectServiceUnavailable) Error() string {
+	return fmt.Sprintf("[GET /api/gitlab/connect][%d] gitlabConnectServiceUnavailable", 503)
+}
+
+func (o *GitlabConnectServiceUnavailable) String() string {
+	return fmt.Sprintf("[GET /api/gitlab/connect][%d] gitlabConnectServiceUnavailable", 503)
+}
+
+func (o *GitlabConnectServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+/*
+GitlabConnectInternalServerErrorBody gitlab connect internal server error body
+swagger:model GitlabConnectInternalServerErrorBody
+*/
+type GitlabConnectInternalServerErrorBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this gitlab connect internal server error body
+func (o *GitlabConnectInternalServerErrorBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this gitlab connect internal server error body based on context it is used
+func (o *GitlabConnectInternalServerErrorBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *GitlabConnectInternalServerErrorBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *GitlabConnectInternalServerErrorBody) UnmarshalBinary(b []byte) error {
+	var res GitlabConnectInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }

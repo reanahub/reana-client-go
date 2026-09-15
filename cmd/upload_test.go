@@ -112,8 +112,11 @@ func TestUploadContinuesAfterIndividualFailures(t *testing.T) {
 				http.NotFound(w, r)
 				return
 			}
-			if token := r.URL.Query().Get("access_token"); token != "1234" {
-				t.Errorf("Expected access token 1234, got %q", token)
+			if got := r.Header.Get("Authorization"); got != "Bearer 1234" {
+				t.Errorf("Expected Authorization Bearer 1234, got %q", got)
+			}
+			if r.URL.Query().Has("access_token") {
+				t.Errorf("Access token leaked into query: %s", r.URL.RawQuery)
 			}
 
 			name := filepath.Base(r.URL.Query().Get("file_name"))

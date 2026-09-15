@@ -79,10 +79,16 @@ func TestWorkflowSharingMultiUserResults(t *testing.T) {
 								http.NotFound(w, r)
 								return
 							}
-							if token := r.URL.Query().Get("access_token"); token != "1234" {
+							if got := r.Header.Get("Authorization"); got != "Bearer 1234" {
 								t.Errorf(
-									"expected access token 1234, got %q",
-									token,
+									"expected Authorization Bearer 1234, got %q",
+									got,
+								)
+							}
+							if r.URL.Query().Has("access_token") {
+								t.Errorf(
+									"access token leaked into query: %s",
+									r.URL.RawQuery,
 								)
 							}
 

@@ -69,6 +69,12 @@ func (o *ShareWorkflowReader) ReadResponse(response runtime.ClientResponse, cons
 			return nil, err
 		}
 		return nil, result
+	case 503:
+		result := NewShareWorkflowServiceUnavailable()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	default:
 		return nil, runtime.NewAPIError("[POST /api/workflows/{workflow_id_or_name}/share] share_workflow", response, response.Code())
 	}
@@ -560,6 +566,62 @@ func (o *ShareWorkflowInternalServerError) readResponse(response runtime.ClientR
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewShareWorkflowServiceUnavailable creates a ShareWorkflowServiceUnavailable with default headers values
+func NewShareWorkflowServiceUnavailable() *ShareWorkflowServiceUnavailable {
+	return &ShareWorkflowServiceUnavailable{}
+}
+
+/*
+ShareWorkflowServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type ShareWorkflowServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this share workflow service unavailable response has a 2xx status code
+func (o *ShareWorkflowServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this share workflow service unavailable response has a 3xx status code
+func (o *ShareWorkflowServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this share workflow service unavailable response has a 4xx status code
+func (o *ShareWorkflowServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this share workflow service unavailable response has a 5xx status code
+func (o *ShareWorkflowServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this share workflow service unavailable response a status code equal to that given
+func (o *ShareWorkflowServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the share workflow service unavailable response
+func (o *ShareWorkflowServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *ShareWorkflowServiceUnavailable) Error() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/share][%d] shareWorkflowServiceUnavailable", 503)
+}
+
+func (o *ShareWorkflowServiceUnavailable) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/share][%d] shareWorkflowServiceUnavailable", 503)
+}
+
+func (o *ShareWorkflowServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

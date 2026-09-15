@@ -33,6 +33,18 @@ func (o *AddSecretsReader) ReadResponse(response runtime.ClientResponse, consume
 			return nil, err
 		}
 		return result, nil
+	case 400:
+		result := NewAddSecretsBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 401:
+		result := NewAddSecretsUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewAddSecretsForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -47,6 +59,12 @@ func (o *AddSecretsReader) ReadResponse(response runtime.ClientResponse, consume
 		return nil, result
 	case 500:
 		result := NewAddSecretsInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewAddSecretsServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -122,6 +140,132 @@ func (o *AddSecretsCreated) readResponse(response runtime.ClientResponse, consum
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewAddSecretsBadRequest creates a AddSecretsBadRequest with default headers values
+func NewAddSecretsBadRequest() *AddSecretsBadRequest {
+	return &AddSecretsBadRequest{}
+}
+
+/*
+AddSecretsBadRequest describes a response with status code 400, with default header values.
+
+Request failed. A secret value is not correctly base64-encoded.
+*/
+type AddSecretsBadRequest struct {
+	Payload *AddSecretsBadRequestBody
+}
+
+// IsSuccess returns true when this add secrets bad request response has a 2xx status code
+func (o *AddSecretsBadRequest) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this add secrets bad request response has a 3xx status code
+func (o *AddSecretsBadRequest) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this add secrets bad request response has a 4xx status code
+func (o *AddSecretsBadRequest) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this add secrets bad request response has a 5xx status code
+func (o *AddSecretsBadRequest) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this add secrets bad request response a status code equal to that given
+func (o *AddSecretsBadRequest) IsCode(code int) bool {
+	return code == 400
+}
+
+// Code gets the status code for the add secrets bad request response
+func (o *AddSecretsBadRequest) Code() int {
+	return 400
+}
+
+func (o *AddSecretsBadRequest) Error() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsBadRequest %s", 400, payload)
+}
+
+func (o *AddSecretsBadRequest) String() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsBadRequest %s", 400, payload)
+}
+
+func (o *AddSecretsBadRequest) GetPayload() *AddSecretsBadRequestBody {
+	return o.Payload
+}
+
+func (o *AddSecretsBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(AddSecretsBadRequestBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
+		return err
+	}
+
+	return nil
+}
+
+// NewAddSecretsUnauthorized creates a AddSecretsUnauthorized with default headers values
+func NewAddSecretsUnauthorized() *AddSecretsUnauthorized {
+	return &AddSecretsUnauthorized{}
+}
+
+/*
+AddSecretsUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type AddSecretsUnauthorized struct {
+}
+
+// IsSuccess returns true when this add secrets unauthorized response has a 2xx status code
+func (o *AddSecretsUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this add secrets unauthorized response has a 3xx status code
+func (o *AddSecretsUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this add secrets unauthorized response has a 4xx status code
+func (o *AddSecretsUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this add secrets unauthorized response has a 5xx status code
+func (o *AddSecretsUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this add secrets unauthorized response a status code equal to that given
+func (o *AddSecretsUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the add secrets unauthorized response
+func (o *AddSecretsUnauthorized) Code() int {
+	return 401
+}
+
+func (o *AddSecretsUnauthorized) Error() string {
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsUnauthorized", 401)
+}
+
+func (o *AddSecretsUnauthorized) String() string {
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsUnauthorized", 401)
+}
+
+func (o *AddSecretsUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
@@ -333,6 +477,100 @@ func (o *AddSecretsInternalServerError) readResponse(response runtime.ClientResp
 		return err
 	}
 
+	return nil
+}
+
+// NewAddSecretsServiceUnavailable creates a AddSecretsServiceUnavailable with default headers values
+func NewAddSecretsServiceUnavailable() *AddSecretsServiceUnavailable {
+	return &AddSecretsServiceUnavailable{}
+}
+
+/*
+AddSecretsServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type AddSecretsServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this add secrets service unavailable response has a 2xx status code
+func (o *AddSecretsServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this add secrets service unavailable response has a 3xx status code
+func (o *AddSecretsServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this add secrets service unavailable response has a 4xx status code
+func (o *AddSecretsServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this add secrets service unavailable response has a 5xx status code
+func (o *AddSecretsServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this add secrets service unavailable response a status code equal to that given
+func (o *AddSecretsServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the add secrets service unavailable response
+func (o *AddSecretsServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *AddSecretsServiceUnavailable) Error() string {
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsServiceUnavailable", 503)
+}
+
+func (o *AddSecretsServiceUnavailable) String() string {
+	return fmt.Sprintf("[POST /api/secrets/][%d] addSecretsServiceUnavailable", 503)
+}
+
+func (o *AddSecretsServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+/*
+AddSecretsBadRequestBody add secrets bad request body
+swagger:model AddSecretsBadRequestBody
+*/
+type AddSecretsBadRequestBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this add secrets bad request body
+func (o *AddSecretsBadRequestBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this add secrets bad request body based on context it is used
+func (o *AddSecretsBadRequestBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *AddSecretsBadRequestBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *AddSecretsBadRequestBody) UnmarshalBinary(b []byte) error {
+	var res AddSecretsBadRequestBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
 	return nil
 }
 

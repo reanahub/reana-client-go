@@ -238,7 +238,7 @@ func NewRestartWorkflowUnauthorized() *RestartWorkflowUnauthorized {
 /*
 RestartWorkflowUnauthorized describes a response with status code 401, with default header values.
 
-Request malformed or missing access token.
+The request is not authenticated.
 */
 type RestartWorkflowUnauthorized struct {
 	Payload *models.ErrorResponse

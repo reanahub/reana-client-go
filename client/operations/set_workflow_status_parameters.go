@@ -61,12 +61,6 @@ SetWorkflowStatusParams contains all the parameters to send to the API endpoint
 */
 type SetWorkflowStatusParams struct {
 
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* Parameters.
 
 	   Optional. Additional parameters to customise the workflow status change.
@@ -138,17 +132,6 @@ func (o *SetWorkflowStatusParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the set workflow status params
-func (o *SetWorkflowStatusParams) WithAccessToken(accessToken *string) *SetWorkflowStatusParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the set workflow status params
-func (o *SetWorkflowStatusParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithParameters adds the parameters to the set workflow status params
 func (o *SetWorkflowStatusParams) WithParameters(parameters SetWorkflowStatusBody) *SetWorkflowStatusParams {
 	o.SetParameters(parameters)
@@ -189,23 +172,6 @@ func (o *SetWorkflowStatusParams) WriteToRequest(r runtime.ClientRequest, reg st
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 	if err := r.SetBodyParam(o.Parameters); err != nil {
 		return err
 	}

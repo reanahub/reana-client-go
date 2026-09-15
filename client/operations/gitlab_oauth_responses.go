@@ -37,6 +37,12 @@ func (o *GitlabOauthReader) ReadResponse(response runtime.ClientResponse, consum
 			return nil, err
 		}
 		return nil, result
+	case 401:
+		result := NewGitlabOauthUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewGitlabOauthForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -45,6 +51,12 @@ func (o *GitlabOauthReader) ReadResponse(response runtime.ClientResponse, consum
 		return nil, result
 	case 500:
 		result := NewGitlabOauthInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewGitlabOauthServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -176,6 +188,62 @@ func (o *GitlabOauthFound) String() string {
 }
 
 func (o *GitlabOauthFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+// NewGitlabOauthUnauthorized creates a GitlabOauthUnauthorized with default headers values
+func NewGitlabOauthUnauthorized() *GitlabOauthUnauthorized {
+	return &GitlabOauthUnauthorized{}
+}
+
+/*
+GitlabOauthUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type GitlabOauthUnauthorized struct {
+}
+
+// IsSuccess returns true when this gitlab oauth unauthorized response has a 2xx status code
+func (o *GitlabOauthUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this gitlab oauth unauthorized response has a 3xx status code
+func (o *GitlabOauthUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this gitlab oauth unauthorized response has a 4xx status code
+func (o *GitlabOauthUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this gitlab oauth unauthorized response has a 5xx status code
+func (o *GitlabOauthUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this gitlab oauth unauthorized response a status code equal to that given
+func (o *GitlabOauthUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the gitlab oauth unauthorized response
+func (o *GitlabOauthUnauthorized) Code() int {
+	return 401
+}
+
+func (o *GitlabOauthUnauthorized) Error() string {
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthUnauthorized", 401)
+}
+
+func (o *GitlabOauthUnauthorized) String() string {
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthUnauthorized", 401)
+}
+
+func (o *GitlabOauthUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
@@ -316,6 +384,62 @@ func (o *GitlabOauthInternalServerError) readResponse(response runtime.ClientRes
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewGitlabOauthServiceUnavailable creates a GitlabOauthServiceUnavailable with default headers values
+func NewGitlabOauthServiceUnavailable() *GitlabOauthServiceUnavailable {
+	return &GitlabOauthServiceUnavailable{}
+}
+
+/*
+GitlabOauthServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type GitlabOauthServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this gitlab oauth service unavailable response has a 2xx status code
+func (o *GitlabOauthServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this gitlab oauth service unavailable response has a 3xx status code
+func (o *GitlabOauthServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this gitlab oauth service unavailable response has a 4xx status code
+func (o *GitlabOauthServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this gitlab oauth service unavailable response has a 5xx status code
+func (o *GitlabOauthServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this gitlab oauth service unavailable response a status code equal to that given
+func (o *GitlabOauthServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the gitlab oauth service unavailable response
+func (o *GitlabOauthServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *GitlabOauthServiceUnavailable) Error() string {
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthServiceUnavailable", 503)
+}
+
+func (o *GitlabOauthServiceUnavailable) String() string {
+	return fmt.Sprintf("[GET /api/gitlab][%d] gitlabOauthServiceUnavailable", 503)
+}
+
+func (o *GitlabOauthServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

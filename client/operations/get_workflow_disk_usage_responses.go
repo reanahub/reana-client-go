@@ -39,6 +39,12 @@ func (o *GetWorkflowDiskUsageReader) ReadResponse(response runtime.ClientRespons
 			return nil, err
 		}
 		return nil, result
+	case 401:
+		result := NewGetWorkflowDiskUsageUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewGetWorkflowDiskUsageForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -53,6 +59,12 @@ func (o *GetWorkflowDiskUsageReader) ReadResponse(response runtime.ClientRespons
 		return nil, result
 	case 500:
 		result := NewGetWorkflowDiskUsageInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewGetWorkflowDiskUsageServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -198,6 +210,62 @@ func (o *GetWorkflowDiskUsageBadRequest) readResponse(response runtime.ClientRes
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewGetWorkflowDiskUsageUnauthorized creates a GetWorkflowDiskUsageUnauthorized with default headers values
+func NewGetWorkflowDiskUsageUnauthorized() *GetWorkflowDiskUsageUnauthorized {
+	return &GetWorkflowDiskUsageUnauthorized{}
+}
+
+/*
+GetWorkflowDiskUsageUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type GetWorkflowDiskUsageUnauthorized struct {
+}
+
+// IsSuccess returns true when this get workflow disk usage unauthorized response has a 2xx status code
+func (o *GetWorkflowDiskUsageUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow disk usage unauthorized response has a 3xx status code
+func (o *GetWorkflowDiskUsageUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow disk usage unauthorized response has a 4xx status code
+func (o *GetWorkflowDiskUsageUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get workflow disk usage unauthorized response has a 5xx status code
+func (o *GetWorkflowDiskUsageUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get workflow disk usage unauthorized response a status code equal to that given
+func (o *GetWorkflowDiskUsageUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the get workflow disk usage unauthorized response
+func (o *GetWorkflowDiskUsageUnauthorized) Code() int {
+	return 401
+}
+
+func (o *GetWorkflowDiskUsageUnauthorized) Error() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageUnauthorized", 401)
+}
+
+func (o *GetWorkflowDiskUsageUnauthorized) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageUnauthorized", 401)
+}
+
+func (o *GetWorkflowDiskUsageUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
@@ -408,6 +476,62 @@ func (o *GetWorkflowDiskUsageInternalServerError) readResponse(response runtime.
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewGetWorkflowDiskUsageServiceUnavailable creates a GetWorkflowDiskUsageServiceUnavailable with default headers values
+func NewGetWorkflowDiskUsageServiceUnavailable() *GetWorkflowDiskUsageServiceUnavailable {
+	return &GetWorkflowDiskUsageServiceUnavailable{}
+}
+
+/*
+GetWorkflowDiskUsageServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type GetWorkflowDiskUsageServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this get workflow disk usage service unavailable response has a 2xx status code
+func (o *GetWorkflowDiskUsageServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get workflow disk usage service unavailable response has a 3xx status code
+func (o *GetWorkflowDiskUsageServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get workflow disk usage service unavailable response has a 4xx status code
+func (o *GetWorkflowDiskUsageServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get workflow disk usage service unavailable response has a 5xx status code
+func (o *GetWorkflowDiskUsageServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get workflow disk usage service unavailable response a status code equal to that given
+func (o *GetWorkflowDiskUsageServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the get workflow disk usage service unavailable response
+func (o *GetWorkflowDiskUsageServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *GetWorkflowDiskUsageServiceUnavailable) Error() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageServiceUnavailable", 503)
+}
+
+func (o *GetWorkflowDiskUsageServiceUnavailable) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/disk_usage][%d] getWorkflowDiskUsageServiceUnavailable", 503)
+}
+
+func (o *GetWorkflowDiskUsageServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

@@ -61,9 +61,6 @@ RestartWorkflowParams contains all the parameters to send to the API endpoint
 */
 type RestartWorkflowParams struct {
 
-	// AccessToken.
-	AccessToken *string
-
 	/* Parameters.
 
 	   JSON object containing optional input_parameters and operational_options objects.
@@ -132,17 +129,6 @@ func (o *RestartWorkflowParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the restart workflow params
-func (o *RestartWorkflowParams) WithAccessToken(accessToken *string) *RestartWorkflowParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the restart workflow params
-func (o *RestartWorkflowParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithParameters adds the parameters to the restart workflow params
 func (o *RestartWorkflowParams) WithParameters(parameters *string) *RestartWorkflowParams {
 	o.SetParameters(parameters)
@@ -183,23 +169,6 @@ func (o *RestartWorkflowParams) WriteToRequest(r runtime.ClientRequest, reg strf
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 
 	if o.Parameters != nil {
 

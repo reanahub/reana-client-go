@@ -20,21 +20,19 @@ import (
 
 // APIFetcher retrieves workflow test data using the REANA REST API.
 type APIFetcher struct {
-	api   *client.API
-	token string
+	api *client.AuthenticatedClient
 }
 
 // NewAPIFetcher creates a workflow test data fetcher.
-func NewAPIFetcher(api *client.API, token string) *APIFetcher {
-	return &APIFetcher{api: api, token: token}
+func NewAPIFetcher(api *client.AuthenticatedClient) *APIFetcher {
+	return &APIFetcher{api: api}
 }
 
 // Status returns the status and run timestamps of a workflow.
 func (f *APIFetcher) Status(workflow string) (WorkflowStatus, error) {
 	params := operations.NewGetWorkflowStatusParams()
-	params.SetAccessToken(&f.token)
 	params.SetWorkflowIDOrName(workflow)
-	response, err := f.api.Operations.GetWorkflowStatus(params)
+	response, err := f.api.Operations.GetWorkflowStatus(params, nil)
 	if err != nil {
 		return WorkflowStatus{}, err
 	}
@@ -59,9 +57,8 @@ func (f *APIFetcher) Specification(
 	workflow string,
 ) (WorkflowSpecification, error) {
 	params := operations.NewGetWorkflowSpecificationParams()
-	params.SetAccessToken(&f.token)
 	params.SetWorkflowIDOrName(workflow)
-	response, err := f.api.Operations.GetWorkflowSpecification(params)
+	response, err := f.api.Operations.GetWorkflowSpecification(params, nil)
 	if err != nil {
 		return WorkflowSpecification{}, err
 	}
@@ -88,12 +85,11 @@ func (f *APIFetcher) Files(
 	fileName string,
 ) ([]FileInfo, error) {
 	params := operations.NewGetFilesParams()
-	params.SetAccessToken(&f.token)
 	params.SetWorkflowIDOrName(workflow)
 	if fileName != "" {
 		params.SetFileName(&fileName)
 	}
-	response, err := f.api.Operations.GetFiles(params)
+	response, err := f.api.Operations.GetFiles(params, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -122,12 +118,11 @@ func (f *APIFetcher) DiskUsage(
 	summarize bool,
 ) ([]FileInfo, error) {
 	params := operations.NewGetWorkflowDiskUsageParams()
-	params.SetAccessToken(&f.token)
 	params.SetWorkflowIDOrName(workflow)
 	params.SetParameters(operations.GetWorkflowDiskUsageBody{
 		Summarize: summarize,
 	})
-	response, err := f.api.Operations.GetWorkflowDiskUsage(params)
+	response, err := f.api.Operations.GetWorkflowDiskUsage(params, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -156,12 +151,11 @@ func (f *APIFetcher) Logs(
 	steps []string,
 ) (WorkflowLogs, error) {
 	params := operations.NewGetWorkflowLogsParams()
-	params.SetAccessToken(&f.token)
 	params.SetWorkflowIDOrName(workflow)
 	if len(steps) > 0 {
 		params.SetSteps(steps)
 	}
-	response, err := f.api.Operations.GetWorkflowLogs(params)
+	response, err := f.api.Operations.GetWorkflowLogs(params, nil)
 	if err != nil {
 		return WorkflowLogs{}, err
 	}
@@ -186,10 +180,9 @@ func (f *APIFetcher) Download(
 ) (DownloadedFile, error) {
 	var content bytes.Buffer
 	params := operations.NewDownloadFileParams()
-	params.SetAccessToken(&f.token)
 	params.SetWorkflowIDOrName(workflow)
 	params.SetFileName(fileName)
-	response, err := f.api.Operations.DownloadFile(params, &content)
+	response, err := f.api.Operations.DownloadFile(params, nil, &content)
 	if err != nil {
 		return DownloadedFile{}, err
 	}

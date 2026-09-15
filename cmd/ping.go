@@ -58,13 +58,12 @@ func newPingCmd() *cobra.Command {
 
 func (o *pingOptions) run(cmd *cobra.Command) error {
 	pingParams := operations.NewGetYouParams()
-	pingParams.SetAccessToken(&o.token)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
-	pingResp, err := api.Operations.GetYou(pingParams)
+	pingResp, err := api.Operations.GetYou(pingParams, nil)
 	if err != nil {
 		return err
 	}

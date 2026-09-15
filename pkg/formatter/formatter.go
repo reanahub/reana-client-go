@@ -11,6 +11,7 @@ package formatter
 
 import (
 	"fmt"
+	"net/url"
 	"reanahub/reana-client-go/pkg/validator"
 	"strconv"
 	"strings"
@@ -150,7 +151,24 @@ func DataFrameToStringData(df dataframe.DataFrame) [][]string {
 	return data
 }
 
-// FormatSessionURI takes the serverURL, its token and a path, and formats them into a session URI.
-func FormatSessionURI(serverURL string, path string, token string) string {
-	return serverURL + path + "?token=" + token
+// FormatSessionURI builds a session URL containing a short-lived session secret.
+func FormatSessionURI(
+	serverURL string,
+	path string,
+	sessionSecret string,
+) (string, error) {
+	base, err := url.Parse(serverURL)
+	if err != nil {
+		return "", err
+	}
+	sessionPath, err := url.Parse(path)
+	if err != nil {
+		return "", err
+	}
+
+	sessionURL := base.ResolveReference(sessionPath)
+	query := sessionURL.Query()
+	query.Set("token", sessionSecret)
+	sessionURL.RawQuery = query.Encode()
+	return sessionURL.String(), nil
 }

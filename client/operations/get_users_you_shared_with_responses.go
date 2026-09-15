@@ -51,6 +51,12 @@ func (o *GetUsersYouSharedWithReader) ReadResponse(response runtime.ClientRespon
 			return nil, err
 		}
 		return nil, result
+	case 503:
+		result := NewGetUsersYouSharedWithServiceUnavailable()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	default:
 		return nil, runtime.NewAPIError("[GET /api/users/you-shared-with] get_users_you_shared_with", response, response.Code())
 	}
@@ -332,6 +338,62 @@ func (o *GetUsersYouSharedWithInternalServerError) readResponse(response runtime
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewGetUsersYouSharedWithServiceUnavailable creates a GetUsersYouSharedWithServiceUnavailable with default headers values
+func NewGetUsersYouSharedWithServiceUnavailable() *GetUsersYouSharedWithServiceUnavailable {
+	return &GetUsersYouSharedWithServiceUnavailable{}
+}
+
+/*
+GetUsersYouSharedWithServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type GetUsersYouSharedWithServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this get users you shared with service unavailable response has a 2xx status code
+func (o *GetUsersYouSharedWithServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get users you shared with service unavailable response has a 3xx status code
+func (o *GetUsersYouSharedWithServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get users you shared with service unavailable response has a 4xx status code
+func (o *GetUsersYouSharedWithServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get users you shared with service unavailable response has a 5xx status code
+func (o *GetUsersYouSharedWithServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get users you shared with service unavailable response a status code equal to that given
+func (o *GetUsersYouSharedWithServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the get users you shared with service unavailable response
+func (o *GetUsersYouSharedWithServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *GetUsersYouSharedWithServiceUnavailable) Error() string {
+	return fmt.Sprintf("[GET /api/users/you-shared-with][%d] getUsersYouSharedWithServiceUnavailable", 503)
+}
+
+func (o *GetUsersYouSharedWithServiceUnavailable) String() string {
+	return fmt.Sprintf("[GET /api/users/you-shared-with][%d] getUsersYouSharedWithServiceUnavailable", 503)
+}
+
+func (o *GetUsersYouSharedWithServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

@@ -69,7 +69,7 @@ type GetQuotaUsageParams struct {
 
 	/* Email.
 
-	   Get the quota limit by user email (mutually exclusive with `user_id` and `user_access_token`)
+	   Get the quota limit by user email (mutually exclusive with `user_id`)
 	*/
 	Email *string
 
@@ -79,15 +79,9 @@ type GetQuotaUsageParams struct {
 	*/
 	ResourceType string
 
-	/* UserAccessToken.
-
-	   Get the quota limit by user access token (mutually exclusive with `user_id` and `email`)
-	*/
-	UserAccessToken *string
-
 	/* UserID.
 
-	   Get the quota limit by user ID (mutually exclusive with `email` and `user_access_token`)
+	   Get the quota limit by user ID (mutually exclusive with `email`)
 	*/
 	UserID *string
 
@@ -177,17 +171,6 @@ func (o *GetQuotaUsageParams) SetResourceType(resourceType string) {
 	o.ResourceType = resourceType
 }
 
-// WithUserAccessToken adds the userAccessToken to the get quota usage params
-func (o *GetQuotaUsageParams) WithUserAccessToken(userAccessToken *string) *GetQuotaUsageParams {
-	o.SetUserAccessToken(userAccessToken)
-	return o
-}
-
-// SetUserAccessToken adds the userAccessToken to the get quota usage params
-func (o *GetQuotaUsageParams) SetUserAccessToken(userAccessToken *string) {
-	o.UserAccessToken = userAccessToken
-}
-
 // WithUserID adds the userID to the get quota usage params
 func (o *GetQuotaUsageParams) WithUserID(userID *string) *GetQuotaUsageParams {
 	o.SetUserID(userID)
@@ -236,23 +219,6 @@ func (o *GetQuotaUsageParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 
 		if err := r.SetQueryParam("resource_type", qResourceType); err != nil {
 			return err
-		}
-	}
-
-	if o.UserAccessToken != nil {
-
-		// query param user_access_token
-		var qrUserAccessToken string
-
-		if o.UserAccessToken != nil {
-			qrUserAccessToken = *o.UserAccessToken
-		}
-		qUserAccessToken := qrUserAccessToken
-		if qUserAccessToken != "" {
-
-			if err := r.SetQueryParam("user_access_token", qUserAccessToken); err != nil {
-				return err
-			}
 		}
 	}
 

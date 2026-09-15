@@ -2,14 +2,18 @@
 package client
 
 import (
-	"crypto/tls"
+	"context"
 	"errors"
 	"fmt"
 	"io"
 	"mime"
+	"net"
 	"net/http"
 	"net/url"
 	"os"
+	"reanahub/reana-client-go/client/operations"
+	"reanahub/reana-client-go/pkg/auth"
+	"strings"
 	"time"
 
 	"github.com/go-openapi/runtime"
@@ -130,96 +134,172 @@ func (transport *boundedResponseTransport) RoundTrip(
 	return response, nil
 }
 
+// AuthenticatedClient combines the generated API with authentication helpers.
+type AuthenticatedClient struct {
+	*API
+
+	httpClient *http.Client
+}
+
+func validateBearerTransportURL(u *url.URL) error {
+	if u.Scheme == "https" {
+		return nil
+	}
+	if u.Scheme == "http" {
+		host := u.Hostname()
+		ip := net.ParseIP(host)
+		if strings.EqualFold(host, "localhost") ||
+			(ip != nil && ip.IsLoopback()) {
+			return nil
+		}
+		return fmt.Errorf(
+			"refusing to send a bearer token over cleartext HTTP to %q; use HTTPS",
+			u.Host,
+		)
+	}
+	return fmt.Errorf("unsupported REANA server URL scheme %q", u.Scheme)
+}
+
 // ApiClient provides an uncapped API client used for ordinary REANA operations.
-func ApiClient() (*API, error) {
-	return newAPIClient(0, false)
+func ApiClient(tokens ...string) (*AuthenticatedClient, error) {
+	return newAPIClient(tokenOverride(tokens), 0, false)
 }
 
 // ControlAPIClient provides a bounded client for small control-plane responses.
-func ControlAPIClient() (*API, error) {
-	return newAPIClient(apiRequestTimeout, true)
+func ControlAPIClient(tokens ...string) (*AuthenticatedClient, error) {
+	return newAPIClient(tokenOverride(tokens), apiRequestTimeout, true)
+}
+
+func tokenOverride(tokens []string) string {
+	if len(tokens) == 0 {
+		return ""
+	}
+	return tokens[0]
+}
+
+// AccessToken returns an explicit token override or a renewable stored OIDC
+// access token for the configured REANA server.
+func AccessToken(ctx context.Context, token string) (string, error) {
+	if token != "" {
+		return token, nil
+	}
+	manager, err := auth.NewManager()
+	if err != nil {
+		return "", err
+	}
+	return manager.AccessToken(ctx, viper.GetString("server-url"))
 }
 
 // StreamingHTTPClient returns a client for large raw request bodies and bounded
 // control-plane responses. It has no whole-request deadline, but bounds the
 // wait for response headers after the body has been transmitted.
 func StreamingHTTPClient() (*http.Client, *url.URL, error) {
-	serverURL := viper.GetString("server-url")
-	u, err := url.Parse(serverURL)
+	normalized, err := auth.NormalizeServerURL(viper.GetString("server-url"))
 	if err != nil {
 		return nil, nil, err
 	}
-	if u.Host == "" {
-		return nil, nil, errors.New(
-			"environment variable REANA_SERVER_URL is not set",
-		)
+	u, err := url.Parse(normalized)
+	if err != nil {
+		return nil, nil, err
 	}
-	if u.Scheme != "http" && u.Scheme != "https" {
-		return nil, nil, fmt.Errorf(
-			"unsupported REANA server URL scheme %q",
-			u.Scheme,
-		)
+	if err := validateBearerTransportURL(u); err != nil {
+		return nil, nil, err
 	}
-	transport := http.DefaultTransport.(*http.Transport).Clone()
-	transport.TLSClientConfig = &tls.Config{ //nolint:gosec
-		InsecureSkipVerify: true,
+	httpClient, err := auth.NewHTTPClient()
+	if err != nil {
+		return nil, nil, err
+	}
+	transport, ok := httpClient.Transport.(*http.Transport)
+	if !ok {
+		return nil, nil, errors.New("unexpected REANA HTTP transport")
 	}
 	transport.ResponseHeaderTimeout = apiRequestTimeout
-	return &http.Client{
-		Transport: &boundedResponseTransport{transport: transport},
-	}, u, nil
+	httpClient.Timeout = 0
+	httpClient.Transport = &boundedResponseTransport{transport: transport}
+	return httpClient, u, nil
 }
 
 func newAPIClient(
+	token string,
 	requestTimeout time.Duration,
 	boundResponses bool,
-) (*API, error) {
+) (*AuthenticatedClient, error) {
 	// parse REANA server URL
-	serverURL := viper.GetString("server-url")
-	u, err := url.Parse(serverURL)
+	normalized, err := auth.NormalizeServerURL(viper.GetString("server-url"))
 	if err != nil {
 		return nil, err
 	}
-	if u.Host == "" {
-		return nil, errors.New(
-			"environment variable REANA_SERVER_URL is not set",
-		)
+	u, err := url.Parse(normalized)
+	if err != nil {
+		return nil, err
 	}
-	if u.Scheme != "http" && u.Scheme != "https" {
-		return nil, fmt.Errorf(
-			"unsupported REANA server URL scheme %q",
-			u.Scheme,
-		)
+	if err := validateBearerTransportURL(u); err != nil {
+		return nil, err
 	}
 
-	// Keep the historical support for self-signed cluster certificates without
-	// mutating the process-wide default HTTP transport.
-	baseTransport := http.DefaultTransport.(*http.Transport).Clone()
-	baseTransport.TLSClientConfig = &tls.Config{ //nolint:gosec
-		InsecureSkipVerify: true,
+	httpClient, err := auth.NewHTTPClient()
+	if err != nil {
+		return nil, err
 	}
-	var transport http.RoundTripper = baseTransport
+	tokenProvider := func(ctx context.Context) (string, error) {
+		return AccessToken(ctx, token)
+	}
+
+	var transport http.RoundTripper = httpClient.Transport
 	if boundResponses {
 		transport = &boundedResponseTransport{
-			transport: &knownLengthMultipartTransport{transport: baseTransport},
+			transport: &knownLengthMultipartTransport{transport: transport},
 		}
 	}
-	httpClient := &http.Client{
-		Timeout:   requestTimeout,
-		Transport: transport,
-	}
+	httpClient.Timeout = requestTimeout
+	httpClient.Transport = transport
 	apiTransport := httptransport.NewWithClient(
 		u.Host,
-		"",
+		strings.TrimRight(u.EscapedPath(), "/"),
 		[]string{u.Scheme},
 		httpClient,
 	)
 	apiTransport.SetLogger(log.StandardLogger())
-	apiTransport.SetDebug(log.GetLevel() == log.DebugLevel)
+	// Request dumps include Authorization headers and request bodies.
+	apiTransport.SetDebug(false)
+	apiTransport.DefaultAuthentication = runtime.ClientAuthInfoWriterFunc(
+		func(request runtime.ClientRequest, registry strfmt.Registry) error {
+			accessToken, err := tokenProvider(context.Background())
+			if err != nil {
+				return err
+			}
+			return request.SetHeaderParam(
+				"Authorization",
+				"Bearer "+accessToken,
+			)
+		},
+	)
 	apiTransport.Consumers["application/zip"] = runtime.ByteStreamConsumer()
 
-	log.Info("Connecting to ", serverURL)
+	log.Info("Connecting to ", normalized)
 
-	// create the API client, with the transport
-	return New(apiTransport, strfmt.Default), nil
+	return &AuthenticatedClient{
+		API:        New(apiTransport, strfmt.Default),
+		httpClient: httpClient,
+	}, nil
+}
+
+// GetInteractiveSessionSecret fetches the short-lived secret used in an
+// interactive session URL.
+func (c *AuthenticatedClient) GetInteractiveSessionSecret(
+	ctx context.Context,
+	workflow string,
+) (string, error) {
+	params := operations.NewGetInteractiveSessionSecretParams().
+		WithContext(ctx).
+		WithWorkflowIDOrName(workflow)
+	response, err := c.Operations.GetInteractiveSessionSecret(params, nil)
+	if err != nil {
+		return "", err
+	}
+	if response.Payload == nil || response.Payload.SessionSecret == nil ||
+		*response.Payload.SessionSecret == "" {
+		return "", errors.New("interactive session secret is empty")
+	}
+	return *response.Payload.SessionSecret, nil
 }

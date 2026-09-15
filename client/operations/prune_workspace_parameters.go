@@ -62,12 +62,6 @@ PruneWorkspaceParams contains all the parameters to send to the API endpoint
 */
 type PruneWorkspaceParams struct {
 
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* IncludeInputs.
 
 	   Optional. Delete also the input files of the workflow.
@@ -139,17 +133,6 @@ func (o *PruneWorkspaceParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the prune workspace params
-func (o *PruneWorkspaceParams) WithAccessToken(accessToken *string) *PruneWorkspaceParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the prune workspace params
-func (o *PruneWorkspaceParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithIncludeInputs adds the includeInputs to the prune workspace params
 func (o *PruneWorkspaceParams) WithIncludeInputs(includeInputs *bool) *PruneWorkspaceParams {
 	o.SetIncludeInputs(includeInputs)
@@ -190,23 +173,6 @@ func (o *PruneWorkspaceParams) WriteToRequest(r runtime.ClientRequest, reg strfm
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 
 	if o.IncludeInputs != nil {
 

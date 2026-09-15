@@ -61,12 +61,6 @@ ShareWorkflowParams contains all the parameters to send to the API endpoint
 */
 type ShareWorkflowParams struct {
 
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* ShareDetails.
 
 	   JSON object with details of the share.
@@ -132,17 +126,6 @@ func (o *ShareWorkflowParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the share workflow params
-func (o *ShareWorkflowParams) WithAccessToken(accessToken *string) *ShareWorkflowParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the share workflow params
-func (o *ShareWorkflowParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithShareDetails adds the shareDetails to the share workflow params
 func (o *ShareWorkflowParams) WithShareDetails(shareDetails ShareWorkflowBody) *ShareWorkflowParams {
 	o.SetShareDetails(shareDetails)
@@ -172,23 +155,6 @@ func (o *ShareWorkflowParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 	if err := r.SetBodyParam(o.ShareDetails); err != nil {
 		return err
 	}

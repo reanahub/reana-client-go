@@ -43,11 +43,8 @@ func cleanWorkspacePath(value string) string {
 }
 
 func workspaceDownloadPath(value string) string {
-	path := stripQuotes(value)
-	if strings.HasPrefix(path, "/") {
-		return path
-	}
-	return "/" + path
+	// The API route already supplies the slash before the file name.
+	return strings.TrimLeft(stripQuotes(value), "/")
 }
 
 func humanReadableToBytes(value string) (int64, error) {

@@ -33,6 +33,12 @@ func (o *GetSecretsReader) ReadResponse(response runtime.ClientResponse, consume
 			return nil, err
 		}
 		return result, nil
+	case 401:
+		result := NewGetSecretsUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewGetSecretsForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -41,6 +47,12 @@ func (o *GetSecretsReader) ReadResponse(response runtime.ClientResponse, consume
 		return nil, result
 	case 500:
 		result := NewGetSecretsInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewGetSecretsServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -114,6 +126,62 @@ func (o *GetSecretsOK) readResponse(response runtime.ClientResponse, consumer ru
 	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewGetSecretsUnauthorized creates a GetSecretsUnauthorized with default headers values
+func NewGetSecretsUnauthorized() *GetSecretsUnauthorized {
+	return &GetSecretsUnauthorized{}
+}
+
+/*
+GetSecretsUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type GetSecretsUnauthorized struct {
+}
+
+// IsSuccess returns true when this get secrets unauthorized response has a 2xx status code
+func (o *GetSecretsUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get secrets unauthorized response has a 3xx status code
+func (o *GetSecretsUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get secrets unauthorized response has a 4xx status code
+func (o *GetSecretsUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get secrets unauthorized response has a 5xx status code
+func (o *GetSecretsUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get secrets unauthorized response a status code equal to that given
+func (o *GetSecretsUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the get secrets unauthorized response
+func (o *GetSecretsUnauthorized) Code() int {
+	return 401
+}
+
+func (o *GetSecretsUnauthorized) Error() string {
+	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsUnauthorized", 401)
+}
+
+func (o *GetSecretsUnauthorized) String() string {
+	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsUnauthorized", 401)
+}
+
+func (o *GetSecretsUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
@@ -254,6 +322,62 @@ func (o *GetSecretsInternalServerError) readResponse(response runtime.ClientResp
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewGetSecretsServiceUnavailable creates a GetSecretsServiceUnavailable with default headers values
+func NewGetSecretsServiceUnavailable() *GetSecretsServiceUnavailable {
+	return &GetSecretsServiceUnavailable{}
+}
+
+/*
+GetSecretsServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type GetSecretsServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this get secrets service unavailable response has a 2xx status code
+func (o *GetSecretsServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get secrets service unavailable response has a 3xx status code
+func (o *GetSecretsServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get secrets service unavailable response has a 4xx status code
+func (o *GetSecretsServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get secrets service unavailable response has a 5xx status code
+func (o *GetSecretsServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get secrets service unavailable response a status code equal to that given
+func (o *GetSecretsServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the get secrets service unavailable response
+func (o *GetSecretsServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *GetSecretsServiceUnavailable) Error() string {
+	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsServiceUnavailable", 503)
+}
+
+func (o *GetSecretsServiceUnavailable) String() string {
+	return fmt.Sprintf("[GET /api/secrets][%d] getSecretsServiceUnavailable", 503)
+}
+
+func (o *GetSecretsServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

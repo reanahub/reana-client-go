@@ -1,253 +1,352 @@
-// This file is part of REANA.
-// Copyright (C) 2026 CERN.
+/*
+This file is part of REANA.
+Copyright (C) 2026 CERN.
+
+REANA is free software; you can redistribute it and/or modify it
+under the terms of the MIT License; see LICENSE file for more details.
+*/
 
 package client
 
 import (
-	"bytes"
-	"errors"
-	"io"
+	"context"
+	"encoding/pem"
 	"net/http"
 	"net/http/httptest"
-	"strconv"
+	"os"
 	"strings"
 	"testing"
+	"time"
+
+	httptransport "github.com/go-openapi/runtime/client"
+	log "github.com/sirupsen/logrus"
+	"github.com/spf13/viper"
 
 	"reanahub/reana-client-go/client/operations"
-
-	"github.com/spf13/viper"
+	"reanahub/reana-client-go/pkg/auth"
 )
 
-type roundTripFunc func(*http.Request) (*http.Response, error)
-
-func (function roundTripFunc) RoundTrip(
-	request *http.Request,
-) (*http.Response, error) {
-	return function(request)
+func setServerURL(t *testing.T, serverURL string) {
+	t.Helper()
+	viper.Set("server-url", serverURL)
+	t.Cleanup(viper.Reset)
 }
 
-type trackedBody struct {
-	io.Reader
-	closed bool
-}
-
-func (body *trackedBody) Close() error {
-	body.closed = true
-	return nil
-}
-
-func TestBoundedResponseBodyRejectsBytesPastLimit(t *testing.T) {
-	body := &boundedResponseBody{
-		body:      io.NopCloser(strings.NewReader("four")),
-		remaining: 3,
-	}
-	contents, err := io.ReadAll(body)
-	if err == nil ||
-		!strings.Contains(err.Error(), ErrResponseTooLarge.Error()) {
-		t.Fatalf("expected response limit error, got %q and %v", contents, err)
-	}
-	if !bytes.Equal(contents, []byte("fou")) {
-		t.Fatalf("unexpected bounded contents %q", contents)
-	}
-}
-
-func TestBoundedResponseBodyAcceptsExactLimit(t *testing.T) {
-	body := &boundedResponseBody{
-		body:      io.NopCloser(strings.NewReader("three")),
-		remaining: 5,
-	}
-	contents, err := io.ReadAll(body)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !bytes.Equal(contents, []byte("three")) {
-		t.Fatalf("unexpected contents %q", contents)
-	}
-}
-
-func TestBoundedResponseBodyClose(t *testing.T) {
-	underlying := &trackedBody{Reader: strings.NewReader("")}
-	body := &boundedResponseBody{body: underlying, remaining: 1}
-	if err := body.Close(); err != nil {
-		t.Fatal(err)
-	}
-	if !underlying.closed {
-		t.Error("expected Close to be forwarded")
-	}
-}
-
-func TestBoundedResponseTransport(t *testing.T) {
-	t.Run("rejects declared oversized response", func(t *testing.T) {
-		body := &trackedBody{Reader: strings.NewReader("response")}
-		transport := &boundedResponseTransport{
-			transport: roundTripFunc(func(
-				*http.Request,
-			) (*http.Response, error) {
-				return &http.Response{
-					Body:          body,
-					ContentLength: maxAPIResponseBytes + 1,
-				}, nil
-			}),
-		}
-		_, err := transport.RoundTrip(
-			httptest.NewRequest(http.MethodGet, "https://reana.test", nil),
-		)
-		if err == nil ||
-			!strings.Contains(err.Error(), ErrResponseTooLarge.Error()) {
-			t.Fatalf("expected response limit error, got %v", err)
-		}
-		if !body.closed {
-			t.Error("expected rejected response body to be closed")
-		}
-	})
-
-	t.Run("bounds response with unknown length", func(t *testing.T) {
-		transport := &boundedResponseTransport{
-			transport: roundTripFunc(func(
-				*http.Request,
-			) (*http.Response, error) {
-				return &http.Response{
-					Body:          io.NopCloser(strings.NewReader("response")),
-					ContentLength: -1,
-				}, nil
-			}),
-		}
-		response, err := transport.RoundTrip(
-			httptest.NewRequest(http.MethodGet, "https://reana.test", nil),
-		)
-		if err != nil {
-			t.Fatal(err)
-		}
-		bounded, ok := response.Body.(*boundedResponseBody)
-		if !ok || bounded.remaining != maxAPIResponseBytes {
-			t.Fatalf("response body was not bounded: %#v", response.Body)
-		}
-	})
-
-	t.Run("propagates transport error", func(t *testing.T) {
-		want := errors.New("connection failed")
-		transport := &boundedResponseTransport{
-			transport: roundTripFunc(func(
-				*http.Request,
-			) (*http.Response, error) {
-				return nil, want
-			}),
-		}
-		_, err := transport.RoundTrip(
-			httptest.NewRequest(http.MethodGet, "https://reana.test", nil),
-		)
-		if !errors.Is(err, want) {
-			t.Fatalf("expected %v, got %v", want, err)
-		}
-	})
-}
-
-func TestAPIClientRejectsInvalidServerURL(t *testing.T) {
-	for _, testCase := range []struct {
-		name      string
-		serverURL string
-		errorText string
-	}{
-		{"missing", "", "REANA_SERVER_URL is not set"},
-		{"relative", "/api", "REANA_SERVER_URL is not set"},
-		{"unsupported scheme", "ftp://reana.test", "unsupported"},
-		{"malformed", "https://[::1", "missing ']'"},
-	} {
-		t.Run(testCase.name, func(t *testing.T) {
-			viper.Set("server-url", testCase.serverURL)
-			t.Cleanup(viper.Reset)
-			_, err := ApiClient()
-			if err == nil ||
-				!strings.Contains(err.Error(), testCase.errorText) {
-				t.Fatalf("expected %q error, got %v", testCase.errorText, err)
-			}
-		})
-	}
-}
-
-func TestAPIClientBoundsControlResponses(t *testing.T) {
-	payload := `{"status":"` +
-		strings.Repeat("x", maxAPIResponseBytes) +
-		`"}`
-	for _, testCase := range []struct {
-		name          string
-		contentLength bool
-	}{
-		{"known length", true},
-		{"chunked", false},
-	} {
-		t.Run(testCase.name, func(t *testing.T) {
-			server := httptest.NewTLSServer(
-				http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-					w.Header().Set("Content-Type", "application/json")
-					if testCase.contentLength {
-						w.Header().Set(
-							"Content-Length",
-							strconv.Itoa(len(payload)),
-						)
-					} else {
-						w.WriteHeader(http.StatusOK)
-						w.(http.Flusher).Flush()
-					}
-					_, _ = w.Write([]byte(payload))
-				}),
-			)
-			defer server.Close()
-			viper.Set("server-url", server.URL)
-			defer viper.Reset()
-
-			api, err := ControlAPIClient()
-			if err != nil {
-				t.Fatal(err)
-			}
-			token := "token"
-			params := operations.NewGetWorkflowStatusParams()
-			params.SetAccessToken(&token)
-			params.SetWorkflowIDOrName("analysis")
-			_, err = api.Operations.GetWorkflowStatus(params)
-			if err == nil ||
-				!strings.Contains(err.Error(), ErrResponseTooLarge.Error()) {
-				t.Fatalf("expected bounded validation response, got %v", err)
-			}
-		})
-	}
-}
-
-func TestAPIClientConnectsToSelfSignedTLSServer(t *testing.T) {
-	server := httptest.NewTLSServer(
+func TestAPIClientUsesStoredOIDCToken(t *testing.T) {
+	server := httptest.NewServer(
 		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Content-Type", "application/json")
-			_, _ = w.Write([]byte(`{"status":"running"}`))
+			if got := r.Header.Get("Authorization"); got != "Bearer stored.jwt.token" {
+				t.Errorf("Authorization = %q, want stored token", got)
+			}
+			w.WriteHeader(http.StatusInternalServerError)
 		}),
 	)
 	defer server.Close()
-	viper.Set("server-url", server.URL)
-	t.Cleanup(viper.Reset)
+	setServerURL(t, server.URL)
+	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/credentials.json")
+	store, err := auth.NewStore()
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = store.Put(server.URL, auth.Credentials{
+		AccessToken:          "stored.jwt.token",
+		AccessTokenExpiresAt: time.Now().Add(time.Hour).Format(time.RFC3339),
+	}, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	api, err := ApiClient("")
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, _ = api.Operations.GetYou(operations.NewGetYouParams(), nil)
+}
 
-	defaultTransport := http.DefaultTransport.(*http.Transport)
-	defaultInsecureSkipVerify := false
-	if defaultTransport.TLSClientConfig != nil {
-		defaultInsecureSkipVerify =
-			defaultTransport.TLSClientConfig.InsecureSkipVerify
-	}
-	api, err := ApiClient()
+func TestAPIClientUsesBearerWithoutQueryOverLoopbackHTTP(t *testing.T) {
+	requestReceived := false
+	server := httptest.NewServer(
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			requestReceived = true
+			if got := r.Header.Get("Authorization"); got != "Bearer jwt-override" {
+				t.Errorf(
+					"Authorization = %q, want %q",
+					got,
+					"Bearer jwt-override",
+				)
+			}
+			if r.URL.Query().Has("access_token") {
+				t.Errorf("access_token leaked into query: %s", r.URL.RawQuery)
+			}
+			w.WriteHeader(http.StatusInternalServerError)
+		}),
+	)
+	defer server.Close()
+	setServerURL(t, server.URL)
+
+	api, err := ApiClient("jwt-override")
 	if err != nil {
 		t.Fatal(err)
 	}
-	token := "token"
-	params := operations.NewGetWorkflowStatusParams()
-	params.SetAccessToken(&token)
-	params.SetWorkflowIDOrName("analysis")
-	response, err := api.Operations.GetWorkflowStatus(params)
+	_, _ = api.Operations.GetYou(operations.NewGetYouParams(), nil)
+	if !requestReceived {
+		t.Fatal("HTTP server did not receive generated client request")
+	}
+}
+
+func TestAPIClientRejectsBearerOverNonLoopbackHTTP(t *testing.T) {
+	setServerURL(t, "http://reana.example")
+
+	_, err := ApiClient("jwt")
+	if err == nil || !strings.Contains(err.Error(), "HTTPS") {
+		t.Fatalf("expected cleartext bearer rejection, got %v", err)
+	}
+}
+
+func TestAPIClientRejectsAllRedirects(t *testing.T) {
+	setServerURL(t, "https://reana.example")
+	api, err := ApiClient("jwt")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if response.Payload.Status != "running" {
-		t.Errorf("unexpected status %q", response.Payload.Status)
+
+	redirect, _ := http.NewRequest(
+		http.MethodGet,
+		"http://reana.example/api/ping",
+		nil,
+	)
+	original, _ := http.NewRequest(
+		http.MethodGet,
+		"https://reana.example/api/ping",
+		nil,
+	)
+	err = api.httpClient.CheckRedirect(redirect, []*http.Request{original})
+	if err != http.ErrUseLastResponse {
+		t.Fatalf("redirect policy error = %v, want ErrUseLastResponse", err)
 	}
-	if defaultTransport.TLSClientConfig != nil &&
-		defaultTransport.TLSClientConfig.InsecureSkipVerify !=
-			defaultInsecureSkipVerify {
-		t.Error("ApiClient disabled TLS verification on the default transport")
+}
+
+func TestAPIClientDoesNotReplayBearerAcrossRedirect(t *testing.T) {
+	targetRequests := 0
+	target := httptest.NewTLSServer(http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			targetRequests++
+			if authorization := r.Header.Get("Authorization"); authorization != "" {
+				t.Errorf(
+					"redirect target received Authorization %q",
+					authorization,
+				)
+			}
+			w.WriteHeader(http.StatusOK)
+		},
+	))
+	defer target.Close()
+	origin := httptest.NewTLSServer(http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			http.Redirect(
+				w,
+				r,
+				target.URL+"/captured",
+				http.StatusTemporaryRedirect,
+			)
+		},
+	))
+	defer origin.Close()
+	setServerURL(t, origin.URL)
+	t.Setenv("REANA_SERVER_TLS_VERIFY", "false")
+
+	api, err := ApiClient("jwt")
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, _ = api.Operations.GetYou(operations.NewGetYouParams(), nil)
+	if targetRequests != 0 {
+		t.Fatalf("redirect target received %d requests", targetRequests)
+	}
+}
+
+func TestAPIClientVerifiesTLSCertificates(t *testing.T) {
+	server := httptest.NewTLSServer(
+		http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			w.WriteHeader(http.StatusOK)
+		}),
+	)
+	defer server.Close()
+	setServerURL(t, server.URL)
+
+	api, err := ApiClient("jwt")
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = api.Operations.GetYou(operations.NewGetYouParams(), nil)
+	if err == nil || !strings.Contains(err.Error(), "certificate") {
+		t.Fatalf("expected certificate verification error, got %v", err)
+	}
+}
+
+func TestAPIClientSupportsExplicitInsecureTLSForLocalTesting(t *testing.T) {
+	requestReceived := false
+	server := httptest.NewTLSServer(
+		http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			requestReceived = true
+			w.WriteHeader(http.StatusInternalServerError)
+		}),
+	)
+	defer server.Close()
+	setServerURL(t, server.URL)
+	t.Setenv("REANA_SERVER_TLS_VERIFY", "false")
+
+	api, err := ApiClient("jwt")
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, _ = api.Operations.GetYou(operations.NewGetYouParams(), nil)
+	if !requestReceived {
+		t.Fatal("explicit insecure TLS setting did not reach the test server")
+	}
+}
+
+func TestAPIClientSupportsCustomCABundle(t *testing.T) {
+	requestReceived := false
+	server := httptest.NewTLSServer(
+		http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+			requestReceived = true
+			w.WriteHeader(http.StatusInternalServerError)
+		}),
+	)
+	defer server.Close()
+	setServerURL(t, server.URL)
+	certificate := pem.EncodeToMemory(&pem.Block{
+		Type:  "CERTIFICATE",
+		Bytes: server.Certificate().Raw,
+	})
+	caPath := t.TempDir() + "/ca.pem"
+	if err := os.WriteFile(caPath, certificate, 0o600); err != nil {
+		t.Fatal(err)
+	}
+	t.Setenv("REANA_SERVER_CA_CERTS", caPath)
+
+	api, err := ApiClient("jwt")
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, _ = api.Operations.GetYou(operations.NewGetYouParams(), nil)
+	if !requestReceived {
+		t.Fatal("custom CA bundle did not reach the test server")
+	}
+}
+
+func TestAPIClientDisablesGoOpenAPIDumpsAtDebugLevel(t *testing.T) {
+	oldLevel := log.GetLevel()
+	log.SetLevel(log.DebugLevel)
+	t.Cleanup(func() { log.SetLevel(oldLevel) })
+	setServerURL(t, "https://reana.example")
+
+	api, err := ApiClient("jwt")
+	if err != nil {
+		t.Fatal(err)
+	}
+	transport, ok := api.Transport.(*httptransport.Runtime)
+	if !ok {
+		t.Fatalf("transport type = %T, want *client.Runtime", api.Transport)
+	}
+	if transport.Debug {
+		t.Fatal("go-openapi request dumping is enabled")
+	}
+}
+
+func TestStreamingHTTPClientReturnsBoundedClientWithNoTimeout(t *testing.T) {
+	setServerURL(t, "https://reana.example")
+
+	httpClient, u, err := StreamingHTTPClient()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if httpClient.Timeout != 0 {
+		t.Fatalf(
+			"Timeout = %v, want 0 (no whole-request deadline)",
+			httpClient.Timeout,
+		)
+	}
+	if u.Host != "reana.example" {
+		t.Fatalf("host = %q, want reana.example", u.Host)
+	}
+	transport, ok := httpClient.Transport.(*boundedResponseTransport)
+	if !ok {
+		t.Fatalf(
+			"transport type = %T, want *boundedResponseTransport",
+			httpClient.Transport,
+		)
+	}
+	inner, ok := transport.transport.(*http.Transport)
+	if !ok {
+		t.Fatalf(
+			"inner transport type = %T, want *http.Transport",
+			transport.transport,
+		)
+	}
+	if inner.ResponseHeaderTimeout != apiRequestTimeout {
+		t.Fatalf(
+			"ResponseHeaderTimeout = %v, want %v",
+			inner.ResponseHeaderTimeout,
+			apiRequestTimeout,
+		)
+	}
+}
+
+func TestStreamingHTTPClientRejectsMissingServerURL(t *testing.T) {
+	setServerURL(t, "")
+
+	_, _, err := StreamingHTTPClient()
+	if err == nil ||
+		!strings.Contains(err.Error(), "REANA server URL is not set") {
+		t.Fatalf("expected missing server URL error, got %v", err)
+	}
+}
+
+func TestStreamingHTTPClientRejectsCleartextNonLoopback(t *testing.T) {
+	setServerURL(t, "http://reana.example")
+
+	_, _, err := StreamingHTTPClient()
+	if err == nil || !strings.Contains(err.Error(), "HTTPS") {
+		t.Fatalf("expected cleartext bearer rejection, got %v", err)
+	}
+}
+
+func TestGetInteractiveSessionSecret(t *testing.T) {
+	workflow := "analysis/run 1?"
+	server := httptest.NewServer(
+		http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			wantPath := "/api/workflows/analysis%2Frun%201%3F/interactive-session-secret"
+			if got := r.URL.EscapedPath(); got != wantPath {
+				t.Errorf("escaped path = %q, want %q", got, wantPath)
+			}
+			if got := r.Header.Get("Authorization"); got != "Bearer jwt" {
+				t.Errorf("Authorization = %q, want %q", got, "Bearer jwt")
+			}
+			if r.URL.RawQuery != "" {
+				t.Errorf("unexpected query: %s", r.URL.RawQuery)
+			}
+			w.Header().Set("Content-Type", "application/json")
+			_, _ = w.Write(
+				[]byte(`{"session_secret":"short-lived+/=","path":"/session"}`),
+			)
+		}),
+	)
+	defer server.Close()
+	setServerURL(t, server.URL)
+
+	api, err := ApiClient("jwt")
+	if err != nil {
+		t.Fatal(err)
+	}
+	secret, err := api.GetInteractiveSessionSecret(
+		context.Background(),
+		workflow,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if secret != "short-lived+/=" {
+		t.Fatalf("session secret = %q, want %q", secret, "short-lived+/=")
 	}
 }

@@ -63,20 +63,18 @@ func newInfoCmd() *cobra.Command {
 
 func (o *infoOptions) run(cmd *cobra.Command) error {
 	infoParams := operations.NewInfoParams()
-	infoParams.SetAccessToken(o.token)
 	quotaParams := operations.NewGetYouParams()
-	quotaParams.SetAccessToken(&o.token)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
-	infoResp, err := api.Operations.Info(infoParams)
+	infoResp, err := api.Operations.Info(infoParams, nil)
 	if err != nil {
 		return err
 	}
 	quotaPeriodInfo := quotaPeriodInfo{}
-	quotaResp, err := api.Operations.GetYou(quotaParams)
+	quotaResp, err := api.Operations.GetYou(quotaParams, nil)
 	if err != nil {
 		log.Debugf(
 			"Could not enrich cluster info with quota period details: %v",

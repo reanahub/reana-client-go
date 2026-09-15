@@ -86,15 +86,15 @@ func newShareStatusCmd() *cobra.Command {
 
 func (o *shareStatusOptions) run(cmd *cobra.Command) error {
 	shareStatusParams := operations.NewGetWorkflowShareStatusParams()
-	shareStatusParams.SetAccessToken(&o.token)
 	shareStatusParams.SetWorkflowIDOrName(o.workflow)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
 	shareStatusResp, err := api.Operations.GetWorkflowShareStatus(
 		shareStatusParams,
+		nil,
 	)
 	if err != nil {
 		return err

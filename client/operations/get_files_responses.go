@@ -39,6 +39,12 @@ func (o *GetFilesReader) ReadResponse(response runtime.ClientResponse, consumer 
 			return nil, err
 		}
 		return nil, result
+	case 401:
+		result := NewGetFilesUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewGetFilesForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -53,6 +59,12 @@ func (o *GetFilesReader) ReadResponse(response runtime.ClientResponse, consumer 
 		return nil, result
 	case 500:
 		result := NewGetFilesInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewGetFilesServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -198,6 +210,62 @@ func (o *GetFilesBadRequest) readResponse(response runtime.ClientResponse, consu
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewGetFilesUnauthorized creates a GetFilesUnauthorized with default headers values
+func NewGetFilesUnauthorized() *GetFilesUnauthorized {
+	return &GetFilesUnauthorized{}
+}
+
+/*
+GetFilesUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type GetFilesUnauthorized struct {
+}
+
+// IsSuccess returns true when this get files unauthorized response has a 2xx status code
+func (o *GetFilesUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get files unauthorized response has a 3xx status code
+func (o *GetFilesUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get files unauthorized response has a 4xx status code
+func (o *GetFilesUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this get files unauthorized response has a 5xx status code
+func (o *GetFilesUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this get files unauthorized response a status code equal to that given
+func (o *GetFilesUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the get files unauthorized response
+func (o *GetFilesUnauthorized) Code() int {
+	return 401
+}
+
+func (o *GetFilesUnauthorized) Error() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesUnauthorized", 401)
+}
+
+func (o *GetFilesUnauthorized) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesUnauthorized", 401)
+}
+
+func (o *GetFilesUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
@@ -408,6 +476,62 @@ func (o *GetFilesInternalServerError) readResponse(response runtime.ClientRespon
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewGetFilesServiceUnavailable creates a GetFilesServiceUnavailable with default headers values
+func NewGetFilesServiceUnavailable() *GetFilesServiceUnavailable {
+	return &GetFilesServiceUnavailable{}
+}
+
+/*
+GetFilesServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type GetFilesServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this get files service unavailable response has a 2xx status code
+func (o *GetFilesServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this get files service unavailable response has a 3xx status code
+func (o *GetFilesServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this get files service unavailable response has a 4xx status code
+func (o *GetFilesServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this get files service unavailable response has a 5xx status code
+func (o *GetFilesServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this get files service unavailable response a status code equal to that given
+func (o *GetFilesServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the get files service unavailable response
+func (o *GetFilesServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *GetFilesServiceUnavailable) Error() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesServiceUnavailable", 503)
+}
+
+func (o *GetFilesServiceUnavailable) String() string {
+	return fmt.Sprintf("[GET /api/workflows/{workflow_id_or_name}/workspace][%d] getFilesServiceUnavailable", 503)
+}
+
+func (o *GetFilesServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

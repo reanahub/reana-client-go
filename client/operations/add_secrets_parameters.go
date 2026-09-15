@@ -62,12 +62,6 @@ AddSecretsParams contains all the parameters to send to the API endpoint
 */
 type AddSecretsParams struct {
 
-	/* AccessToken.
-
-	   Secrets owner access token.
-	*/
-	AccessToken *string
-
 	/* Overwrite.
 
 	   Whether existing secret keys should be overwritten.
@@ -133,17 +127,6 @@ func (o *AddSecretsParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the add secrets params
-func (o *AddSecretsParams) WithAccessToken(accessToken *string) *AddSecretsParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the add secrets params
-func (o *AddSecretsParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithOverwrite adds the overwrite to the add secrets params
 func (o *AddSecretsParams) WithOverwrite(overwrite *bool) *AddSecretsParams {
 	o.SetOverwrite(overwrite)
@@ -173,23 +156,6 @@ func (o *AddSecretsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 
 	if o.Overwrite != nil {
 

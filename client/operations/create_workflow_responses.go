@@ -30,6 +30,12 @@ type CreateWorkflowReader struct {
 // ReadResponse reads a server response into the received o.
 func (o *CreateWorkflowReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (any, error) {
 	switch response.Code() {
+	case 200:
+		result := NewCreateWorkflowOK()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return result, nil
 	case 201:
 		result := NewCreateWorkflowCreated()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -38,6 +44,12 @@ func (o *CreateWorkflowReader) ReadResponse(response runtime.ClientResponse, con
 		return result, nil
 	case 400:
 		result := NewCreateWorkflowBadRequest()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 401:
+		result := NewCreateWorkflowUnauthorized()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -93,6 +105,76 @@ func (o *CreateWorkflowReader) ReadResponse(response runtime.ClientResponse, con
 	default:
 		return nil, runtime.NewAPIError("[POST /api/workflows] create_workflow", response, response.Code())
 	}
+}
+
+// NewCreateWorkflowOK creates a CreateWorkflowOK with default headers values
+func NewCreateWorkflowOK() *CreateWorkflowOK {
+	return &CreateWorkflowOK{}
+}
+
+/*
+CreateWorkflowOK describes a response with status code 200, with default header values.
+
+The GitLab webhook was processed without creating a workflow, for example when the user's quota is exceeded.
+*/
+type CreateWorkflowOK struct {
+	Payload *CreateWorkflowOKBody
+}
+
+// IsSuccess returns true when this create workflow o k response has a 2xx status code
+func (o *CreateWorkflowOK) IsSuccess() bool {
+	return true
+}
+
+// IsRedirect returns true when this create workflow o k response has a 3xx status code
+func (o *CreateWorkflowOK) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this create workflow o k response has a 4xx status code
+func (o *CreateWorkflowOK) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this create workflow o k response has a 5xx status code
+func (o *CreateWorkflowOK) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this create workflow o k response a status code equal to that given
+func (o *CreateWorkflowOK) IsCode(code int) bool {
+	return code == 200
+}
+
+// Code gets the status code for the create workflow o k response
+func (o *CreateWorkflowOK) Code() int {
+	return 200
+}
+
+func (o *CreateWorkflowOK) Error() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowOK %s", 200, payload)
+}
+
+func (o *CreateWorkflowOK) String() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowOK %s", 200, payload)
+}
+
+func (o *CreateWorkflowOK) GetPayload() *CreateWorkflowOKBody {
+	return o.Payload
+}
+
+func (o *CreateWorkflowOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(CreateWorkflowOKBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
+		return err
+	}
+
+	return nil
 }
 
 // NewCreateWorkflowCreated creates a CreateWorkflowCreated with default headers values
@@ -226,6 +308,76 @@ func (o *CreateWorkflowBadRequest) GetPayload() *CreateWorkflowBadRequestBody {
 func (o *CreateWorkflowBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	o.Payload = new(CreateWorkflowBadRequestBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
+		return err
+	}
+
+	return nil
+}
+
+// NewCreateWorkflowUnauthorized creates a CreateWorkflowUnauthorized with default headers values
+func NewCreateWorkflowUnauthorized() *CreateWorkflowUnauthorized {
+	return &CreateWorkflowUnauthorized{}
+}
+
+/*
+CreateWorkflowUnauthorized describes a response with status code 401, with default header values.
+
+Request failed. The stored GitLab access token is not valid.
+*/
+type CreateWorkflowUnauthorized struct {
+	Payload *CreateWorkflowUnauthorizedBody
+}
+
+// IsSuccess returns true when this create workflow unauthorized response has a 2xx status code
+func (o *CreateWorkflowUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this create workflow unauthorized response has a 3xx status code
+func (o *CreateWorkflowUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this create workflow unauthorized response has a 4xx status code
+func (o *CreateWorkflowUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this create workflow unauthorized response has a 5xx status code
+func (o *CreateWorkflowUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this create workflow unauthorized response a status code equal to that given
+func (o *CreateWorkflowUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the create workflow unauthorized response
+func (o *CreateWorkflowUnauthorized) Code() int {
+	return 401
+}
+
+func (o *CreateWorkflowUnauthorized) Error() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowUnauthorized %s", 401, payload)
+}
+
+func (o *CreateWorkflowUnauthorized) String() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[POST /api/workflows][%d] createWorkflowUnauthorized %s", 401, payload)
+}
+
+func (o *CreateWorkflowUnauthorized) GetPayload() *CreateWorkflowUnauthorizedBody {
+	return o.Payload
+}
+
+func (o *CreateWorkflowUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(CreateWorkflowUnauthorizedBody)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
@@ -1102,6 +1254,44 @@ func (o *CreateWorkflowNotFoundBody) UnmarshalBinary(b []byte) error {
 }
 
 /*
+CreateWorkflowOKBody create workflow o k body
+swagger:model CreateWorkflowOKBody
+*/
+type CreateWorkflowOKBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this create workflow o k body
+func (o *CreateWorkflowOKBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this create workflow o k body based on context it is used
+func (o *CreateWorkflowOKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *CreateWorkflowOKBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *CreateWorkflowOKBody) UnmarshalBinary(b []byte) error {
+	var res CreateWorkflowOKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
 CreateWorkflowRequestEntityTooLargeBody create workflow request entity too large body
 swagger:model CreateWorkflowRequestEntityTooLargeBody
 */
@@ -1208,6 +1398,44 @@ func (o *CreateWorkflowTooManyRequestsBody) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *CreateWorkflowTooManyRequestsBody) UnmarshalBinary(b []byte) error {
 	var res CreateWorkflowTooManyRequestsBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+CreateWorkflowUnauthorizedBody create workflow unauthorized body
+swagger:model CreateWorkflowUnauthorizedBody
+*/
+type CreateWorkflowUnauthorizedBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this create workflow unauthorized body
+func (o *CreateWorkflowUnauthorizedBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this create workflow unauthorized body based on context it is used
+func (o *CreateWorkflowUnauthorizedBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *CreateWorkflowUnauthorizedBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *CreateWorkflowUnauthorizedBody) UnmarshalBinary(b []byte) error {
+	var res CreateWorkflowUnauthorizedBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

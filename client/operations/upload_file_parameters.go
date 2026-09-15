@@ -62,12 +62,6 @@ UploadFileParams contains all the parameters to send to the API endpoint
 */
 type UploadFileParams struct {
 
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* File.
 
 	   Required. File to add to the workspace.
@@ -145,17 +139,6 @@ func (o *UploadFileParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the upload file params
-func (o *UploadFileParams) WithAccessToken(accessToken *string) *UploadFileParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the upload file params
-func (o *UploadFileParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithFile adds the file to the upload file params
 func (o *UploadFileParams) WithFile(file string) *UploadFileParams {
 	o.SetFile(file)
@@ -207,23 +190,6 @@ func (o *UploadFileParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Re
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 	if err := r.SetBodyParam(o.File); err != nil {
 		return err
 	}

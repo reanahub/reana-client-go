@@ -60,13 +60,6 @@ GetUsersSharedWithYouParams contains all the parameters to send to the API endpo
 	Typically these are written to a http.Request.
 */
 type GetUsersSharedWithYouParams struct {
-
-	/* AccessToken.
-
-	   API access_token of user.
-	*/
-	AccessToken *string
-
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -120,17 +113,6 @@ func (o *GetUsersSharedWithYouParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the get users shared with you params
-func (o *GetUsersSharedWithYouParams) WithAccessToken(accessToken *string) *GetUsersSharedWithYouParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the get users shared with you params
-func (o *GetUsersSharedWithYouParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WriteToRequest writes these params to a swagger request
 func (o *GetUsersSharedWithYouParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -138,23 +120,6 @@ func (o *GetUsersSharedWithYouParams) WriteToRequest(r runtime.ClientRequest, re
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)

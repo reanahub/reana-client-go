@@ -102,18 +102,17 @@ files in the two workspaces are shown.`,
 
 func (o *diffOptions) run(cmd *cobra.Command) error {
 	diffParams := operations.NewGetWorkflowDiffParams()
-	diffParams.SetAccessToken(&o.token)
 	diffParams.SetWorkflowIDOrNamea(o.workflowA)
 	diffParams.SetWorkflowIDOrNameb(o.workflowB)
 	diffParams.SetBrief(&o.brief)
 	contextLines := fmt.Sprintf("%d", o.unified)
 	diffParams.SetContextLines(&contextLines)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
-	diffResp, err := api.Operations.GetWorkflowDiff(diffParams)
+	diffResp, err := api.Operations.GetWorkflowDiff(diffParams, nil)
 	if err != nil {
 		return err
 	}

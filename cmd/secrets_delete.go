@@ -60,14 +60,16 @@ func newSecretsDeleteCmd() *cobra.Command {
 
 func (o *secretsDeleteOptions) run(cmd *cobra.Command) error {
 	deleteSecretsParams := operations.NewDeleteSecretsParams()
-	deleteSecretsParams.SetAccessToken(&o.token)
 	deleteSecretsParams.SetSecrets(o.secrets)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
-	deleteSecretsResp, err := api.Operations.DeleteSecrets(deleteSecretsParams)
+	deleteSecretsResp, err := api.Operations.DeleteSecrets(
+		deleteSecretsParams,
+		nil,
+	)
 	if err != nil {
 		return handleSecretsDeleteApiError(err)
 	}

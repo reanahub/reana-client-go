@@ -121,95 +121,107 @@ func WithAcceptTextHTML(r *runtime.ClientOperation) {
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	AddSecrets(params *AddSecretsParams, opts ...ClientOption) (*AddSecretsCreated, error)
+	AddSecrets(params *AddSecretsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*AddSecretsCreated, error)
 
-	CloseInteractiveSession(params *CloseInteractiveSessionParams, opts ...ClientOption) (*CloseInteractiveSessionOK, error)
+	BffLogin(params *BffLoginParams, opts ...ClientOption) error
 
-	CreateGitlabWebhook(params *CreateGitlabWebhookParams, opts ...ClientOption) (*CreateGitlabWebhookCreated, error)
+	BffLogout(params *BffLogoutParams, opts ...ClientOption) (*BffLogoutOK, error)
 
-	CreateWorkflow(params *CreateWorkflowParams, opts ...ClientOption) (*CreateWorkflowCreated, error)
+	BffOauthCallback(params *BffOauthCallbackParams, opts ...ClientOption) error
 
-	DeleteFile(params *DeleteFileParams, opts ...ClientOption) (*DeleteFileOK, error)
+	CloseInteractiveSession(params *CloseInteractiveSessionParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CloseInteractiveSessionOK, error)
 
-	DeleteGitlabWebhook(params *DeleteGitlabWebhookParams, opts ...ClientOption) (*DeleteGitlabWebhookNoContent, error)
+	CreateGitlabWebhook(params *CreateGitlabWebhookParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateGitlabWebhookCreated, error)
 
-	DeleteSecrets(params *DeleteSecretsParams, opts ...ClientOption) (*DeleteSecretsOK, error)
+	CreateWorkflow(params *CreateWorkflowParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateWorkflowOK, *CreateWorkflowCreated, error)
 
-	DeleteToken(params *DeleteTokenParams, opts ...ClientOption) (*DeleteTokenOK, error)
+	DeleteFile(params *DeleteFileParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteFileOK, error)
 
-	DownloadFile(params *DownloadFileParams, writer io.Writer, opts ...ClientOption) (*DownloadFileOK, error)
+	DeleteGitlabWebhook(params *DeleteGitlabWebhookParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteGitlabWebhookNoContent, error)
+
+	DeleteSecrets(params *DeleteSecretsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteSecretsOK, error)
+
+	DownloadFile(params *DownloadFileParams, authInfo runtime.ClientAuthInfoWriter, writer io.Writer, opts ...ClientOption) (*DownloadFileOK, error)
 
 	GetConfig(params *GetConfigParams, opts ...ClientOption) (*GetConfigOK, error)
 
-	GetFiles(params *GetFilesParams, opts ...ClientOption) (*GetFilesOK, error)
+	GetFiles(params *GetFilesParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetFilesOK, error)
+
+	GetGitlabWebhookToken(params *GetGitlabWebhookTokenParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetGitlabWebhookTokenOK, error)
+
+	GetInteractiveSessionSecret(params *GetInteractiveSessionSecretParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetInteractiveSessionSecretOK, error)
+
+	GetOpenidConfiguration(params *GetOpenidConfigurationParams, opts ...ClientOption) (*GetOpenidConfigurationOK, error)
 
 	GetQuotaUsage(params *GetQuotaUsageParams, opts ...ClientOption) (*GetQuotaUsageOK, error)
 
-	GetSecrets(params *GetSecretsParams, opts ...ClientOption) (*GetSecretsOK, error)
+	GetSecrets(params *GetSecretsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetSecretsOK, error)
 
-	GetUsersSharedWithYou(params *GetUsersSharedWithYouParams, opts ...ClientOption) (*GetUsersSharedWithYouOK, error)
+	GetUsersSharedWithYou(params *GetUsersSharedWithYouParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetUsersSharedWithYouOK, error)
 
-	GetUsersYouSharedWith(params *GetUsersYouSharedWithParams, opts ...ClientOption) (*GetUsersYouSharedWithOK, error)
+	GetUsersYouSharedWith(params *GetUsersYouSharedWithParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetUsersYouSharedWithOK, error)
 
-	GetWorkflowDiff(params *GetWorkflowDiffParams, opts ...ClientOption) (*GetWorkflowDiffOK, error)
+	GetWorkflowDiff(params *GetWorkflowDiffParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowDiffOK, error)
 
-	GetWorkflowDiskUsage(params *GetWorkflowDiskUsageParams, opts ...ClientOption) (*GetWorkflowDiskUsageOK, error)
+	GetWorkflowDiskUsage(params *GetWorkflowDiskUsageParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowDiskUsageOK, error)
 
-	GetWorkflowLogs(params *GetWorkflowLogsParams, opts ...ClientOption) (*GetWorkflowLogsOK, error)
+	GetWorkflowLogs(params *GetWorkflowLogsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowLogsOK, error)
 
-	GetWorkflowParameters(params *GetWorkflowParametersParams, opts ...ClientOption) (*GetWorkflowParametersOK, error)
+	GetWorkflowParameters(params *GetWorkflowParametersParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowParametersOK, error)
 
-	GetWorkflowRetentionRules(params *GetWorkflowRetentionRulesParams, opts ...ClientOption) (*GetWorkflowRetentionRulesOK, error)
+	GetWorkflowRetentionRules(params *GetWorkflowRetentionRulesParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowRetentionRulesOK, error)
 
-	GetWorkflowShareStatus(params *GetWorkflowShareStatusParams, opts ...ClientOption) (*GetWorkflowShareStatusOK, error)
+	GetWorkflowShareStatus(params *GetWorkflowShareStatusParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowShareStatusOK, error)
 
-	GetWorkflowSpecification(params *GetWorkflowSpecificationParams, opts ...ClientOption) (*GetWorkflowSpecificationOK, error)
+	GetWorkflowSpecification(params *GetWorkflowSpecificationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowSpecificationOK, error)
 
-	GetWorkflowStatus(params *GetWorkflowStatusParams, opts ...ClientOption) (*GetWorkflowStatusOK, error)
+	GetWorkflowStatus(params *GetWorkflowStatusParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowStatusOK, error)
 
-	GetWorkflows(params *GetWorkflowsParams, opts ...ClientOption) (*GetWorkflowsOK, error)
+	GetWorkflows(params *GetWorkflowsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowsOK, error)
 
-	GetYou(params *GetYouParams, opts ...ClientOption) (*GetYouOK, error)
+	GetYou(params *GetYouParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetYouOK, error)
 
-	GitlabConnect(params *GitlabConnectParams, opts ...ClientOption) error
+	GitlabConnect(params *GitlabConnectParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) error
 
-	GitlabOauth(params *GitlabOauthParams, opts ...ClientOption) (*GitlabOauthOK, error)
+	GitlabOauth(params *GitlabOauthParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GitlabOauthOK, error)
 
-	GitlabProjects(params *GitlabProjectsParams, opts ...ClientOption) (*GitlabProjectsOK, error)
+	GitlabProjects(params *GitlabProjectsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GitlabProjectsOK, error)
 
-	Info(params *InfoParams, opts ...ClientOption) (*InfoOK, error)
+	Health(params *HealthParams, opts ...ClientOption) (*HealthOK, error)
 
-	Launch(params *LaunchParams, opts ...ClientOption) (*LaunchOK, error)
+	Info(params *InfoParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*InfoOK, error)
 
-	MoveFiles(params *MoveFilesParams, opts ...ClientOption) (*MoveFilesOK, error)
+	Launch(params *LaunchParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*LaunchOK, error)
 
-	OpenInteractiveSession(params *OpenInteractiveSessionParams, opts ...ClientOption) (*OpenInteractiveSessionOK, error)
+	MoveFiles(params *MoveFilesParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*MoveFilesOK, error)
+
+	OpenInteractiveSession(params *OpenInteractiveSessionParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*OpenInteractiveSessionOK, error)
 
 	PatchQuota(params *PatchQuotaParams, opts ...ClientOption) (*PatchQuotaOK, error)
 
 	Ping(params *PingParams, opts ...ClientOption) (*PingOK, error)
 
-	PruneWorkspace(params *PruneWorkspaceParams, opts ...ClientOption) (*PruneWorkspaceOK, error)
+	PruneWorkspace(params *PruneWorkspaceParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PruneWorkspaceOK, error)
 
-	RequestToken(params *RequestTokenParams, opts ...ClientOption) (*RequestTokenOK, error)
+	RenewGitlabWebhookToken(params *RenewGitlabWebhookTokenParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*RenewGitlabWebhookTokenOK, error)
 
-	RestartWorkflow(params *RestartWorkflowParams, opts ...ClientOption) (*RestartWorkflowOK, error)
+	RestartWorkflow(params *RestartWorkflowParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*RestartWorkflowOK, error)
 
 	SetQuotaLimit(params *SetQuotaLimitParams, opts ...ClientOption) (*SetQuotaLimitOK, error)
 
-	SetWorkflowStatus(params *SetWorkflowStatusParams, opts ...ClientOption) (*SetWorkflowStatusOK, error)
+	SetWorkflowStatus(params *SetWorkflowStatusParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SetWorkflowStatusOK, error)
 
-	ShareWorkflow(params *ShareWorkflowParams, opts ...ClientOption) (*ShareWorkflowOK, error)
+	ShareWorkflow(params *ShareWorkflowParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ShareWorkflowOK, error)
 
-	StartWorkflow(params *StartWorkflowParams, opts ...ClientOption) (*StartWorkflowOK, error)
+	StartWorkflow(params *StartWorkflowParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*StartWorkflowOK, error)
 
-	Status(params *StatusParams, opts ...ClientOption) (*StatusOK, error)
+	Status(params *StatusParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*StatusOK, error)
 
-	UnshareWorkflow(params *UnshareWorkflowParams, opts ...ClientOption) (*UnshareWorkflowOK, error)
+	UnshareWorkflow(params *UnshareWorkflowParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UnshareWorkflowOK, error)
 
-	UploadFile(params *UploadFileParams, opts ...ClientOption) (*UploadFileOK, error)
+	UploadFile(params *UploadFileParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UploadFileOK, error)
 
-	ValidateWorkflowSpecification(params *ValidateWorkflowSpecificationParams, opts ...ClientOption) (*ValidateWorkflowSpecificationOK, error)
+	ValidateWorkflowSpecification(params *ValidateWorkflowSpecificationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ValidateWorkflowSpecificationOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -219,7 +231,7 @@ AddSecrets adds user secrets to r e a n a
 
 This resource adds secrets for the authenticated user.
 */
-func (a *Client) AddSecrets(params *AddSecretsParams, opts ...ClientOption) (*AddSecretsCreated, error) {
+func (a *Client) AddSecrets(params *AddSecretsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*AddSecretsCreated, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewAddSecretsParams()
@@ -233,6 +245,7 @@ func (a *Client) AddSecrets(params *AddSecretsParams, opts ...ClientOption) (*Ad
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &AddSecretsReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -260,11 +273,124 @@ func (a *Client) AddSecrets(params *AddSecretsParams, opts ...ClientOption) (*Ad
 }
 
 /*
+BffLogin starts the browser login flow
+
+Redirects the browser to the trusted issuer's authorization endpoint (authorization code flow with PKCE). On completion the issuer redirects back to the OAuth callback, which establishes the cookie-based session. Returns 404 when the BFF login is disabled.
+*/
+func (a *Client) BffLogin(params *BffLoginParams, opts ...ClientOption) error {
+	// NOTE: parameters are not validated before sending
+	if params == nil {
+		params = NewBffLoginParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "bff_login",
+		Method:             "GET",
+		PathPattern:        "/api/login",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &BffLoginReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+	_, err := a.transport.Submit(op)
+	if err != nil {
+		return err
+	}
+	// no success response is defined: return nil
+
+	return nil
+}
+
+/*
+BffLogout ends the browser session
+
+Deletes the server-side session (refresh token), clears the authentication cookies and returns the issuer's RP-initiated logout URL for the web application to navigate to.
+*/
+func (a *Client) BffLogout(params *BffLogoutParams, opts ...ClientOption) (*BffLogoutOK, error) {
+	// NOTE: parameters are not validated before sending
+	if params == nil {
+		params = NewBffLogoutParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "bff_logout",
+		Method:             "POST",
+		PathPattern:        "/api/logout",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &BffLogoutReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+
+	// only one success response has to be checked
+	success, ok := result.(*BffLogoutOK)
+	if ok {
+		return success, nil
+	}
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for bff_logout: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+BffOauthCallback completes the browser login flow
+
+Handles the issuer's redirect: validates the OAuth state, exchanges the authorization code for tokens, provisions/links the REANA user, stores the refresh token server-side and sets the authentication cookies.
+*/
+func (a *Client) BffOauthCallback(params *BffOauthCallbackParams, opts ...ClientOption) error {
+	// NOTE: parameters are not validated before sending
+	if params == nil {
+		params = NewBffOauthCallbackParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "bff_oauth_callback",
+		Method:             "GET",
+		PathPattern:        "/api/oauth/callback",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &BffOauthCallbackReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+	_, err := a.transport.Submit(op)
+	if err != nil {
+		return err
+	}
+	// no success response is defined: return nil
+
+	return nil
+}
+
+/*
 CloseInteractiveSession closes an interactive workflow session
 
 This resource is expecting a workflow to close an interactive session within its workspace.
 */
-func (a *Client) CloseInteractiveSession(params *CloseInteractiveSessionParams, opts ...ClientOption) (*CloseInteractiveSessionOK, error) {
+func (a *Client) CloseInteractiveSession(params *CloseInteractiveSessionParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CloseInteractiveSessionOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewCloseInteractiveSessionParams()
@@ -278,6 +404,7 @@ func (a *Client) CloseInteractiveSession(params *CloseInteractiveSessionParams, 
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &CloseInteractiveSessionReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -309,7 +436,7 @@ CreateGitlabWebhook sets a webhook on a user project from git lab
 
 Setup a webhook for a GitLab project on GitLab.
 */
-func (a *Client) CreateGitlabWebhook(params *CreateGitlabWebhookParams, opts ...ClientOption) (*CreateGitlabWebhookCreated, error) {
+func (a *Client) CreateGitlabWebhook(params *CreateGitlabWebhookParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateGitlabWebhookCreated, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewCreateGitlabWebhookParams()
@@ -323,6 +450,7 @@ func (a *Client) CreateGitlabWebhook(params *CreateGitlabWebhookParams, opts ...
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &CreateGitlabWebhookReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -354,7 +482,7 @@ CreateWorkflow creates a new workflow based on a r e a n a specification file
 
 Creates a workflow from one uncompressed ZIP validation snapshot in the multipart “bundle“ field. The archive contains canonical “reana.yaml“ plus explicitly declared workflow/parameter files. The server loads and validates the specification authoritatively (sandboxed for Snakemake/CWL/Yadage).
 */
-func (a *Client) CreateWorkflow(params *CreateWorkflowParams, opts ...ClientOption) (*CreateWorkflowCreated, error) {
+func (a *Client) CreateWorkflow(params *CreateWorkflowParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*CreateWorkflowOK, *CreateWorkflowCreated, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewCreateWorkflowParams()
@@ -368,6 +496,7 @@ func (a *Client) CreateWorkflow(params *CreateWorkflowParams, opts ...ClientOpti
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &CreateWorkflowReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -376,21 +505,21 @@ func (a *Client) CreateWorkflow(params *CreateWorkflowParams, opts ...ClientOpti
 	}
 	result, err := a.transport.Submit(op)
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
-	// only one success response has to be checked
-	success, ok := result.(*CreateWorkflowCreated)
-	if ok {
-		return success, nil
+	// several success responses have to be checked
+	switch value := result.(type) {
+	case *CreateWorkflowOK:
+		return value, nil, nil
+	case *CreateWorkflowCreated:
+		return nil, value, nil
 	}
-
-	// unexpected success response.
 
 	// no default response is defined.
 	//
 	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for create_workflow: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for operations: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -399,7 +528,7 @@ DeleteFile deletes the specified file
 
 This resource is expecting a workflow UUID and a filename existing inside the workspace to be deleted.
 */
-func (a *Client) DeleteFile(params *DeleteFileParams, opts ...ClientOption) (*DeleteFileOK, error) {
+func (a *Client) DeleteFile(params *DeleteFileParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteFileOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewDeleteFileParams()
@@ -413,6 +542,7 @@ func (a *Client) DeleteFile(params *DeleteFileParams, opts ...ClientOption) (*De
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &DeleteFileReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -444,7 +574,7 @@ DeleteGitlabWebhook deletes an existing webhook from git lab
 
 Remove an existing REANA webhook from a project on GitLab
 */
-func (a *Client) DeleteGitlabWebhook(params *DeleteGitlabWebhookParams, opts ...ClientOption) (*DeleteGitlabWebhookNoContent, error) {
+func (a *Client) DeleteGitlabWebhook(params *DeleteGitlabWebhookParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteGitlabWebhookNoContent, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewDeleteGitlabWebhookParams()
@@ -458,6 +588,7 @@ func (a *Client) DeleteGitlabWebhook(params *DeleteGitlabWebhookParams, opts ...
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &DeleteGitlabWebhookReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -489,7 +620,7 @@ DeleteSecrets deletes the specified secret s
 
 This resource deletes the requested secrets.
 */
-func (a *Client) DeleteSecrets(params *DeleteSecretsParams, opts ...ClientOption) (*DeleteSecretsOK, error) {
+func (a *Client) DeleteSecrets(params *DeleteSecretsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteSecretsOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewDeleteSecretsParams()
@@ -503,6 +634,7 @@ func (a *Client) DeleteSecrets(params *DeleteSecretsParams, opts ...ClientOption
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &DeleteSecretsReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -530,56 +662,11 @@ func (a *Client) DeleteSecrets(params *DeleteSecretsParams, opts ...ClientOption
 }
 
 /*
-DeleteToken revokes the active access token of the selected user
-
-This management resource revokes the currently active REANA access token of a selected user. The endpoint is disabled unless `REANA_TOKEN_MANAGEMENT_SECRET` is configured.
-*/
-func (a *Client) DeleteToken(params *DeleteTokenParams, opts ...ClientOption) (*DeleteTokenOK, error) {
-	// NOTE: parameters are not validated before sending
-	if params == nil {
-		params = NewDeleteTokenParams()
-	}
-	op := &runtime.ClientOperation{
-		ID:                 "delete_token",
-		Method:             "DELETE",
-		PathPattern:        "/api/token",
-		ProducesMediaTypes: []string{"application/json"},
-		ConsumesMediaTypes: []string{"application/json"},
-		Schemes:            []string{"http"},
-		Params:             params,
-		Reader:             &DeleteTokenReader{formats: a.formats},
-		Context:            params.Context,
-		Client:             params.HTTPClient,
-	}
-	for _, opt := range opts {
-		opt(op)
-	}
-	result, err := a.transport.Submit(op)
-	if err != nil {
-		return nil, err
-	}
-
-	// only one success response has to be checked
-	success, ok := result.(*DeleteTokenOK)
-	if ok {
-		return success, nil
-	}
-
-	// unexpected success response.
-
-	// no default response is defined.
-	//
-	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for delete_token: API contract not enforced by server. Client expected to get an error, but got: %T", result)
-	panic(msg)
-}
-
-/*
 DownloadFile returns the requested file
 
 This resource is expecting a workflow UUID and a file name existing inside the workspace to return its content.
 */
-func (a *Client) DownloadFile(params *DownloadFileParams, writer io.Writer, opts ...ClientOption) (*DownloadFileOK, error) {
+func (a *Client) DownloadFile(params *DownloadFileParams, authInfo runtime.ClientAuthInfoWriter, writer io.Writer, opts ...ClientOption) (*DownloadFileOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewDownloadFileParams()
@@ -593,6 +680,7 @@ func (a *Client) DownloadFile(params *DownloadFileParams, writer io.Writer, opts
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &DownloadFileReader{formats: a.formats, writer: writer},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -669,7 +757,7 @@ GetFiles returns the workspace file list
 
 This resource retrieves the file list of a workspace, given its workflow UUID.
 */
-func (a *Client) GetFiles(params *GetFilesParams, opts ...ClientOption) (*GetFilesOK, error) {
+func (a *Client) GetFiles(params *GetFilesParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetFilesOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetFilesParams()
@@ -683,6 +771,7 @@ func (a *Client) GetFiles(params *GetFilesParams, opts ...ClientOption) (*GetFil
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GetFilesReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -706,6 +795,143 @@ func (a *Client) GetFiles(params *GetFilesParams, opts ...ClientOption) (*GetFil
 	//
 	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for get_files: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+GetGitlabWebhookToken gets git lab webhook authorization status
+
+Return expiry metadata for the current user's delegated GitLab webhook authorization. The secret itself is never returned.
+*/
+func (a *Client) GetGitlabWebhookToken(params *GetGitlabWebhookTokenParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetGitlabWebhookTokenOK, error) {
+	// NOTE: parameters are not validated before sending
+	if params == nil {
+		params = NewGetGitlabWebhookTokenParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "get_gitlab_webhook_token",
+		Method:             "GET",
+		PathPattern:        "/api/gitlab/webhook-token",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &GetGitlabWebhookTokenReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+
+	// only one success response has to be checked
+	success, ok := result.(*GetGitlabWebhookTokenOK)
+	if ok {
+		return success, nil
+	}
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for get_gitlab_webhook_token: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+GetInteractiveSessionSecret gets the access secret of the open interactive session
+
+Return the random per-session secret used as the notebook access token of the workflow's open interactive session. Only the authenticated workflow owner can retrieve it.
+*/
+func (a *Client) GetInteractiveSessionSecret(params *GetInteractiveSessionSecretParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetInteractiveSessionSecretOK, error) {
+	// NOTE: parameters are not validated before sending
+	if params == nil {
+		params = NewGetInteractiveSessionSecretParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "get_interactive_session_secret",
+		Method:             "GET",
+		PathPattern:        "/api/workflows/{workflow_id_or_name}/interactive-session-secret",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &GetInteractiveSessionSecretReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+
+	// only one success response has to be checked
+	success, ok := result.(*GetInteractiveSessionSecretOK)
+	if ok {
+		return success, nil
+	}
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for get_interactive_session_secret: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+GetOpenidConfiguration gets the trusted issuer s open ID configuration
+
+Relays the OIDC discovery document of the deployment's trusted issuer, extended with the public client id that reana-client must use for the device authorization grant. This lets clients discover the identity provider knowing only the REANA URL.
+*/
+func (a *Client) GetOpenidConfiguration(params *GetOpenidConfigurationParams, opts ...ClientOption) (*GetOpenidConfigurationOK, error) {
+	// NOTE: parameters are not validated before sending
+	if params == nil {
+		params = NewGetOpenidConfigurationParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "get_openid_configuration",
+		Method:             "GET",
+		PathPattern:        "/api/.well-known/openid-configuration",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &GetOpenidConfigurationReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+
+	// only one success response has to be checked
+	success, ok := result.(*GetOpenidConfigurationOK)
+	if ok {
+		return success, nil
+	}
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for get_openid_configuration: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -759,7 +985,7 @@ GetSecrets gets user secrets requires an user access token
 
 Get user secrets.
 */
-func (a *Client) GetSecrets(params *GetSecretsParams, opts ...ClientOption) (*GetSecretsOK, error) {
+func (a *Client) GetSecrets(params *GetSecretsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetSecretsOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetSecretsParams()
@@ -773,6 +999,7 @@ func (a *Client) GetSecrets(params *GetSecretsParams, opts ...ClientOption) (*Ge
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GetSecretsReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -804,7 +1031,7 @@ GetUsersSharedWithYou gets users that shared workflow s with the authenticated u
 
 This resource provides information about users that shared workflow(s) with the authenticated user.
 */
-func (a *Client) GetUsersSharedWithYou(params *GetUsersSharedWithYouParams, opts ...ClientOption) (*GetUsersSharedWithYouOK, error) {
+func (a *Client) GetUsersSharedWithYou(params *GetUsersSharedWithYouParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetUsersSharedWithYouOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetUsersSharedWithYouParams()
@@ -818,6 +1045,7 @@ func (a *Client) GetUsersSharedWithYou(params *GetUsersSharedWithYouParams, opts
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GetUsersSharedWithYouReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -849,7 +1077,7 @@ GetUsersYouSharedWith gets users that the authenticated user shared workflow s w
 
 This resource provides information about users that the authenticated user shared workflow(s) with.
 */
-func (a *Client) GetUsersYouSharedWith(params *GetUsersYouSharedWithParams, opts ...ClientOption) (*GetUsersYouSharedWithOK, error) {
+func (a *Client) GetUsersYouSharedWith(params *GetUsersYouSharedWithParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetUsersYouSharedWithOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetUsersYouSharedWithParams()
@@ -863,6 +1091,7 @@ func (a *Client) GetUsersYouSharedWith(params *GetUsersYouSharedWithParams, opts
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GetUsersYouSharedWithReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -894,7 +1123,7 @@ GetWorkflowDiff gets diff between two workflows
 
 This resource shows the differences between the assets of two workflows. Resource is expecting two workflow UUIDs or names.
 */
-func (a *Client) GetWorkflowDiff(params *GetWorkflowDiffParams, opts ...ClientOption) (*GetWorkflowDiffOK, error) {
+func (a *Client) GetWorkflowDiff(params *GetWorkflowDiffParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowDiffOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowDiffParams()
@@ -908,6 +1137,7 @@ func (a *Client) GetWorkflowDiff(params *GetWorkflowDiffParams, opts ...ClientOp
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GetWorkflowDiffReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -939,7 +1169,7 @@ GetWorkflowDiskUsage gets disk usage of a workflow
 
 This resource reports the disk usage of a workflow. Resource is expecting a workflow UUID and some parameters .
 */
-func (a *Client) GetWorkflowDiskUsage(params *GetWorkflowDiskUsageParams, opts ...ClientOption) (*GetWorkflowDiskUsageOK, error) {
+func (a *Client) GetWorkflowDiskUsage(params *GetWorkflowDiskUsageParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowDiskUsageOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowDiskUsageParams()
@@ -953,6 +1183,7 @@ func (a *Client) GetWorkflowDiskUsage(params *GetWorkflowDiskUsageParams, opts .
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GetWorkflowDiskUsageReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -984,7 +1215,7 @@ GetWorkflowLogs gets workflow logs of a workflow
 
 This resource reports the status of a workflow. Resource is expecting a workflow UUID.
 */
-func (a *Client) GetWorkflowLogs(params *GetWorkflowLogsParams, opts ...ClientOption) (*GetWorkflowLogsOK, error) {
+func (a *Client) GetWorkflowLogs(params *GetWorkflowLogsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowLogsOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowLogsParams()
@@ -998,6 +1229,7 @@ func (a *Client) GetWorkflowLogs(params *GetWorkflowLogsParams, opts ...ClientOp
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GetWorkflowLogsReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1029,7 +1261,7 @@ GetWorkflowParameters gets parameters of a workflow
 
 This resource reports the input parameters of a workflow. Resource is expecting a workflow UUID.
 */
-func (a *Client) GetWorkflowParameters(params *GetWorkflowParametersParams, opts ...ClientOption) (*GetWorkflowParametersOK, error) {
+func (a *Client) GetWorkflowParameters(params *GetWorkflowParametersParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowParametersOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowParametersParams()
@@ -1043,6 +1275,7 @@ func (a *Client) GetWorkflowParameters(params *GetWorkflowParametersParams, opts
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GetWorkflowParametersReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1074,7 +1307,7 @@ GetWorkflowRetentionRules gets the retention rules of a workflow
 
 This resource returns all the retention rules of a given workflow.
 */
-func (a *Client) GetWorkflowRetentionRules(params *GetWorkflowRetentionRulesParams, opts ...ClientOption) (*GetWorkflowRetentionRulesOK, error) {
+func (a *Client) GetWorkflowRetentionRules(params *GetWorkflowRetentionRulesParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowRetentionRulesOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowRetentionRulesParams()
@@ -1088,6 +1321,7 @@ func (a *Client) GetWorkflowRetentionRules(params *GetWorkflowRetentionRulesPara
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GetWorkflowRetentionRulesReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1119,7 +1353,7 @@ GetWorkflowShareStatus gets the share status of a workflow
 
 This resource returns the share status of a given workflow.
 */
-func (a *Client) GetWorkflowShareStatus(params *GetWorkflowShareStatusParams, opts ...ClientOption) (*GetWorkflowShareStatusOK, error) {
+func (a *Client) GetWorkflowShareStatus(params *GetWorkflowShareStatusParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowShareStatusOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowShareStatusParams()
@@ -1133,6 +1367,7 @@ func (a *Client) GetWorkflowShareStatus(params *GetWorkflowShareStatusParams, op
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GetWorkflowShareStatusReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1164,7 +1399,7 @@ GetWorkflowSpecification gets the specification used for this workflow run
 
 This resource returns the REANA workflow specification used to start the workflow run. Resource is expecting a workflow UUID.
 */
-func (a *Client) GetWorkflowSpecification(params *GetWorkflowSpecificationParams, opts ...ClientOption) (*GetWorkflowSpecificationOK, error) {
+func (a *Client) GetWorkflowSpecification(params *GetWorkflowSpecificationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowSpecificationOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowSpecificationParams()
@@ -1178,6 +1413,7 @@ func (a *Client) GetWorkflowSpecification(params *GetWorkflowSpecificationParams
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GetWorkflowSpecificationReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1209,7 +1445,7 @@ GetWorkflowStatus gets status of a workflow
 
 This resource reports the status of a workflow. Resource is expecting a workflow UUID.
 */
-func (a *Client) GetWorkflowStatus(params *GetWorkflowStatusParams, opts ...ClientOption) (*GetWorkflowStatusOK, error) {
+func (a *Client) GetWorkflowStatus(params *GetWorkflowStatusParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowStatusOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowStatusParams()
@@ -1223,6 +1459,7 @@ func (a *Client) GetWorkflowStatus(params *GetWorkflowStatusParams, opts ...Clie
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GetWorkflowStatusReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1254,7 +1491,7 @@ GetWorkflows returns list of all current workflows in r e a n a
 
 This resource return all current workflows in JSON format.
 */
-func (a *Client) GetWorkflows(params *GetWorkflowsParams, opts ...ClientOption) (*GetWorkflowsOK, error) {
+func (a *Client) GetWorkflows(params *GetWorkflowsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetWorkflowsOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetWorkflowsParams()
@@ -1268,6 +1505,7 @@ func (a *Client) GetWorkflows(params *GetWorkflowsParams, opts ...ClientOption) 
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GetWorkflowsReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1299,7 +1537,7 @@ GetYou gets information about authenticated user
 
 This resource provides basic information about an authenticated user based on the session cookie presence.
 */
-func (a *Client) GetYou(params *GetYouParams, opts ...ClientOption) (*GetYouOK, error) {
+func (a *Client) GetYou(params *GetYouParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetYouOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGetYouParams()
@@ -1313,6 +1551,7 @@ func (a *Client) GetYou(params *GetYouParams, opts ...ClientOption) (*GetYouOK, 
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GetYouReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1344,7 +1583,7 @@ GitlabConnect initiates connection to git lab
 
 Initiate connection to GitLab to authorize accessing the authenticated user's API.
 */
-func (a *Client) GitlabConnect(params *GitlabConnectParams, opts ...ClientOption) error {
+func (a *Client) GitlabConnect(params *GitlabConnectParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) error {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGitlabConnectParams()
@@ -1358,6 +1597,7 @@ func (a *Client) GitlabConnect(params *GitlabConnectParams, opts ...ClientOption
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GitlabConnectReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1378,7 +1618,7 @@ GitlabOauth gets access token from git lab
 
 Authorize REANA on GitLab.
 */
-func (a *Client) GitlabOauth(params *GitlabOauthParams, opts ...ClientOption) (*GitlabOauthOK, error) {
+func (a *Client) GitlabOauth(params *GitlabOauthParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GitlabOauthOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGitlabOauthParams()
@@ -1392,6 +1632,7 @@ func (a *Client) GitlabOauth(params *GitlabOauthParams, opts ...ClientOption) (*
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GitlabOauthReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1423,7 +1664,7 @@ GitlabProjects gets user project from git lab
 
 Retrieve projects from GitLab.
 */
-func (a *Client) GitlabProjects(params *GitlabProjectsParams, opts ...ClientOption) (*GitlabProjectsOK, error) {
+func (a *Client) GitlabProjects(params *GitlabProjectsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GitlabProjectsOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewGitlabProjectsParams()
@@ -1437,6 +1678,7 @@ func (a *Client) GitlabProjects(params *GitlabProjectsParams, opts ...ClientOpti
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &GitlabProjectsReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1464,11 +1706,58 @@ func (a *Client) GitlabProjects(params *GitlabProjectsParams, opts ...ClientOpti
 }
 
 /*
+	Health reports health of r e a n a server s auth adjacent dependencies
+
+	Unlike /api/ping (process liveness only), this reports whether the BFF session store (Redis) and the configured OIDC issuer currently have usable cached material, so that external monitoring pointed here can detect an outage that /api/ping cannot see. Each check is skipped (omitted from the response and not counted against health) when the corresponding feature is not configured for this deployment. Never performs a live network call to the issuer; only inspects already-cached state, so this is cheap enough to poll frequently and cannot itself add load to a struggling issuer.
+
+Only the “redis“ check (the BFF session store) can make this endpoint's own status code report unhealthy. This endpoint is for dependency monitoring, not Kubernetes readiness; deployments should probe /api/ping so a Redis outage does not withdraw the otherwise usable whole API. “issuer“ is reported in the body for observability/alerting only and never affects the status code: with several worker processes sharing one pod, coupling readiness to issuer reachability could make an IdP outage take the whole pod out of rotation and keep it there even after the IdP recovers, because losing readiness also stops the very traffic that would refresh the issuer's discovery/JWKS caches. REANA Server keeps serving /api/ping, /api/info, /api/config, and the friendly 503 auth-error response regardless of issuer cache health.
+*/
+func (a *Client) Health(params *HealthParams, opts ...ClientOption) (*HealthOK, error) {
+	// NOTE: parameters are not validated before sending
+	if params == nil {
+		params = NewHealthParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "health",
+		Method:             "GET",
+		PathPattern:        "/api/health",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http"},
+		Params:             params,
+		Reader:             &HealthReader{formats: a.formats},
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+
+	// only one success response has to be checked
+	success, ok := result.(*HealthOK)
+	if ok {
+		return success, nil
+	}
+
+	// unexpected success response.
+
+	// no default response is defined.
+	//
+	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for health: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
 Info gets information about the cluster capabilities
 
 This resource reports information about cluster capabilities.
 */
-func (a *Client) Info(params *InfoParams, opts ...ClientOption) (*InfoOK, error) {
+func (a *Client) Info(params *InfoParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*InfoOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewInfoParams()
@@ -1482,6 +1771,7 @@ func (a *Client) Info(params *InfoParams, opts ...ClientOption) (*InfoOK, error)
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &InfoReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1513,7 +1803,7 @@ Launch launches workflow from a remote r e a n a specification file
 
 This resource expects a remote reference to a REANA specification file needed to launch a workflow via URL.
 */
-func (a *Client) Launch(params *LaunchParams, opts ...ClientOption) (*LaunchOK, error) {
+func (a *Client) Launch(params *LaunchParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*LaunchOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewLaunchParams()
@@ -1527,6 +1817,7 @@ func (a *Client) Launch(params *LaunchParams, opts ...ClientOption) (*LaunchOK, 
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &LaunchReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1558,7 +1849,7 @@ MoveFiles moves files within workspace
 
 This resource moves files within the workspace. Resource is expecting a workflow UUID.
 */
-func (a *Client) MoveFiles(params *MoveFilesParams, opts ...ClientOption) (*MoveFilesOK, error) {
+func (a *Client) MoveFiles(params *MoveFilesParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*MoveFilesOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewMoveFilesParams()
@@ -1572,6 +1863,7 @@ func (a *Client) MoveFiles(params *MoveFilesParams, opts ...ClientOption) (*Move
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &MoveFilesReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1603,7 +1895,7 @@ OpenInteractiveSession starts an interactive session inside the workflow workspa
 
 This resource is expecting a workflow to start an interactive session within its workspace.
 */
-func (a *Client) OpenInteractiveSession(params *OpenInteractiveSessionParams, opts ...ClientOption) (*OpenInteractiveSessionOK, error) {
+func (a *Client) OpenInteractiveSession(params *OpenInteractiveSessionParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*OpenInteractiveSessionOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewOpenInteractiveSessionParams()
@@ -1617,6 +1909,7 @@ func (a *Client) OpenInteractiveSession(params *OpenInteractiveSessionParams, op
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &OpenInteractiveSessionReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1740,7 +2033,7 @@ PruneWorkspace prunes the workspace s files
 
 This resource deletes the workspace's files that are neither in the input nor in the output of the workflow definition. This resource is expecting a workflow UUID and some parameters.
 */
-func (a *Client) PruneWorkspace(params *PruneWorkspaceParams, opts ...ClientOption) (*PruneWorkspaceOK, error) {
+func (a *Client) PruneWorkspace(params *PruneWorkspaceParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PruneWorkspaceOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewPruneWorkspaceParams()
@@ -1754,6 +2047,7 @@ func (a *Client) PruneWorkspace(params *PruneWorkspaceParams, opts ...ClientOpti
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &PruneWorkspaceReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1781,24 +2075,25 @@ func (a *Client) PruneWorkspace(params *PruneWorkspaceParams, opts ...ClientOpti
 }
 
 /*
-RequestToken requests a new access token for the authenticated user
+RenewGitlabWebhookToken renews git lab webhook authorization
 
-This resource allows the user to create an empty REANA access token and mark it as requested.
+Confirm the current user's REANA entitlement and extend the delegated GitLab webhook authorization without rotating its secret. Renewal does not re-enable a webhook that GitLab has disabled; the user must send a test delivery or re-enable it from that project's GitLab settings. If the authorization had already expired, the response includes a “message“ pointing this out, since REANA cannot detect or repair a GitLab-side auto-disable on its own.
 */
-func (a *Client) RequestToken(params *RequestTokenParams, opts ...ClientOption) (*RequestTokenOK, error) {
+func (a *Client) RenewGitlabWebhookToken(params *RenewGitlabWebhookTokenParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*RenewGitlabWebhookTokenOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
-		params = NewRequestTokenParams()
+		params = NewRenewGitlabWebhookTokenParams()
 	}
 	op := &runtime.ClientOperation{
-		ID:                 "request_token",
+		ID:                 "renew_gitlab_webhook_token",
 		Method:             "PUT",
-		PathPattern:        "/api/token",
+		PathPattern:        "/api/gitlab/webhook-token",
 		ProducesMediaTypes: []string{"application/json"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"http"},
 		Params:             params,
-		Reader:             &RequestTokenReader{formats: a.formats},
+		Reader:             &RenewGitlabWebhookTokenReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1811,7 +2106,7 @@ func (a *Client) RequestToken(params *RequestTokenParams, opts ...ClientOption) 
 	}
 
 	// only one success response has to be checked
-	success, ok := result.(*RequestTokenOK)
+	success, ok := result.(*RenewGitlabWebhookTokenOK)
 	if ok {
 		return success, nil
 	}
@@ -1821,7 +2116,7 @@ func (a *Client) RequestToken(params *RequestTokenParams, opts ...ClientOption) 
 	// no default response is defined.
 	//
 	// safeguard: normally, in the absence of a default response, unknown success responses return an error above: so this is a codegen issue
-	msg := fmt.Sprintf("unexpected success response for request_token: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	msg := fmt.Sprintf("unexpected success response for renew_gitlab_webhook_token: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 
@@ -1830,7 +2125,7 @@ RestartWorkflow restarts a workflow with a replacement specification
 
 Atomically validates and applies one raw replacement REANA specification. Workflow source files are reused from the existing workspace.
 */
-func (a *Client) RestartWorkflow(params *RestartWorkflowParams, opts ...ClientOption) (*RestartWorkflowOK, error) {
+func (a *Client) RestartWorkflow(params *RestartWorkflowParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*RestartWorkflowOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewRestartWorkflowParams()
@@ -1844,6 +2139,7 @@ func (a *Client) RestartWorkflow(params *RestartWorkflowParams, opts ...ClientOp
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &RestartWorkflowReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1920,7 +2216,7 @@ SetWorkflowStatus sets status of a workflow
 
 This resource reports the status of a workflow. Resource is expecting a workflow UUID.
 */
-func (a *Client) SetWorkflowStatus(params *SetWorkflowStatusParams, opts ...ClientOption) (*SetWorkflowStatusOK, error) {
+func (a *Client) SetWorkflowStatus(params *SetWorkflowStatusParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SetWorkflowStatusOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewSetWorkflowStatusParams()
@@ -1934,6 +2230,7 @@ func (a *Client) SetWorkflowStatus(params *SetWorkflowStatusParams, opts ...Clie
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &SetWorkflowStatusReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -1965,7 +2262,7 @@ ShareWorkflow shares a workflow with another user
 
 This resource shares a workflow with another user. This resource is expecting a workflow UUID and some parameters.
 */
-func (a *Client) ShareWorkflow(params *ShareWorkflowParams, opts ...ClientOption) (*ShareWorkflowOK, error) {
+func (a *Client) ShareWorkflow(params *ShareWorkflowParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ShareWorkflowOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewShareWorkflowParams()
@@ -1979,6 +2276,7 @@ func (a *Client) ShareWorkflow(params *ShareWorkflowParams, opts ...ClientOption
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &ShareWorkflowReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -2012,7 +2310,7 @@ func (a *Client) ShareWorkflow(params *ShareWorkflowParams, opts ...ClientOption
 
 The workspace is the authoritative copy of the specification: before the workflow is queued, the server re-loads and re-validates the specification *from the current workspace* (in a sandbox for Snakemake/CWL/Yadage, in-process for serial) and refreshes the stored specification from it. A workspace that no longer loads or fails policy is rejected with a 400 and the workflow keeps its current status. Any non-blocking validation findings are returned in “validation_warnings“.
 */
-func (a *Client) StartWorkflow(params *StartWorkflowParams, opts ...ClientOption) (*StartWorkflowOK, error) {
+func (a *Client) StartWorkflow(params *StartWorkflowParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*StartWorkflowOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewStartWorkflowParams()
@@ -2026,6 +2324,7 @@ func (a *Client) StartWorkflow(params *StartWorkflowParams, opts ...ClientOption
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &StartWorkflowReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -2057,7 +2356,7 @@ Status retrieves cluster health status
 
 Retrieve cluster health status.
 */
-func (a *Client) Status(params *StatusParams, opts ...ClientOption) (*StatusOK, error) {
+func (a *Client) Status(params *StatusParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*StatusOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewStatusParams()
@@ -2071,6 +2370,7 @@ func (a *Client) Status(params *StatusParams, opts ...ClientOption) (*StatusOK, 
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &StatusReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -2102,7 +2402,7 @@ UnshareWorkflow unshares a workflow with another user
 
 This resource unshares a workflow with another user. This resource is expecting a workflow UUID and some parameters.
 */
-func (a *Client) UnshareWorkflow(params *UnshareWorkflowParams, opts ...ClientOption) (*UnshareWorkflowOK, error) {
+func (a *Client) UnshareWorkflow(params *UnshareWorkflowParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UnshareWorkflowOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewUnshareWorkflowParams()
@@ -2116,6 +2416,7 @@ func (a *Client) UnshareWorkflow(params *UnshareWorkflowParams, opts ...ClientOp
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &UnshareWorkflowReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -2147,7 +2448,7 @@ UploadFile adds a file to the workspace
 
 This resource is expecting a file to place in the workspace.
 */
-func (a *Client) UploadFile(params *UploadFileParams, opts ...ClientOption) (*UploadFileOK, error) {
+func (a *Client) UploadFile(params *UploadFileParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*UploadFileOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewUploadFileParams()
@@ -2161,6 +2462,7 @@ func (a *Client) UploadFile(params *UploadFileParams, opts ...ClientOption) (*Up
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &UploadFileReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -2192,7 +2494,7 @@ ValidateWorkflowSpecification validates a raw workflow specification bundle
 
 Accepts one uncompressed ZIP validation snapshot in the multipart “bundle“ field. The archive contains canonical “reana.yaml“ plus its explicitly declared workflow/configuration files. Serial specs are loaded and validated in-process; Snakemake/CWL/Yadage specs -- whose loading executes user code -- are validated inside a sandboxed job spawned by reana-workflow-controller. Returns a structured validation report.
 */
-func (a *Client) ValidateWorkflowSpecification(params *ValidateWorkflowSpecificationParams, opts ...ClientOption) (*ValidateWorkflowSpecificationOK, error) {
+func (a *Client) ValidateWorkflowSpecification(params *ValidateWorkflowSpecificationParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ValidateWorkflowSpecificationOK, error) {
 	// NOTE: parameters are not validated before sending
 	if params == nil {
 		params = NewValidateWorkflowSpecificationParams()
@@ -2206,6 +2508,7 @@ func (a *Client) ValidateWorkflowSpecification(params *ValidateWorkflowSpecifica
 		Schemes:            []string{"http"},
 		Params:             params,
 		Reader:             &ValidateWorkflowSpecificationReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}

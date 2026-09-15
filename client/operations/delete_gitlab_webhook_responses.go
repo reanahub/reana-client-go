@@ -33,6 +33,12 @@ func (o *DeleteGitlabWebhookReader) ReadResponse(response runtime.ClientResponse
 			return nil, err
 		}
 		return result, nil
+	case 401:
+		result := NewDeleteGitlabWebhookUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewDeleteGitlabWebhookForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -47,6 +53,12 @@ func (o *DeleteGitlabWebhookReader) ReadResponse(response runtime.ClientResponse
 		return nil, result
 	case 500:
 		result := NewDeleteGitlabWebhookInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewDeleteGitlabWebhookServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -108,6 +120,76 @@ func (o *DeleteGitlabWebhookNoContent) String() string {
 }
 
 func (o *DeleteGitlabWebhookNoContent) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
+// NewDeleteGitlabWebhookUnauthorized creates a DeleteGitlabWebhookUnauthorized with default headers values
+func NewDeleteGitlabWebhookUnauthorized() *DeleteGitlabWebhookUnauthorized {
+	return &DeleteGitlabWebhookUnauthorized{}
+}
+
+/*
+DeleteGitlabWebhookUnauthorized describes a response with status code 401, with default header values.
+
+Request failed. The stored GitLab access token is not valid.
+*/
+type DeleteGitlabWebhookUnauthorized struct {
+	Payload *DeleteGitlabWebhookUnauthorizedBody
+}
+
+// IsSuccess returns true when this delete gitlab webhook unauthorized response has a 2xx status code
+func (o *DeleteGitlabWebhookUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete gitlab webhook unauthorized response has a 3xx status code
+func (o *DeleteGitlabWebhookUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete gitlab webhook unauthorized response has a 4xx status code
+func (o *DeleteGitlabWebhookUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this delete gitlab webhook unauthorized response has a 5xx status code
+func (o *DeleteGitlabWebhookUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this delete gitlab webhook unauthorized response a status code equal to that given
+func (o *DeleteGitlabWebhookUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the delete gitlab webhook unauthorized response
+func (o *DeleteGitlabWebhookUnauthorized) Code() int {
+	return 401
+}
+
+func (o *DeleteGitlabWebhookUnauthorized) Error() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookUnauthorized %s", 401, payload)
+}
+
+func (o *DeleteGitlabWebhookUnauthorized) String() string {
+	payload, _ := json.Marshal(o.Payload)
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookUnauthorized %s", 401, payload)
+}
+
+func (o *DeleteGitlabWebhookUnauthorized) GetPayload() *DeleteGitlabWebhookUnauthorizedBody {
+	return o.Payload
+}
+
+func (o *DeleteGitlabWebhookUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(DeleteGitlabWebhookUnauthorizedBody)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
+		return err
+	}
 
 	return nil
 }
@@ -308,6 +390,62 @@ func (o *DeleteGitlabWebhookInternalServerError) readResponse(response runtime.C
 	return nil
 }
 
+// NewDeleteGitlabWebhookServiceUnavailable creates a DeleteGitlabWebhookServiceUnavailable with default headers values
+func NewDeleteGitlabWebhookServiceUnavailable() *DeleteGitlabWebhookServiceUnavailable {
+	return &DeleteGitlabWebhookServiceUnavailable{}
+}
+
+/*
+DeleteGitlabWebhookServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type DeleteGitlabWebhookServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this delete gitlab webhook service unavailable response has a 2xx status code
+func (o *DeleteGitlabWebhookServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this delete gitlab webhook service unavailable response has a 3xx status code
+func (o *DeleteGitlabWebhookServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this delete gitlab webhook service unavailable response has a 4xx status code
+func (o *DeleteGitlabWebhookServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this delete gitlab webhook service unavailable response has a 5xx status code
+func (o *DeleteGitlabWebhookServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this delete gitlab webhook service unavailable response a status code equal to that given
+func (o *DeleteGitlabWebhookServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the delete gitlab webhook service unavailable response
+func (o *DeleteGitlabWebhookServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *DeleteGitlabWebhookServiceUnavailable) Error() string {
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookServiceUnavailable", 503)
+}
+
+func (o *DeleteGitlabWebhookServiceUnavailable) String() string {
+	return fmt.Sprintf("[DELETE /api/gitlab/webhook][%d] deleteGitlabWebhookServiceUnavailable", 503)
+}
+
+func (o *DeleteGitlabWebhookServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	return nil
+}
+
 /*
 DeleteGitlabWebhookBody delete gitlab webhook body
 swagger:model DeleteGitlabWebhookBody
@@ -451,6 +589,44 @@ func (o *DeleteGitlabWebhookInternalServerErrorBody) MarshalBinary() ([]byte, er
 // UnmarshalBinary interface implementation
 func (o *DeleteGitlabWebhookInternalServerErrorBody) UnmarshalBinary(b []byte) error {
 	var res DeleteGitlabWebhookInternalServerErrorBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+DeleteGitlabWebhookUnauthorizedBody delete gitlab webhook unauthorized body
+swagger:model DeleteGitlabWebhookUnauthorizedBody
+*/
+type DeleteGitlabWebhookUnauthorizedBody struct {
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this delete gitlab webhook unauthorized body
+func (o *DeleteGitlabWebhookUnauthorizedBody) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this delete gitlab webhook unauthorized body based on context it is used
+func (o *DeleteGitlabWebhookUnauthorizedBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *DeleteGitlabWebhookUnauthorizedBody) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *DeleteGitlabWebhookUnauthorizedBody) UnmarshalBinary(b []byte) error {
+	var res DeleteGitlabWebhookUnauthorizedBody
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

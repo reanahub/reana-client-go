@@ -61,12 +61,6 @@ DeleteSecretsParams contains all the parameters to send to the API endpoint
 */
 type DeleteSecretsParams struct {
 
-	/* AccessToken.
-
-	   API key of the admin.
-	*/
-	AccessToken *string
-
 	/* Secrets.
 
 	   Optional. List of secrets to be deleted.
@@ -126,17 +120,6 @@ func (o *DeleteSecretsParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the delete secrets params
-func (o *DeleteSecretsParams) WithAccessToken(accessToken *string) *DeleteSecretsParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the delete secrets params
-func (o *DeleteSecretsParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithSecrets adds the secrets to the delete secrets params
 func (o *DeleteSecretsParams) WithSecrets(secrets []string) *DeleteSecretsParams {
 	o.SetSecrets(secrets)
@@ -155,23 +138,6 @@ func (o *DeleteSecretsParams) WriteToRequest(r runtime.ClientRequest, reg strfmt
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 	if o.Secrets != nil {
 		if err := r.SetBodyParam(o.Secrets); err != nil {
 			return err

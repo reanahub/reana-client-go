@@ -71,15 +71,14 @@ func newCloseCmd() *cobra.Command {
 
 func (o *closeOptions) run(cmd *cobra.Command) error {
 	closeParams := operations.NewCloseInteractiveSessionParams()
-	closeParams.SetAccessToken(&o.token)
 	closeParams.SetWorkflowIDOrName(o.workflow)
 
-	api, err := client.ApiClient()
+	api, err := client.ApiClient(o.token)
 	if err != nil {
 		return err
 	}
 	log.Infof("Closing an interactive session on %s", o.workflow)
-	_, err = api.Operations.CloseInteractiveSession(closeParams)
+	_, err = api.Operations.CloseInteractiveSession(closeParams, nil)
 	if err != nil {
 		return err
 	}

@@ -27,9 +27,9 @@ func (f *downloadMockFetcher) Download(
 	return f.download, f.err
 }
 
-func TestWorkspaceDownloadPathPreservesLeadingSlash(t *testing.T) {
-	if got := workspaceDownloadPath(`"/result.txt"`); got != "/result.txt" {
-		t.Errorf("got %q, want /result.txt", got)
+func TestWorkspaceDownloadPathUsesRelativePath(t *testing.T) {
+	if got := workspaceDownloadPath(`"/result.txt"`); got != "result.txt" {
+		t.Errorf("got %q, want result.txt", got)
 	}
 }
 

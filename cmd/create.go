@@ -137,7 +137,7 @@ func (o *createOptions) create(cmd *cobra.Command) (string, error) {
 	}
 
 	// Refuse an incompatible server before any bundle is built or uploaded.
-	api, err := bundleCapableAPIClient()
+	api, err := bundleCapableAPIClient(o.token)
 	if err != nil {
 		return "", err
 	}
@@ -155,20 +155,32 @@ func (o *createOptions) create(cmd *cobra.Command) (string, error) {
 	params := operations.NewCreateWorkflowParamsWithTimeout(
 		controlOperationTimeout,
 	)
-	params.SetAccessToken(&o.token)
 	params.SetBundle(bundle)
 	params.SetWorkflowName(o.name)
-	response, err := api.Operations.CreateWorkflow(params)
+	okResponse, createdResponse, err := api.Operations.CreateWorkflow(
+		params,
+		nil,
+	)
 	if err != nil {
 		return "", fmt.Errorf("cannot create workflow: %w", err)
 	}
 
-	payload := response.GetPayload()
+	if okResponse != nil {
+		return "", fmt.Errorf(
+			"server returned a legacy create response without a workflow name: %s",
+			okResponse.GetPayload().Message,
+		)
+	}
+	payload := createdResponse.GetPayload()
 	for _, warning := range payload.ValidationWarnings {
-		if warning == nil {
-			continue
+		if warning != nil {
+			displayer.DisplayMessage(
+				warning.Message,
+				displayer.Warning,
+				true,
+				out,
+			)
 		}
-		displayer.DisplayMessage(warning.Message, displayer.Warning, true, out)
 	}
 	return payload.WorkflowName, nil
 }

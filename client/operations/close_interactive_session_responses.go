@@ -37,6 +37,12 @@ func (o *CloseInteractiveSessionReader) ReadResponse(response runtime.ClientResp
 			return nil, err
 		}
 		return nil, result
+	case 401:
+		result := NewCloseInteractiveSessionUnauthorized()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 403:
 		result := NewCloseInteractiveSessionForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -51,6 +57,12 @@ func (o *CloseInteractiveSessionReader) ReadResponse(response runtime.ClientResp
 		return nil, result
 	case 500:
 		result := NewCloseInteractiveSessionInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 503:
+		result := NewCloseInteractiveSessionServiceUnavailable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -196,6 +208,62 @@ func (o *CloseInteractiveSessionBadRequest) readResponse(response runtime.Client
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewCloseInteractiveSessionUnauthorized creates a CloseInteractiveSessionUnauthorized with default headers values
+func NewCloseInteractiveSessionUnauthorized() *CloseInteractiveSessionUnauthorized {
+	return &CloseInteractiveSessionUnauthorized{}
+}
+
+/*
+CloseInteractiveSessionUnauthorized describes a response with status code 401, with default header values.
+
+The request is not authenticated.
+*/
+type CloseInteractiveSessionUnauthorized struct {
+}
+
+// IsSuccess returns true when this close interactive session unauthorized response has a 2xx status code
+func (o *CloseInteractiveSessionUnauthorized) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this close interactive session unauthorized response has a 3xx status code
+func (o *CloseInteractiveSessionUnauthorized) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this close interactive session unauthorized response has a 4xx status code
+func (o *CloseInteractiveSessionUnauthorized) IsClientError() bool {
+	return true
+}
+
+// IsServerError returns true when this close interactive session unauthorized response has a 5xx status code
+func (o *CloseInteractiveSessionUnauthorized) IsServerError() bool {
+	return false
+}
+
+// IsCode returns true when this close interactive session unauthorized response a status code equal to that given
+func (o *CloseInteractiveSessionUnauthorized) IsCode(code int) bool {
+	return code == 401
+}
+
+// Code gets the status code for the close interactive session unauthorized response
+func (o *CloseInteractiveSessionUnauthorized) Code() int {
+	return 401
+}
+
+func (o *CloseInteractiveSessionUnauthorized) Error() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionUnauthorized", 401)
+}
+
+func (o *CloseInteractiveSessionUnauthorized) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionUnauthorized", 401)
+}
+
+func (o *CloseInteractiveSessionUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }
@@ -406,6 +474,62 @@ func (o *CloseInteractiveSessionInternalServerError) readResponse(response runti
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && !stderrors.Is(err, io.EOF) {
 		return err
 	}
+
+	return nil
+}
+
+// NewCloseInteractiveSessionServiceUnavailable creates a CloseInteractiveSessionServiceUnavailable with default headers values
+func NewCloseInteractiveSessionServiceUnavailable() *CloseInteractiveSessionServiceUnavailable {
+	return &CloseInteractiveSessionServiceUnavailable{}
+}
+
+/*
+CloseInteractiveSessionServiceUnavailable describes a response with status code 503, with default header values.
+
+The identity provider or the authentication session store is temporarily unavailable.
+*/
+type CloseInteractiveSessionServiceUnavailable struct {
+}
+
+// IsSuccess returns true when this close interactive session service unavailable response has a 2xx status code
+func (o *CloseInteractiveSessionServiceUnavailable) IsSuccess() bool {
+	return false
+}
+
+// IsRedirect returns true when this close interactive session service unavailable response has a 3xx status code
+func (o *CloseInteractiveSessionServiceUnavailable) IsRedirect() bool {
+	return false
+}
+
+// IsClientError returns true when this close interactive session service unavailable response has a 4xx status code
+func (o *CloseInteractiveSessionServiceUnavailable) IsClientError() bool {
+	return false
+}
+
+// IsServerError returns true when this close interactive session service unavailable response has a 5xx status code
+func (o *CloseInteractiveSessionServiceUnavailable) IsServerError() bool {
+	return true
+}
+
+// IsCode returns true when this close interactive session service unavailable response a status code equal to that given
+func (o *CloseInteractiveSessionServiceUnavailable) IsCode(code int) bool {
+	return code == 503
+}
+
+// Code gets the status code for the close interactive session service unavailable response
+func (o *CloseInteractiveSessionServiceUnavailable) Code() int {
+	return 503
+}
+
+func (o *CloseInteractiveSessionServiceUnavailable) Error() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionServiceUnavailable", 503)
+}
+
+func (o *CloseInteractiveSessionServiceUnavailable) String() string {
+	return fmt.Sprintf("[POST /api/workflows/{workflow_id_or_name}/close/][%d] closeInteractiveSessionServiceUnavailable", 503)
+}
+
+func (o *CloseInteractiveSessionServiceUnavailable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	return nil
 }

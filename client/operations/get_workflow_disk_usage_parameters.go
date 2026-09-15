@@ -61,12 +61,6 @@ GetWorkflowDiskUsageParams contains all the parameters to send to the API endpoi
 */
 type GetWorkflowDiskUsageParams struct {
 
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken *string
-
 	/* Parameters.
 
 	   Optional. Additional input parameters and operational options.
@@ -132,17 +126,6 @@ func (o *GetWorkflowDiskUsageParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the get workflow disk usage params
-func (o *GetWorkflowDiskUsageParams) WithAccessToken(accessToken *string) *GetWorkflowDiskUsageParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the get workflow disk usage params
-func (o *GetWorkflowDiskUsageParams) SetAccessToken(accessToken *string) {
-	o.AccessToken = accessToken
-}
-
 // WithParameters adds the parameters to the get workflow disk usage params
 func (o *GetWorkflowDiskUsageParams) WithParameters(parameters GetWorkflowDiskUsageBody) *GetWorkflowDiskUsageParams {
 	o.SetParameters(parameters)
@@ -172,23 +155,6 @@ func (o *GetWorkflowDiskUsageParams) WriteToRequest(r runtime.ClientRequest, reg
 		return err
 	}
 	var res []error
-
-	if o.AccessToken != nil {
-
-		// query param access_token
-		var qrAccessToken string
-
-		if o.AccessToken != nil {
-			qrAccessToken = *o.AccessToken
-		}
-		qAccessToken := qrAccessToken
-		if qAccessToken != "" {
-
-			if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-				return err
-			}
-		}
-	}
 	if err := r.SetBodyParam(o.Parameters); err != nil {
 		return err
 	}

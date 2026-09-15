@@ -60,13 +60,6 @@ InfoParams contains all the parameters to send to the API endpoint
 	Typically these are written to a http.Request.
 */
 type InfoParams struct {
-
-	/* AccessToken.
-
-	   The API access_token of workflow owner.
-	*/
-	AccessToken string
-
 	timeout    time.Duration
 	Context    context.Context
 	HTTPClient *http.Client
@@ -120,17 +113,6 @@ func (o *InfoParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
-// WithAccessToken adds the accessToken to the info params
-func (o *InfoParams) WithAccessToken(accessToken string) *InfoParams {
-	o.SetAccessToken(accessToken)
-	return o
-}
-
-// SetAccessToken adds the accessToken to the info params
-func (o *InfoParams) SetAccessToken(accessToken string) {
-	o.AccessToken = accessToken
-}
-
 // WriteToRequest writes these params to a swagger request
 func (o *InfoParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry) error {
 
@@ -138,16 +120,6 @@ func (o *InfoParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Registry
 		return err
 	}
 	var res []error
-
-	// query param access_token
-	qrAccessToken := o.AccessToken
-	qAccessToken := qrAccessToken
-	if qAccessToken != "" {
-
-		if err := r.SetQueryParam("access_token", qAccessToken); err != nil {
-			return err
-		}
-	}
 
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
