@@ -11,8 +11,9 @@ package cmd
 import (
 	"fmt"
 	"net/http"
-	"reanahub/reana-client-go/client/operations"
 	"testing"
+
+	"github.com/reanahub/reana-client-go/client/operations"
 
 	"github.com/go-gota/gota/series"
 

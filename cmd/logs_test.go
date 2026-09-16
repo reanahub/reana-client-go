@@ -11,10 +11,11 @@ package cmd
 import (
 	"fmt"
 	"net/http"
-	"reanahub/reana-client-go/pkg/config"
-	"reanahub/reana-client-go/pkg/filterer"
 	"reflect"
 	"testing"
+
+	"github.com/reanahub/reana-client-go/pkg/config"
+	"github.com/reanahub/reana-client-go/pkg/filterer"
 
 	"golang.org/x/exp/slices"
 )

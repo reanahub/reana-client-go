@@ -1,3 +1,11 @@
+/*
+This file is part of REANA.
+Copyright (C) 2022, 2025, 2026 CERN.
+
+REANA is free software; you can redistribute it and/or modify it
+under the terms of the MIT License; see LICENSE file for more details.
+*/
+
 // Package client provides the automatically generated API client, provided by the swagger tool.
 package client
 
@@ -11,10 +19,11 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/pkg/auth"
 	"strings"
 	"time"
+
+	"github.com/reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/pkg/auth"
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"

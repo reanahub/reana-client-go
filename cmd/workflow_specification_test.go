@@ -13,7 +13,7 @@ import (
 	"strings"
 	"testing"
 
-	"reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/client/operations"
 )
 
 func TestWorkflowInputs(t *testing.T) {

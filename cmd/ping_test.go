@@ -1,9 +1,18 @@
+/*
+This file is part of REANA.
+Copyright (C) 2022, 2025, 2026 CERN.
+
+REANA is free software; you can redistribute it and/or modify it
+under the terms of the MIT License; see LICENSE file for more details.
+*/
+
 package cmd
 
 import (
 	"net/http"
-	"reanahub/reana-client-go/pkg/errorhandler"
 	"testing"
+
+	"github.com/reanahub/reana-client-go/pkg/errorhandler"
 
 	"github.com/spf13/viper"
 )

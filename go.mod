@@ -1,4 +1,4 @@
-module reanahub/reana-client-go
+module github.com/reanahub/reana-client-go
 
 go 1.25.13
 

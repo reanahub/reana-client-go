@@ -11,9 +11,10 @@ package displayer
 import (
 	"bytes"
 	"fmt"
-	"reanahub/reana-client-go/pkg/datautils"
 	"strings"
 	"testing"
+
+	"github.com/reanahub/reana-client-go/pkg/datautils"
 
 	"github.com/jedib0t/go-pretty/v6/text"
 )

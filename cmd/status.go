@@ -10,11 +10,12 @@ package cmd
 
 import (
 	"fmt"
-	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/pkg/displayer"
-	"reanahub/reana-client-go/pkg/formatter"
-	"reanahub/reana-client-go/pkg/workflows"
 	"strings"
+
+	"github.com/reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/pkg/displayer"
+	"github.com/reanahub/reana-client-go/pkg/formatter"
+	"github.com/reanahub/reana-client-go/pkg/workflows"
 
 	"golang.org/x/exp/slices"
 

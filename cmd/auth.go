@@ -15,7 +15,7 @@ import (
 	"runtime"
 	"time"
 
-	"reanahub/reana-client-go/pkg/auth"
+	"github.com/reanahub/reana-client-go/pkg/auth"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

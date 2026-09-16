@@ -16,7 +16,7 @@ import (
 	"strings"
 	"testing"
 
-	"reanahub/reana-client-go/client"
+	"github.com/reanahub/reana-client-go/client"
 
 	"github.com/spf13/viper"
 )

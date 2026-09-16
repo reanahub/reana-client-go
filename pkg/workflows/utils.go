@@ -11,9 +11,10 @@ package workflows
 
 import (
 	"fmt"
-	"reanahub/reana-client-go/pkg/datautils"
 	"strings"
 	"time"
+
+	"github.com/reanahub/reana-client-go/pkg/datautils"
 )
 
 // GetNameAndRunNumber parses a string in the format 'name.number' and returns the workflow's name and number.

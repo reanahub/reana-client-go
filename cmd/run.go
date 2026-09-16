@@ -11,7 +11,7 @@ package cmd
 import (
 	"fmt"
 
-	"reanahub/reana-client-go/pkg/displayer"
+	"github.com/reanahub/reana-client-go/pkg/displayer"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"

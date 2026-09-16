@@ -10,13 +10,14 @@ package cmd
 
 import (
 	"fmt"
-	"reanahub/reana-client-go/client"
-	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/pkg/config"
-	"reanahub/reana-client-go/pkg/datautils"
-	"reanahub/reana-client-go/pkg/displayer"
-	"reanahub/reana-client-go/pkg/filterer"
-	"reanahub/reana-client-go/pkg/formatter"
+
+	"github.com/reanahub/reana-client-go/client"
+	"github.com/reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/pkg/config"
+	"github.com/reanahub/reana-client-go/pkg/datautils"
+	"github.com/reanahub/reana-client-go/pkg/displayer"
+	"github.com/reanahub/reana-client-go/pkg/filterer"
+	"github.com/reanahub/reana-client-go/pkg/formatter"
 
 	"github.com/go-gota/gota/dataframe"
 	"github.com/go-gota/gota/series"
