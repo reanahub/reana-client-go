@@ -12,10 +12,11 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"reanahub/reana-client-go/client"
-	"reanahub/reana-client-go/pkg/auth"
-	"reanahub/reana-client-go/pkg/commandgroups"
-	"reanahub/reana-client-go/pkg/validator"
+
+	"github.com/reanahub/reana-client-go/client"
+	"github.com/reanahub/reana-client-go/pkg/auth"
+	"github.com/reanahub/reana-client-go/pkg/commandgroups"
+	"github.com/reanahub/reana-client-go/pkg/validator"
 
 	"github.com/spf13/pflag"
 

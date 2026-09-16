@@ -13,12 +13,13 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"reanahub/reana-client-go/pkg/auth"
-	"reanahub/reana-client-go/pkg/errorhandler"
-	"reanahub/reana-client-go/pkg/validator"
 	"strings"
 	"testing"
 	"time"
+
+	"github.com/reanahub/reana-client-go/pkg/auth"
+	"github.com/reanahub/reana-client-go/pkg/errorhandler"
+	"github.com/reanahub/reana-client-go/pkg/validator"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"

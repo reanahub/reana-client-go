@@ -10,7 +10,7 @@ package client
 import (
 	"testing"
 
-	"reanahub/reana-client-go/pkg/auth"
+	"github.com/reanahub/reana-client-go/pkg/auth"
 )
 
 func savedTestServer(t *testing.T, server string, verify bool) {

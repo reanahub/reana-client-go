@@ -13,7 +13,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"reanahub/reana-client-go/pkg/config"
+
+	"github.com/reanahub/reana-client-go/pkg/config"
 
 	"github.com/jedib0t/go-pretty/v6/table"
 	"github.com/jedib0t/go-pretty/v6/text"

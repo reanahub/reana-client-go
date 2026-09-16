@@ -14,12 +14,13 @@ import (
 	"fmt"
 	"io"
 	"path"
-	"reanahub/reana-client-go/pkg/config"
-	"reanahub/reana-client-go/pkg/displayer"
-	"reanahub/reana-client-go/pkg/errorhandler"
-	"reanahub/reana-client-go/pkg/fileutils"
-	"reanahub/reana-client-go/pkg/workflows"
 	"strings"
+
+	"github.com/reanahub/reana-client-go/pkg/config"
+	"github.com/reanahub/reana-client-go/pkg/displayer"
+	"github.com/reanahub/reana-client-go/pkg/errorhandler"
+	"github.com/reanahub/reana-client-go/pkg/fileutils"
+	"github.com/reanahub/reana-client-go/pkg/workflows"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"

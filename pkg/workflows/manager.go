@@ -19,10 +19,11 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"reanahub/reana-client-go/client"
-	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/pkg/config"
-	"reanahub/reana-client-go/pkg/validator"
+
+	"github.com/reanahub/reana-client-go/client"
+	"github.com/reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/pkg/config"
+	"github.com/reanahub/reana-client-go/pkg/validator"
 )
 
 // UpdateStatus updates the status of the specified workflow.

@@ -1,6 +1,6 @@
 /*
 This file is part of REANA.
-Copyright (C) 2022 CERN.
+Copyright (C) 2022, 2026 CERN.
 
 REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
@@ -11,8 +11,9 @@ package cmd
 import (
 	"errors"
 	"net/http"
-	"reanahub/reana-client-go/client/operations"
 	"testing"
+
+	"github.com/reanahub/reana-client-go/client/operations"
 )
 
 var secretsDeleteServerPath = "/api/secrets/"

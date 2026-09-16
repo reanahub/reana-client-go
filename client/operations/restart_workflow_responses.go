@@ -14,7 +14,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"reanahub/reana-client-go/models"
+	"github.com/reanahub/reana-client-go/models"
 )
 
 // RestartWorkflowReader is a Reader for the RestartWorkflow structure.

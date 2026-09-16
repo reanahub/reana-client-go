@@ -17,9 +17,10 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
-	"reanahub/reana-client-go/pkg/config"
 	"strings"
 	"testing"
+
+	"github.com/reanahub/reana-client-go/pkg/config"
 
 	"github.com/spf13/viper"
 )

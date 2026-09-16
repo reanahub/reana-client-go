@@ -12,9 +12,10 @@ import (
 	"encoding/base64"
 	"net/http"
 	"os"
-	"reanahub/reana-client-go/client/operations"
 	"reflect"
 	"testing"
+
+	"github.com/reanahub/reana-client-go/client/operations"
 
 	"golang.org/x/exp/slices"
 )

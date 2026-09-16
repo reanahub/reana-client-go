@@ -12,9 +12,10 @@ package formatter
 import (
 	"fmt"
 	"net/url"
-	"reanahub/reana-client-go/pkg/validator"
 	"strconv"
 	"strings"
+
+	"github.com/reanahub/reana-client-go/pkg/validator"
 
 	"github.com/go-gota/gota/dataframe"
 	"github.com/go-gota/gota/series"

@@ -10,13 +10,14 @@ package cmd
 
 import (
 	"fmt"
-	"reanahub/reana-client-go/client"
-	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/pkg/config"
-	"reanahub/reana-client-go/pkg/displayer"
-	"reanahub/reana-client-go/pkg/errorhandler"
-	"reanahub/reana-client-go/pkg/validator"
 	"strings"
+
+	"github.com/reanahub/reana-client-go/client"
+	"github.com/reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/pkg/config"
+	"github.com/reanahub/reana-client-go/pkg/displayer"
+	"github.com/reanahub/reana-client-go/pkg/errorhandler"
+	"github.com/reanahub/reana-client-go/pkg/validator"
 
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"

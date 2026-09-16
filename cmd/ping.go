@@ -12,11 +12,11 @@ import (
 	"errors"
 	"fmt"
 	"net/url"
-	"reanahub/reana-client-go/pkg/errorhandler"
 
-	"reanahub/reana-client-go/client"
-	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/pkg/auth"
+	"github.com/reanahub/reana-client-go/client"
+	"github.com/reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/pkg/auth"
+	"github.com/reanahub/reana-client-go/pkg/errorhandler"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"

@@ -21,7 +21,7 @@
         { "type": "docs", "section": "Documentation", "hidden": false },
         { "type": "chore", "section": "Chores", "hidden": true }
       ],
-      "extra-files": ["cmd/version.go"]
+      "extra-files": ["cmd/version.go", "README.md"]
     }
   },
   "pull-request-footer": " ",

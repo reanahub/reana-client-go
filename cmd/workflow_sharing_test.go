@@ -14,9 +14,10 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
-	"reanahub/reana-client-go/pkg/config"
 	"strings"
 	"testing"
+
+	"github.com/reanahub/reana-client-go/pkg/config"
 
 	"github.com/spf13/viper"
 

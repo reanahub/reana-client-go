@@ -23,7 +23,7 @@ import (
 	"testing"
 	"time"
 
-	"reanahub/reana-client-go/pkg/auth"
+	"github.com/reanahub/reana-client-go/pkg/auth"
 
 	"github.com/spf13/viper"
 )

@@ -12,12 +12,12 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
-	"reanahub/reana-client-go/pkg/auth"
 	"reflect"
 	"strings"
 	"testing"
 
-	"reanahub/reana-client-go/client"
+	"github.com/reanahub/reana-client-go/client"
+	"github.com/reanahub/reana-client-go/pkg/auth"
 
 	"github.com/spf13/viper"
 )

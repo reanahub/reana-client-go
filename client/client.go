@@ -17,10 +17,11 @@ import (
 	"net/http"
 	"net/url"
 	"os"
-	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/pkg/auth"
 	"strings"
 	"time"
+
+	"github.com/reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/pkg/auth"
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"

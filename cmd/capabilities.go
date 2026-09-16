@@ -11,8 +11,8 @@ package cmd
 import (
 	"fmt"
 
-	"reanahub/reana-client-go/client"
-	"reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/client"
+	"github.com/reanahub/reana-client-go/client/operations"
 )
 
 // workflowSpecificationBundlesCapability is advertised by servers that load and

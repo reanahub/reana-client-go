@@ -16,7 +16,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"reanahub/reana-client-go/models"
+	"github.com/reanahub/reana-client-go/models"
 )
 
 // MoveFilesReader is a Reader for the MoveFiles structure.

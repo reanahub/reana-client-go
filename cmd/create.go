@@ -13,9 +13,9 @@ import (
 	"fmt"
 	"strings"
 
-	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/pkg/displayer"
-	"reanahub/reana-client-go/pkg/specbundle"
+	"github.com/reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/pkg/displayer"
+	"github.com/reanahub/reana-client-go/pkg/specbundle"
 
 	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"

@@ -12,10 +12,11 @@ import (
 	"bytes"
 	"fmt"
 	"net/http"
-	"reanahub/reana-client-go/pkg/config"
-	"reanahub/reana-client-go/pkg/displayer"
 	"strings"
 	"testing"
+
+	"github.com/reanahub/reana-client-go/pkg/config"
+	"github.com/reanahub/reana-client-go/pkg/displayer"
 
 	"github.com/jedib0t/go-pretty/v6/text"
 )

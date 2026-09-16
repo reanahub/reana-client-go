@@ -13,8 +13,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"reanahub/reana-client-go/pkg/datautils"
 	"strings"
+
+	"github.com/reanahub/reana-client-go/pkg/datautils"
 
 	"golang.org/x/exp/slices"
 )

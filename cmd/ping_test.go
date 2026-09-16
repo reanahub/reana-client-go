@@ -8,8 +8,9 @@ package cmd
 
 import (
 	"net/http"
-	"reanahub/reana-client-go/pkg/errorhandler"
 	"testing"
+
+	"github.com/reanahub/reana-client-go/pkg/errorhandler"
 
 	"github.com/spf13/viper"
 )

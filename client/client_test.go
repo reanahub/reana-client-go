@@ -22,8 +22,8 @@ import (
 	log "github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
-	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/pkg/auth"
+	"github.com/reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/pkg/auth"
 )
 
 func setServerURL(t *testing.T, serverURL string) {

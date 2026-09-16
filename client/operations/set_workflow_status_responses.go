@@ -18,7 +18,7 @@ import (
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 
-	"reanahub/reana-client-go/models"
+	"github.com/reanahub/reana-client-go/models"
 )
 
 // SetWorkflowStatusReader is a Reader for the SetWorkflowStatus structure.

@@ -9,10 +9,10 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
-	"reanahub/reana-client-go/client"
-	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/pkg/displayer"
-	"reanahub/reana-client-go/pkg/formatter"
+	"github.com/reanahub/reana-client-go/client"
+	"github.com/reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/pkg/displayer"
+	"github.com/reanahub/reana-client-go/pkg/formatter"
 
 	"github.com/go-gota/gota/dataframe"
 	"github.com/go-gota/gota/series"

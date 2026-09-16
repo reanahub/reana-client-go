@@ -14,8 +14,8 @@ import (
 	"net/url"
 	"reflect"
 
-	"reanahub/reana-client-go/client"
-	"reanahub/reana-client-go/pkg/auth"
+	"github.com/reanahub/reana-client-go/client"
+	"github.com/reanahub/reana-client-go/pkg/auth"
 
 	"github.com/spf13/viper"
 )

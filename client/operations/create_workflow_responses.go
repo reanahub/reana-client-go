@@ -19,7 +19,7 @@ import (
 	"github.com/go-openapi/swag"
 	"github.com/go-openapi/validate"
 
-	"reanahub/reana-client-go/models"
+	"github.com/reanahub/reana-client-go/models"
 )
 
 // CreateWorkflowReader is a Reader for the CreateWorkflow structure.

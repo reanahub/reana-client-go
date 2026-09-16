@@ -10,8 +10,9 @@ package cmd
 
 import (
 	"fmt"
-	"reanahub/reana-client-go/pkg/displayer"
-	"reanahub/reana-client-go/pkg/workflows"
+
+	"github.com/reanahub/reana-client-go/pkg/displayer"
+	"github.com/reanahub/reana-client-go/pkg/workflows"
 
 	log "github.com/sirupsen/logrus"
 

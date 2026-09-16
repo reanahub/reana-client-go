@@ -11,7 +11,7 @@ package cmd
 import (
 	"fmt"
 
-	"reanahub/reana-client-go/pkg/auth"
+	"github.com/reanahub/reana-client-go/pkg/auth"
 
 	"github.com/spf13/cobra"
 )
