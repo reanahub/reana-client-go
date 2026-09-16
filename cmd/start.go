@@ -11,14 +11,15 @@ package cmd
 import (
 	"errors"
 	"io"
-	"reanahub/reana-client-go/client"
-	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/models"
-	"reanahub/reana-client-go/pkg/config"
-	"reanahub/reana-client-go/pkg/displayer"
-	"reanahub/reana-client-go/pkg/validator"
-	"reanahub/reana-client-go/pkg/workflows"
 	"time"
+
+	"github.com/reanahub/reana-client-go/client"
+	"github.com/reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/models"
+	"github.com/reanahub/reana-client-go/pkg/config"
+	"github.com/reanahub/reana-client-go/pkg/displayer"
+	"github.com/reanahub/reana-client-go/pkg/validator"
+	"github.com/reanahub/reana-client-go/pkg/workflows"
 
 	"github.com/spf13/viper"
 

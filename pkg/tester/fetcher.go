@@ -14,8 +14,8 @@ import (
 	"errors"
 	"fmt"
 
-	"reanahub/reana-client-go/client"
-	"reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/client"
+	"github.com/reanahub/reana-client-go/client/operations"
 )
 
 // APIFetcher retrieves workflow test data using the REANA REST API.

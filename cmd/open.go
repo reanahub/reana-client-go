@@ -10,12 +10,13 @@ package cmd
 
 import (
 	"fmt"
-	"reanahub/reana-client-go/client"
-	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/pkg/config"
-	"reanahub/reana-client-go/pkg/displayer"
-	"reanahub/reana-client-go/pkg/formatter"
-	"reanahub/reana-client-go/pkg/validator"
+
+	"github.com/reanahub/reana-client-go/client"
+	"github.com/reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/pkg/config"
+	"github.com/reanahub/reana-client-go/pkg/displayer"
+	"github.com/reanahub/reana-client-go/pkg/formatter"
+	"github.com/reanahub/reana-client-go/pkg/validator"
 
 	"github.com/jedib0t/go-pretty/v6/text"
 

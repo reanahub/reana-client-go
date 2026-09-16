@@ -18,8 +18,9 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"reanahub/reana-client-go/pkg/config"
 	"strings"
+
+	"github.com/reanahub/reana-client-go/pkg/config"
 
 	"github.com/spf13/pflag"
 

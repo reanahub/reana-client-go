@@ -19,8 +19,8 @@ import (
 	"testing"
 	"time"
 
-	"reanahub/reana-client-go/pkg/auth"
-	"reanahub/reana-client-go/pkg/config"
+	"github.com/reanahub/reana-client-go/pkg/auth"
+	"github.com/reanahub/reana-client-go/pkg/config"
 
 	"github.com/spf13/viper"
 )

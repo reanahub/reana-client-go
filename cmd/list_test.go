@@ -11,9 +11,10 @@ package cmd
 import (
 	"net/http"
 	"net/http/httptest"
-	"reanahub/reana-client-go/pkg/config"
 	"strings"
 	"testing"
+
+	"github.com/reanahub/reana-client-go/pkg/config"
 
 	"github.com/go-gota/gota/series"
 	"github.com/spf13/viper"

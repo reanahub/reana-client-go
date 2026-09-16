@@ -14,11 +14,12 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
-	"reanahub/reana-client-go/client/operations"
-	"reanahub/reana-client-go/pkg/config"
 	"strings"
 	"sync"
 	"testing"
+
+	"github.com/reanahub/reana-client-go/client/operations"
+	"github.com/reanahub/reana-client-go/pkg/config"
 
 	"github.com/spf13/viper"
 	"golang.org/x/exp/slices"

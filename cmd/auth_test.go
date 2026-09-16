@@ -24,7 +24,7 @@ import (
 	"strings"
 	"testing"
 
-	"reanahub/reana-client-go/pkg/auth"
+	"github.com/reanahub/reana-client-go/pkg/auth"
 )
 
 func trustAuthTestServer(t *testing.T, server *httptest.Server) {

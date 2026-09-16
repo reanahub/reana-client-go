@@ -23,7 +23,19 @@ workflows.
 The detailed information on how to install and use REANA can be found in
 [docs.reana.io](https://docs.reana.io).
 
-### Installation from source
+### Installation with Go
+
+Install the published prerelease with Go 1.25.13 or later:
+
+```console
+$ go install github.com/reanahub/reana-client-go@v0.95.0-alpha.1
+```
+
+The executable is installed into `go env GOBIN`, or into `$(go env GOPATH)/bin`
+when `GOBIN` is not configured. Add that directory to `PATH`. This release
+requires an OIDC-enabled REANA deployment.
+
+### Installation from a source checkout
 
 Install the executable into the Go binary directory:
 

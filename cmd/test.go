@@ -14,10 +14,10 @@ import (
 	"io/fs"
 	"time"
 
-	"reanahub/reana-client-go/client"
-	"reanahub/reana-client-go/pkg/config"
-	"reanahub/reana-client-go/pkg/displayer"
-	"reanahub/reana-client-go/pkg/tester"
+	"github.com/reanahub/reana-client-go/client"
+	"github.com/reanahub/reana-client-go/pkg/config"
+	"github.com/reanahub/reana-client-go/pkg/displayer"
+	"github.com/reanahub/reana-client-go/pkg/tester"
 
 	"github.com/spf13/cobra"
 )

@@ -15,10 +15,11 @@ package main
 
 import (
 	"os"
-	"reanahub/reana-client-go/cmd"
-	"reanahub/reana-client-go/pkg/config"
-	"reanahub/reana-client-go/pkg/displayer"
-	"reanahub/reana-client-go/pkg/errorhandler"
+
+	"github.com/reanahub/reana-client-go/cmd"
+	"github.com/reanahub/reana-client-go/pkg/config"
+	"github.com/reanahub/reana-client-go/pkg/displayer"
+	"github.com/reanahub/reana-client-go/pkg/errorhandler"
 
 	log "github.com/sirupsen/logrus"
 )
