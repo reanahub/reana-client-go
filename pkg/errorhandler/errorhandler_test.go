@@ -9,10 +9,17 @@ under the terms of the MIT License; see LICENSE file for more details.
 package errorhandler
 
 import (
+	"crypto/x509"
 	"errors"
 	"fmt"
+	"net"
 	"net/url"
+	"os"
+	"strings"
+	"syscall"
 	"testing"
+
+	"reanahub/reana-client-go/pkg/auth"
 
 	"github.com/spf13/viper"
 )
@@ -36,7 +43,6 @@ func TestHandleApiError(t *testing.T) {
 		viper.Reset()
 	})
 
-	urlError := url.Error{}
 	apiError := testApiError{
 		Payload: struct{ Message string }{Message: "API Error"},
 	}
@@ -50,13 +56,6 @@ func TestHandleApiError(t *testing.T) {
 		arg  error
 		want string
 	}{
-		"server not found": {
-			arg: &urlError,
-			want: fmt.Sprintf(
-				"'%s' not found, please verify the provided server URL or check your internet connection",
-				serverURL,
-			),
-		},
 		"api error": {
 			arg:  &apiError,
 			want: apiError.Error(),
@@ -81,5 +80,54 @@ func TestHandleApiError(t *testing.T) {
 				t.Errorf("Expected %s, got %s", test.want, got)
 			}
 		})
+	}
+}
+
+func TestTransportDiagnostics(t *testing.T) {
+	server := "https://reana.example.org"
+	viper.Set("server-url", server)
+	t.Cleanup(viper.Reset)
+	t.Setenv("REANA_SERVER_CA_CERTS", "")
+	for _, test := range []struct {
+		name     string
+		cause    error
+		endpoint string
+		want     string
+		bypass   bool
+	}{
+		{"certificate", x509.UnknownAuthorityError{}, server, "certificate is not trusted", true},
+		{"external issuer", x509.UnknownAuthorityError{}, "https://iam.example.org", "does not apply to this identity provider", false},
+		{"dns", &net.DNSError{Name: "secret-request-data", Err: "not found"}, server, "hostname could not be resolved", false},
+		{"refused", syscall.ECONNREFUSED, server, "connection was refused", false},
+		{"timeout", os.ErrDeadlineExceeded, server, "connection timed out", false},
+	} {
+		t.Run(test.name, func(t *testing.T) {
+			transport := &url.Error{
+				Op:  "Get",
+				URL: test.endpoint + "/api?secret=query",
+				Err: test.cause,
+			}
+			got := HandleApiError(fmt.Errorf("request failed: %w", transport))
+			if !strings.Contains(got.Error(), server+" (from saved login)") ||
+				!strings.Contains(got.Error(), test.want) {
+				t.Fatalf("missing diagnostic: %v", got)
+			}
+			if strings.Contains(got.Error(), "--no-tls-verify") != test.bypass {
+				t.Fatalf("incorrect bypass advice: %v", got)
+			}
+			if strings.Contains(got.Error(), "secret") ||
+				!errors.Is(got, test.cause) {
+				t.Fatalf("cause lost or request data exposed: %v", got)
+			}
+			if HandleApiError(got) != got {
+				t.Fatal("already classified error was replaced")
+			}
+		})
+	}
+	// An explicit operation target must survive the global API handler.
+	other := "https://other.example.org"
+	classified := auth.ConnectionError(other, other, syscall.ECONNREFUSED)
+	if HandleApiError(classified) != classified {
+		t.Fatal("operation target was replaced by the selected server")
 	}
 }

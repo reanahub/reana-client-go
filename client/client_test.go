@@ -152,7 +152,7 @@ func TestAPIClientDoesNotReplayBearerAcrossRedirect(t *testing.T) {
 	))
 	defer origin.Close()
 	setServerURL(t, origin.URL)
-	t.Setenv("REANA_SERVER_TLS_VERIFY", "false")
+	savedTestServer(t, viper.GetString("server-url"), false)
 
 	api, err := ApiClient("jwt")
 	if err != nil {
@@ -193,7 +193,7 @@ func TestAPIClientSupportsExplicitInsecureTLSForLocalTesting(t *testing.T) {
 	)
 	defer server.Close()
 	setServerURL(t, server.URL)
-	t.Setenv("REANA_SERVER_TLS_VERIFY", "false")
+	savedTestServer(t, viper.GetString("server-url"), false)
 
 	api, err := ApiClient("jwt")
 	if err != nil {

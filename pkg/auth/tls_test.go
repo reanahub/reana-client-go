@@ -35,28 +35,12 @@ func TestHTTPClientTLSVerificationValues(t *testing.T) {
 	cases := []struct {
 		value  string
 		verify bool
-	}{
-		{"", true},
-		{"   ", true},
-		{"1", true},
-		{"true", true},
-		{"TRUE", true},
-		{"yes", true},
-		{"Yes", true},
-		{"on", true},
-		{"  true  ", true},
-		{"0", false},
-		{"false", false},
-		{"FALSE", false},
-		{"no", false},
-		{"No", false},
-		{"off", false},
-		{"  off  ", false},
-	}
+	}{{"verified", true}, {"bypass", false}}
+
 	for _, testCase := range cases {
 		t.Run(testCase.value, func(t *testing.T) {
-			t.Setenv(tlsVerifyEnv, testCase.value)
-			client, err := NewHTTPClient()
+			savedTestServer(t, server.URL, testCase.verify)
+			client, err := NewHTTPClient(server.URL)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -79,9 +63,9 @@ func TestHTTPClientTLSVerificationValues(t *testing.T) {
 func TestStrictHTTPClientIgnoresServerTLSVerify(t *testing.T) {
 	output := captureTLSWarning(t)
 	t.Setenv(caCertsEnv, "")
-	for _, value := range []string{"false", "banana"} {
+	for _, value := range []string{"saved bypass"} {
 		t.Run(value, func(t *testing.T) {
-			t.Setenv(tlsVerifyEnv, value)
+			savedTestServer(t, "https://reana.example.org", false)
 			client, err := NewStrictHTTPClient()
 			if err != nil {
 				t.Fatal(err)
@@ -133,8 +117,7 @@ func TestManagerScopesTLSVerification(t *testing.T) {
 	if err := os.WriteFile(caPath, bundle, 0o600); err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv(tlsVerifyEnv, "false")
-	t.Setenv(configPathEnv, t.TempDir()+"/credentials.json")
+	savedTestServer(t, server.URL, false)
 	for _, trusted := range []bool{false, true} {
 		name := "untrusted issuer"
 		if trusted {
@@ -150,8 +133,16 @@ func TestManagerScopesTLSVerification(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			defer manager.HTTPClient.CloseIdleConnections()
-			defer manager.IdPHTTPClient.CloseIdleConnections()
+			defer func() {
+				if manager.HTTPClient != nil {
+					manager.HTTPClient.CloseIdleConnections()
+				}
+			}()
+			defer func() {
+				if manager.IdPHTTPClient != nil {
+					manager.IdPHTTPClient.CloseIdleConnections()
+				}
+			}()
 			discovered, err := manager.Discover(
 				context.Background(),
 				server.URL,
@@ -264,16 +255,23 @@ func TestBundledIssuerLoginRefreshAndLogout(t *testing.T) {
 		CLIClientID:                 "reana-client",
 	}
 	mutex.Unlock()
-	t.Setenv(tlsVerifyEnv, "no")
 	t.Setenv(caCertsEnv, "")
-	t.Setenv(configPathEnv, t.TempDir()+"/credentials.json")
+	savedTestServer(t, server.URL, false)
 	t.Setenv(loginLoopbackPortEnv, "0")
 	manager, err := NewManager()
 	if err != nil {
 		t.Fatal(err)
 	}
-	defer manager.HTTPClient.CloseIdleConnections()
-	defer manager.IdPHTTPClient.CloseIdleConnections()
+	defer func() {
+		if manager.HTTPClient != nil {
+			manager.HTTPClient.CloseIdleConnections()
+		}
+	}()
+	defer func() {
+		if manager.IdPHTTPClient != nil {
+			manager.IdPHTTPClient.CloseIdleConnections()
+		}
+	}()
 	manager.Sleep = func(context.Context, time.Duration) error { return nil }
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()

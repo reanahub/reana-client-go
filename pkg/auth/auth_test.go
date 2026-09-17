@@ -869,8 +869,8 @@ func TestNewManagerWiresStoreHTTPClientAndSleep(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if manager.Store == nil || manager.HTTPClient == nil ||
-		manager.IdPHTTPClient == nil ||
+	if manager.Store == nil || manager.HTTPClient != nil ||
+		manager.IdPHTTPClient != nil ||
 		manager.Now == nil ||
 		manager.Sleep == nil {
 		t.Fatalf("manager was not fully wired: %+v", manager)
@@ -1369,7 +1369,7 @@ func TestAccessTokenErrorsWhenNoActiveServer(t *testing.T) {
 	})
 	_, err := manager.AccessToken(context.Background(), "")
 	if err == nil ||
-		!strings.Contains(err.Error(), "not connected to any REANA cluster") {
+		!strings.Contains(err.Error(), "No REANA server is configured") {
 		t.Fatalf("expected no-active-cluster error, got %v", err)
 	}
 }
@@ -1405,7 +1405,7 @@ func TestLogoutErrorsWhenNoActiveServer(t *testing.T) {
 	})
 	_, err := manager.Logout(context.Background(), "")
 	if err == nil ||
-		!strings.Contains(err.Error(), "not connected to any REANA cluster") {
+		!strings.Contains(err.Error(), "No REANA server is configured") {
 		t.Fatalf("expected no-active-cluster error, got %v", err)
 	}
 }
@@ -1418,7 +1418,7 @@ func TestDiscoverReturnsConnectionErrorWhenServerUnreachable(t *testing.T) {
 		context.Background(),
 		"https://reana.example.org",
 	)
-	if err == nil || !strings.Contains(err.Error(), "could not connect") {
+	if err == nil || !strings.Contains(err.Error(), "Could not connect") {
 		t.Fatalf("expected connection error, got %v", err)
 	}
 }
@@ -1524,7 +1524,7 @@ func TestPostFormReturnsWrappedErrorOnTransportFailure(t *testing.T) {
 		&target,
 	)
 	if err == nil ||
-		!strings.Contains(err.Error(), "could not complete token refresh") {
+		!strings.Contains(err.Error(), "Could not connect to") {
 		t.Fatalf("expected wrapped transport error, got %v", err)
 	}
 }
@@ -1593,7 +1593,7 @@ func TestRefreshErrorsWhenNoRefreshToken(t *testing.T) {
 		Credentials{},
 	)
 	if err == nil ||
-		!strings.Contains(err.Error(), "please run `reana-client-go login`") {
+		!strings.Contains(err.Error(), "Run `reana-client-go login --server") {
 		t.Fatalf("expected missing refresh token error, got %v", err)
 	}
 }
@@ -1667,7 +1667,7 @@ func TestRefreshClearsCredentialsOnInvalidGrant(t *testing.T) {
 		Credentials{},
 	)
 	if err == nil ||
-		!strings.Contains(err.Error(), "please run `reana-client-go login`") {
+		!strings.Contains(err.Error(), "Run `reana-client-go login --server") {
 		t.Fatalf("expected cleared-credentials login error, got %v", err)
 	}
 	stored, getErr := manager.Store.Get("https://reana.example.org")

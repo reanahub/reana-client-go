@@ -1,6 +1,6 @@
 /*
 This file is part of REANA.
-Copyright (C) 2022 CERN.
+Copyright (C) 2022, 2026 CERN.
 
 REANA is free software; you can redistribute it and/or modify it
 under the terms of the MIT License; see LICENSE file for more details.
@@ -11,11 +11,11 @@ package errorhandler
 
 import (
 	"errors"
-	"fmt"
 	"net/url"
 	"reflect"
 
 	"reanahub/reana-client-go/client"
+	"reanahub/reana-client-go/pkg/auth"
 
 	"github.com/spf13/viper"
 )
@@ -26,11 +26,14 @@ func HandleApiError(err error) error {
 	if errors.Is(err, client.ErrResponseTooLarge) {
 		return client.ErrResponseTooLarge
 	}
-	_, isUrlErr := err.(*url.Error)
-	if isUrlErr {
-		return fmt.Errorf(
-			"'%s' not found, please verify the provided server URL or check your internet connection",
-			viper.GetString("server-url"),
+	var authenticationError *auth.AuthenticationError
+	if errors.As(err, &authenticationError) {
+		return err
+	}
+	var transportError *url.Error
+	if errors.As(err, &transportError) {
+		return auth.ConnectionError(
+			viper.GetString("server-url"), transportError.URL, err,
 		)
 	}
 

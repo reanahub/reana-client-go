@@ -300,6 +300,7 @@ func TestDownloadToStdoutKeepsDiagnosticsOnStderr(t *testing.T) {
 			}
 		},
 	))
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(func() {
 		viper.Reset()

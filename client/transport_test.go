@@ -1,5 +1,8 @@
 // This file is part of REANA.
 // Copyright (C) 2026 CERN.
+//
+// REANA is free software; you can redistribute it and/or modify it
+// under the terms of the MIT License; see LICENSE file for more details.
 
 package client
 
@@ -279,7 +282,7 @@ func TestAPIClientBoundsControlResponses(t *testing.T) {
 	defer server.Close()
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
-	t.Setenv("REANA_SERVER_TLS_VERIFY", "false")
+	savedTestServer(t, viper.GetString("server-url"), false)
 
 	api, err := ControlAPIClient("token")
 	if err != nil {

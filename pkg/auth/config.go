@@ -99,14 +99,129 @@ func defaultConfigPath() (string, error) {
 }
 
 // NewHTTPClient builds an HTTP client using the REANA server TLS settings.
-func NewHTTPClient() (*http.Client, error) {
-	return newHTTPClient(true)
+func NewHTTPClient(serverURLs ...string) (*http.Client, error) {
+	serverURL := ""
+	if len(serverURLs) > 0 {
+		serverURL = serverURLs[0]
+	}
+	client, err := serverHTTPClient(serverURL, nil)
+	if err == nil {
+		warnTLSVerification(client, serverURL)
+	}
+	return client, err
 }
 
+// TLSVerify resolves the effective policy after applying a CA bundle override.
+func TLSVerify(serverURL string, explicit *bool) (bool, error) {
+	if err := CheckRetiredEnvironment(); err != nil {
+		return false, err
+	}
+	if os.Getenv(caCertsEnv) != "" {
+		if explicit != nil && !*explicit {
+			return false, authenticationError(
+				"--no-tls-verify conflicts with REANA_SERVER_CA_CERTS. Unset the CA bundle override first.",
+			)
+		}
+		return true, nil
+	}
+	if explicit != nil {
+		return *explicit, nil
+	}
+	if serverURL == "" {
+		return true, nil
+	}
+	store, err := NewStore()
+	if err != nil {
+		return false, err
+	}
+	entry, err := store.Get(serverURL)
+	if err != nil {
+		return false, err
+	}
+	if entry.TLS != nil && entry.TLS.Verify != nil {
+		return *entry.TLS.Verify, nil
+	}
+	return true, nil
+}
+
+func serverHTTPClient(serverURL string, explicit *bool) (*http.Client, error) {
+	verify, err := TLSVerify(serverURL, explicit)
+	if err != nil {
+		return nil, err
+	}
+	return newHTTPClient(verify)
+}
+
+// effectiveTLSVerify binds the saved policy to this manager's invocation.
+func (m *Manager) effectiveTLSVerify(serverURL string) (bool, error) {
+	m.tlsMutex.Lock()
+	defer m.tlsMutex.Unlock()
+	if verify, ok := m.tlsPolicies[serverURL]; ok {
+		return verify, nil
+	}
+	verify, err := TLSVerify(serverURL, m.TLSVerify)
+	if err != nil {
+		return false, err
+	}
+	if m.tlsPolicies == nil {
+		m.tlsPolicies = make(map[string]bool)
+	}
+	m.tlsPolicies[serverURL] = verify
+	return verify, nil
+}
+
+func (m *Manager) serverHTTPClient(serverURL string) (*http.Client, error) {
+	verify, err := m.effectiveTLSVerify(serverURL)
+	if err != nil {
+		return nil, err
+	}
+	return newHTTPClient(verify)
+}
+
+// NewHTTPClient builds an API transport using this invocation's resolved policy.
+func (m *Manager) NewHTTPClient(serverURL string) (*http.Client, error) {
+	client, err := m.serverHTTPClient(serverURL)
+	if err == nil {
+		warnTLSVerification(client, serverURL)
+	}
+	return client, err
+}
+
+// TLSStatus reports the same policy used by this manager's transports.
+func (m *Manager) TLSStatus(serverURL string) (string, error) {
+	verify, err := m.effectiveTLSVerify(serverURL)
+	if err != nil {
+		return "", err
+	}
+	return tlsStatus(verify), nil
+}
+
+// TLSStatus describes effective verification, including CA overrides.
+func TLSStatus(serverURL string, explicit *bool) (string, error) {
+	verify, err := TLSVerify(serverURL, explicit)
+	if err != nil {
+		return "", err
+	}
+	return tlsStatus(verify), nil
+}
+
+func tlsStatus(verify bool) string {
+	if !verify {
+		return "disabled"
+	}
+	return "enabled"
+}
+
+// ResetTLSWarning starts a new CLI invocation's warning lifetime.
+func ResetTLSWarning() { tlsWarningOnce = sync.Once{} }
+
 // NewStrictHTTPClient verifies identity-provider certificates regardless of
-// REANA_SERVER_TLS_VERIFY, while still trusting REANA_SERVER_CA_CERTS.
+// saved REANA bypass settings, while still trusting REANA_SERVER_CA_CERTS.
 func NewStrictHTTPClient() (*http.Client, error) {
-	return newHTTPClient(false)
+	if err := CheckRetiredEnvironment(); err != nil {
+		return nil, err
+	}
+	return newHTTPClient(true)
 }
 
 // sameHTTPSOrigin compares hosts and effective ports without trusting DNS aliases.
@@ -138,7 +253,7 @@ func sameHTTPSOrigin(serverURL, endpoint string) bool {
 		ports[0] == ports[1]
 }
 
-func newHTTPClient(serverRequests bool) (*http.Client, error) {
+func newHTTPClient(verify bool) (*http.Client, error) {
 	tlsConfig := &tls.Config{MinVersion: tls.VersionTLS12}
 	if caPath := strings.TrimSpace(os.Getenv(caCertsEnv)); caPath != "" {
 		roots, err := x509.SystemCertPool()
@@ -155,19 +270,10 @@ func newHTTPClient(serverRequests bool) (*http.Client, error) {
 			)
 		}
 		tlsConfig.RootCAs = roots
-	} else if raw := strings.TrimSpace(os.Getenv(tlsVerifyEnv)); serverRequests && raw != "" {
-		verify, valid := parseBoolean(raw)
-		if !valid {
-			return nil, fmt.Errorf("invalid %s value %q", tlsVerifyEnv, raw)
-		}
-		// This is an explicit local-development escape hatch matching the Python client.
-		tlsConfig.InsecureSkipVerify = !verify //nolint:gosec
-		if !verify {
-			tlsWarningOnce.Do(func() {
-				log.Warn("REANA server TLS certificate verification is disabled by " + tlsVerifyEnv + ".")
-			})
-		}
+	} else {
+		tlsConfig.InsecureSkipVerify = !verify //nolint:gosec // Explicit per-server choice.
 	}
+
 	transport := http.DefaultTransport.(*http.Transport).Clone()
 	transport.TLSClientConfig = tlsConfig
 	return &http.Client{
@@ -179,13 +285,29 @@ func newHTTPClient(serverRequests bool) (*http.Client, error) {
 	}, nil
 }
 
-func parseBoolean(value string) (bool, bool) {
-	switch strings.ToLower(strings.TrimSpace(value)) {
-	case "1", "true", "yes", "on":
-		return true, true
-	case "0", "false", "no", "off":
-		return false, true
-	default:
-		return false, false
+func warnTLSVerification(client *http.Client, serverURL string) {
+	transport, ok := client.Transport.(*http.Transport)
+	if ok && transport.TLSClientConfig != nil &&
+		transport.TLSClientConfig.InsecureSkipVerify {
+		tlsWarningOnce.Do(
+			func() { log.Warnf("TLS certificate verification is disabled for %s.", serverURL) },
+		)
 	}
+}
+
+// CheckRetiredEnvironment rejects stale exports before using a saved destination.
+func CheckRetiredEnvironment() error {
+	names := []string{}
+	for _, name := range []string{"REANA_SERVER_URL", tlsVerifyEnv} {
+		if os.Getenv(name) != "" {
+			names = append(names, name)
+		}
+	}
+	if len(names) != 0 {
+		return authenticationError(
+			"%s are no longer client inputs. Unset them, then run `reana-client-go login --server https://your-reana-server`. For self-signed development HTTPS, add --no-tls-verify.",
+			strings.Join(names, " and "),
+		)
+	}
+	return nil
 }

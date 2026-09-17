@@ -35,68 +35,33 @@ func captureTLSWarning(t *testing.T) *bytes.Buffer {
 
 func TestNewHTTPClientWarnsOnceWhenVerificationDisabled(t *testing.T) {
 	output := captureTLSWarning(t)
-	t.Setenv(tlsVerifyEnv, "false")
+	savedTestServer(t, "https://reana.example.org", false)
 	t.Setenv(caCertsEnv, "")
 
-	if _, err := NewHTTPClient(); err != nil {
+	if _, err := NewHTTPClient("https://reana.example.org"); err != nil {
 		t.Fatal(err)
 	}
-	if _, err := NewHTTPClient(); err != nil {
+	if _, err := NewHTTPClient("https://reana.example.org"); err != nil {
 		t.Fatal(err)
 	}
-	if count := strings.Count(output.String(), "disabled by REANA_SERVER_TLS_VERIFY"); count != 1 {
+	if count := strings.Count(output.String(), "disabled for"); count != 1 {
 		t.Fatalf("warning count = %d, output = %q", count, output.String())
 	}
 }
 
-func TestNewHTTPClientRejectsInvalidTLSVerifyValue(t *testing.T) {
+func TestNewHTTPClientRejectsRetiredTLSVariable(t *testing.T) {
 	output := captureTLSWarning(t)
 	t.Setenv(tlsVerifyEnv, "banana")
 	t.Setenv(caCertsEnv, "")
 
-	_, err := NewHTTPClient()
-	if err == nil || !strings.Contains(err.Error(), "invalid") ||
+	_, err := NewHTTPClient("https://reana.example.org")
+	if err == nil ||
+		!strings.Contains(err.Error(), "no longer client inputs") ||
 		!strings.Contains(err.Error(), tlsVerifyEnv) {
 		t.Fatalf("expected invalid %s error, got %v", tlsVerifyEnv, err)
 	}
 	if output.Len() != 0 {
 		t.Fatalf("invalid setting warned: %q", output.String())
-	}
-}
-
-func TestParseBoolean(t *testing.T) {
-	cases := []struct {
-		value string
-		want  bool
-		ok    bool
-	}{
-		{"1", true, true},
-		{"true", true, true},
-		{"True", true, true},
-		{"yes", true, true},
-		{"on", true, true},
-		{"0", false, true},
-		{"false", false, true},
-		{"no", false, true},
-		{"off", false, true},
-		{"  true  ", true, true},
-		{"banana", false, false},
-		{"", false, false},
-	}
-	for _, testCase := range cases {
-		t.Run(testCase.value, func(t *testing.T) {
-			got, ok := parseBoolean(testCase.value)
-			if got != testCase.want || ok != testCase.ok {
-				t.Fatalf(
-					"parseBoolean(%q) = (%v, %v), want (%v, %v)",
-					testCase.value,
-					got,
-					ok,
-					testCase.want,
-					testCase.ok,
-				)
-			}
-		})
 	}
 }
 
@@ -156,8 +121,8 @@ func TestNewHTTPClientKeepsVerificationAndCABundlePrecedenceSilent(
 	t *testing.T,
 ) {
 	output := captureTLSWarning(t)
-	t.Setenv(tlsVerifyEnv, "true")
-	if _, err := NewHTTPClient(); err != nil {
+	savedTestServer(t, "https://reana.example.org", true)
+	if _, err := NewHTTPClient("https://reana.example.org"); err != nil {
 		t.Fatal(err)
 	}
 	if output.Len() != 0 {
@@ -165,13 +130,13 @@ func TestNewHTTPClientKeepsVerificationAndCABundlePrecedenceSilent(
 	}
 
 	tlsWarningOnce = sync.Once{}
-	t.Setenv(tlsVerifyEnv, "false")
+	savedTestServer(t, "https://reana.example.org", false)
 	caPath := t.TempDir() + "/invalid-ca.pem"
 	if err := os.WriteFile(caPath, []byte("not a certificate"), 0o600); err != nil {
 		t.Fatal(err)
 	}
 	t.Setenv(caCertsEnv, caPath)
-	if _, err := NewHTTPClient(); err == nil {
+	if _, err := NewHTTPClient("https://reana.example.org"); err == nil {
 		t.Fatal("invalid CA bundle unexpectedly accepted")
 	}
 	if output.Len() != 0 {

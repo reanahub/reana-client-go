@@ -10,8 +10,9 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
-	"errors"
+	"fmt"
 	"os"
+	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/pkg/auth"
 	"reanahub/reana-client-go/pkg/commandgroups"
 	"reanahub/reana-client-go/pkg/validator"
@@ -149,6 +150,16 @@ func NewRootCmd() *cobra.Command {
 }
 
 func (o *rootOptions) run(cmd *cobra.Command) error {
+	auth.ResetTLSWarning()
+	client.SetAuthManager(nil)
+	parent := cmd.Parent()
+	if cmd.Name() != "help" && cmd.Name() != "version" &&
+		cmd.Name() != "completion" &&
+		(parent == nil || parent.Name() != "completion") {
+		if err := auth.CheckRetiredEnvironment(); err != nil {
+			return err
+		}
+	}
 	if err := setupProfiler(); err != nil {
 		return err
 	}
@@ -182,26 +193,36 @@ func validateFlags(cmd *cobra.Command) error {
 		if tokenValue != "" {
 			if !token.Changed && os.Getenv("REANA_ACCESS_TOKEN") != "" &&
 				!auth.IsJWT(tokenValue) {
-				return errors.New(
-					"REANA_ACCESS_TOKEN must contain a JWT; run `reana-client-go login` or provide a valid JWT",
-				)
+				return &auth.AuthenticationError{
+					Message: "REANA_ACCESS_TOKEN must contain a JWT. REANA 0.95 uses OIDC login; unset an old REANA 0.9 token and run `reana-client-go login`, or provide a valid JWT.",
+				}
 			}
-		} else {
-			manager, err := auth.NewManager()
+		}
+		manager, err := auth.NewManager()
+		if err != nil {
+			return err
+		}
+		if serverURL == "" {
+			serverURL, err = manager.Store.ActiveServer()
 			if err != nil {
 				return err
 			}
-			if serverURL == "" {
-				serverURL, err = manager.Store.ActiveServer()
-				if err != nil {
-					return err
-				}
-				if serverURL != "" {
-					viper.Set("server-url", serverURL)
-				}
-			}
+		}
+		if serverURL == "" {
+			return &auth.AuthenticationError{Message: auth.NoServerMessage}
+		}
+		serverURL, err = auth.NormalizeServerURL(serverURL)
+		if err != nil {
+			return err
+		}
+		viper.Set("server-url", serverURL)
+		client.SetAuthManager(manager)
+		if _, err := manager.TLSStatus(serverURL); err != nil {
+			return err
+		}
+		if tokenValue == "" {
 			if _, err := manager.AccessToken(cmd.Context(), serverURL); err != nil {
-				return err
+				return auth.ForServer(serverURL, "saved login", err)
 			}
 		}
 		if err := validator.ValidateServerURL(serverURL); err != nil {
@@ -228,9 +249,6 @@ func validateFlags(cmd *cobra.Command) error {
 
 // setupViper binds environment variable values to the viper keys.
 func setupViper() error {
-	if err := viper.BindEnv("server-url", "REANA_SERVER_URL"); err != nil {
-		return err
-	}
 	if err := viper.BindEnv("access-token", "REANA_ACCESS_TOKEN"); err != nil {
 		return err
 	}
@@ -255,10 +273,10 @@ func setupLogger(logLevelFlag string) error {
 	}
 	log.SetLevel(level)
 	log.SetOutput(os.Stderr)
-	log.SetFormatter(&log.TextFormatter{
+	log.SetFormatter(&cliLogFormatter{TextFormatter: log.TextFormatter{
 		FullTimestamp:   true,
 		TimestampFormat: "2006-01-02 15:04:05.1234",
-	})
+	}})
 	return nil
 }
 
@@ -283,4 +301,14 @@ func bindViperToCmdFlag(f *pflag.Flag) error {
 		}
 	}
 	return nil
+}
+
+// Warnings share the Python client's presentation; debug keeps its detail.
+type cliLogFormatter struct{ log.TextFormatter }
+
+func (formatter *cliLogFormatter) Format(entry *log.Entry) ([]byte, error) {
+	if entry.Level == log.WarnLevel {
+		return []byte(fmt.Sprintf("[WARNING] %s\n", entry.Message)), nil
+	}
+	return formatter.TextFormatter.Format(entry)
 }

@@ -22,21 +22,66 @@ import (
 )
 
 func newLoginCmd() *cobra.Command {
-	var serverURL string
+	var serverURL, serverAlias string
+	var verifyTLS, noVerifyTLS bool
 	var headless bool
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate against REANA Server using OIDC.",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, _ []string) error {
+			if serverURL != "" && serverAlias != "" {
+				first, e1 := auth.NormalizeServerURL(serverURL)
+				second, e2 := auth.NormalizeServerURL(serverAlias)
+				if e1 != nil {
+					return e1
+				}
+				if e2 != nil {
+					return e2
+				}
+				if first != second {
+					return fmt.Errorf(
+						"--server and --server-url specify different servers",
+					)
+				}
+			}
+			if cmd.Flags().Changed("tls-verify") &&
+				cmd.Flags().Changed("no-tls-verify") {
+				return fmt.Errorf(
+					"--tls-verify and --no-tls-verify cannot be used together",
+				)
+			}
+			manager, err := auth.NewManager()
+			if err != nil {
+				return err
+			}
+			if serverAlias != "" {
+				serverURL = serverAlias
+			}
 			if serverURL == "" {
 				serverURL = viper.GetString("server-url")
+			}
+			if serverURL == "" {
+				serverURL, err = manager.Store.ActiveServer()
+				if err != nil {
+					return err
+				}
+			}
+			if serverURL == "" {
+				return fmt.Errorf("%s", auth.NoServerMessage)
 			}
 			normalized, err := auth.NormalizeServerURL(serverURL)
 			if err != nil {
 				return err
 			}
-			manager, err := auth.NewManager()
+			if cmd.Flags().Changed("no-tls-verify") {
+				verifyTLS = !noVerifyTLS
+			}
+			if cmd.Flags().Changed("tls-verify") ||
+				cmd.Flags().Changed("no-tls-verify") {
+				manager.TLSVerify = &verifyTLS
+			}
+			status, err := manager.TLSStatus(normalized)
 			if err != nil {
 				return err
 			}
@@ -70,14 +115,29 @@ func newLoginCmd() *cobra.Command {
 				}, openBrowser)
 			}
 			if err != nil {
-				return err
+				source := "saved login"
+				if cmd.Flags().Changed("server") ||
+					cmd.Flags().Changed("server-url") {
+					source = "login option"
+				}
+				return auth.ForServer(normalized, source, err)
 			}
-			cmd.Printf("Logged in to %s\n", normalized)
+			cmd.Printf(
+				"Logged in to %s\nTLS verification: %s\n",
+				normalized,
+				status,
+			)
 			return nil
 		},
 	}
 	cmd.Flags().
 		StringVar(&serverURL, "server-url", "", "REANA server URL to authenticate against.")
+	cmd.Flags().
+		StringVar(&serverAlias, "server", "", "REANA server URL (alias for --server-url).")
+	cmd.Flags().
+		BoolVar(&verifyTLS, "tls-verify", false, "Verify the server certificate and save the choice.")
+	cmd.Flags().
+		BoolVar(&noVerifyTLS, "no-tls-verify", false, "Disable certificate verification for this server and save the choice.")
 	cmd.Flags().
 		BoolVar(&headless, "headless", false, "Use device login instead of opening a local browser.")
 	return cmd

@@ -28,8 +28,8 @@ func main() {
 	err := rootCmd.Execute()
 
 	if err != nil {
-		log.Debug(err)
 		err = errorhandler.HandleApiError(err)
+		log.Debug(err)
 		if err != config.ErrEmpty {
 			displayer.DisplayMessage(
 				err.Error(),
