@@ -132,6 +132,7 @@ func executeDeleteCommand(
 	))
 	defer server.Close()
 
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	defer viper.Reset()
 

@@ -37,6 +37,7 @@ func legacyServer(t *testing.T) (*httptest.Server, *[]string) {
 		}, legacyPingBody),
 	)
 	t.Cleanup(server.Close)
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 	return server, &paths
@@ -103,6 +104,7 @@ func TestRestartWithoutReplacementDoesNotRequireTheCapability(t *testing.T) {
 		}),
 	)
 	defer server.Close()
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 
@@ -132,6 +134,7 @@ func TestPingFailureIsReportedWithoutUploading(t *testing.T) {
 		}),
 	)
 	defer server.Close()
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 

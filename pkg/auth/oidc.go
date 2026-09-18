@@ -25,6 +25,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -40,9 +41,13 @@ const (
 // AuthenticationError is an authentication failure suitable for CLI output.
 type AuthenticationError struct {
 	Message string
+	Cause   error
 }
 
 func (e *AuthenticationError) Error() string { return e.Message }
+
+// Unwrap preserves typed transport causes for callers.
+func (e *AuthenticationError) Unwrap() error { return e.Cause }
 
 // Metadata is the authentication configuration relayed by REANA Server.
 type Metadata struct {
@@ -77,6 +82,12 @@ type DevicePrompt struct {
 
 // Manager owns OIDC network operations and credential persistence.
 type Manager struct {
+	TLSVerify        *bool // Explicit login override, persisted only on success.
+	configuredServer string
+	managedClients   bool
+	tlsPolicies      map[string]bool
+	tlsMutex         sync.Mutex
+
 	Store         *Store
 	HTTPClient    *http.Client // REANA server requests, including discovery.
 	IdPHTTPClient *http.Client // Identity-provider requests outside the REANA origin.
@@ -84,25 +95,16 @@ type Manager struct {
 	Sleep         func(context.Context, time.Duration) error
 }
 
-// NewManager creates an authentication manager using environment TLS settings.
+// NewManager creates an authentication manager; transports follow server resolution.
 func NewManager() (*Manager, error) {
 	store, err := NewStore()
 	if err != nil {
 		return nil, err
 	}
-	httpClient, err := NewHTTPClient()
-	if err != nil {
-		return nil, err
-	}
-	idpHTTPClient, err := NewStrictHTTPClient()
-	if err != nil {
-		return nil, err
-	}
 	return &Manager{
-		Store:         store,
-		HTTPClient:    httpClient,
-		IdPHTTPClient: idpHTTPClient,
-		Now:           time.Now,
+		Store:          store,
+		managedClients: true,
+		Now:            time.Now,
 		Sleep: func(ctx context.Context, duration time.Duration) error {
 			timer := time.NewTimer(duration)
 			defer timer.Stop()
@@ -114,6 +116,30 @@ func NewManager() (*Manager, error) {
 			}
 		},
 	}, nil
+}
+
+// configure resolves the destination before constructing transports. Injected
+// clients remain available to library users and tests.
+func (m *Manager) configure(serverURL string) error {
+	if m.configuredServer == serverURL {
+		return nil
+	}
+	if m.managedClients || m.HTTPClient == nil {
+		client, err := m.serverHTTPClient(serverURL)
+		if err != nil {
+			return err
+		}
+		m.HTTPClient = client
+	}
+	if m.managedClients || m.IdPHTTPClient == nil {
+		client, err := NewStrictHTTPClient()
+		if err != nil {
+			return err
+		}
+		m.IdPHTTPClient = client
+	}
+	m.configuredServer = serverURL
+	return nil
 }
 
 func authenticationError(format string, args ...any) error {
@@ -234,12 +260,13 @@ func (m *Manager) Discover(
 	if err != nil {
 		return Metadata{}, err
 	}
+	if err := m.configure(normalized); err != nil {
+		return Metadata{}, err
+	}
+	warnTLSVerification(m.HTTPClient, normalized)
 	response, err := m.HTTPClient.Do(req)
 	if err != nil {
-		return Metadata{}, authenticationError(
-			"could not connect to the REANA server at %s",
-			normalized,
-		)
+		return Metadata{}, ConnectionError(normalized, normalized, err)
 	}
 	if err := rejectRedirect(response, "authentication metadata discovery"); err != nil {
 		response.Body.Close()
@@ -292,6 +319,7 @@ func generatePKCE() (pkcePair, error) {
 // Select per request so an external endpoint or another cluster stays strict.
 func (m *Manager) httpClientForURL(serverURL, endpoint string) *http.Client {
 	if sameHTTPSOrigin(serverURL, endpoint) {
+		warnTLSVerification(m.HTTPClient, serverURL)
 		return m.HTTPClient
 	}
 	return m.IdPHTTPClient
@@ -313,13 +341,12 @@ func (m *Manager) postForm(
 		return nil, err
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	if err := m.configure(serverURL); err != nil {
+		return nil, err
+	}
 	response, err := m.httpClientForURL(serverURL, endpoint).Do(req)
 	if err != nil {
-		return nil, authenticationError(
-			"could not complete %s: %v",
-			strings.ToLower(description),
-			err,
-		)
+		return nil, ConnectionError(serverURL, endpoint, err)
 	}
 	if err := rejectRedirect(response, description); err != nil {
 		response.Body.Close()
@@ -471,7 +498,7 @@ func (m *Manager) storeTokens(
 			_, storeErr := m.Store.Put(
 				serverURL,
 				refreshTokenRecoveryCredentials(metadata, tokens.RefreshToken),
-				makeActive,
+				false,
 			)
 			if storeErr != nil {
 				return Credentials{}, authenticationError(
@@ -482,6 +509,9 @@ func (m *Manager) storeTokens(
 			}
 		}
 		return Credentials{}, err
+	}
+	if makeActive && m.TLSVerify != nil {
+		credentials.TLS = &TLSSettings{Verify: m.TLSVerify}
 	}
 	return m.Store.Put(serverURL, credentials, makeActive)
 }
@@ -833,7 +863,7 @@ func (m *Manager) AccessToken(
 	}
 	if serverURL == "" {
 		return "", authenticationError(
-			"REANA client is not connected to any REANA cluster; run `reana-client-go login`",
+			NoServerMessage,
 		)
 	}
 	credentials, err := m.Store.Get(serverURL)
@@ -903,7 +933,9 @@ func (m *Manager) Refresh(
 	}
 	if credentials.RefreshToken == "" {
 		return Credentials{}, authenticationError(
-			"please run `reana-client-go login`",
+			"No usable credentials for %s. Run `reana-client-go login --server %s`.",
+			ServerDescription(normalized),
+			normalized,
 		)
 	}
 	metadata := metadataFromCredentials(credentials)
@@ -936,7 +968,9 @@ func (m *Manager) Refresh(
 			}
 			if cleared {
 				return Credentials{}, authenticationError(
-					"please run `reana-client-go login`",
+					"No usable credentials for %s. Run `reana-client-go login --server %s`.",
+					ServerDescription(normalized),
+					normalized,
 				)
 			}
 			return Credentials{}, authenticationError(
@@ -1013,7 +1047,9 @@ func (m *Manager) Refresh(
 			updated.RefreshToken,
 		)
 		return Credentials{}, authenticationError(
-			"please run `reana-client-go login`",
+			"No usable credentials for %s. Run `reana-client-go login --server %s`.",
+			ServerDescription(normalized),
+			normalized,
 		)
 	}
 	return stored, nil
@@ -1043,6 +1079,9 @@ func (m *Manager) revokeBestEffort(
 		return err.Error()
 	}
 	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	if err := m.configure(serverURL); err != nil {
+		return err.Error()
+	}
 	response, err := m.httpClientForURL(serverURL, metadata.RevocationEndpoint).
 		Do(request)
 	if err != nil {
@@ -1075,8 +1114,11 @@ func (m *Manager) Logout(
 	}
 	if serverURL == "" {
 		return "", authenticationError(
-			"REANA client is not connected to any REANA cluster",
+			NoServerMessage,
 		)
+	}
+	if err := m.configure(serverURL); err != nil {
+		return "", err
 	}
 	return m.Store.Logout(serverURL, func(credentials Credentials) string {
 		return m.revokeBestEffort(

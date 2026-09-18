@@ -61,6 +61,7 @@ func TestValidateKeepsPullLocal(t *testing.T) {
 	)
 	defer server.Close()
 
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 
@@ -104,6 +105,7 @@ func TestValidateOmitsEnvironmentFlagsByDefault(t *testing.T) {
 	)
 	defer server.Close()
 
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 
@@ -134,6 +136,7 @@ func TestValidateDisplaysRateLimitMessage(t *testing.T) {
 	)
 	defer server.Close()
 
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 
@@ -167,6 +170,7 @@ func TestValidateDisplaysClientErrorMessages(t *testing.T) {
 			)
 			defer server.Close()
 
+			savedTestServer(t, server.URL, false)
 			viper.Set("server-url", server.URL)
 			t.Cleanup(viper.Reset)
 
@@ -210,6 +214,7 @@ func TestValidateWarnsServerCapabilitiesIsIgnored(t *testing.T) {
 	)
 	defer server.Close()
 
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 
@@ -251,6 +256,7 @@ func TestValidateReportsInvalidSpecification(t *testing.T) {
 	)
 	defer server.Close()
 
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 
@@ -281,6 +287,7 @@ func TestValidateSurfacesServerError(t *testing.T) {
 	)
 	defer server.Close()
 
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 

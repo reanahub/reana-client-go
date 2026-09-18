@@ -62,6 +62,7 @@ func TestRestartWithoutSpecFileSucceeds(t *testing.T) {
 		}),
 	)
 	defer server.Close()
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 
@@ -92,6 +93,7 @@ func TestRestartDecodesWorkspaceMutationErrors(t *testing.T) {
 				}),
 			)
 			defer server.Close()
+			savedTestServer(t, server.URL, false)
 			viper.Set("server-url", server.URL)
 			t.Cleanup(viper.Reset)
 
@@ -153,6 +155,7 @@ func TestRestartPostsReplacementSpecAtomically(t *testing.T) {
 		}),
 	)
 	defer server.Close()
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 
@@ -209,6 +212,7 @@ func TestRestartValidatesOverridesAgainstReplacementSpec(t *testing.T) {
 		}),
 	)
 	defer server.Close()
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 
@@ -265,6 +269,7 @@ func TestRestartReturnsAtomicOperationFailure(t *testing.T) {
 				}),
 			)
 			defer server.Close()
+			savedTestServer(t, server.URL, false)
 			viper.Set("server-url", server.URL)
 			t.Cleanup(viper.Reset)
 
@@ -296,6 +301,7 @@ func TestRestartReturnsNonRunningStatusAsError(t *testing.T) {
 		}),
 	)
 	defer server.Close()
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 

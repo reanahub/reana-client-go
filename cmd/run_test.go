@@ -131,6 +131,7 @@ func TestRunCreatesUploadsAndStartsWorkflow(t *testing.T) {
 			)
 			defer server.Close()
 
+			savedTestServer(t, server.URL, false)
 			viper.Set("server-url", server.URL)
 			t.Cleanup(viper.Reset)
 			out, err := ExecuteCommand(
@@ -179,6 +180,7 @@ func TestRunStopsWhenCreationFails(t *testing.T) {
 	)
 	defer server.Close()
 
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 	_, err := ExecuteCommand(NewRootCmd(), "run", "-t", "1234", "-f", reanaFile)

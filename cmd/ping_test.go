@@ -1,3 +1,9 @@
+// This file is part of REANA.
+// Copyright (C) 2022, 2025, 2026 CERN.
+//
+// REANA is free software; you can redistribute it and/or modify it
+// under the terms of the MIT License; see LICENSE file for more details.
+
 package cmd
 
 import (
@@ -43,7 +49,7 @@ func TestUnreachableServer(t *testing.T) {
 		t.Errorf("Expected an error, instead got '%s'", output)
 	}
 
-	expectedErr := "'https://localhost:1' not found, please verify the provided server URL or check your internet connection"
+	expectedErr := "Could not connect to https://localhost:1 (from saved login): The connection was refused. Check that the server is running and reachable."
 	if errorhandler.HandleApiError(err).Error() != expectedErr {
 		t.Errorf(
 			"Expected server not found error, instead got '%s'",
