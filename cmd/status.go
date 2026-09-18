@@ -109,6 +109,10 @@ func (o *statusOptions) run(cmd *cobra.Command) error {
 	if err != nil {
 		return err
 	}
+	payload.Progress, err = workflowProgress(payload)
+	if err != nil {
+		return err
+	}
 
 	header := buildStatusHeader(
 		o.verbose,
@@ -272,8 +276,10 @@ func getStatusCommand(
 	}
 	currentCmd := *progress.CurrentCommand
 	if strings.HasPrefix(currentCmd, "bash -c \"cd ") {
-		commaIdx := strings.Index(currentCmd, ";")
-		currentCmd = currentCmd[commaIdx+2 : len(currentCmd)-2]
+		semicolon := strings.Index(currentCmd, ";")
+		if semicolon >= 0 && semicolon+2 <= len(currentCmd)-2 {
+			currentCmd = currentCmd[semicolon+2 : len(currentCmd)-2]
+		}
 	}
 	return currentCmd
 }

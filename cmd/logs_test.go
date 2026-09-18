@@ -299,6 +299,20 @@ func TestLogs(t *testing.T) {
 			},
 			wantError: true,
 		},
+		"follow workflow that has not emitted engine logs yet": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(logsPathTemplate, workflowName): {
+					statusCode:   http.StatusOK,
+					responseFile: "logs_follow_no_workflow_logs.json",
+				},
+				fmt.Sprintf(statusPathTemplate, workflowName): {
+					statusCode:   http.StatusOK,
+					responseFile: "status_finished.json",
+				},
+			},
+			args:     []string{"-w", workflowName, "--follow", "-i", "0"},
+			expected: []string{"Workflow has completed"},
+		},
 		"follow logs when live logs are disabled": {
 			serverResponses: map[string]ServerResponse{
 				fmt.Sprintf(logsPathTemplate, workflowName): {
