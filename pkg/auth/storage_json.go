@@ -71,7 +71,17 @@ func (c *credentialConfig) UnmarshalJSON(data []byte) (err error) {
 	return
 }
 
-func (c credentialConfig) MarshalJSON() ([]byte, error) { return encodeFields(plainConfig(c), c.extra) }
+func (c credentialConfig) MarshalJSON() ([]byte, error) {
+	var active *string
+	if c.ActiveServer != "" {
+		active = &c.ActiveServer
+	}
+	value := struct {
+		plainConfig
+		ActiveServer *string `json:"active_server"`
+	}{plainConfig(c), active}
+	return encodeFields(value, c.extra)
+}
 
 // UnmarshalJSON remembers additional TLS settings.
 func (c *TLSSettings) UnmarshalJSON(data []byte) (err error) {

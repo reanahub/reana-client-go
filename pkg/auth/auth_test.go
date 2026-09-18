@@ -1476,9 +1476,9 @@ func TestRevokeBestEffortSkipsWhenEndpointOrTokenMissing(t *testing.T) {
 	}
 }
 
-func TestRevokeBestEffortReturnsNetworkErrorMessage(t *testing.T) {
+func TestRevokeBestEffortReturnsSafeNetworkDiagnostic(t *testing.T) {
 	manager := testManager(t, func(*http.Request) (*http.Response, error) {
-		return nil, errors.New("network unreachable")
+		return nil, errors.New("network unreachable: secret-request-data")
 	})
 	warning := manager.revokeBestEffort(
 		context.Background(),
@@ -1488,8 +1488,10 @@ func TestRevokeBestEffortReturnsNetworkErrorMessage(t *testing.T) {
 		},
 		"refresh",
 	)
-	if !strings.Contains(warning, "network unreachable") {
-		t.Fatalf("warning = %q, want network error message", warning)
+	if !strings.Contains(warning, "The network request failed") ||
+		!strings.Contains(warning, "https://reana.example.org") ||
+		strings.Contains(warning, "secret-request-data") {
+		t.Fatalf("warning = %q, want safe connection diagnostic", warning)
 	}
 }
 
