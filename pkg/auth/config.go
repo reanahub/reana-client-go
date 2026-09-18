@@ -116,6 +116,22 @@ func TLSVerify(serverURL string, explicit *bool) (bool, error) {
 	if err := CheckRetiredEnvironment(); err != nil {
 		return false, err
 	}
+	if explicit != nil || os.Getenv(caCertsEnv) != "" || serverURL == "" {
+		return resolveTLSVerify(nil, explicit)
+	}
+	store, err := NewStore()
+	if err != nil {
+		return false, err
+	}
+	entry, err := store.Get(serverURL)
+	if err != nil {
+		return false, err
+	}
+	return resolveTLSVerify(entry.TLS, explicit)
+}
+
+// resolveTLSVerify applies invocation overrides to a saved TLS policy.
+func resolveTLSVerify(saved *TLSSettings, explicit *bool) (bool, error) {
 	if os.Getenv(caCertsEnv) != "" {
 		if explicit != nil && !*explicit {
 			return false, authenticationError(
@@ -127,19 +143,8 @@ func TLSVerify(serverURL string, explicit *bool) (bool, error) {
 	if explicit != nil {
 		return *explicit, nil
 	}
-	if serverURL == "" {
-		return true, nil
-	}
-	store, err := NewStore()
-	if err != nil {
-		return false, err
-	}
-	entry, err := store.Get(serverURL)
-	if err != nil {
-		return false, err
-	}
-	if entry.TLS != nil && entry.TLS.Verify != nil {
-		return *entry.TLS.Verify, nil
+	if saved != nil && saved.Verify != nil {
+		return *saved.Verify, nil
 	}
 	return true, nil
 }

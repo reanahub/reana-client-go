@@ -1064,6 +1064,26 @@ func (m *Manager) revokeBestEffort(
 	if metadata.RevocationEndpoint == "" || refreshToken == "" {
 		return ""
 	}
+	if err := m.configure(serverURL); err != nil {
+		return err.Error()
+	}
+	return revokeWithClient(
+		ctx,
+		m.httpClientForURL(serverURL, metadata.RevocationEndpoint),
+		serverURL,
+		metadata,
+		refreshToken,
+	)
+}
+
+// revokeWithClient uses an already resolved transport and never reads the store.
+func revokeWithClient(
+	ctx context.Context,
+	client *http.Client,
+	serverURL string,
+	metadata Metadata,
+	refreshToken string,
+) string {
 	form := url.Values{
 		"client_id":       {metadata.CLIClientID},
 		"token":           {refreshToken},
@@ -1076,25 +1096,33 @@ func (m *Manager) revokeBestEffort(
 		strings.NewReader(form.Encode()),
 	)
 	if err != nil {
-		return err.Error()
+		return fmt.Sprintf(
+			"Could not prepare token revocation for %s. Check the saved revocation endpoint.",
+			ServerDescription(serverURL),
+		)
 	}
 	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	if err := m.configure(serverURL); err != nil {
-		return err.Error()
-	}
-	response, err := m.httpClientForURL(serverURL, metadata.RevocationEndpoint).
-		Do(request)
+	response, err := client.Do(request)
 	if err != nil {
-		return err.Error()
+		return ConnectionError(
+			serverURL,
+			metadata.RevocationEndpoint,
+			err,
+		).Error()
 	}
 	defer response.Body.Close()
-	if err := rejectRedirect(response, "token revocation"); err != nil {
-		return err.Error()
+	if response.StatusCode >= 300 && response.StatusCode < 400 {
+		// A redirect Location can contain credentials; report only its status.
+		return fmt.Sprintf(
+			"Remote token revocation for %s failed with HTTP %d. Refusing to follow a redirect on an authentication request.",
+			ServerDescription(serverURL),
+			response.StatusCode,
+		)
 	}
 	if response.StatusCode < 200 || response.StatusCode >= 300 {
 		return fmt.Sprintf(
-			"remote token revocation failed with HTTP %d",
-			response.StatusCode,
+			"Remote token revocation for %s failed with HTTP %d.",
+			ServerDescription(serverURL), response.StatusCode,
 		)
 	}
 	return ""

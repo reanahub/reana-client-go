@@ -76,6 +76,15 @@ func NewRootCmd() *cobra.Command {
 			},
 		},
 		{
+			Message: "Server connection management commands:",
+			Commands: []*cobra.Command{
+				newServerAddCmd(),
+				newServerListCmd(),
+				newServerRemoveCmd(),
+				newServerUseCmd(),
+			},
+		},
+		{
 			Message: "Workflow management commands:",
 			Commands: []*cobra.Command{
 				newCreateCmd(),
@@ -155,6 +164,15 @@ func (o *rootOptions) run(cmd *cobra.Command) error {
 	parent := cmd.Parent()
 	if cmd.Name() != "help" && cmd.Name() != "version" &&
 		cmd.Name() != "completion" &&
+		!slices.Contains(
+			[]string{
+				"server-add",
+				"server-list",
+				"server-use",
+				"server-remove",
+			},
+			cmd.Name(),
+		) &&
 		(parent == nil || parent.Name() != "completion") {
 		if err := auth.CheckRetiredEnvironment(); err != nil {
 			return err
