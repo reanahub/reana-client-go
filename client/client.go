@@ -1,3 +1,9 @@
+// This file is part of REANA.
+// Copyright (C) 2022, 2025, 2026 CERN.
+//
+// REANA is free software; you can redistribute it and/or modify it
+// under the terms of the MIT License; see LICENSE file for more details.
+
 // Package client provides the automatically generated API client, provided by the swagger tool.
 package client
 
@@ -177,13 +183,38 @@ func tokenOverride(tokens []string) string {
 	return tokens[0]
 }
 
+var invocationAuthManager *auth.Manager
+
+// SetAuthManager shares one manager across the CLI's validation and requests.
+// The root command replaces it at the start of every invocation. Library callers
+// without a bound manager continue to resolve settings independently.
+func SetAuthManager(manager *auth.Manager) {
+	invocationAuthManager = manager
+}
+
+func connectionManager() (*auth.Manager, error) {
+	if invocationAuthManager != nil {
+		return invocationAuthManager, nil
+	}
+	return auth.NewManager()
+}
+
+// TLSStatus reports the policy used by this invocation's API transports.
+func TLSStatus() (string, error) {
+	manager, err := connectionManager()
+	if err != nil {
+		return "", err
+	}
+	return manager.TLSStatus(viper.GetString("server-url"))
+}
+
 // AccessToken returns an explicit token override or a renewable stored OIDC
 // access token for the configured REANA server.
 func AccessToken(ctx context.Context, token string) (string, error) {
 	if token != "" {
 		return token, nil
 	}
-	manager, err := auth.NewManager()
+	manager, err := connectionManager()
 	if err != nil {
 		return "", err
 	}
@@ -205,7 +236,11 @@ func StreamingHTTPClient() (*http.Client, *url.URL, error) {
 	if err := validateBearerTransportURL(u); err != nil {
 		return nil, nil, err
 	}
-	httpClient, err := auth.NewHTTPClient()
+	manager, err := connectionManager()
+	if err != nil {
+		return nil, nil, err
+	}
+	httpClient, err := manager.NewHTTPClient(normalized)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -237,12 +272,19 @@ func newAPIClient(
 		return nil, err
 	}
 
-	httpClient, err := auth.NewHTTPClient()
+	manager, err := connectionManager()
+	if err != nil {
+		return nil, err
+	}
+	httpClient, err := manager.NewHTTPClient(normalized)
 	if err != nil {
 		return nil, err
 	}
 	tokenProvider := func(ctx context.Context) (string, error) {
-		return AccessToken(ctx, token)
+		if token != "" {
+			return token, nil
+		}
+		return manager.AccessToken(ctx, normalized)
 	}
 
 	var transport http.RoundTripper = httpClient.Transport

@@ -52,6 +52,7 @@ func serveTestStatus(w http.ResponseWriter, status string) {
 func configureTestServer(t *testing.T, handler http.HandlerFunc) {
 	t.Helper()
 	server := httptest.NewTLSServer(handler)
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(func() {
 		server.Close()

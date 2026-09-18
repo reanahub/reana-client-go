@@ -18,6 +18,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"reanahub/reana-client-go/pkg/auth"
 	"reanahub/reana-client-go/pkg/config"
 	"strings"
 
@@ -28,7 +29,7 @@ import (
 
 const (
 	InvalidAccessTokenMsg = "please provide your access token by using the -t/--access-token flag, or by setting the REANA_ACCESS_TOKEN environment variable"
-	InvalidServerURLMsg   = "please set REANA_SERVER_URL environment variable"
+	InvalidServerURLMsg   = auth.NoServerMessage
 	InvalidWorkflowMsg    = "workflow name must be provided either with `--workflow` option or with REANA_WORKON environment variable"
 )
 
@@ -43,7 +44,7 @@ func ValidateAccessToken(token string) error {
 // ValidateServerURL verifies if REANA's server URL has been set, ignoring any white spaces.
 func ValidateServerURL(serverURL string) error {
 	if strings.TrimSpace(serverURL) == "" {
-		return errors.New(InvalidServerURLMsg)
+		return &auth.AuthenticationError{Message: InvalidServerURLMsg}
 	}
 	return nil
 }

@@ -93,6 +93,7 @@ func TestCreateUploadsBundleAndPrintsName(t *testing.T) {
 	)
 	defer server.Close()
 
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 
@@ -143,6 +144,7 @@ func TestCreateReturnsErrorOnServerRejection(t *testing.T) {
 	)
 	defer server.Close()
 
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 
@@ -177,6 +179,7 @@ func TestCreateRendersValidationWarnings(t *testing.T) {
 	)
 	defer server.Close()
 
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 
@@ -210,6 +213,7 @@ func TestCreateWarnsSkipValidationIsIgnored(t *testing.T) {
 	)
 	defer server.Close()
 
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 
@@ -245,6 +249,7 @@ func TestCreateReturnsErrorOnLegacyOKResponse(t *testing.T) {
 	)
 	defer server.Close()
 
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 
@@ -279,6 +284,7 @@ func TestCreateRejectsInvalidName(t *testing.T) {
 				called = true
 			}),
 		)
+		savedTestServer(t, server.URL, false)
 		viper.Set("server-url", server.URL)
 
 		_, err := ExecuteCommand(

@@ -180,6 +180,7 @@ func testCmdRun(t *testing.T, p TestCmdParams) {
 		}),
 	)
 
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	if p.serverURL != "" {
 		viper.Set("server-url", p.serverURL)
@@ -248,13 +249,13 @@ func TestValidateFlags(t *testing.T) {
 		"invalid token": {
 			hasToken: true, token: "",
 			hasServerURL: false, hasWorkflow: false,
-			wantError: true, errorMsg: "REANA client is not connected to any REANA cluster; run `reana-client-go login`",
+			wantError: true, errorMsg: auth.NoServerMessage,
 		},
 		"invalid server url": {
 			hasToken: true, token: "token",
 			hasServerURL: true, serverURL: "",
 			hasWorkflow: false,
-			wantError:   true, errorMsg: validator.InvalidServerURLMsg,
+			wantError:   true, errorMsg: auth.NoServerMessage,
 		},
 		"no workflow": {
 			hasToken: true, token: "token",
@@ -333,11 +334,6 @@ func TestSetupViper(t *testing.T) {
 		viperProp string
 		value     string
 	}{
-		"server url": {
-			env:       "REANA_SERVER_URL",
-			viperProp: "server-url",
-			value:     "https://localhost:8080",
-		},
 		"access token": {
 			env:       "REANA_ACCESS_TOKEN",
 			viperProp: "access-token",
@@ -377,7 +373,7 @@ func TestSetupViper(t *testing.T) {
 
 func TestMalformedEnvironmentAccessTokenIsRejected(t *testing.T) {
 	t.Setenv("REANA_ACCESS_TOKEN", "legacy-opaque-token")
-	t.Setenv("REANA_SERVER_URL", "https://reana.example.org")
+	savedTestServer(t, "https://reana.example.org", true)
 	viper.Reset()
 	t.Cleanup(viper.Reset)
 

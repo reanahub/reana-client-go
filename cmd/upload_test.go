@@ -137,6 +137,7 @@ func TestUploadContinuesAfterIndividualFailures(t *testing.T) {
 			_, _ = w.Write([]byte(`{"message":"uploaded"}`))
 		},
 	))
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(func() {
 		viper.Reset()

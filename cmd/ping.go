@@ -9,10 +9,14 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
+	"errors"
 	"fmt"
+	"net/url"
+	"reanahub/reana-client-go/pkg/errorhandler"
 
 	"reanahub/reana-client-go/client"
 	"reanahub/reana-client-go/client/operations"
+	"reanahub/reana-client-go/pkg/auth"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -65,15 +69,27 @@ func (o *pingOptions) run(cmd *cobra.Command) error {
 	}
 	pingResp, err := api.Operations.GetYou(pingParams, nil)
 	if err != nil {
-		return err
+		var transportError *url.Error
+		if errors.As(err, &transportError) {
+			return auth.ConnectionError(o.serverURL, o.serverURL, err)
+		}
+		return auth.ForServer(
+			o.serverURL,
+			"saved login",
+			errorhandler.HandleApiError(err),
+		)
 	}
 
+	status, err := client.TLSStatus()
+	if err != nil {
+		return err
+	}
 	p := pingResp.Payload
 	response := fmt.Sprintf("REANA server: %s \n", o.serverURL) +
 		fmt.Sprintf("REANA server version: %s \n", p.ReanaServerVersion) +
 		fmt.Sprintf("REANA client version: %s \n", version) +
 		fmt.Sprintf("Authenticated as: <%s> \n", p.Email) +
-		fmt.Sprintf("Status: %s ", "Connected")
+		fmt.Sprintf("Status: %s\nTLS verification: %s", "Connected", status)
 
 	cmd.Println(response)
 

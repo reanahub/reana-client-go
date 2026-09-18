@@ -144,6 +144,7 @@ func TestWorkflowSharingMultiUserResults(t *testing.T) {
 							_, _ = fmt.Fprint(w, `{}`)
 						},
 					))
+					savedTestServer(t, server.URL, false)
 					viper.Set("server-url", server.URL)
 					t.Cleanup(func() {
 						server.Close()

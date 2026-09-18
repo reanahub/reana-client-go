@@ -32,6 +32,9 @@ const (
 
 // Credentials is one server's OIDC metadata and token material.
 type Credentials struct {
+	TLS   *TLSSettings `json:"tls,omitempty"`
+	extra map[string]json.RawMessage
+
 	Issuer                      string `json:"issuer,omitempty"`
 	ClientID                    string `json:"client_id,omitempty"`
 	TokenEndpoint               string `json:"token_endpoint,omitempty"`
@@ -46,6 +49,8 @@ type Credentials struct {
 }
 
 type credentialConfig struct {
+	extra map[string]json.RawMessage
+
 	ActiveServer string                 `json:"active_server"`
 	Servers      map[string]Credentials `json:"servers"`
 }
@@ -190,10 +195,10 @@ func (s *Store) withLock(update func(*credentialConfig) error) error {
 	return s.saveUnlocked(config)
 }
 
-// ActiveServer returns REANA_SERVER_URL when set, otherwise the stored active server.
+// ActiveServer returns the saved active server.
 func (s *Store) ActiveServer() (string, error) {
-	if serverURL := os.Getenv("REANA_SERVER_URL"); serverURL != "" {
-		return NormalizeServerURL(serverURL)
+	if err := CheckRetiredEnvironment(); err != nil {
+		return "", err
 	}
 	lock, err := acquireLock(s.Path+".lock", true)
 	if err != nil {
@@ -237,6 +242,7 @@ func (s *Store) Put(
 	}
 	var stored Credentials
 	err = s.withLock(func(config *credentialConfig) error {
+		entry = preserveSettings(entry, config.Servers[normalized])
 		entry.CredentialEpoch = config.Servers[normalized].CredentialEpoch + 1
 		config.Servers[normalized] = entry
 		if makeActive {
@@ -264,6 +270,7 @@ func (s *Store) PutIfEpoch(
 		if config.Servers[normalized].CredentialEpoch != epoch {
 			return nil
 		}
+		entry = preserveSettings(entry, config.Servers[normalized])
 		entry.CredentialEpoch = epoch + 1
 		config.Servers[normalized] = entry
 		stored, matched = entry, true

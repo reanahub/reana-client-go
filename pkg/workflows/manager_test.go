@@ -30,9 +30,19 @@ import (
 
 func useWorkflowServer(t *testing.T, handler http.Handler) {
 	t.Helper()
-	t.Setenv("REANA_SERVER_TLS_VERIFY", "false")
+	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/client.json")
+	t.Setenv("REANA_SERVER_TLS_VERIFY", "")
+	t.Setenv("REANA_SERVER_URL", "")
 	server := httptest.NewTLSServer(handler)
 	viper.Set("server-url", server.URL)
+	store, err := auth.NewStore()
+	if err != nil {
+		t.Fatal(err)
+	}
+	verify := false
+	if _, err := store.Put(server.URL, auth.Credentials{TLS: &auth.TLSSettings{Verify: &verify}}, true); err != nil {
+		t.Fatal(err)
+	}
 	t.Cleanup(func() {
 		viper.Reset()
 		server.Close()
@@ -187,7 +197,6 @@ func TestListRunsUsesStoredOIDCToken(t *testing.T) {
             }`))
 		}),
 	)
-	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/credentials.json")
 	store, err := auth.NewStore()
 	if err != nil {
 		t.Fatal(err)
@@ -243,7 +252,6 @@ func TestUploadFileUsesStoredOIDCToken(t *testing.T) {
 			_, _ = w.Write([]byte(`{"message":"uploaded"}`))
 		}),
 	)
-	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/credentials.json")
 	store, err := auth.NewStore()
 	if err != nil {
 		t.Fatal(err)

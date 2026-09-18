@@ -12,6 +12,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"reanahub/reana-client-go/pkg/auth"
 	"reflect"
 	"strings"
 	"testing"
@@ -26,9 +27,19 @@ func newTestAPIFetcher(
 	handler http.HandlerFunc,
 ) *APIFetcher {
 	t.Helper()
-	t.Setenv("REANA_SERVER_TLS_VERIFY", "false")
+	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/client.json")
+	t.Setenv("REANA_SERVER_TLS_VERIFY", "")
+	t.Setenv("REANA_SERVER_URL", "")
 	server := httptest.NewTLSServer(handler)
 	viper.Set("server-url", server.URL)
+	store, err := auth.NewStore()
+	if err != nil {
+		t.Fatal(err)
+	}
+	verify := false
+	if _, err := store.Put(server.URL, auth.Credentials{TLS: &auth.TLSSettings{Verify: &verify}}, true); err != nil {
+		t.Fatal(err)
+	}
 	t.Cleanup(func() {
 		server.Close()
 		viper.Reset()

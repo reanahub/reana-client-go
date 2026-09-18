@@ -844,10 +844,18 @@ _reana-client-go_login()
 
     flags+=("--headless")
     local_nonpersistent_flags+=("--headless")
+    flags+=("--no-tls-verify")
+    local_nonpersistent_flags+=("--no-tls-verify")
+    flags+=("--server=")
+    two_word_flags+=("--server")
+    local_nonpersistent_flags+=("--server")
+    local_nonpersistent_flags+=("--server=")
     flags+=("--server-url=")
     two_word_flags+=("--server-url")
     local_nonpersistent_flags+=("--server-url")
     local_nonpersistent_flags+=("--server-url=")
+    flags+=("--tls-verify")
+    local_nonpersistent_flags+=("--tls-verify")
     flags+=("--loglevel=")
     two_word_flags+=("--loglevel")
     two_word_flags+=("-l")
@@ -1511,6 +1519,112 @@ _reana-client-go_secrets-list()
     noun_aliases=()
 }
 
+_reana-client-go_server-add()
+{
+    last_command="reana-client-go_server-add"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--no-tls-verify")
+    local_nonpersistent_flags+=("--no-tls-verify")
+    flags+=("--tls-verify")
+    local_nonpersistent_flags+=("--tls-verify")
+    flags+=("--loglevel=")
+    two_word_flags+=("--loglevel")
+    two_word_flags+=("-l")
+    flags+=("--profile=")
+    two_word_flags+=("--profile")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_reana-client-go_server-list()
+{
+    last_command="reana-client-go_server-list"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--loglevel=")
+    two_word_flags+=("--loglevel")
+    two_word_flags+=("-l")
+    flags+=("--profile=")
+    two_word_flags+=("--profile")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_reana-client-go_server-remove()
+{
+    last_command="reana-client-go_server-remove"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--local-only")
+    local_nonpersistent_flags+=("--local-only")
+    flags+=("--loglevel=")
+    two_word_flags+=("--loglevel")
+    two_word_flags+=("-l")
+    flags+=("--profile=")
+    two_word_flags+=("--profile")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_reana-client-go_server-use()
+{
+    last_command="reana-client-go_server-use"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--loglevel=")
+    two_word_flags+=("--loglevel")
+    two_word_flags+=("-l")
+    flags+=("--profile=")
+    two_word_flags+=("--profile")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
 _reana-client-go_share-add()
 {
     last_command="reana-client-go_share-add"
@@ -1980,6 +2094,10 @@ _reana-client-go_root_command()
     commands+=("secrets-add")
     commands+=("secrets-delete")
     commands+=("secrets-list")
+    commands+=("server-add")
+    commands+=("server-list")
+    commands+=("server-remove")
+    commands+=("server-use")
     commands+=("share-add")
     commands+=("share-remove")
     commands+=("share-status")

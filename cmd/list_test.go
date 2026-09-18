@@ -385,6 +385,7 @@ func TestListDegradesToPlaceholderWhenSessionSecretFetchFails(t *testing.T) {
 	))
 	defer server.Close()
 
+	savedTestServer(t, server.URL, false)
 	viper.Set("server-url", server.URL)
 	t.Cleanup(viper.Reset)
 

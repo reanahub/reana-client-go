@@ -277,7 +277,7 @@ func TestLogoutCommandErrorsWhenNotLoggedIn(t *testing.T) {
 
 	_, err := ExecuteCommand(NewRootCmd(), "logout")
 	if err == nil ||
-		!strings.Contains(err.Error(), "not connected to any REANA cluster") {
+		!strings.Contains(err.Error(), "No REANA server is configured") {
 		t.Fatalf("expected a no-active-cluster error, got %v", err)
 	}
 }
