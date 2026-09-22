@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const version = "v0.95.0-alpha.0" // x-release-please-version
+const version = "v0.95.0" // x-release-please-version
 
 const versionDesc = `
 Show version.
