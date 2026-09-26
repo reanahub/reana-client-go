@@ -1,0 +1,9 @@
+{
+  "created": "2026-08-30T20:26:18",
+  "id": "my_workflow_id",
+  "name": "my_workflow.1",
+  "status": "queued",
+  "user": "user",
+  "logs": "",
+  "progress": {}
+}
