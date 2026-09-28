@@ -1436,6 +1436,144 @@ func TestDiscoverReturnsErrorForNonSuccessStatus(t *testing.T) {
 	}
 }
 
+// discovery404Manager returns a manager whose server 404s on discovery and
+// answers the ping with the given handler.
+func discovery404Manager(t *testing.T, ping roundTripFunc) *Manager {
+	t.Helper()
+	return testManager(t, func(request *http.Request) (*http.Response, error) {
+		switch request.URL.Path {
+		case discoveryPath:
+			return jsonResponse(http.StatusNotFound, `{}`), nil
+		case pingPath:
+			return ping(request)
+		}
+		t.Fatalf("unexpected request to %q", request.URL.Path)
+		return nil, nil
+	})
+}
+
+func TestDiscoverExplainsLegacyServer(t *testing.T) {
+	manager := discovery404Manager(
+		t,
+		func(*http.Request) (*http.Response, error) {
+			return jsonResponse(
+				http.StatusOK,
+				`{"message":"OK","status":"200"}`,
+			), nil
+		},
+	)
+	_, err := manager.Discover(
+		context.Background(),
+		"https://reana.example.org",
+	)
+	if err == nil {
+		t.Fatal("expected legacy server error")
+	}
+	message := err.Error()
+	for _, want := range []string{
+		"predates OIDC login",
+		"version " + ClientVersion,
+		MinimumServerVersion,
+		LegacyServerClientRequirement,
+	} {
+		if !strings.Contains(message, want) {
+			t.Errorf("error %q does not contain %q", message, want)
+		}
+	}
+	if strings.Contains(message, "HTTP 404") {
+		t.Errorf("legacy server error should not report HTTP 404: %q", message)
+	}
+}
+
+func TestDiscoverReportsVersionOfCurrentServerWithoutMetadata(t *testing.T) {
+	manager := discovery404Manager(
+		t,
+		func(*http.Request) (*http.Response, error) {
+			return jsonResponse(http.StatusOK, `{
+            "message":"OK",
+            "status":"200",
+            "reana_server_version":"0.95.0",
+            "api_capabilities":["workflow-specification-bundles-v1"]
+        }`), nil
+		},
+	)
+	_, err := manager.Discover(
+		context.Background(),
+		"https://reana.example.org",
+	)
+	if err == nil ||
+		!strings.Contains(err.Error(), "HTTP 404") ||
+		!strings.Contains(err.Error(), "version 0.95.0") ||
+		strings.Contains(err.Error(), "predates OIDC login") {
+		t.Fatalf("expected current-server discovery error, got %v", err)
+	}
+}
+
+func TestDiscoverDoesNotCallNonREANAServerLegacy(t *testing.T) {
+	redirect := jsonResponse(http.StatusFound, `{}`)
+	redirect.Header.Set("Location", "https://sso.example.org/")
+	tests := map[string]roundTripFunc{
+		"connection error": func(*http.Request) (*http.Response, error) {
+			return nil, errors.New("connection refused")
+		},
+		"not found": func(*http.Request) (*http.Response, error) {
+			return jsonResponse(http.StatusNotFound, `{}`), nil
+		},
+		"not JSON": func(*http.Request) (*http.Response, error) {
+			return jsonResponse(http.StatusOK, `<html>not json</html>`), nil
+		},
+		"unrelated JSON": func(*http.Request) (*http.Response, error) {
+			return jsonResponse(http.StatusOK, `{"unrelated":"service"}`), nil
+		},
+		"generic OK without status": func(*http.Request) (*http.Response, error) {
+			return jsonResponse(http.StatusOK, `{"message":"OK"}`), nil
+		},
+		"OK with non-REANA status": func(*http.Request) (*http.Response, error) {
+			return jsonResponse(
+				http.StatusOK,
+				`{"message":"OK","status":"up"}`,
+			), nil
+		},
+		"redirect": func(*http.Request) (*http.Response, error) {
+			return redirect, nil
+		},
+	}
+	for name, ping := range tests {
+		t.Run(name, func(t *testing.T) {
+			manager := discovery404Manager(t, ping)
+			_, err := manager.Discover(
+				context.Background(),
+				"https://reana.example.org",
+			)
+			if err == nil ||
+				!strings.Contains(err.Error(), "HTTP 404") ||
+				!strings.Contains(err.Error(), "is a REANA server") ||
+				strings.Contains(err.Error(), "predates OIDC login") {
+				t.Fatalf("expected generic discovery error, got %v", err)
+			}
+		})
+	}
+}
+
+func TestDiscoverDoesNotPingOnNon404Failure(t *testing.T) {
+	manager := testManager(
+		t,
+		func(request *http.Request) (*http.Response, error) {
+			if request.URL.Path != discoveryPath {
+				t.Fatalf("unexpected request to %q", request.URL.Path)
+			}
+			return jsonResponse(http.StatusServiceUnavailable, `{}`), nil
+		},
+	)
+	_, err := manager.Discover(
+		context.Background(),
+		"https://reana.example.org",
+	)
+	if err == nil || !strings.HasSuffix(err.Error(), "HTTP 503") {
+		t.Fatalf("expected plain HTTP 503 discovery error, got %v", err)
+	}
+}
+
 func TestDiscoverRejectsInvalidMetadata(t *testing.T) {
 	manager := testManager(t, func(*http.Request) (*http.Response, error) {
 		return jsonResponse(

@@ -9,10 +9,16 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
+	"github.com/reanahub/reana-client-go/pkg/auth"
+
 	"github.com/spf13/cobra"
 )
 
 const version = "v0.95.0-alpha.1" // x-release-please-version
+
+func init() {
+	auth.ClientVersion = version
+}
 
 const versionDesc = `
 Show version.
