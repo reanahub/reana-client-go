@@ -30,7 +30,7 @@ Install the published version with Go 1.25.13 or later:
 <!-- x-release-please-start-version -->
 
 ```console
-$ go install github.com/reanahub/reana-client-go@v0.95.0-alpha.1
+$ go install github.com/reanahub/reana-client-go@v0.95.0
 ```
 
 <!-- x-release-please-end -->
