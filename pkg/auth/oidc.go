@@ -31,12 +31,24 @@ import (
 
 const (
 	discoveryPath       = "/api/.well-known/openid-configuration"
+	pingPath            = "/api/ping"
 	defaultScopes       = "openid profile email offline_access"
 	expiryLeeway        = 60 * time.Second
 	refreshLockWait     = 35 * time.Second
 	deviceFlowMax       = time.Hour
 	loopbackCallbackURL = "/callback"
 )
+
+const (
+	// MinimumServerVersion is the oldest REANA server release supporting OIDC login.
+	MinimumServerVersion = "0.95.0"
+	// LegacyServerClientRequirement is a pip requirement for a client that
+	// can talk to a pre-OIDC server; no reana-client-go release predates OIDC.
+	LegacyServerClientRequirement = "reana-client<0.95"
+)
+
+// ClientVersion is reported when refusing a server; set by the CLI at start-up.
+var ClientVersion = "unknown"
 
 // AuthenticationError is an authentication failure suitable for CLI output.
 type AuthenticationError struct {
@@ -274,11 +286,15 @@ func (m *Manager) Discover(
 	}
 	if response.StatusCode < 200 || response.StatusCode >= 300 {
 		response.Body.Close()
-		return Metadata{}, authenticationError(
+		message := fmt.Sprintf(
 			"could not discover authentication metadata from %s: HTTP %d",
 			normalized,
 			response.StatusCode,
 		)
+		if response.StatusCode == http.StatusNotFound {
+			message = m.explainMissingDiscovery(ctx, normalized, message)
+		}
+		return Metadata{}, &AuthenticationError{Message: message}
 	}
 	var metadata Metadata
 	if err := responseJSON(response, &metadata); err != nil {
@@ -288,6 +304,86 @@ func (m *Manager) Discover(
 		return Metadata{}, err
 	}
 	return metadata, nil
+}
+
+// pingResponse is the unauthenticated /api/ping payload. Servers that
+// support OIDC login advertise api_capabilities; released servers omit it
+// and do not expose their version before authentication.
+type pingResponse struct {
+	Message         string    `json:"message"`
+	Status          string    `json:"status"`
+	ServerVersion   string    `json:"reana_server_version"`
+	APICapabilities *[]string `json:"api_capabilities"`
+}
+
+// pingServer returns the server's ping payload, or nil if it is not a REANA
+// ping. Every REANA server release answers with both message "OK" and status
+// "200"; requiring both keeps a generic health check from passing as REANA.
+func (m *Manager) pingServer(
+	ctx context.Context,
+	serverURL string,
+) *pingResponse {
+	req, err := http.NewRequestWithContext(
+		ctx,
+		http.MethodGet,
+		serverURL+pingPath,
+		nil,
+	)
+	if err != nil {
+		return nil
+	}
+	response, err := m.HTTPClient.Do(req)
+	if err != nil {
+		return nil
+	}
+	defer response.Body.Close()
+	if response.StatusCode < 200 || response.StatusCode >= 300 {
+		return nil
+	}
+	var ping pingResponse
+	decoder := json.NewDecoder(io.LimitReader(response.Body, 1<<20))
+	if err := decoder.Decode(&ping); err != nil ||
+		ping.Message != "OK" || ping.Status != "200" {
+		return nil
+	}
+	return &ping
+}
+
+// explainMissingDiscovery explains a 404 from the discovery endpoint.
+func (m *Manager) explainMissingDiscovery(
+	ctx context.Context,
+	serverURL, message string,
+) string {
+	ping := m.pingServer(ctx, serverURL)
+	if ping == nil {
+		return fmt.Sprintf(
+			"%s\nCheck that %s is a REANA server.",
+			message,
+			serverURL,
+		)
+	}
+	if ping.APICapabilities == nil {
+		return fmt.Sprintf(
+			"%s runs a REANA server release that predates OIDC login.\n"+
+				"This client (version %s) requires REANA server %s or newer.\n"+
+				"To use this server, install a matching client, e.g. pip install '%s'.",
+			serverURL,
+			ClientVersion,
+			MinimumServerVersion,
+			LegacyServerClientRequirement,
+		)
+	}
+	serverVersion := ping.ServerVersion
+	if serverVersion == "" {
+		serverVersion = "unknown"
+	}
+	return fmt.Sprintf(
+		"%s\nThe REANA server (version %s) supports OIDC login but does not "+
+			"publish its authentication metadata. Please contact the server "+
+			"administrators.",
+		message,
+		serverVersion,
+	)
 }
 
 type pkcePair struct {
