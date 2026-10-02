@@ -231,12 +231,16 @@ func responseJSON(response *http.Response, target any) error {
 	return nil
 }
 
+// rejectRedirect refuses a redirected authentication response. The error
+// deliberately omits the Location header: a redirect target may carry
+// credentials or other sensitive query data, and the error is shown in the
+// terminal and in debug logs.
 func rejectRedirect(response *http.Response, description string) error {
 	if response.StatusCode >= 300 && response.StatusCode < 400 {
 		return authenticationError(
-			"%s attempted to redirect to %q; refusing to follow an authentication redirect",
+			"%s failed with HTTP %d; refusing to follow a redirect on an authentication request",
 			description,
-			response.Header.Get("Location"),
+			response.StatusCode,
 		)
 	}
 	return nil
