@@ -17,17 +17,6 @@ import (
 	"os"
 	"path/filepath"
 	"time"
-
-	"golang.org/x/sys/unix"
-)
-
-const (
-	// Logout holds this lock for as long as its own revocation HTTP call
-	// takes (NewHTTPClient's Timeout, also 30s) -- keep a margin here so a
-	// concurrent waiter's patience doesn't expire at the same instant a
-	// slow-but-legitimate revocation finishes.
-	credentialLockTimeout = 35 * time.Second
-	lockPollInterval      = 100 * time.Millisecond
 )
 
 // Credentials is one server's OIDC metadata and token material.
@@ -142,41 +131,6 @@ func (s *Store) saveUnlocked(config credentialConfig) error {
 		return err
 	}
 	return os.Chmod(s.Path, 0o600)
-}
-
-func acquireLock(path string, wait bool) (*os.File, error) {
-	if err := os.MkdirAll(filepath.Dir(path), 0o700); err != nil {
-		return nil, err
-	}
-	file, err := os.OpenFile(path, os.O_CREATE|os.O_RDWR, 0o600)
-	if err != nil {
-		return nil, err
-	}
-	deadline := time.Now().Add(credentialLockTimeout)
-	for {
-		err = unix.Flock(int(file.Fd()), unix.LOCK_EX|unix.LOCK_NB)
-		if err == nil {
-			return file, nil
-		}
-		if !wait || time.Now().After(deadline) {
-			file.Close()
-			if wait {
-				return nil, errors.New(
-					"timed out waiting for the REANA client credential lock",
-				)
-			}
-			return nil, nil
-		}
-		time.Sleep(lockPollInterval)
-	}
-}
-
-func releaseLock(file *os.File) {
-	if file == nil {
-		return
-	}
-	_ = unix.Flock(int(file.Fd()), unix.LOCK_UN)
-	_ = file.Close()
 }
 
 func (s *Store) withLock(update func(*credentialConfig) error) error {
