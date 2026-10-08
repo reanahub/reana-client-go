@@ -11,6 +11,7 @@ import (
 	stderrors "errors"
 	"fmt"
 	"io"
+	"strconv"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
@@ -888,6 +889,9 @@ type ShareWorkflowOKBody struct {
 	// message
 	Message string `json:"message,omitempty"`
 
+	// Present only when the workflow was shared but a follow-up action, such as sending the notification email, failed.
+	Warnings []*ShareWorkflowOKBodyWarningsItems0 `json:"warnings"`
+
 	// workflow id
 	WorkflowID string `json:"workflow_id,omitempty"`
 
@@ -897,11 +901,88 @@ type ShareWorkflowOKBody struct {
 
 // Validate validates this share workflow o k body
 func (o *ShareWorkflowOKBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateWarnings(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
 	return nil
 }
 
-// ContextValidate validates this share workflow o k body based on context it is used
+func (o *ShareWorkflowOKBody) validateWarnings(formats strfmt.Registry) error {
+	if swag.IsZero(o.Warnings) { // not required
+		return nil
+	}
+
+	for i := 0; i < len(o.Warnings); i++ {
+		if swag.IsZero(o.Warnings[i]) { // not required
+			continue
+		}
+
+		if o.Warnings[i] != nil {
+			if err := o.Warnings[i].Validate(formats); err != nil {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
+					return ve.ValidateName("shareWorkflowOK" + "." + "warnings" + "." + strconv.Itoa(i))
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
+					return ce.ValidateName("shareWorkflowOK" + "." + "warnings" + "." + strconv.Itoa(i))
+				}
+
+				return err
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// ContextValidate validate this share workflow o k body based on the context it is used
 func (o *ShareWorkflowOKBody) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.contextValidateWarnings(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *ShareWorkflowOKBody) contextValidateWarnings(ctx context.Context, formats strfmt.Registry) error {
+
+	for i := 0; i < len(o.Warnings); i++ {
+
+		if o.Warnings[i] != nil {
+
+			if swag.IsZero(o.Warnings[i]) { // not required
+				return nil
+			}
+
+			if err := o.Warnings[i].ContextValidate(ctx, formats); err != nil {
+				ve := new(errors.Validation)
+				if stderrors.As(err, &ve) {
+					return ve.ValidateName("shareWorkflowOK" + "." + "warnings" + "." + strconv.Itoa(i))
+				}
+				ce := new(errors.CompositeError)
+				if stderrors.As(err, &ce) {
+					return ce.ValidateName("shareWorkflowOK" + "." + "warnings" + "." + strconv.Itoa(i))
+				}
+
+				return err
+			}
+		}
+
+	}
+
 	return nil
 }
 
@@ -916,6 +997,47 @@ func (o *ShareWorkflowOKBody) MarshalBinary() ([]byte, error) {
 // UnmarshalBinary interface implementation
 func (o *ShareWorkflowOKBody) UnmarshalBinary(b []byte) error {
 	var res ShareWorkflowOKBody
+	if err := swag.ReadJSON(b, &res); err != nil {
+		return err
+	}
+	*o = res
+	return nil
+}
+
+/*
+ShareWorkflowOKBodyWarningsItems0 share workflow o k body warnings items0
+swagger:model ShareWorkflowOKBodyWarningsItems0
+*/
+type ShareWorkflowOKBodyWarningsItems0 struct {
+
+	// code
+	Code string `json:"code,omitempty"`
+
+	// message
+	Message string `json:"message,omitempty"`
+}
+
+// Validate validates this share workflow o k body warnings items0
+func (o *ShareWorkflowOKBodyWarningsItems0) Validate(formats strfmt.Registry) error {
+	return nil
+}
+
+// ContextValidate validates this share workflow o k body warnings items0 based on context it is used
+func (o *ShareWorkflowOKBodyWarningsItems0) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+	return nil
+}
+
+// MarshalBinary interface implementation
+func (o *ShareWorkflowOKBodyWarningsItems0) MarshalBinary() ([]byte, error) {
+	if o == nil {
+		return nil, nil
+	}
+	return swag.WriteJSON(o)
+}
+
+// UnmarshalBinary interface implementation
+func (o *ShareWorkflowOKBodyWarningsItems0) UnmarshalBinary(b []byte) error {
+	var res ShareWorkflowOKBodyWarningsItems0
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
