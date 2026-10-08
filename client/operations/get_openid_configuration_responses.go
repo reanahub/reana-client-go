@@ -12,9 +12,11 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // GetOpenidConfigurationReader is a Reader for the GetOpenidConfiguration structure.
@@ -355,6 +357,11 @@ type GetOpenidConfigurationOKBody struct {
 	// reana cli client id
 	ReanaCliClientID string `json:"reana_cli_client_id,omitempty"`
 
+	// Fixed loopback port that CLI clients must use for the browser login callback. Present only when configured by the deployment.
+	// Maximum: 65535
+	// Minimum: 1
+	ReanaCliLoopbackPort int64 `json:"reana_cli_loopback_port,omitempty"`
+
 	// reana client id
 	ReanaClientID string `json:"reana_client_id,omitempty"`
 
@@ -367,6 +374,31 @@ type GetOpenidConfigurationOKBody struct {
 
 // Validate validates this get openid configuration o k body
 func (o *GetOpenidConfigurationOKBody) Validate(formats strfmt.Registry) error {
+	var res []error
+
+	if err := o.validateReanaCliLoopbackPort(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if len(res) > 0 {
+		return errors.CompositeValidationError(res...)
+	}
+	return nil
+}
+
+func (o *GetOpenidConfigurationOKBody) validateReanaCliLoopbackPort(formats strfmt.Registry) error {
+	if swag.IsZero(o.ReanaCliLoopbackPort) { // not required
+		return nil
+	}
+
+	if err := validate.MinimumInt("getOpenidConfigurationOK"+"."+"reana_cli_loopback_port", "body", o.ReanaCliLoopbackPort, 1, false); err != nil {
+		return err
+	}
+
+	if err := validate.MaximumInt("getOpenidConfigurationOK"+"."+"reana_cli_loopback_port", "body", o.ReanaCliLoopbackPort, 65535, false); err != nil {
+		return err
+	}
+
 	return nil
 }
 

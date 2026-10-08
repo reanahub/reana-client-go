@@ -25,6 +25,7 @@ func newLoginCmd() *cobra.Command {
 	var serverURL, serverAlias string
 	var verifyTLS, noVerifyTLS bool
 	var headless bool
+	var callbackPort int
 	cmd := &cobra.Command{
 		Use:   "login",
 		Short: "Authenticate against REANA Server using OIDC.",
@@ -50,6 +51,31 @@ func newLoginCmd() *cobra.Command {
 				return fmt.Errorf(
 					"--tls-verify and --no-tls-verify cannot be used together",
 				)
+			}
+			// An omitted option differs from an explicit 0, which forces
+			// an OS-assigned port.
+			var explicitCallbackPort *int
+			if cmd.Flags().Changed("callback-port") {
+				if headless {
+					return fmt.Errorf(
+						"--headless and --callback-port cannot be used together: " +
+							"device login does not use a callback port",
+					)
+				}
+				if callbackPort < 0 || callbackPort > 65535 {
+					return fmt.Errorf(
+						"--callback-port must be an integer between 0 and 65535, got %d",
+						callbackPort,
+					)
+				}
+				explicitCallbackPort = &callbackPort
+			}
+			if !headless {
+				// Fail before any network request, so that a stale export
+				// is reported even when the server cannot be reached.
+				if err := auth.CheckRetiredLoopbackPortEnv(); err != nil {
+					return err
+				}
 			}
 			manager, err := auth.NewManager()
 			if err != nil {
@@ -110,7 +136,7 @@ func newLoginCmd() *cobra.Command {
 					},
 				)
 			} else {
-				_, err = manager.LoginBrowser(loginContext, normalized, func(authorizationURL string) {
+				_, err = manager.LoginBrowser(loginContext, normalized, explicitCallbackPort, func(authorizationURL string) {
 					cmd.Printf("Opening your browser to authenticate. If it does not open automatically, visit:\n%s\n", authorizationURL)
 				}, openBrowser)
 			}
@@ -140,6 +166,12 @@ func newLoginCmd() *cobra.Command {
 		BoolVar(&noVerifyTLS, "no-tls-verify", false, "Disable certificate verification for this server and save the choice.")
 	cmd.Flags().
 		BoolVar(&headless, "headless", false, "Use device login instead of opening a local browser.")
+	cmd.Flags().
+		IntVar(&callbackPort, "callback-port", 0, "Local port for the browser login callback. "+
+			"By default the port advertised by the REANA server is used, if any, "+
+			"or else a free port selected by the operating system. "+
+			"Use 0 to force a free port. "+
+			"The identity provider must accept the resulting redirect URI.")
 	return cmd
 }
 

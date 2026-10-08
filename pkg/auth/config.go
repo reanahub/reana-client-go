@@ -28,10 +28,10 @@ import (
 )
 
 const (
-	configPathEnv        = "REANA_CLIENT_CONFIG"
-	caCertsEnv           = "REANA_SERVER_CA_CERTS"
-	tlsVerifyEnv         = "REANA_SERVER_TLS_VERIFY"
-	loginLoopbackPortEnv = "REANA_CLIENT_LOGIN_LOOPBACK_PORT"
+	configPathEnv          = "REANA_CLIENT_CONFIG"
+	caCertsEnv             = "REANA_SERVER_CA_CERTS"
+	tlsVerifyEnv           = "REANA_SERVER_TLS_VERIFY"
+	retiredLoopbackPortEnv = "REANA_CLIENT_LOGIN_LOOPBACK_PORT"
 )
 
 var tlsWarningOnce sync.Once

@@ -16,7 +16,7 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		panic(err)
 	}
-	for _, name := range []string{"REANA_SERVER_URL", "REANA_SERVER_TLS_VERIFY", "REANA_SERVER_CA_CERTS", "REANA_ACCESS_TOKEN"} {
+	for _, name := range []string{"REANA_SERVER_URL", "REANA_SERVER_TLS_VERIFY", "REANA_SERVER_CA_CERTS", "REANA_ACCESS_TOKEN", "REANA_CLIENT_LOGIN_LOOPBACK_PORT"} {
 		if err := os.Unsetenv(name); err != nil {
 			panic(err)
 		}

@@ -9,6 +9,8 @@ under the terms of the MIT License; see LICENSE file for more details.
 package cmd
 
 import (
+	"bytes"
+	"context"
 	"encoding/pem"
 	"fmt"
 	"io"
@@ -23,6 +25,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/reanahub/reana-client-go/pkg/auth"
 )
@@ -160,7 +163,6 @@ func TestLoginBrowserCommandCompletesFullFlow(t *testing.T) {
 	}
 	port := probe.Addr().(*net.TCPAddr).Port
 	probe.Close()
-	t.Setenv("REANA_CLIENT_LOGIN_LOOPBACK_PORT", strconv.Itoa(port))
 
 	var server *httptest.Server
 	server = httptest.NewTLSServer(http.HandlerFunc(
@@ -219,13 +221,260 @@ func TestLoginBrowserCommandCompletesFullFlow(t *testing.T) {
 		"login",
 		"--server-url",
 		server.URL,
+		"--callback-port",
+		strconv.Itoa(port),
 	)
 	if err != nil {
 		t.Fatalf("browser login failed: %v, output=%s", err, out)
 	}
+	if !strings.Contains(
+		out,
+		url.QueryEscape("http://127.0.0.1:"+strconv.Itoa(port)+"/callback"),
+	) {
+		t.Errorf("expected the explicit callback port in %q", out)
+	}
 	if !strings.Contains(out, "Logged in to "+server.URL) {
 		t.Errorf("expected a success message in the output, got %q", out)
 	}
+}
+
+const retiredLoopbackPortEnv = "REANA_CLIENT_LOGIN_LOOPBACK_PORT"
+
+// newLoopbackDiscoveryServer serves discovery metadata with the given raw
+// JSON value of the advertised callback port; an empty value omits the field.
+func newLoopbackDiscoveryServer(
+	t *testing.T,
+	advertisedPort string,
+) *httptest.Server {
+	t.Helper()
+	extra := ""
+	if advertisedPort != "" {
+		extra = `,"reana_cli_loopback_port":` + advertisedPort
+	}
+	server := httptest.NewTLSServer(http.HandlerFunc(
+		func(w http.ResponseWriter, r *http.Request) {
+			if r.URL.Path != "/api/.well-known/openid-configuration" {
+				t.Errorf("unexpected request to %q", r.URL.Path)
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
+			w.Header().Set("Content-Type", "application/json")
+			fmt.Fprintf(w, `{
+                "issuer":"https://issuer.example.org",
+                "authorization_endpoint":"https://issuer.example.org/auth",
+                "token_endpoint":"https://issuer.example.org/token",
+                "device_authorization_endpoint":"https://issuer.example.org/device",
+                "reana_cli_client_id":"reana-cli"%s
+            }`, extra)
+		},
+	))
+	t.Cleanup(server.Close)
+	trustAuthTestServer(t, server)
+	return server
+}
+
+func TestLoginCommandRejectsHeadlessWithCallbackPort(t *testing.T) {
+	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/credentials.json")
+	for _, port := range []string{"0", "8899"} {
+		t.Run(port, func(t *testing.T) {
+			// The server URL is unreachable: the options are rejected
+			// before discovery.
+			_, err := ExecuteCommand(
+				NewRootCmd(),
+				"login",
+				"--server-url",
+				"https://reana.invalid",
+				"--headless",
+				"--callback-port",
+				port,
+			)
+			if err == nil || !strings.Contains(
+				err.Error(),
+				"--headless and --callback-port cannot be used together",
+			) {
+				t.Fatalf("expected an option conflict, got %v", err)
+			}
+		})
+	}
+}
+
+func TestLoginCommandRejectsInvalidCallbackPort(t *testing.T) {
+	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/credentials.json")
+	for _, port := range []string{"-1", "65536", "abc", "88.5"} {
+		t.Run(port, func(t *testing.T) {
+			_, err := ExecuteCommand(
+				NewRootCmd(),
+				"login",
+				"--server-url",
+				"https://reana.invalid",
+				"--callback-port="+port,
+			)
+			if err == nil ||
+				!strings.Contains(err.Error(), "callback-port") {
+				t.Fatalf("expected an invalid port error, got %v", err)
+			}
+		})
+	}
+}
+
+func TestLoginCommandStopsOnRetiredPortVariable(t *testing.T) {
+	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/credentials.json")
+	t.Setenv(retiredLoopbackPortEnv, "8899")
+	for name, arguments := range map[string][]string{
+		"no option":   {},
+		"with option": {"--callback-port", "8899"},
+		"with zero":   {"--callback-port", "0"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			_, err := ExecuteCommand(
+				NewRootCmd(),
+				append(
+					[]string{"login", "--server-url", "https://reana.invalid"},
+					arguments...,
+				)...,
+			)
+			if err == nil {
+				t.Fatal("stale variable did not stop browser login")
+			}
+			for _, want := range []string{
+				retiredLoopbackPortEnv + " is no longer a client input",
+				"reana-client-go login --callback-port PORT",
+			} {
+				if !strings.Contains(err.Error(), want) {
+					t.Fatalf("guidance = %v, want %q", err, want)
+				}
+			}
+		})
+	}
+}
+
+func TestLoginCommandIgnoresBlankRetiredPortVariable(t *testing.T) {
+	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/credentials.json")
+	server := newLoopbackDiscoveryServer(t, `"oops"`)
+	for _, value := range []string{"", "   "} {
+		t.Run(strconv.Quote(value), func(t *testing.T) {
+			t.Setenv(retiredLoopbackPortEnv, value)
+			_, err := ExecuteCommand(
+				NewRootCmd(),
+				"login",
+				"--server-url",
+				server.URL,
+			)
+			// Login continues to the port selection, which rejects the
+			// invalid advertised port.
+			if err == nil ||
+				strings.Contains(err.Error(), "no longer a client input") ||
+				!strings.Contains(err.Error(), "reana_cli_loopback_port") {
+				t.Fatalf("expected an advertised port error, got %v", err)
+			}
+		})
+	}
+}
+
+func TestRetiredPortVariableDoesNotAffectOtherCommands(t *testing.T) {
+	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/credentials.json")
+	t.Setenv(retiredLoopbackPortEnv, "8899")
+	failing := httptest.NewTLSServer(http.HandlerFunc(
+		func(w http.ResponseWriter, _ *http.Request) {
+			w.WriteHeader(http.StatusInternalServerError)
+		},
+	))
+	defer failing.Close()
+	trustAuthTestServer(t, failing)
+
+	// Device login reaches discovery instead of stopping on the variable.
+	_, err := ExecuteCommand(
+		NewRootCmd(),
+		"login",
+		"--server-url",
+		failing.URL,
+		"--headless",
+	)
+	if err == nil || !strings.Contains(err.Error(), "could not discover") {
+		t.Fatalf("expected a discovery error, got %v", err)
+	}
+
+	out, err := ExecuteCommand(NewRootCmd(), "version")
+	if err != nil || strings.Contains(out, retiredLoopbackPortEnv) {
+		t.Fatalf("version failed: %v, output=%s", err, out)
+	}
+}
+
+func TestLoginCommandCallbackPortReachesPortSelection(t *testing.T) {
+	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/credentials.json")
+	t.Setenv(retiredLoopbackPortEnv, "")
+	// No browser opener is found, so that no real browser starts.
+	t.Setenv("PATH", t.TempDir())
+	server := newLoopbackDiscoveryServer(t, `"oops"`)
+
+	t.Run("invalid advertised port without option", func(t *testing.T) {
+		_, err := ExecuteCommand(
+			NewRootCmd(),
+			"login",
+			"--server-url",
+			server.URL,
+		)
+		if err == nil ||
+			!strings.Contains(err.Error(), "reana_cli_loopback_port") ||
+			!strings.Contains(err.Error(), "--callback-port") {
+			t.Fatalf("expected an advertised port error, got %v", err)
+		}
+	})
+
+	t.Run("occupied explicit port", func(t *testing.T) {
+		listener, err := net.Listen("tcp", "127.0.0.1:0")
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer listener.Close()
+		port := listener.Addr().(*net.TCPAddr).Port
+		_, err = ExecuteCommand(
+			NewRootCmd(),
+			"login",
+			"--server-url",
+			server.URL,
+			"--callback-port",
+			strconv.Itoa(port),
+		)
+		// The override bypasses the invalid advertised port.
+		if err == nil ||
+			!strings.Contains(err.Error(), "fixed by --callback-port") {
+			t.Fatalf("expected an occupied port error, got %v", err)
+		}
+	})
+
+	t.Run("explicit zero", func(t *testing.T) {
+		ctx, cancel := context.WithTimeout(
+			context.Background(),
+			500*time.Millisecond,
+		)
+		defer cancel()
+		root := NewRootCmd()
+		buffer := new(bytes.Buffer)
+		root.SetOut(buffer)
+		root.SetErr(buffer)
+		root.SetArgs(
+			[]string{
+				"login",
+				"--server-url",
+				server.URL,
+				"--callback-port",
+				"0",
+			},
+		)
+		err := root.ExecuteContext(ctx)
+		// Zero forces an OS-assigned port despite the invalid advertised
+		// port: login waits for the callback until the context ends.
+		if err == nil || !strings.Contains(err.Error(), "timed out") {
+			t.Fatalf("expected a login timeout, got %v", err)
+		}
+		if !strings.Contains(
+			buffer.String(),
+			"redirect_uri="+url.QueryEscape("http://127.0.0.1:"),
+		) {
+			t.Fatalf("expected a loopback redirect URI in %q", buffer.String())
+		}
+	})
 }
 
 func TestLogoutCommandRevokesAndClearsStoredCredentials(t *testing.T) {

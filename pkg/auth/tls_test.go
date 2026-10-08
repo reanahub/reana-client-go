@@ -257,7 +257,6 @@ func TestBundledIssuerLoginRefreshAndLogout(t *testing.T) {
 	mutex.Unlock()
 	t.Setenv(caCertsEnv, "")
 	savedTestServer(t, server.URL, false)
-	t.Setenv(loginLoopbackPortEnv, "0")
 	manager, err := NewManager()
 	if err != nil {
 		t.Fatal(err)
@@ -278,6 +277,7 @@ func TestBundledIssuerLoginRefreshAndLogout(t *testing.T) {
 	credentials, err := manager.LoginBrowser(
 		ctx,
 		server.URL,
+		nil,
 		func(string) {},
 		func(raw string) error {
 			parsed, err := url.Parse(raw)

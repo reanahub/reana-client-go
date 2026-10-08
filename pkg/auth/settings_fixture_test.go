@@ -8,8 +8,17 @@ under the terms of the MIT License; see LICENSE file for more details.
 package auth
 
 import (
+	"os"
 	"testing"
 )
+
+// TestMain keeps a developer's stale export from changing the login tests.
+func TestMain(m *testing.M) {
+	if err := os.Unsetenv(retiredLoopbackPortEnv); err != nil {
+		panic(err)
+	}
+	os.Exit(m.Run())
+}
 
 func savedTestServer(t *testing.T, server string, verify bool) {
 	t.Helper()

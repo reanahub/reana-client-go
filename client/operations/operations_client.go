@@ -893,7 +893,7 @@ func (a *Client) GetInteractiveSessionSecret(params *GetInteractiveSessionSecret
 /*
 GetOpenidConfiguration gets the trusted issuer s open ID configuration
 
-Relays the OIDC discovery document of the deployment's trusted issuer, extended with the public client id that reana-client must use for the device authorization grant. This lets clients discover the identity provider knowing only the REANA URL.
+Relays the OIDC discovery document of the deployment's trusted issuer, extended with the public client id that reana-client must use for the device authorization grant and, when the deployment configures one, the fixed loopback port that CLI clients must use for the browser login callback. This lets clients discover the identity provider knowing only the REANA URL.
 */
 func (a *Client) GetOpenidConfiguration(params *GetOpenidConfigurationParams, opts ...ClientOption) (*GetOpenidConfigurationOK, error) {
 	// NOTE: parameters are not validated before sending
