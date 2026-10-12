@@ -25,7 +25,7 @@ The detailed information on how to install and use REANA can be found in
 
 ### Installation with Go
 
-Install the published version with Go 1.25.13 or later:
+Install the published version with Go 1.27.2 or later:
 
 <!-- x-release-please-start-version -->
 
