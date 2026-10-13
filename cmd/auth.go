@@ -21,6 +21,13 @@ import (
 	"github.com/spf13/viper"
 )
 
+// loginTimeout bounds the whole login flow and loginBrowserOpener opens the
+// authorization URL; both are variables so that tests can replace them.
+var (
+	loginTimeout       = 5 * time.Minute
+	loginBrowserOpener = openBrowser
+)
+
 func newLoginCmd() *cobra.Command {
 	var serverURL, serverAlias string
 	var verifyTLS, noVerifyTLS bool
@@ -87,7 +94,7 @@ func newLoginCmd() *cobra.Command {
 			}
 			loginContext, cancel := context.WithTimeout(
 				cmd.Context(),
-				5*time.Minute,
+				loginTimeout,
 			)
 			defer cancel()
 			if headless {
@@ -112,7 +119,7 @@ func newLoginCmd() *cobra.Command {
 			} else {
 				_, err = manager.LoginBrowser(loginContext, normalized, func(authorizationURL string) {
 					cmd.Printf("Opening your browser to authenticate. If it does not open automatically, visit:\n%s\n", authorizationURL)
-				}, openBrowser)
+				}, loginBrowserOpener)
 			}
 			if err != nil {
 				source := "saved login"

@@ -12,17 +12,14 @@ import (
 	"encoding/pem"
 	"fmt"
 	"io"
-	"net"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"os"
-	"os/exec"
 	"path/filepath"
-	"runtime"
-	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/reanahub/reana-client-go/pkg/auth"
 )
@@ -141,26 +138,14 @@ func TestLoginDeviceCommandCompletesFullFlow(t *testing.T) {
 	}
 }
 
-// TestLoginBrowserCommandCompletesFullFlow drives newLoginCmd's real,
-// non-injectable openBrowser through a throwaway "xdg-open" script placed
-// first on PATH; the script uses curl to follow the fake IdP's redirect back
-// to the loopback callback, exactly like a real browser would.
+// TestLoginBrowserCommandCompletesFullFlow drives newLoginCmd's browser flow
+// with a stand-in browser opener that follows the fake IdP's redirect back to
+// the loopback callback, exactly like a real browser would. The callback
+// listener keeps its default ephemeral port, which the opener learns from the
+// redirect URI, and a short deadline bounds the test should the flow stall.
 func TestLoginBrowserCommandCompletesFullFlow(t *testing.T) {
-	if runtime.GOOS != "linux" {
-		t.Skip("test supplies a fake xdg-open implementation")
-	}
-	if _, err := exec.LookPath("curl"); err != nil {
-		t.Skip("curl not available")
-	}
 	t.Setenv("REANA_CLIENT_CONFIG", t.TempDir()+"/credentials.json")
-
-	probe, err := net.Listen("tcp", "127.0.0.1:0")
-	if err != nil {
-		t.Fatal(err)
-	}
-	port := probe.Addr().(*net.TCPAddr).Port
-	probe.Close()
-	t.Setenv("REANA_CLIENT_LOGIN_LOOPBACK_PORT", strconv.Itoa(port))
+	t.Setenv("REANA_CLIENT_LOGIN_LOOPBACK_PORT", "")
 
 	var server *httptest.Server
 	server = httptest.NewTLSServer(http.HandlerFunc(
@@ -200,19 +185,27 @@ func TestLoginBrowserCommandCompletesFullFlow(t *testing.T) {
 	defer server.Close()
 	trustAuthTestServer(t, server)
 
-	scriptDir := t.TempDir()
-	script := "#!/bin/sh\ncurl -k -s -o /dev/null -L \"$1\"\n"
-	if err := os.WriteFile(
-		filepath.Join(scriptDir, "xdg-open"),
-		[]byte(script),
-		0o755,
-	); err != nil {
-		t.Fatal(err)
+	previousTimeout, previousOpener := loginTimeout, loginBrowserOpener
+	t.Cleanup(func() {
+		loginTimeout, loginBrowserOpener = previousTimeout, previousOpener
+	})
+	loginTimeout = 10 * time.Second
+	opened := 0
+	loginBrowserOpener = func(target string) error {
+		opened++
+		browser := server.Client()
+		browser.Timeout = 5 * time.Second
+		response, err := browser.Get(target)
+		if err != nil {
+			t.Errorf("stand-in browser could not follow %q: %v", target, err)
+			return err
+		}
+		defer response.Body.Close()
+		if response.StatusCode != http.StatusOK {
+			t.Errorf("callback status = %d, want 200", response.StatusCode)
+		}
+		return nil
 	}
-	t.Setenv(
-		"PATH",
-		scriptDir+string(os.PathListSeparator)+os.Getenv("PATH"),
-	)
 
 	out, err := ExecuteCommand(
 		NewRootCmd(),
@@ -225,6 +218,9 @@ func TestLoginBrowserCommandCompletesFullFlow(t *testing.T) {
 	}
 	if !strings.Contains(out, "Logged in to "+server.URL) {
 		t.Errorf("expected a success message in the output, got %q", out)
+	}
+	if opened != 1 {
+		t.Errorf("browser opener calls = %d, want 1", opened)
 	}
 }
 
