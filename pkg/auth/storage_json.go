@@ -101,3 +101,24 @@ func preserveSettings(entry, previous Credentials) Credentials {
 	}
 	return entry
 }
+
+// mergeRecovery replaces only the refresh token and the metadata it was issued
+// under. The previous access token is kept unless it belongs to another issuer
+// or client.
+func mergeRecovery(recovery, previous Credentials) Credentials {
+	merged := previous
+	if previous.Issuer != recovery.Issuer ||
+		previous.ClientID != recovery.ClientID {
+		merged.AccessToken = ""
+		merged.AccessTokenExpiresAt = ""
+	}
+	merged.Issuer = recovery.Issuer
+	merged.ClientID = recovery.ClientID
+	merged.TokenEndpoint = recovery.TokenEndpoint
+	merged.AuthorizationEndpoint = recovery.AuthorizationEndpoint
+	merged.DeviceAuthorizationEndpoint = recovery.DeviceAuthorizationEndpoint
+	merged.RevocationEndpoint = recovery.RevocationEndpoint
+	merged.RefreshToken = recovery.RefreshToken
+	merged.RefreshTokenExpiresAt = ""
+	return merged
+}

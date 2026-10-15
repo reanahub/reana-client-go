@@ -1644,8 +1644,154 @@ func TestRefreshPreservesRotatedRefreshTokenWhenResponseIsRejected(
 			stored.RefreshToken,
 		)
 	}
-	if stored.AccessToken != "" {
-		t.Fatalf("rejected access token was stored: %q", stored.AccessToken)
+	if stored.AccessToken != credentials.AccessToken ||
+		stored.AccessTokenExpiresAt != credentials.AccessTokenExpiresAt {
+		t.Fatalf("previous access token was not preserved: %+v", stored)
+	}
+	if stored.CredentialEpoch != credentials.CredentialEpoch+1 {
+		t.Fatalf("credential epoch = %d", stored.CredentialEpoch)
+	}
+}
+
+func TestRejectedLoginKeepsActiveServerAndExistingEntry(t *testing.T) {
+	manager := testManager(
+		t,
+		func(request *http.Request) (*http.Response, error) {
+			switch request.URL.Path {
+			case discoveryPath:
+				return jsonResponse(http.StatusOK, `{
+                "issuer":"https://issuer.example.org",
+                "authorization_endpoint":"https://issuer.example.org/auth",
+                "token_endpoint":"https://issuer.example.org/token",
+                "device_authorization_endpoint":"https://issuer.example.org/device",
+                "reana_cli_client_id":"reana-cli"
+            }`), nil
+			case "/device":
+				return jsonResponse(
+					http.StatusOK,
+					`{"device_code":"device","user_code":"ABCD","verification_uri":"https://issuer.example.org/verify","expires_in":300,"interval":1}`,
+				), nil
+			case "/token":
+				return jsonResponse(
+					http.StatusOK,
+					`{"access_token":"rejected-access","refresh_token":"rotated-refresh","expires_in":-1}`,
+				), nil
+			default:
+				t.Fatalf("unexpected request: %s", request.URL)
+				return nil, nil
+			}
+		},
+	)
+	serverA, serverB := "https://a.example.org", "https://b.example.org"
+	insecure := false
+	accessTokenExpiresAt := manager.Now().Add(time.Hour).Format(time.RFC3339)
+	previous, err := manager.Store.Put(serverB, Credentials{
+		TLS:                  &TLSSettings{Verify: &insecure},
+		Issuer:               "https://issuer.example.org",
+		ClientID:             "reana-cli",
+		TokenEndpoint:        "https://issuer.example.org/token",
+		AccessToken:          "valid.access.token",
+		AccessTokenExpiresAt: accessTokenExpiresAt,
+		RefreshToken:         "old-refresh",
+	}, true)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := manager.Store.Put(
+		serverA,
+		Credentials{AccessToken: "a"},
+		true,
+	); err != nil {
+		t.Fatal(err)
+	}
+
+	_, err = manager.LoginDevice(
+		context.Background(),
+		serverB,
+		func(DevicePrompt) {},
+	)
+	if err == nil || !strings.Contains(err.Error(), "expires_in") {
+		t.Fatalf("invalid token response error = %v", err)
+	}
+	active, err := manager.Store.ActiveServer()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if active != serverA {
+		t.Fatalf("active server = %q, want %q", active, serverA)
+	}
+	stored, err := manager.Store.Get(serverB)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if stored.RefreshToken != "rotated-refresh" {
+		t.Fatalf(
+			"refresh token = %q, want rotated-refresh",
+			stored.RefreshToken,
+		)
+	}
+	if stored.AccessToken != "valid.access.token" ||
+		stored.AccessTokenExpiresAt != accessTokenExpiresAt {
+		t.Fatalf("previous access token was not preserved: %+v", stored)
+	}
+	if stored.TLS == nil || stored.TLS.Verify == nil || *stored.TLS.Verify {
+		t.Fatalf("TLS setting was not preserved: %+v", stored.TLS)
+	}
+	if stored.CredentialEpoch != previous.CredentialEpoch+1 {
+		t.Fatalf("credential epoch = %d", stored.CredentialEpoch)
+	}
+}
+
+func TestPutRecoveryDropsAccessTokenFromAnotherIssuer(t *testing.T) {
+	store := &Store{Path: filepath.Join(t.TempDir(), "reana-client.json")}
+	serverURL := "https://reana.example.org"
+	if _, err := store.Put(serverURL, Credentials{
+		Issuer:       "https://old-issuer.example.org",
+		ClientID:     "reana-cli",
+		AccessToken:  "old.access.token",
+		RefreshToken: "old-refresh",
+	}, true); err != nil {
+		t.Fatal(err)
+	}
+	stored, err := store.PutRecovery(serverURL, Credentials{
+		Issuer:       "https://issuer.example.org",
+		ClientID:     "reana-cli",
+		RefreshToken: "rotated-refresh",
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if stored.AccessToken != "" || stored.RefreshToken != "rotated-refresh" ||
+		stored.Issuer != "https://issuer.example.org" {
+		t.Fatalf("unexpected recovery entry: %+v", stored)
+	}
+}
+
+func TestPutRecoveryIfEpochSkipsRacedEntry(t *testing.T) {
+	store := &Store{Path: filepath.Join(t.TempDir(), "reana-client.json")}
+	serverURL := "https://reana.example.org"
+	previous, err := store.Put(
+		serverURL,
+		Credentials{RefreshToken: "new-login-refresh"},
+		true,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, matched, err := store.PutRecoveryIfEpoch(
+		serverURL,
+		Credentials{RefreshToken: "rotated-refresh"},
+		previous.CredentialEpoch-1,
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	stored, err := store.Get(serverURL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if matched || stored.RefreshToken != "new-login-refresh" {
+		t.Fatalf("raced entry was overwritten: %+v", stored)
 	}
 }
 
