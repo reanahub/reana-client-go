@@ -53,6 +53,7 @@ type TestCmdParams struct {
 	unwanted        []string
 	wantError       bool
 	serverURL       string
+	assertRequest   func(t *testing.T, r *http.Request)
 }
 
 type ServerResponse struct {
@@ -140,6 +141,9 @@ func testCmdRun(t *testing.T, p TestCmdParams) {
 					),
 				)
 				return
+			}
+			if p.assertRequest != nil {
+				p.assertRequest(t, r)
 			}
 			res, validPath := p.serverResponses[r.URL.Path]
 			if validPath {
