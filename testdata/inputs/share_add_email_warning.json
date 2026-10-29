@@ -1,0 +1,11 @@
+{
+  "message": "The workflow has been shared with the user.",
+  "workflow_id": "cdcf48b1-c2f3-4693-8230-b066e088c6ac",
+  "workflow_name": "my_workflow.1",
+  "warnings": [
+    {
+      "code": "email_notification_failed",
+      "message": "The workflow was shared, but the notification email could not be sent."
+    }
+  ]
+}

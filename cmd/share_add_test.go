@@ -43,9 +43,39 @@ func TestShareAdd(t *testing.T) {
 				`"workflow": "my_workflow"`,
 				`"shared_with": [`,
 				`"bob@cern.ch"`,
+				`"warnings": []`,
 				`"errors": []`,
 			},
 			unwanted: []string{"SUCCESS"},
+		},
+		"email notification warning": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(shareAddPathTemplate, workflowName): {
+					statusCode:   http.StatusOK,
+					responseFile: "share_add_email_warning.json",
+				},
+			},
+			args: []string{"-w", workflowName, "--user", "bob@cern.ch"},
+			expected: []string{
+				"my_workflow is now read-only shared with bob@cern.ch",
+				"bob@cern.ch: The workflow was shared, but the notification email could not be sent.",
+			},
+		},
+		"email notification warning json": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(shareAddPathTemplate, workflowName): {
+					statusCode:   http.StatusOK,
+					responseFile: "share_add_email_warning.json",
+				},
+			},
+			args: []string{
+				"-w", workflowName, "--user", "bob@cern.ch", "--json",
+			},
+			expected: []string{
+				`"warnings": [`,
+				"bob@cern.ch: The workflow was shared, but the notification email could not be sent.",
+				`"errors": []`,
+			},
 		},
 		"with message and valid-until": {
 			serverResponses: map[string]ServerResponse{
