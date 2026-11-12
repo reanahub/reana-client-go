@@ -1,0 +1,4 @@
+{
+  "logs_pruned_at": "2026-07-13T03:00:00Z",
+  "message": "The logs for this run were pruned by the cluster's retention policy on 2026-07-13T03:00:00Z and are no longer available."
+}
