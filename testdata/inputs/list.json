@@ -27,6 +27,7 @@
       "session_status": "created",
       "session_type": "jupyter",
       "session_uri": "/session1uri",
+      "session_secret": "session-secret",
       "shared_with": []
     },
     {
@@ -55,6 +56,7 @@
       "session_status": "created",
       "session_type": "jupyter",
       "session_uri": "/session2uri",
+      "session_secret": "session-secret",
       "shared_with": ["shared_with_email"]
     }
   ]

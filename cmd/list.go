@@ -258,6 +258,10 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 	listParams.SetWorkflowIDOrName(&o.workflow)
 	listParams.SetStatus(statusFilters)
 	listParams.SetSearch(&searchFilter)
+	if o.listSessions {
+		// Fetch the session secrets with the listing rather than one by one.
+		listParams.SetIncludeSessionSecrets(&o.listSessions)
+	}
 	if cmd.Flags().Changed("size") {
 		listParams.SetSize(&o.size)
 	}
@@ -307,7 +311,6 @@ func (o *listOptions) run(cmd *cobra.Command) error {
 		header,
 		parsedFormatFilters,
 		o.serverURL,
-		api,
 		o.sortColumn,
 		o.jsonOutput,
 		o.humanReadable,
@@ -326,7 +329,6 @@ func displayListPayload(
 	header []string,
 	formatFilters []formatter.FormatFilter,
 	serverURL string,
-	api *client.AuthenticatedClient,
 	sortColumn string,
 	jsonOutput, humanReadable bool,
 ) error {
@@ -381,23 +383,21 @@ func displayListPayload(
 				value = getOptionalStringField(&workflow.SessionType)
 			case "session_uri":
 				if workflow.SessionURI != "" {
-					sessionSecret, err := api.GetInteractiveSessionSecret(
-						cmd.Context(),
-						workflow.Name,
-					)
-					if err != nil {
+					// The secret comes with the listing, and only for the
+					// sessions the user owns.
+					if workflow.SessionSecret == "" {
 						log.Debugf(
-							"could not fetch interactive session secret for %q: %v",
+							"no interactive session secret returned for %q",
 							workflow.Name,
-							err,
 						)
 						value = "(unavailable)"
 						break
 					}
+					var err error
 					value, err = formatter.FormatSessionURI(
 						serverURL,
 						workflow.SessionURI,
-						sessionSecret,
+						workflow.SessionSecret,
 					)
 					if err != nil {
 						return err
