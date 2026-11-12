@@ -140,6 +140,26 @@ func TestStatus(t *testing.T) {
 			},
 			wantError: true,
 		},
+		"progress absent": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(statusPathTemplate, workflowName): {
+					statusCode:   http.StatusOK,
+					responseFile: "status_no_progress.json",
+				},
+			},
+			args:     []string{"-w", workflowName, "-v", "--include-duration"},
+			expected: []string{"my_workflow", "created"},
+		},
+		"progress empty": {
+			serverResponses: map[string]ServerResponse{
+				fmt.Sprintf(statusPathTemplate, workflowName): {
+					statusCode:   http.StatusOK,
+					responseFile: "status_bare_progress.json",
+				},
+			},
+			args:     []string{"-w", workflowName, "-v", "--include-duration"},
+			expected: []string{"my_workflow", "queued"},
+		},
 	}
 
 	for name, params := range tests {
@@ -336,6 +356,8 @@ func TestGetStatusCommand(t *testing.T) {
 	cmdStr := "cmd"
 	stepStr := "step"
 	bashCmd := "bash -c \"cd folder; ls \""
+	emptyBodyCmd := "bash -c \"cd /x;\""
+	noSemicolonCmd := "bash -c \"cd a\""
 
 	tests := map[string]struct {
 		progress operations.GetWorkflowStatusOKBodyProgress
@@ -360,6 +382,18 @@ func TestGetStatusCommand(t *testing.T) {
 				CurrentStepName: &stepStr,
 			},
 			expected: "ls",
+		},
+		"prefix with no command after the semicolon": {
+			progress: operations.GetWorkflowStatusOKBodyProgress{
+				CurrentCommand: &emptyBodyCmd,
+			},
+			expected: emptyBodyCmd,
+		},
+		"prefix with no semicolon": {
+			progress: operations.GetWorkflowStatusOKBodyProgress{
+				CurrentCommand: &noSemicolonCmd,
+			},
+			expected: noSemicolonCmd,
 		},
 	}
 
