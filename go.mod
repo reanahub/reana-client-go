@@ -1,6 +1,6 @@
 module github.com/reanahub/reana-client-go
 
-go 1.27.3
+go 1.27.4
 
 require (
 	github.com/cucumber/gherkin/go/v42 v42.0.0
