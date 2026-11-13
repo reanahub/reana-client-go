@@ -63,6 +63,7 @@ type specForBundle struct {
 		Files       []string               `yaml:"files"`
 		Directories []string               `yaml:"directories"`
 		Parameters  map[string]interface{} `yaml:"parameters"`
+		Options     yaml.Node              `yaml:"options"`
 	} `yaml:"inputs"`
 }
 
@@ -653,6 +654,36 @@ func Gather(reanaFile string) (map[string]string, error) {
 	} else if legacyFile != "" {
 		if err := addFile(members, budget, baseDir, legacyFile, "inputs.parameters.input", false); err != nil {
 			return nil, err
+		}
+	}
+	if specification.Workflow.Type == "yadage" &&
+		specification.Inputs.Options.Kind != 0 {
+		var value interface{}
+		if err := specification.Inputs.Options.Decode(&value); err != nil {
+			return nil, fmt.Errorf("invalid inputs.options: %w", err)
+		}
+		options, ok := value.(map[string]interface{})
+		if !ok {
+			return nil, fmt.Errorf("inputs.options must be a mapping")
+		}
+		if value, present := options["initfiles"]; present {
+			initfiles, ok := value.([]interface{})
+			if !ok {
+				return nil, fmt.Errorf(
+					"inputs.options.initfiles must be a list",
+				)
+			}
+			for _, value := range initfiles {
+				filename, ok := value.(string)
+				if !ok {
+					return nil, fmt.Errorf(
+						"inputs.options.initfiles entries must be strings",
+					)
+				}
+				if err := addFile(members, budget, baseDir, filename, "inputs.options.initfiles", false); err != nil {
+					return nil, err
+				}
+			}
 		}
 	}
 	return members, nil
