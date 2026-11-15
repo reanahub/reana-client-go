@@ -50,6 +50,7 @@ type shareAddOptions struct {
 type shareAddResult struct {
 	Workflow   string   `json:"workflow"`
 	SharedWith []string `json:"shared_with"`
+	Warnings   []string `json:"warnings"`
 	Errors     []string `json:"errors"`
 }
 
@@ -147,13 +148,14 @@ func (o *shareAddOptions) run(cmd *cobra.Command) error {
 	}
 
 	shareErrors := []string{}
+	shareWarnings := []string{}
 	sharedUsers := []string{}
 
 	for _, user := range o.users {
 		log.Infof("Sharing workflow %s with user %s", o.workflow, user)
 
 		shareAddParams.ShareDetails.UserEmailToShareWith = &user
-		_, err := api.Operations.ShareWorkflow(shareAddParams, nil)
+		shareAddResp, err := api.Operations.ShareWorkflow(shareAddParams, nil)
 
 		if err != nil {
 			err := errorhandler.HandleApiError(err)
@@ -168,6 +170,14 @@ func (o *shareAddOptions) run(cmd *cobra.Command) error {
 			)
 		} else {
 			sharedUsers = append(sharedUsers, user)
+			for _, warning := range shareAddResp.Payload.Warnings {
+				if warning != nil {
+					shareWarnings = append(
+						shareWarnings,
+						fmt.Sprintf("%s: %s", user, warning.Message),
+					)
+				}
+			}
 		}
 	}
 
@@ -176,6 +186,7 @@ func (o *shareAddOptions) run(cmd *cobra.Command) error {
 			shareAddResult{
 				Workflow:   o.workflow,
 				SharedWith: sharedUsers,
+				Warnings:   shareWarnings,
 				Errors:     shareErrors,
 			},
 			cmd.OutOrStdout(),
@@ -191,6 +202,14 @@ func (o *shareAddOptions) run(cmd *cobra.Command) error {
 					strings.Join(sharedUsers, ", "),
 				),
 				displayer.Success,
+				false,
+				cmd.OutOrStdout(),
+			)
+		}
+		for _, shareWarning := range shareWarnings {
+			displayer.DisplayMessage(
+				shareWarning,
+				displayer.Warning,
 				false,
 				cmd.OutOrStdout(),
 			)
