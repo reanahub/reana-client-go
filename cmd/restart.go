@@ -20,7 +20,6 @@ import (
 	"github.com/reanahub/reana-client-go/pkg/validator"
 	"github.com/reanahub/reana-client-go/pkg/workflows"
 
-	"go.yaml.in/yaml/v3"
 	"golang.org/x/exp/slices"
 
 	"github.com/spf13/cobra"
@@ -30,11 +29,17 @@ const restartDesc = `
 Restart previously run workflow.
 
 The ` + "``restart``" + ` command allows to restart a previous workflow on the same
-workspace.
+workspace. It reloads and validates the current workspace workflow sources and
+parameter files. Upload changed files before restarting; an unchanged reana.yaml
+does not need to be resubmitted.
 
 Note that workflow restarting can be used in a combination with operational
 options ` + "``FROM``" + ` and ` + "``TARGET``" + `. You can also pass a modified workflow
 specification with ` + "``-f``" + ` or ` + "``--file``" + ` flag.
+
+Changing workflow.type or workflow.file requires -f, even after uploading a
+changed reana.yaml. Workspaces missing raw YAML also need -f to restore source
+reloading; self-contained Serial workflows can reuse stored steps with a warning.
 
 The ` + "``-f``" + `/` + "``--file``" + ` flag replaces only the *specification* (input
 parameters, operational options, and workflow type/definition metadata). The
@@ -43,10 +48,11 @@ the existing workspace: a restart does not re-upload them. If the replacement
 specification references new or changed workflow source, upload those files to
 the workspace first; otherwise validation fails naming the missing file.
 
-You can furthermore use modified input prameters using ` + "``-p``" + ` or
-` + "``--parameters``" + ` flag and by setting additional operational options using
-` + "``-o``" + ` or ` + "``--options``" + `.  The input parameters and operational options can
-be repetitive.
+Explicit input parameters (` + "``-p``" + `/` + "``--parameter``" + `) and operational
+options (` + "``-o``" + `/` + "``--option``" + `) override values loaded from the workspace.
+These flags can be repeated and apply only to this run. Unknown parameter names
+are rejected by the server. Parameter-file values are overlaid by inline
+inputs.parameters, then by -p values.
 
 Examples:
 
@@ -152,36 +158,9 @@ func (o *restartOptions) run(cmd *cobra.Command) error {
 		return err
 	}
 
-	var replacementSpecification *restartSpecification
-	if o.file != "" {
-		if len(o.parameters) > 0 || len(o.options) > 0 {
-			replacementSpecification, err = readRestartSpecification(o.file)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	if len(o.parameters) > 0 || len(o.options) > 0 {
-		if replacementSpecification != nil {
-			o.options, o.parameters, err = validateOptionsAndParams(
-				replacementSpecification.Workflow.Type,
-				replacementSpecification.Inputs.Parameters,
-				o.options,
-				o.parameters,
-				cmd.OutOrStdout(),
-			)
-		} else {
-			o.options, o.parameters, err = validateStartOptionsAndParams(
-				api,
-				o.token, o.workflow, o.options, o.parameters,
-				cmd.OutOrStdout(),
-			)
-		}
-		if err != nil {
-			return err
-		}
-	}
+	// Only the server can validate overrides against current workspace sources.
+	// Stored parameters may be stale, and referenced parameter files need not
+	// exist locally when a replacement specification is supplied.
 	var currentStatus string
 	if o.file != "" {
 		replacement, openErr := specbundle.OpenSpecification(o.file)
@@ -257,35 +236,4 @@ func (o *restartOptions) run(cmd *cobra.Command) error {
 	}
 
 	return nil
-}
-
-// restartSpecification contains only the fields needed for lightweight local
-// override validation. The server remains authoritative for full validation.
-type restartSpecification struct {
-	Inputs struct {
-		Parameters map[string]any `yaml:"parameters"`
-	} `yaml:"inputs"`
-	Workflow struct {
-		Type string `yaml:"type"`
-	} `yaml:"workflow"`
-}
-
-func readRestartSpecification(path string) (*restartSpecification, error) {
-	data, err := specbundle.ReadSpecification(path)
-	if err != nil {
-		return nil, fmt.Errorf(
-			"file %s could not be read: %s",
-			path,
-			err.Error(),
-		)
-	}
-	var spec restartSpecification
-	if err := yaml.Unmarshal(data, &spec); err != nil {
-		return nil, fmt.Errorf(
-			"file %s is not a valid YAML specification: %s",
-			path,
-			err.Error(),
-		)
-	}
-	return &spec, nil
 }

@@ -1,6 +1,9 @@
 /*
 This file is part of REANA.
 Copyright (C) 2026 CERN.
+
+REANA is free software; you can redistribute it and/or modify it
+under the terms of the MIT License; see LICENSE file for more details.
 */
 
 package specbundle
@@ -1003,5 +1006,84 @@ func TestOpenSpecificationStreamsExactFileAndClosesDescriptor(t *testing.T) {
 	}
 	if _, err := file.Read(make([]byte, 1)); err == nil {
 		t.Fatal("closed specification descriptor remained readable")
+	}
+}
+
+func TestGatherYadageInitfiles(t *testing.T) {
+	for name, scope := range map[string]struct{ workflow, inputs string }{
+		"explicit-files":       {workflow: "  files: []\n"},
+		"explicit-directories": {workflow: "  directories: []\n"},
+		"implicit-scope":       {},
+		"legacy-duplicate":     {inputs: "  files: [params.yaml]\n"},
+	} {
+		t.Run(name, func(t *testing.T) {
+			root := t.TempDir()
+			writeFile(t, filepath.Join(root, "workflow.yaml"), "stages: []\n")
+			writeFile(t, filepath.Join(root, "params.yaml"), "events: 2000\n")
+			specification := filepath.Join(root, "reana.yaml")
+			writeFile(
+				t,
+				specification,
+				"workflow:\n  type: yadage\n  file: workflow.yaml\n"+scope.workflow+
+					"inputs:\n"+scope.inputs+"  options:\n    initfiles: [params.yaml]\n",
+			)
+			members, err := Gather(specification)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if len(members) != 3 ||
+				members["params.yaml"] != filepath.Join(root, "params.yaml") {
+				t.Fatalf(
+					"expected initfile in validation scope, got %#v",
+					members,
+				)
+			}
+		})
+	}
+}
+
+func TestGatherRejectsInvalidYadageInitfiles(t *testing.T) {
+	for name, options := range map[string]string{
+		"options-list":     "[]",
+		"options-null":     "null",
+		"initfiles-string": "{initfiles: params.yaml}",
+		"initfiles-null":   "{initfiles: null}",
+		"entry-number":     "{initfiles: [42]}",
+		"entry-mapping":    "{initfiles: [{file: params.yaml}]}",
+		"missing":          "{initfiles: [missing.yaml]}",
+		"absolute":         "{initfiles: [/params.yaml]}",
+		"parent":           "{initfiles: [../params.yaml]}",
+		"symlink":          "{initfiles: [link.yaml]}",
+	} {
+		t.Run(name, func(t *testing.T) {
+			root := t.TempDir()
+			writeFile(t, filepath.Join(root, "workflow.yaml"), "stages: []\n")
+			writeFile(t, filepath.Join(root, "params.yaml"), "events: 2000\n")
+			if err := os.Symlink("params.yaml", filepath.Join(root, "link.yaml")); err != nil {
+				t.Fatal(err)
+			}
+			specification := filepath.Join(root, "reana.yaml")
+			writeFile(t, specification,
+				"workflow:\n  type: yadage\n  file: workflow.yaml\n"+
+					"inputs:\n  options: "+options+"\n")
+			if _, err := Gather(specification); err == nil ||
+				!strings.Contains(err.Error(), "inputs.options") {
+				t.Fatalf("expected initfile declaration error, got %v", err)
+			}
+		})
+	}
+}
+
+func TestGatherIgnoresInitfilesForOtherEngines(t *testing.T) {
+	root := t.TempDir()
+	specification := filepath.Join(root, "reana.yaml")
+	writeFile(
+		t,
+		specification,
+		"workflow: {type: serial}\ninputs: {options: {initfiles: [missing.yaml]}}\n",
+	)
+	members, err := Gather(specification)
+	if err != nil || len(members) != 1 {
+		t.Fatalf("unexpected non-Yadage scope: %#v, %v", members, err)
 	}
 }

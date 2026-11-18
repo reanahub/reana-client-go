@@ -15,6 +15,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 
@@ -28,28 +29,18 @@ const restartSuccessBody = `{"message":"started","run_number":"1.1",` +
 	`"status":"running","user":"u","workflow_id":"id",` +
 	`"workflow_name":"my_workflow"}`
 
-func TestRestartSpecificationReadErrors(t *testing.T) {
+func TestRestartMissingReplacementFile(t *testing.T) {
 	missing := filepath.Join(t.TempDir(), "missing.yaml")
-	if _, err := readRestartSpecification(missing); err == nil ||
-		!strings.Contains(err.Error(), "could not be read") {
-		t.Fatalf("unexpected read error: %v", err)
-	}
-
-	malformed := filepath.Join(t.TempDir(), "malformed.yaml")
-	if err := os.WriteFile(
-		malformed,
-		[]byte("workflow: [unterminated\n"),
-		0o600,
-	); err != nil {
-		t.Fatal(err)
-	}
-	if _, err := readRestartSpecification(malformed); err == nil ||
-		!strings.Contains(err.Error(), "not a valid YAML specification") {
-		t.Fatalf("unexpected YAML error: %v", err)
+	_, err := ExecuteCommand(
+		newRestartCmd(), "-f", missing, "-p", "events=2000",
+	)
+	if err == nil ||
+		!strings.Contains(err.Error(), "invalid value for '--file'") {
+		t.Fatalf("unexpected missing file error: %v", err)
 	}
 }
 
-// A plain restart reuses the workspace and needs no reana.yaml: the -f flag is
+// A plain restart reuses the workspace and needs no local reana.yaml: -f is
 // opt-in, so restart must not fail validating a (defaulted) specification file
 // that does not exist in the current directory.
 func TestRestartWithoutSpecFileSucceeds(t *testing.T) {
@@ -177,72 +168,125 @@ func TestRestartPostsReplacementSpecAtomically(t *testing.T) {
 	}
 }
 
-func TestRestartValidatesOverridesAgainstReplacementSpec(t *testing.T) {
-	specFile := filepath.Join(t.TempDir(), "replacement.yaml")
-	specContents := "inputs:\n  parameters:\n    new_parameter: default\n" +
-		"workflow:\n  type: serial\n  specification:\n    steps: []\n"
-	if err := os.WriteFile(specFile, []byte(specContents), 0o644); err != nil {
-		t.Fatal(err)
-	}
-
-	var (
-		parametersEndpointHit bool
-		restartParameters     map[string]any
-	)
-	server := httptest.NewTLSServer(
-		withPingFunc(func(w http.ResponseWriter, r *http.Request) {
-			w.Header().Set("Content-Type", "application/json")
-			switch {
-			case strings.HasSuffix(r.URL.Path, "/parameters"):
-				parametersEndpointHit = true
-				w.WriteHeader(http.StatusInternalServerError)
-			case strings.HasSuffix(r.URL.Path, "/restart"):
-				_ = r.ParseMultipartForm(1024 * 1024)
-				_ = json.Unmarshal(
-					[]byte(r.FormValue("parameters")), &restartParameters,
-				)
-				_, _ = w.Write([]byte(
-					`{"message":"started","status":"running","user":"u",` +
-						`"workflow_id":"id","workflow_name":"my_workflow",` +
-						`"validation_warnings":[{"message":"using latest tag"}]}`,
-				))
-			default:
-				w.WriteHeader(http.StatusNotFound)
+func TestRestartSendsOverridesForWorkspaceValidation(t *testing.T) {
+	for _, replacement := range []bool{false, true} {
+		name := "plain"
+		if replacement {
+			name = "replacement"
+		}
+		t.Run(name, func(t *testing.T) {
+			t.Chdir(t.TempDir())
+			var specContents string
+			args := []string{
+				"restart", "-t", "1234", "-w", "my_workflow",
+				"-p", "new_parameter=overridden", "-p", "events=2000",
+				"-o", "TARGET=result",
 			}
-		}),
-	)
-	defer server.Close()
-	savedTestServer(t, server.URL, false)
-	viper.Set("server-url", server.URL)
-	t.Cleanup(viper.Reset)
-
-	out, err := ExecuteCommand(
-		NewRootCmd(),
-		"restart",
-		"-t",
-		"1234",
-		"-w",
-		"my_workflow",
-		"-f",
-		specFile,
-		"-p",
-		"new_parameter=overridden",
-	)
-	if err != nil {
-		t.Fatalf("restart with replacement override failed: %v", err)
-	}
-	if parametersEndpointHit {
-		t.Error("restart fetched parameters from the original specification")
-	}
-	inputParameters, ok := restartParameters["input_parameters"].(map[string]any)
-	if !ok {
-		t.Fatalf("missing input_parameters: %#v", restartParameters)
-	}
-	if got := inputParameters["new_parameter"]; got != "overridden" {
-		t.Errorf("expected replacement parameter override, got %#v", got)
-	}
-	if !strings.Contains(out, "using latest tag") {
-		t.Errorf("expected validation warning in output, got %q", out)
+			if replacement {
+				// Parameters and workflow sources exist only in the workspace.
+				specContents = "workflow:\n  type: cwl\n  file: workflow.cwl\n" +
+					"  parameters:\n    file: params.yaml\n"
+				if err := os.WriteFile("replacement.yaml", []byte(specContents), 0o600); err != nil {
+					t.Fatal(err)
+				}
+				args = append(args, "-f", "replacement.yaml")
+			}
+			var parametersEndpointHit bool
+			var submitted map[string]any
+			var submissions int
+			server := httptest.NewTLSServer(
+				withPingFunc(func(w http.ResponseWriter, r *http.Request) {
+					w.Header().Set("Content-Type", "application/json")
+					if strings.HasSuffix(r.URL.Path, "/parameters") {
+						parametersEndpointHit = true
+						_, _ = w.Write(
+							[]byte(
+								`{"type":"serial","parameters":{"old_parameter":"value"}}`,
+							),
+						)
+						return
+					}
+					expectedPath := "/start"
+					if replacement {
+						expectedPath = "/restart"
+					}
+					if r.Method != http.MethodPost ||
+						!strings.HasSuffix(r.URL.Path, expectedPath) {
+						t.Errorf(
+							"unexpected request: %s %s",
+							r.Method,
+							r.URL.Path,
+						)
+						http.NotFound(w, r)
+						return
+					}
+					submissions++
+					if replacement {
+						if err := r.ParseMultipartForm(1024 * 1024); err != nil {
+							t.Error(err)
+							return
+						}
+						defer func() { _ = r.MultipartForm.RemoveAll() }()
+						file, _, err := r.FormFile("replacement")
+						if err != nil {
+							t.Error(err)
+							return
+						}
+						defer func() { _ = file.Close() }()
+						contents, err := io.ReadAll(file)
+						if err != nil || string(contents) != specContents {
+							t.Errorf(
+								"replacement bytes changed: %q (%v)",
+								contents,
+								err,
+							)
+						}
+						if err := json.Unmarshal([]byte(r.FormValue("parameters")), &submitted); err != nil {
+							t.Error(err)
+							return
+						}
+					} else if err := json.NewDecoder(r.Body).Decode(&submitted); err != nil {
+						t.Error(err)
+						return
+					}
+					_, _ = w.Write([]byte(
+						`{"message":"started","status":"running","user":"u",` +
+							`"workflow_id":"id","workflow_name":"my_workflow",` +
+							`"validation_warnings":[{"message":"using latest tag"}]}`,
+					))
+				}),
+			)
+			defer server.Close()
+			savedTestServer(t, server.URL, false)
+			viper.Set("server-url", server.URL)
+			t.Cleanup(viper.Reset)
+			out, err := ExecuteCommand(NewRootCmd(), args...)
+			if err != nil {
+				t.Fatalf("restart failed: %v", err)
+			}
+			if parametersEndpointHit {
+				t.Error("restart fetched stored parameters")
+			}
+			if submissions != 1 {
+				t.Fatalf("expected one submission, got %d", submissions)
+			}
+			want := map[string]any{
+				"input_parameters": map[string]any{
+					"new_parameter": "overridden",
+					"events":        "2000",
+				},
+				"operational_options": map[string]any{"TARGET": "result"},
+			}
+			if !replacement {
+				want["restart"] = true
+			}
+			if !reflect.DeepEqual(submitted, want) {
+				t.Errorf("submitted %#v, want %#v", submitted, want)
+			}
+			if !strings.Contains(out, "using latest tag") {
+				t.Errorf("expected validation warning, got %q", out)
+			}
+		})
 	}
 }
 
@@ -252,7 +296,7 @@ func TestRestartReturnsAtomicOperationFailure(t *testing.T) {
 			specFile := filepath.Join(t.TempDir(), "replacement.yaml")
 			if err := os.WriteFile(
 				specFile,
-				[]byte("workflow:\n  type: serial\n  specification:\n    steps: []\n"),
+				[]byte("workflow: [unterminated\n"),
 				0o600,
 			); err != nil {
 				t.Fatal(err)
@@ -282,11 +326,40 @@ func TestRestartReturnsAtomicOperationFailure(t *testing.T) {
 				"my_workflow",
 				"-f",
 				specFile,
+				"-p",
+				"new_parameter=overridden",
 			)
 			if err == nil || !strings.Contains(err.Error(), "restart failed") {
 				t.Fatalf("expected restart failure, got %v", err)
 			}
 		})
+	}
+}
+
+func TestPlainRestartReturnsServerValidationError(t *testing.T) {
+	server := httptest.NewTLSServer(
+		withPingFunc(func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Content-Type", "application/json")
+			if !strings.HasSuffix(r.URL.Path, "/start") {
+				http.NotFound(w, r)
+				return
+			}
+			w.WriteHeader(http.StatusBadRequest)
+			_, _ = w.Write([]byte(`{"message":"unknown workspace parameter"}`))
+		}),
+	)
+	defer server.Close()
+	savedTestServer(t, server.URL, false)
+	viper.Set("server-url", server.URL)
+	t.Cleanup(viper.Reset)
+
+	_, err := ExecuteCommand(
+		NewRootCmd(), "restart", "-t", "1234", "-w", "my_workflow",
+		"-p", "unknown=value",
+	)
+	if err == nil ||
+		!strings.Contains(err.Error(), "unknown workspace parameter") {
+		t.Fatalf("expected server validation error, got %v", err)
 	}
 }
 
