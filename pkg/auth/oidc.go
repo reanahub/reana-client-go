@@ -601,10 +601,9 @@ func (m *Manager) storeTokens(
 			// The issuer may rotate the refresh token before we reject another
 			// response field. Preserve only that replacement, without accepting
 			// the invalid access token, so the next command can retry safely.
-			_, storeErr := m.Store.Put(
+			_, storeErr := m.Store.PutRecovery(
 				serverURL,
 				refreshTokenRecoveryCredentials(metadata, tokens.RefreshToken),
-				false,
 			)
 			if storeErr != nil {
 				return Credentials{}, authenticationError(
@@ -1180,7 +1179,7 @@ func (m *Manager) Refresh(
 				metadata,
 				tokens.RefreshToken,
 			)
-			_, matched, storeErr := m.Store.PutIfEpoch(
+			_, matched, storeErr := m.Store.PutRecoveryIfEpoch(
 				normalized,
 				recovery,
 				startedEpoch,
