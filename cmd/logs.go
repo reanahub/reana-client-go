@@ -294,7 +294,11 @@ func (r *logsCommandRunner) getLogsWithStatus(
 		return "", "", err
 	}
 
-	return *workflowLogs.WorkflowLogs, statusResponse.GetPayload().Status, nil
+	engineLogs := ""
+	if workflowLogs.WorkflowLogs != nil {
+		engineLogs = *workflowLogs.WorkflowLogs
+	}
+	return engineLogs, statusResponse.GetPayload().Status, nil
 }
 
 // getLogs retrieves logs of a workflow and unmarshals data into logs structure.
