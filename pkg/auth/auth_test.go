@@ -213,15 +213,36 @@ func TestDiscoverValidatesRelayedMetadata(t *testing.T) {
 func TestDiscoverRejectsCredentialEndpointRedirect(t *testing.T) {
 	manager := testManager(t, func(*http.Request) (*http.Response, error) {
 		response := jsonResponse(http.StatusTemporaryRedirect, `{}`)
-		response.Header.Set("Location", "http://attacker.example/metadata")
+		response.Header.Set(
+			"Location",
+			"http://attacker.example/metadata?code=secret-code",
+		)
 		return response, nil
 	})
 	_, err := manager.Discover(
 		context.Background(),
 		"https://reana.example.org",
 	)
-	if err == nil || !strings.Contains(err.Error(), "refusing") {
-		t.Fatalf("expected redirect rejection, got %v", err)
+	if err == nil {
+		t.Fatal("expected redirect rejection")
+	}
+	message := err.Error()
+	for _, expected := range []string{
+		"authentication metadata discovery failed with HTTP 307",
+		"refusing to follow a redirect",
+	} {
+		if !strings.Contains(message, expected) {
+			t.Fatalf("error %q does not contain %q", message, expected)
+		}
+	}
+	for _, leaked := range []string{"attacker.example", "secret-code"} {
+		if strings.Contains(message, leaked) {
+			t.Fatalf(
+				"error %q reveals redirect destination %q",
+				message,
+				leaked,
+			)
+		}
 	}
 }
 
@@ -237,7 +258,12 @@ func TestCredentialPostsAreNotReplayedAcrossRedirects(t *testing.T) {
 	defer target.Close()
 	origin := httptest.NewTLSServer(http.HandlerFunc(
 		func(w http.ResponseWriter, request *http.Request) {
-			http.Redirect(w, request, target.URL, http.StatusTemporaryRedirect)
+			http.Redirect(
+				w,
+				request,
+				target.URL+"/callback?token=secret-location",
+				http.StatusTemporaryRedirect,
+			)
 		},
 	))
 	defer origin.Close()
@@ -282,6 +308,15 @@ func TestCredentialPostsAreNotReplayedAcrossRedirects(t *testing.T) {
 	)
 	if !strings.Contains(warning, "redirect") {
 		t.Fatalf("revocation warning = %q", warning)
+	}
+	for _, message := range []string{err.Error(), warning} {
+		if strings.Contains(message, target.URL) ||
+			strings.Contains(message, "secret-location") {
+			t.Fatalf("message %q reveals redirect destination", message)
+		}
+	}
+	if !strings.Contains(err.Error(), "token refresh failed with HTTP 307") {
+		t.Fatalf("token redirect error = %q", err)
 	}
 	if targetRequests.Load() != 0 {
 		t.Fatalf(
