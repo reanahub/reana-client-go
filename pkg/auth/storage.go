@@ -184,27 +184,51 @@ func (s *Store) Get(serverURL string) (Credentials, error) {
 	return config.Servers[normalized], nil
 }
 
+// put stores the entry built from the previous one and increments its
+// concurrency epoch. A non-nil epoch makes the write conditional on it.
+func (s *Store) put(
+	serverURL string,
+	epoch *int64,
+	makeActive bool,
+	build func(previous Credentials) Credentials,
+) (Credentials, bool, error) {
+	normalized, err := NormalizeServerURL(serverURL)
+	if err != nil {
+		return Credentials{}, false, err
+	}
+	var stored Credentials
+	matched := false
+	err = s.withLock(func(config *credentialConfig) error {
+		previous := config.Servers[normalized]
+		if epoch != nil && previous.CredentialEpoch != *epoch {
+			return nil
+		}
+		entry := build(previous)
+		entry.CredentialEpoch = previous.CredentialEpoch + 1
+		config.Servers[normalized] = entry
+		if makeActive {
+			config.ActiveServer = normalized
+		}
+		stored, matched = entry, true
+		return nil
+	})
+	return stored, matched, err
+}
+
 // Put updates a server entry and increments its concurrency epoch.
 func (s *Store) Put(
 	serverURL string,
 	entry Credentials,
 	makeActive bool,
 ) (Credentials, error) {
-	normalized, err := NormalizeServerURL(serverURL)
-	if err != nil {
-		return Credentials{}, err
-	}
-	var stored Credentials
-	err = s.withLock(func(config *credentialConfig) error {
-		entry = preserveSettings(entry, config.Servers[normalized])
-		entry.CredentialEpoch = config.Servers[normalized].CredentialEpoch + 1
-		config.Servers[normalized] = entry
-		if makeActive {
-			config.ActiveServer = normalized
-		}
-		stored = entry
-		return nil
-	})
+	stored, _, err := s.put(
+		serverURL,
+		nil,
+		makeActive,
+		func(previous Credentials) Credentials {
+			return preserveSettings(entry, previous)
+		},
+	)
 	return stored, err
 }
 
@@ -214,23 +238,47 @@ func (s *Store) PutIfEpoch(
 	entry Credentials,
 	epoch int64,
 ) (Credentials, bool, error) {
-	normalized, err := NormalizeServerURL(serverURL)
-	if err != nil {
-		return Credentials{}, false, err
-	}
-	var stored Credentials
-	matched := false
-	err = s.withLock(func(config *credentialConfig) error {
-		if config.Servers[normalized].CredentialEpoch != epoch {
-			return nil
-		}
-		entry = preserveSettings(entry, config.Servers[normalized])
-		entry.CredentialEpoch = epoch + 1
-		config.Servers[normalized] = entry
-		stored, matched = entry, true
-		return nil
-	})
-	return stored, matched, err
+	return s.put(
+		serverURL,
+		&epoch,
+		false,
+		func(previous Credentials) Credentials {
+			return preserveSettings(entry, previous)
+		},
+	)
+}
+
+// PutRecovery stores a rotated refresh token from a rejected token response
+// without replacing the rest of the entry or changing the active server.
+func (s *Store) PutRecovery(
+	serverURL string,
+	recovery Credentials,
+) (Credentials, error) {
+	stored, _, err := s.put(
+		serverURL,
+		nil,
+		false,
+		func(previous Credentials) Credentials {
+			return mergeRecovery(recovery, previous)
+		},
+	)
+	return stored, err
+}
+
+// PutRecoveryIfEpoch is PutRecovery, unless a login/logout raced it.
+func (s *Store) PutRecoveryIfEpoch(
+	serverURL string,
+	recovery Credentials,
+	epoch int64,
+) (Credentials, bool, error) {
+	return s.put(
+		serverURL,
+		&epoch,
+		false,
+		func(previous Credentials) Credentials {
+			return mergeRecovery(recovery, previous)
+		},
+	)
 }
 
 // ClearTokens removes tokens while preserving discovery metadata.
